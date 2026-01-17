@@ -1,20 +1,26 @@
-import { ref, shallowRef } from 'vue'
+import { ref } from 'vue'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
 
 export function useThreePlayground() {
   // Core Three.js objects (not reactive)
   let scene = null
   let camera = null
   let renderer = null
-  let controls = null
+  let orbitControls = null
+  let transformControls = null
   let animationId = null
   let containerEl = null
+  let raycaster = null
+  let mouse = null
 
   // Reactive state
   const objects = ref([])
+  const selectedObject = ref(null)
   const isInitialized = ref(false)
   const themeColor = ref('#22c55e')
+  const transformMode = ref('translate') // translate, rotate, scale
 
   // Initialize Three.js
   const init = (container) => {
@@ -37,12 +43,24 @@ export function useThreePlayground() {
     renderer.shadowMap.enabled = true
     container.appendChild(renderer.domElement)
 
-    // Controls
-    controls = new OrbitControls(camera, renderer.domElement)
-    controls.enableDamping = true
-    controls.dampingFactor = 0.05
-    controls.minDistance = 2
-    controls.maxDistance = 50
+    // Raycaster for object selection
+    raycaster = new THREE.Raycaster()
+    mouse = new THREE.Vector2()
+
+    // Orbit Controls
+    orbitControls = new OrbitControls(camera, renderer.domElement)
+    orbitControls.enableDamping = true
+    orbitControls.dampingFactor = 0.05
+    orbitControls.minDistance = 2
+    orbitControls.maxDistance = 50
+
+    // Transform Controls
+    transformControls = new TransformControls(camera, renderer.domElement)
+    transformControls.addEventListener('dragging-changed', (event) => {
+      orbitControls.enabled = !event.value
+    })
+    transformControls.setSize(0.75)
+    scene.add(transformControls)
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
@@ -60,8 +78,61 @@ export function useThreePlayground() {
     // Handle resize
     window.addEventListener('resize', handleResize)
 
+    // Handle click for selection
+    renderer.domElement.addEventListener('click', handleClick)
+    renderer.domElement.addEventListener('dblclick', handleDoubleClick)
+
     isInitialized.value = true
     animate()
+  }
+
+  // Handle click to select object
+  const handleClick = (event) => {
+    if (!containerEl || !camera || !raycaster) return
+
+    const rect = containerEl.getBoundingClientRect()
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+
+    raycaster.setFromCamera(mouse, camera)
+
+    // Only check user objects (those with userData.id)
+    const selectableObjects = objects.value.filter(obj => obj.userData && obj.userData.id)
+    const intersects = raycaster.intersectObjects(selectableObjects, false)
+
+    if (intersects.length > 0) {
+      selectObject(intersects[0].object)
+    }
+  }
+
+  // Double click to deselect
+  const handleDoubleClick = () => {
+    deselectObject()
+  }
+
+  // Select an object
+  const selectObject = (obj) => {
+    if (!transformControls) return
+
+    selectedObject.value = obj
+    transformControls.attach(obj)
+    transformControls.setMode(transformMode.value)
+  }
+
+  // Deselect object
+  const deselectObject = () => {
+    if (!transformControls) return
+
+    selectedObject.value = null
+    transformControls.detach()
+  }
+
+  // Set transform mode
+  const setTransformMode = (mode) => {
+    transformMode.value = mode
+    if (transformControls && selectedObject.value) {
+      transformControls.setMode(mode)
+    }
   }
 
   // Animation loop
