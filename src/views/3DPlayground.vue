@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useThreePlayground } from '../composables/useThreePlayground'
 import ThreeToolbar from '../components/three/ThreeToolbar.vue'
+import ThreePropertiesPanel from '../components/three/ThreePropertiesPanel.vue'
 
 const playground = useThreePlayground()
 const canvasContainer = ref(null)
@@ -68,15 +69,17 @@ onUnmounted(() => {
       @deselect="playground.deselectObject"
     />
 
-    <!-- Canvas Container -->
-    <div class="flex-1 relative">
-      <div
-        ref="canvasContainer"
-        class="absolute inset-0"
-      ></div>
+    <!-- Main Content -->
+    <div class="flex-1 flex overflow-hidden">
+      <!-- Canvas Container -->
+      <div class="flex-1 relative">
+        <div
+          ref="canvasContainer"
+          class="absolute inset-0"
+        ></div>
 
       <!-- Object Counter / Selection Info -->
-      <div class="absolute bottom-4 left-4 flex flex-col gap-2">
+      <div class="absolute bottom-4 left-4 flex flex-col gap-2 z-10">
         <div v-if="playground.selectedObject.value" class="px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs flex items-center gap-2">
           <!-- Light icon if it's a light -->
           <svg v-if="playground.selectedObject.value.userData?.light" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
@@ -91,7 +94,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Keyboard Controls Visual -->
-      <div v-if="playground.selectedObject.value" class="absolute bottom-4 right-4 p-3 bg-neutral-900/90 border border-neutral-800 rounded-lg">
+      <div v-if="playground.selectedObject.value" class="absolute top-4 left-4 p-3 bg-neutral-900/90 border border-neutral-800 rounded-lg">
         <div class="text-[10px] text-neutral-500 mb-2 text-center">Mover objeto</div>
 
         <!-- WASD + QE Layout -->
@@ -136,6 +139,19 @@ onUnmounted(() => {
       <div v-else class="absolute bottom-4 right-4 px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs text-neutral-500">
         <span class="text-neutral-400">Click</span> Seleccionar &nbsp;
         <span class="text-neutral-400">Scroll</span> Zoom
+      </div>
+      </div>
+
+      <!-- Properties Panel (right sidebar) -->
+      <div class="w-56 bg-neutral-900 border-l border-neutral-800 shrink-0">
+        <ThreePropertiesPanel
+          v-if="playground.selectedObject.value"
+          :selected-object="playground.selectedObject.value"
+          :theme-color="playground.themeColor.value"
+        />
+        <div v-else class="p-4 text-xs text-neutral-500 text-center">
+          Selecciona un objeto
+        </div>
       </div>
     </div>
   </div>
