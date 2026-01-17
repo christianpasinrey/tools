@@ -21,6 +21,13 @@ export function useThreePlayground() {
   let initialScale = new THREE.Vector3()
   let dragStart = new THREE.Vector2()
 
+  // Keyboard movement state
+  const keysPressed = ref({
+    w: false, a: false, s: false, d: false,
+    q: false, e: false
+  })
+  const moveSpeed = 0.1
+
   // Reactive state
   const objects = ref([])
   const selectedObject = ref(null)
@@ -85,8 +92,27 @@ export function useThreePlayground() {
     renderer.domElement.addEventListener('mouseup', handleMouseUp)
     renderer.domElement.addEventListener('dblclick', handleDoubleClick)
 
+    // Keyboard controls
+    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keyup', handleKeyUp)
+
     isInitialized.value = true
     animate()
+  }
+
+  // Keyboard handlers
+  const handleKeyDown = (e) => {
+    const key = e.key.toLowerCase()
+    if (key in keysPressed.value) {
+      keysPressed.value[key] = true
+    }
+  }
+
+  const handleKeyUp = (e) => {
+    const key = e.key.toLowerCase()
+    if (key in keysPressed.value) {
+      keysPressed.value[key] = false
+    }
   }
 
   // Get mouse position in normalized device coordinates
@@ -120,18 +146,19 @@ export function useThreePlayground() {
 
         // Setup based on transform mode
         if (transformMode.value === 'translate') {
-          // Update drag plane to be at object's Y position, facing camera
+          // Use a plane facing the camera for intuitive dragging
           const cameraDir = new THREE.Vector3()
           camera.getWorldDirection(cameraDir)
-          // Use a horizontal plane for more intuitive dragging
           dragPlane.setFromNormalAndCoplanarPoint(
-            new THREE.Vector3(0, 1, 0),
+            cameraDir.negate(),
             selectedObject.value.position
           )
           // Calculate offset
           const intersection = new THREE.Vector3()
           raycaster.ray.intersectPlane(dragPlane, intersection)
-          dragOffset.subVectors(selectedObject.value.position, intersection)
+          if (intersection) {
+            dragOffset.subVectors(selectedObject.value.position, intersection)
+          }
         } else if (transformMode.value === 'rotate') {
           initialRotation.copy(selectedObject.value.rotation)
         } else if (transformMode.value === 'scale') {
@@ -161,9 +188,16 @@ export function useThreePlayground() {
     raycaster.setFromCamera(mouse, camera)
 
     if (transformMode.value === 'translate') {
-      const intersection = new THREE.Vector3()
-      if (raycaster.ray.intersectPlane(dragPlane, intersection)) {
-        selectedObject.value.position.copy(intersection.add(dragOffset))
+      // Shift key = move vertically only
+      if (event.shiftKey) {
+        const deltaY = (dragStart.y - event.clientY) * 0.02
+        selectedObject.value.position.y += deltaY
+        dragStart.set(event.clientX, event.clientY)
+      } else {
+        const intersection = new THREE.Vector3()
+        if (raycaster.ray.intersectPlane(dragPlane, intersection)) {
+          selectedObject.value.position.copy(intersection.add(dragOffset))
+        }
       }
     } else if (transformMode.value === 'rotate') {
       const deltaX = (event.clientX - dragStart.x) * 0.01
@@ -230,6 +264,29 @@ export function useThreePlayground() {
   // Animation loop
   const animate = () => {
     animationId = requestAnimationFrame(animate)
+
+    // Move selected object with WASD/QE keys
+    if (selectedObject.value && camera) {
+      const keys = keysPressed.value
+      if (keys.w || keys.a || keys.s || keys.d || keys.q || keys.e) {
+        // Get camera direction for relative movement
+        const cameraDir = new THREE.Vector3()
+        camera.getWorldDirection(cameraDir)
+        cameraDir.y = 0
+        cameraDir.normalize()
+
+        const right = new THREE.Vector3()
+        right.crossVectors(cameraDir, new THREE.Vector3(0, 1, 0))
+
+        // Apply movement (W/S = Y axis, A/D = left/right, Q/E = forward/back)
+        if (keys.w) selectedObject.value.position.y += moveSpeed
+        if (keys.s) selectedObject.value.position.y -= moveSpeed
+        if (keys.d) selectedObject.value.position.addScaledVector(right, moveSpeed)
+        if (keys.a) selectedObject.value.position.addScaledVector(right, -moveSpeed)
+        if (keys.e) selectedObject.value.position.addScaledVector(cameraDir, moveSpeed)
+        if (keys.q) selectedObject.value.position.addScaledVector(cameraDir, -moveSpeed)
+      }
+    }
 
     // Update objects with animation (only if not selected)
     objects.value.forEach(obj => {
@@ -324,7 +381,7 @@ export function useThreePlayground() {
     // Deselect any selected object
     deselectObject()
 
-    // Remove user objects from scene (keep lights, grid, and transformControls)
+    // Remove user objects from scene (keep lights and grid)
     const toRemove = []
     scene.children.forEach(child => {
       if (child.userData && child.userData.id) {
@@ -529,19 +586,17 @@ export function useThreePlayground() {
     }
 
     if (renderer && renderer.domElement) {
-      renderer.domElement.removeEventListener('click', handleClick)
+      renderer.domElement.removeEventListener('mousedown', handleMouseDown)
+      renderer.domElement.removeEventListener('mousemove', handleMouseMove)
+      renderer.domElement.removeEventListener('mouseup', handleMouseUp)
       renderer.domElement.removeEventListener('dblclick', handleDoubleClick)
     }
 
     window.removeEventListener('resize', handleResize)
+    window.removeEventListener('keydown', handleKeyDown)
+    window.removeEventListener('keyup', handleKeyUp)
 
     clearScene()
-
-    if (transformControls) {
-      transformControls.detach()
-      if (scene) scene.remove(transformControls)
-      transformControls.dispose()
-    }
 
     if (renderer && containerEl) {
       containerEl.removeChild(renderer.domElement)
@@ -552,9 +607,9 @@ export function useThreePlayground() {
     camera = null
     renderer = null
     orbitControls = null
-    transformControls = null
     raycaster = null
     mouse = null
+    isDragging = false
     isInitialized.value = false
   }
 
@@ -565,6 +620,7 @@ export function useThreePlayground() {
     selectedObject,
     themeColor,
     transformMode,
+    keysPressed,
 
     // Methods
     init,

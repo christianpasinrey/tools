@@ -86,10 +86,51 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- Controls Hint -->
-      <div class="absolute bottom-4 right-4 px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs text-neutral-500">
-        <span class="text-neutral-400">LMB</span> Rotar &nbsp;
-        <span class="text-neutral-400">RMB</span> Pan &nbsp;
+      <!-- Keyboard Controls Visual -->
+      <div v-if="playground.selectedObject.value" class="absolute bottom-4 right-4 p-3 bg-neutral-900/90 border border-neutral-800 rounded-lg">
+        <div class="text-[10px] text-neutral-500 mb-2 text-center">Mover objeto</div>
+
+        <!-- WASD + QE Layout -->
+        <div class="flex flex-col items-center gap-1">
+          <!-- Top row: Q W E -->
+          <div class="flex gap-1">
+            <div :class="['w-7 h-7 rounded flex items-center justify-center text-xs font-mono border transition-all', playground.keysPressed.value.q ? 'bg-green-500 border-green-400 text-white' : 'bg-neutral-800 border-neutral-700 text-neutral-400']">
+              Q
+            </div>
+            <div :class="['w-7 h-7 rounded flex items-center justify-center text-xs font-mono border transition-all', playground.keysPressed.value.w ? 'bg-green-500 border-green-400 text-white' : 'bg-neutral-800 border-neutral-700 text-neutral-400']">
+              W
+            </div>
+            <div :class="['w-7 h-7 rounded flex items-center justify-center text-xs font-mono border transition-all', playground.keysPressed.value.e ? 'bg-green-500 border-green-400 text-white' : 'bg-neutral-800 border-neutral-700 text-neutral-400']">
+              E
+            </div>
+          </div>
+          <!-- Bottom row: A S D -->
+          <div class="flex gap-1">
+            <div :class="['w-7 h-7 rounded flex items-center justify-center text-xs font-mono border transition-all', playground.keysPressed.value.a ? 'bg-green-500 border-green-400 text-white' : 'bg-neutral-800 border-neutral-700 text-neutral-400']">
+              A
+            </div>
+            <div :class="['w-7 h-7 rounded flex items-center justify-center text-xs font-mono border transition-all', playground.keysPressed.value.s ? 'bg-green-500 border-green-400 text-white' : 'bg-neutral-800 border-neutral-700 text-neutral-400']">
+              S
+            </div>
+            <div :class="['w-7 h-7 rounded flex items-center justify-center text-xs font-mono border transition-all', playground.keysPressed.value.d ? 'bg-green-500 border-green-400 text-white' : 'bg-neutral-800 border-neutral-700 text-neutral-400']">
+              D
+            </div>
+          </div>
+        </div>
+
+        <!-- Labels -->
+        <div class="flex flex-col text-[9px] text-neutral-600 mt-2 gap-0.5">
+          <div class="flex justify-center gap-3">
+            <span>W↑ S↓</span>
+            <span>A← D→</span>
+          </div>
+          <div class="text-center">Q/E profundidad</div>
+        </div>
+      </div>
+
+      <!-- General Controls Hint (when no selection) -->
+      <div v-else class="absolute bottom-4 right-4 px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs text-neutral-500">
+        <span class="text-neutral-400">Click</span> Seleccionar &nbsp;
         <span class="text-neutral-400">Scroll</span> Zoom
       </div>
     </div>
