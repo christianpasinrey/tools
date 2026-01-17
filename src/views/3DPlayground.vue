@@ -49,9 +49,7 @@ const handleSelectFromList = (obj) => {
 
 // Handle object deletion from list
 const handleDeleteFromList = (obj) => {
-  // Select it first, then delete
-  playground.selectObject(obj)
-  playground.deleteSelected()
+  playground.deleteObject(obj)
 }
 
 // Initialize on mount

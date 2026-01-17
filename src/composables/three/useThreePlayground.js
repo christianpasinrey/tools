@@ -158,6 +158,7 @@ export function useThreePlayground() {
     selectedObject: objects.selectedObject,
     keysPressed: objects.keysPressed,
     addShape: objects.addShape,
+    deleteObject: objects.deleteObject,
     deleteSelected: objects.deleteSelected,
     duplicateSelected: objects.duplicateSelected,
     selectObject: objects.selectObject,

@@ -324,12 +324,14 @@ export function useThreeObjects(core) {
     return clone
   }
 
-  // Delete selected
-  const deleteSelected = () => {
-    if (!selectedObject.value || !core.scene.value) return
+  // Delete a specific object
+  const deleteObject = (obj) => {
+    if (!obj || !core.scene.value) return
 
-    const obj = selectedObject.value
-    deselectObject()
+    // Deselect if this object is selected
+    if (selectedObject.value === obj) {
+      deselectObject()
+    }
 
     // Clean up light if it's a light object
     if (obj.userData) {
@@ -347,6 +349,12 @@ export function useThreeObjects(core) {
     if (obj.material) obj.material.dispose()
 
     objects.value = objects.value.filter(o => o !== obj)
+  }
+
+  // Delete selected
+  const deleteSelected = () => {
+    if (!selectedObject.value) return
+    deleteObject(selectedObject.value)
   }
 
   // Clear scene
@@ -428,6 +436,7 @@ export function useThreeObjects(core) {
     init,
     destroy,
     addShape,
+    deleteObject,
     deleteSelected,
     duplicateSelected,
     selectObject,
