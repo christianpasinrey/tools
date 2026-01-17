@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, toRaw } from 'vue'
 import * as THREE from 'three'
 
 export function useThreeObjects(core) {
@@ -328,14 +328,17 @@ export function useThreeObjects(core) {
   const deleteObject = (obj) => {
     if (!obj || !core.scene.value) return
 
+    // Get raw object (unwrap Vue Proxy)
+    const rawObj = toRaw(obj)
+
     // Deselect if this object is selected
-    if (selectedObject.value === obj) {
+    if (toRaw(selectedObject.value) === rawObj) {
       deselectObject()
     }
 
     // Clean up light if it's a light object
-    if (obj.userData) {
-      const { light, helper, target } = obj.userData
+    if (rawObj.userData) {
+      const { light, helper, target } = rawObj.userData
       if (light) core.scene.value.remove(light)
       if (helper) {
         core.scene.value.remove(helper)
@@ -344,11 +347,11 @@ export function useThreeObjects(core) {
       if (target) core.scene.value.remove(target)
     }
 
-    core.scene.value.remove(obj)
-    if (obj.geometry) obj.geometry.dispose()
-    if (obj.material) obj.material.dispose()
+    core.scene.value.remove(rawObj)
+    if (rawObj.geometry) rawObj.geometry.dispose()
+    if (rawObj.material) rawObj.material.dispose()
 
-    objects.value = objects.value.filter(o => o !== obj)
+    objects.value = objects.value.filter(o => toRaw(o) !== rawObj)
   }
 
   // Delete selected

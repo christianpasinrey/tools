@@ -9,6 +9,10 @@ const props = defineProps({
 
 const emit = defineEmits(['select', 'delete'])
 
+const handleDelete = (obj) => {
+  emit('delete', obj)
+}
+
 // Thumbnail renderer
 let thumbnailRenderer = null
 let thumbnailScene = null
@@ -218,7 +222,7 @@ const isSelected = (obj) => {
 
           <!-- Delete button (on hover) -->
           <button
-            @click.stop="emit('delete', obj)"
+            @click.stop="handleDelete(obj)"
             class="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-red-500/20 hover:text-red-400 text-neutral-500 transition-all"
             title="Eliminar"
           >
