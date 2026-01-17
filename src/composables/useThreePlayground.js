@@ -89,22 +89,103 @@ export function useThreePlayground() {
     animate()
   }
 
-  // Handle click to select object
-  const handleClick = (event) => {
-    if (!containerEl || !camera || !raycaster) return
-
+  // Get mouse position in normalized device coordinates
+  const getMouseNDC = (event) => {
+    if (!containerEl) return null
     const rect = containerEl.getBoundingClientRect()
-    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+    return {
+      x: ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      y: -((event.clientY - rect.top) / rect.height) * 2 + 1
+    }
+  }
 
+  // Handle mouse down - select or start drag
+  const handleMouseDown = (event) => {
+    if (!containerEl || !camera || !raycaster) return
+    if (event.button !== 0) return // Only left click
+
+    const ndc = getMouseNDC(event)
+    if (!ndc) return
+
+    mouse.set(ndc.x, ndc.y)
     raycaster.setFromCamera(mouse, camera)
 
-    // Only check user objects (those with userData.id)
+    // Check if clicking on selected object to start dragging
+    if (selectedObject.value) {
+      const intersects = raycaster.intersectObject(selectedObject.value, false)
+      if (intersects.length > 0) {
+        isDragging = true
+        orbitControls.enabled = false
+        dragStart.set(event.clientX, event.clientY)
+
+        // Setup based on transform mode
+        if (transformMode.value === 'translate') {
+          // Update drag plane to be at object's Y position, facing camera
+          const cameraDir = new THREE.Vector3()
+          camera.getWorldDirection(cameraDir)
+          // Use a horizontal plane for more intuitive dragging
+          dragPlane.setFromNormalAndCoplanarPoint(
+            new THREE.Vector3(0, 1, 0),
+            selectedObject.value.position
+          )
+          // Calculate offset
+          const intersection = new THREE.Vector3()
+          raycaster.ray.intersectPlane(dragPlane, intersection)
+          dragOffset.subVectors(selectedObject.value.position, intersection)
+        } else if (transformMode.value === 'rotate') {
+          initialRotation.copy(selectedObject.value.rotation)
+        } else if (transformMode.value === 'scale') {
+          initialScale.copy(selectedObject.value.scale)
+        }
+        return
+      }
+    }
+
+    // Otherwise, try to select a new object
     const selectableObjects = objects.value.filter(obj => obj.userData && obj.userData.id)
     const intersects = raycaster.intersectObjects(selectableObjects, false)
 
     if (intersects.length > 0) {
       selectObject(intersects[0].object)
+    }
+  }
+
+  // Handle mouse move - drag if active
+  const handleMouseMove = (event) => {
+    if (!isDragging || !selectedObject.value) return
+
+    const ndc = getMouseNDC(event)
+    if (!ndc) return
+
+    mouse.set(ndc.x, ndc.y)
+    raycaster.setFromCamera(mouse, camera)
+
+    if (transformMode.value === 'translate') {
+      const intersection = new THREE.Vector3()
+      if (raycaster.ray.intersectPlane(dragPlane, intersection)) {
+        selectedObject.value.position.copy(intersection.add(dragOffset))
+      }
+    } else if (transformMode.value === 'rotate') {
+      const deltaX = (event.clientX - dragStart.x) * 0.01
+      const deltaY = (event.clientY - dragStart.y) * 0.01
+      selectedObject.value.rotation.y = initialRotation.y + deltaX
+      selectedObject.value.rotation.x = initialRotation.x + deltaY
+    } else if (transformMode.value === 'scale') {
+      const delta = (event.clientX - dragStart.x) * 0.01
+      const scaleFactor = Math.max(0.1, 1 + delta)
+      selectedObject.value.scale.set(
+        initialScale.x * scaleFactor,
+        initialScale.y * scaleFactor,
+        initialScale.z * scaleFactor
+      )
+    }
+  }
+
+  // Handle mouse up - stop dragging
+  const handleMouseUp = () => {
+    if (isDragging) {
+      isDragging = false
+      orbitControls.enabled = true
     }
   }
 
@@ -115,32 +196,35 @@ export function useThreePlayground() {
 
   // Select an object
   const selectObject = (obj) => {
-    if (!transformControls || !scene) return
+    if (!scene) return
+
+    // Deselect previous
+    if (selectedObject.value && selectedObject.value !== obj) {
+      // Remove highlight from previous
+      if (selectedObject.value.material) {
+        selectedObject.value.material.emissive?.setHex(0x000000)
+      }
+    }
 
     selectedObject.value = obj
-    transformControls.attach(obj)
-    transformControls.setMode(transformMode.value)
 
-    // Add to scene if not already there
-    if (!scene.children.includes(transformControls)) {
-      scene.add(transformControls)
+    // Add highlight to selected
+    if (obj.material && obj.material.emissive) {
+      obj.material.emissive.setHex(0x333333)
     }
   }
 
   // Deselect object
   const deselectObject = () => {
-    if (!transformControls) return
-
+    if (selectedObject.value && selectedObject.value.material) {
+      selectedObject.value.material.emissive?.setHex(0x000000)
+    }
     selectedObject.value = null
-    transformControls.detach()
   }
 
   // Set transform mode
   const setTransformMode = (mode) => {
     transformMode.value = mode
-    if (transformControls && selectedObject.value) {
-      transformControls.setMode(mode)
-    }
   }
 
   // Animation loop
