@@ -435,9 +435,20 @@ export function useThreePlayground() {
       cancelAnimationFrame(animationId)
       animationId = null
     }
+
+    if (renderer && renderer.domElement) {
+      renderer.domElement.removeEventListener('click', handleClick)
+      renderer.domElement.removeEventListener('dblclick', handleDoubleClick)
+    }
+
     window.removeEventListener('resize', handleResize)
 
     clearScene()
+
+    if (transformControls) {
+      scene?.remove(transformControls)
+      transformControls.dispose()
+    }
 
     if (renderer && containerEl) {
       containerEl.removeChild(renderer.domElement)
@@ -447,7 +458,10 @@ export function useThreePlayground() {
     scene = null
     camera = null
     renderer = null
-    controls = null
+    orbitControls = null
+    transformControls = null
+    raycaster = null
+    mouse = null
     isInitialized.value = false
   }
 
@@ -455,13 +469,19 @@ export function useThreePlayground() {
     // State
     isInitialized,
     objects,
+    selectedObject,
     themeColor,
+    transformMode,
 
     // Methods
     init,
     addShape,
     loadPreset,
     clearScene,
+    selectObject,
+    deselectObject,
+    deleteSelected,
+    setTransformMode,
     setThemeColor,
     resetCamera,
     toggleWireframe,
