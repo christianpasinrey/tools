@@ -88,7 +88,7 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
 </script>
 
 <template>
-  <div class="flex flex-col flex-1 min-h-0">
+  <div class="w-full">
     <!-- Header -->
     <div class="px-3 py-2 border-b border-neutral-800 flex items-center gap-2 shrink-0">
       <svg v-if="isLight" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
@@ -100,7 +100,7 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
       <span class="text-xs font-medium text-white capitalize">{{ selectedObject?.userData?.type || 'Objeto' }}</span>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-3 space-y-4 text-xs">
+    <div class="p-3 space-y-4 text-xs">
       <!-- Position -->
       <div>
         <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Posicion</div>
