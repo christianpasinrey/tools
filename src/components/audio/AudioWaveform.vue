@@ -67,7 +67,7 @@ defineExpose({
 
     <!-- Waveform Area (shown when hasFile, container always exists) -->
     <template v-else>
-      <div class="flex-1 relative bg-neutral-900/50 border-y border-neutral-800 overflow-hidden">
+      <div class="flex-1 relative bg-neutral-900/50 border-y border-neutral-800 overflow-x-auto overflow-y-hidden">
         <!-- Grid -->
         <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(to right, rgba(64,64,64,0.3) 1px, transparent 1px); background-size: 100px 100%;"></div>
         <div class="absolute inset-x-0 top-1/2 h-px bg-neutral-800 pointer-events-none"></div>
