@@ -227,23 +227,18 @@ export function useThreePlayground() {
 
   // Clear all objects
   const clearScene = () => {
-    if (!scene) {
-      console.log('No scene to clear')
-      return
-    }
+    if (!scene) return
 
-    console.log('Clearing scene, objects array:', objects.value.length)
-    console.log('Scene children before:', scene.children.length)
+    // Deselect any selected object
+    deselectObject()
 
-    // Remove user objects from scene (keep lights and grid)
+    // Remove user objects from scene (keep lights, grid, and transformControls)
     const toRemove = []
     scene.children.forEach(child => {
       if (child.userData && child.userData.id) {
         toRemove.push(child)
       }
     })
-
-    console.log('Objects to remove from scene:', toRemove.length)
 
     toRemove.forEach(obj => {
       scene.remove(obj)
@@ -259,9 +254,6 @@ export function useThreePlayground() {
 
     // Clear the array
     objects.value = []
-
-    console.log('Scene children after:', scene.children.length)
-    console.log('Objects array after:', objects.value.length)
   }
 
   // Load preset scene
