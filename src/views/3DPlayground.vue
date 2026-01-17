@@ -292,55 +292,49 @@ const loadPreset = (presetId) => {
       }
       break
     case 'waves':
-      // Ocean-like animated wave surface
-      const waveGeo = new THREE.PlaneGeometry(20, 20, 80, 80)
-      waveGeo.rotateX(-Math.PI / 2)
+      // Animated wave mesh floor (like a blanket)
+      const segments = 60
+      const size = 15
+      const waveGeometry = new THREE.PlaneGeometry(size, size, segments, segments)
+      waveGeometry.rotateX(-Math.PI / 2) // Make it horizontal in geometry itself
 
-      // Store grid coordinates for wave calculation
-      const wavePositions = waveGeo.attributes.position
-      const gridCoords = []
-      for (let i = 0; i < wavePositions.count; i++) {
-        gridCoords.push({
-          x: wavePositions.getX(i),
-          z: wavePositions.getZ(i)
-        })
-      }
+      // Store original positions for wave calculation
+      const originalPositions = new Float32Array(waveGeometry.attributes.position.array)
 
-      const waveMat = new THREE.MeshStandardMaterial({
-        color: 0x22c55e,
-        metalness: 0.3,
-        roughness: 0.6,
+      const waveMaterial = new THREE.MeshStandardMaterial({
+        color: new THREE.Color('#22c55e'),
+        metalness: 0.2,
+        roughness: 0.5,
         side: THREE.DoubleSide,
         wireframe: true
       })
-
-      const waveMesh = new THREE.Mesh(waveGeo, waveMat)
+      const waveMesh = new THREE.Mesh(waveGeometry, waveMaterial)
+      waveMesh.position.y = 0
 
       waveMesh.userData = {
         type: 'waves',
         id: Date.now(),
         isUserObject: true,
-        gridCoords: gridCoords,
-        animate: (t, mesh) => {
-          const pos = mesh.geometry.attributes.position
-          const coords = mesh.userData.gridCoords
+        originalPositions: originalPositions,
+        animate: (time, obj) => {
+          const pos = obj.geometry.attributes.position
+          const orig = obj.userData.originalPositions
 
           for (let i = 0; i < pos.count; i++) {
-            const { x, z } = coords[i]
-            const y = Math.sin(x * 0.5 + t * 2) * Math.cos(z * 0.5 + t * 1.5) * 1.2
-            pos.setY(i, y)
+            const ix = i * 3
+            const x = orig[ix]
+            const z = orig[ix + 2]
+            // Wave on Y axis (height)
+            const wave = Math.sin(x * 0.4 + time * 1.5) * Math.cos(z * 0.4 + time * 1.2) * 0.8
+            pos.setY(i, wave)
           }
-
           pos.needsUpdate = true
-          mesh.geometry.computeVertexNormals()
+          obj.geometry.computeVertexNormals()
         }
       }
 
       playground.scene.value.add(waveMesh)
       playground.objects.value = [...playground.objects.value, waveMesh]
-      console.log('Waves mesh created:', waveMesh)
-      console.log('Total vertices:', waveGeo.attributes.position.count)
-      console.log('Objects in scene:', playground.objects.value.length)
       break
   }
 }
