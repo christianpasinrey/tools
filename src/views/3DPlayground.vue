@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useThreePlayground } from '../composables/three/useThreePlayground'
 import ThreeToolbar from '../components/three/ThreeToolbar.vue'
 import ThreePropertiesPanel from '../components/three/ThreePropertiesPanel.vue'
+import ThreeObjectsList from '../components/three/ThreeObjectsList.vue'
 
 const playground = useThreePlayground()
 const canvasContainer = ref(null)
@@ -39,6 +40,18 @@ const triggerImport = () => {
 const handleFileSelect = async (e) => {
   await playground.handleFileImport(e)
   e.target.value = '' // Reset input
+}
+
+// Handle object selection from list
+const handleSelectFromList = (obj) => {
+  playground.selectObject(obj)
+}
+
+// Handle object deletion from list
+const handleDeleteFromList = (obj) => {
+  // Select it first, then delete
+  playground.selectObject(obj)
+  playground.deleteSelected()
 }
 
 // Initialize on mount
@@ -97,6 +110,14 @@ onUnmounted(() => {
 
     <!-- Main Content -->
     <div class="flex-1 flex overflow-hidden">
+      <!-- Objects List (left sidebar) -->
+      <ThreeObjectsList
+        :objects="playground.objects.value"
+        :selected-object="playground.selectedObject.value"
+        @select="handleSelectFromList"
+        @delete="handleDeleteFromList"
+      />
+
       <!-- Canvas Container -->
       <div class="flex-1 relative">
         <div
@@ -116,20 +137,6 @@ onUnmounted(() => {
         <!-- Environment loading -->
         <div v-if="playground.isLoadingEnvironment.value" class="absolute top-4 right-4 bg-neutral-900/90 border border-neutral-700 rounded px-3 py-2 text-xs text-neutral-300 z-10">
           Cargando entorno...
-        </div>
-
-        <!-- Object Counter / Selection Info -->
-        <div class="absolute bottom-4 left-4 flex flex-col gap-2 z-10">
-          <div v-if="playground.selectedObject.value" class="px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs flex items-center gap-2">
-            <svg v-if="playground.selectedObject.value.userData?.light" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7zm2 15h-4v-1h4v1zm0-3h-4v-1h4v1zM9 21a1 1 0 001 1h4a1 1 0 001-1v-1H9v1z"/>
-            </svg>
-            <span class="text-neutral-500">Seleccionado:</span>
-            <span class="text-white">{{ playground.selectedObject.value.userData?.type || 'Objeto' }}</span>
-          </div>
-          <div v-if="hasObjects" class="px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs text-neutral-400">
-            {{ playground.objects.value.length }} objeto{{ playground.objects.value.length !== 1 ? 's' : '' }}
-          </div>
         </div>
 
         <!-- Keyboard Controls Visual -->
