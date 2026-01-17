@@ -11,6 +11,7 @@
   "dependencies": {
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.530",
+    "three": "^0.182.0",
     "vue": "^3.5.24",
     "vue-router": "^4.6.4",
     "wavesurfer.js": "^7.12.1"

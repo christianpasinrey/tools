@@ -121,20 +121,16 @@ defineExpose({
     <!-- Empty State -->
     <div
       v-if="!hasFile"
-      class="flex-1 p-4"
+      @click="emit('click')"
+      :class="['flex-1 m-4 flex flex-col items-center justify-center cursor-pointer transition-colors rounded-lg border-2 border-dashed bg-neutral-900/50', isDragging ? 'border-green-500/50 bg-green-500/5' : 'border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50']"
     >
-      <div
-        @click="emit('click')"
-        :class="['h-full flex flex-col items-center justify-center cursor-pointer transition-colors rounded-lg border-2 border-dashed bg-neutral-900/50', isDragging ? 'border-green-500/50 bg-green-500/5' : 'border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50']"
-      >
-        <div class="w-16 h-16 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center mb-4">
-          <svg class="w-7 h-7 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-          </svg>
-        </div>
-        <p class="text-neutral-400 text-sm mb-1">Arrastra un archivo de audio aquí</p>
-        <p class="text-neutral-600 text-xs">MP3, WAV, OGG, FLAC, M4A</p>
+      <div class="w-16 h-16 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+        </svg>
       </div>
+      <p class="text-neutral-400 text-sm mb-1">Arrastra un archivo de audio aquí</p>
+      <p class="text-neutral-600 text-xs">MP3, WAV, OGG, FLAC, M4A</p>
     </div>
 
     <!-- Waveform Area (shown when hasFile, container always exists) -->
