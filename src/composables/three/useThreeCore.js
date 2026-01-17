@@ -89,6 +89,8 @@ export function useThreeCore() {
     animate()
   }
 
+  let skipDefaultRender = false
+
   // Animation loop
   const animate = () => {
     animationId = requestAnimationFrame(animate)
@@ -97,9 +99,16 @@ export function useThreeCore() {
     animationCallbacks.forEach(cb => cb())
 
     if (orbitControls.value) orbitControls.value.update()
-    if (renderer.value && scene.value && camera.value) {
+
+    // Only render if no callback is handling rendering
+    if (!skipDefaultRender && renderer.value && scene.value && camera.value) {
       renderer.value.render(scene.value, camera.value)
     }
+  }
+
+  // Set skip default render flag
+  const setSkipDefaultRender = (skip) => {
+    skipDefaultRender = skip
   }
 
   // Register animation callback
@@ -170,6 +179,7 @@ export function useThreeCore() {
     resetCamera,
     getDomElement,
     onAnimate,
-    handleResize
+    handleResize,
+    setSkipDefaultRender
   }
 }

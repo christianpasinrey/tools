@@ -1,6 +1,9 @@
+import { ref } from 'vue'
 import * as THREE from 'three'
 
 export function useThreeLights(core, objectsManager) {
+  const ambientIntensity = ref(0.4)
+  const directionalIntensity = ref(0.6)
   // Add spotlight
   const addSpotlight = (options = {}) => {
     if (!core.scene.value) return null
@@ -112,6 +115,7 @@ export function useThreeLights(core, objectsManager) {
 
   // Set ambient light intensity
   const setAmbientIntensity = (intensity) => {
+    ambientIntensity.value = intensity
     if (!core.scene.value) return
     const ambient = core.scene.value.getObjectByName('ambientLight')
     if (ambient) {
@@ -121,6 +125,7 @@ export function useThreeLights(core, objectsManager) {
 
   // Set directional light intensity
   const setDirectionalIntensity = (intensity) => {
+    directionalIntensity.value = intensity
     if (!core.scene.value) return
     const directional = core.scene.value.getObjectByName('directionalLight')
     if (directional) {
@@ -129,6 +134,11 @@ export function useThreeLights(core, objectsManager) {
   }
 
   return {
+    // State
+    ambientIntensity,
+    directionalIntensity,
+
+    // Methods
     addSpotlight,
     addPointLight,
     addAmbientLight,

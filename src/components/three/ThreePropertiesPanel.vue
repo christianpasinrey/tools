@@ -1,10 +1,13 @@
 <script setup>
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   selectedObject: Object,
-  themeColor: String
+  materialPresets: Object,
+  materialProperties: Object
 })
+
+const emit = defineEmits(['color-change', 'material-change', 'material-property-change'])
 
 // Check if selected object is a light
 const isLight = computed(() => {
@@ -85,9 +88,9 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
 </script>
 
 <template>
-  <div class="w-56 bg-neutral-900 border-l border-neutral-800 flex flex-col shrink-0">
+  <div class="flex flex-col h-full">
     <!-- Header -->
-    <div class="px-3 py-2 border-b border-neutral-800 flex items-center gap-2">
+    <div class="px-3 py-2 border-b border-neutral-800 flex items-center gap-2 shrink-0">
       <svg v-if="isLight" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
         <path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7z"/>
       </svg>
@@ -100,7 +103,7 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
     <div class="flex-1 overflow-y-auto p-3 space-y-4 text-xs">
       <!-- Position -->
       <div>
-        <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Posición</div>
+        <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Posicion</div>
         <div class="grid grid-cols-3 gap-1">
           <div>
             <label class="text-red-400 text-[10px]">X</label>
@@ -137,7 +140,7 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
 
       <!-- Rotation (only for non-lights) -->
       <div v-if="!isLight">
-        <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Rotación °</div>
+        <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Rotacion</div>
         <div class="grid grid-cols-3 gap-1">
           <div>
             <label class="text-red-400 text-[10px]">X</label>
@@ -212,6 +215,87 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
         </div>
       </div>
 
+      <!-- Material Properties (for non-lights) -->
+      <template v-if="!isLight && materialProperties">
+        <!-- Color -->
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Color</div>
+          <input
+            type="color"
+            :value="materialProperties.color"
+            @input="emit('color-change', $event.target.value)"
+            class="w-full h-8 rounded border border-neutral-700 cursor-pointer bg-transparent"
+          />
+        </div>
+
+        <!-- Material Type -->
+        <div>
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Tipo Material</div>
+          <div class="grid grid-cols-5 gap-1">
+            <button
+              v-for="(preset, key) in materialPresets"
+              :key="key"
+              @click="emit('material-change', key)"
+              :class="['p-1.5 rounded border text-center transition-colors', selectedObject?.userData?.materialType === key ? 'border-green-500 bg-green-500/20' : 'border-neutral-700 hover:border-neutral-600']"
+              :title="preset.name"
+            >
+              {{ preset.icon }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Metalness -->
+        <div v-if="materialProperties.metalness !== undefined">
+          <div class="flex justify-between text-[10px] text-neutral-500 mb-1">
+            <span class="uppercase tracking-wider">Metalico</span>
+            <span class="text-white">{{ (materialProperties.metalness * 100).toFixed(0) }}%</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            :value="materialProperties.metalness"
+            @input="emit('material-property-change', 'metalness', parseFloat($event.target.value))"
+            class="w-full accent-green-500 h-1.5"
+          />
+        </div>
+
+        <!-- Roughness -->
+        <div v-if="materialProperties.roughness !== undefined">
+          <div class="flex justify-between text-[10px] text-neutral-500 mb-1">
+            <span class="uppercase tracking-wider">Rugosidad</span>
+            <span class="text-white">{{ (materialProperties.roughness * 100).toFixed(0) }}%</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            :value="materialProperties.roughness"
+            @input="emit('material-property-change', 'roughness', parseFloat($event.target.value))"
+            class="w-full accent-green-500 h-1.5"
+          />
+        </div>
+
+        <!-- Opacity -->
+        <div>
+          <div class="flex justify-between text-[10px] text-neutral-500 mb-1">
+            <span class="uppercase tracking-wider">Opacidad</span>
+            <span class="text-white">{{ (materialProperties.opacity * 100).toFixed(0) }}%</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            :value="materialProperties.opacity"
+            @input="emit('material-property-change', 'opacity', parseFloat($event.target.value))"
+            class="w-full accent-green-500 h-1.5"
+          />
+        </div>
+      </template>
+
       <!-- Light Properties -->
       <template v-if="isLight">
         <!-- Intensity -->
@@ -251,8 +335,8 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
         <!-- Angle (spotlight only) -->
         <div v-if="lightType === 'spotlight'">
           <div class="flex justify-between text-[10px] text-neutral-500 mb-1">
-            <span class="uppercase tracking-wider">Ángulo</span>
-            <span class="text-yellow-400">{{ ((light?.angle ?? 0.5) * (180 / Math.PI)).toFixed(0) }}°</span>
+            <span class="uppercase tracking-wider">Angulo</span>
+            <span class="text-yellow-400">{{ ((light?.angle ?? 0.5) * (180 / Math.PI)).toFixed(0) }}</span>
           </div>
           <input
             type="range"

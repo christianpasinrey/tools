@@ -28,7 +28,6 @@ export function useThreePlayground() {
 
     // Initialize sub-modules
     objects.init()
-    lights.init()
     environment.init()
     importer.init()
 
@@ -36,6 +35,7 @@ export function useThreePlayground() {
     postProcessing.init()
 
     // Setup render loop with post-processing
+    core.setSkipDefaultRender(true) // We handle rendering ourselves
     core.onAnimate(() => {
       // Update light helpers if needed
       objects.objects.value.forEach(obj => {
@@ -52,9 +52,6 @@ export function useThreePlayground() {
         }
       }
     })
-
-    // Start animation
-    core.animate()
 
     return true
   }
