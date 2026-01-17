@@ -21,6 +21,11 @@ export function useThreePlayground() {
   const exporter = useThreeExporter(core, objects)
   const environment = useThreeEnvironment(core)
 
+  // Animation control
+  const animationPaused = ref(false)
+  let pausedTime = 0
+  let timeOffset = 0
+
   // Unified initialization
   const init = (container) => {
     // Initialize core (scene, camera, renderer)
@@ -37,14 +42,27 @@ export function useThreePlayground() {
     // Setup render loop with post-processing
     core.setSkipDefaultRender(true) // We handle rendering ourselves
     core.onAnimate((time) => {
+      // Calculate effective time (accounting for pauses)
+      let effectiveTime = time
+      if (animationPaused.value) {
+        if (pausedTime === 0) pausedTime = time
+        effectiveTime = pausedTime - timeOffset
+      } else {
+        if (pausedTime > 0) {
+          timeOffset += time - pausedTime
+          pausedTime = 0
+        }
+        effectiveTime = time - timeOffset
+      }
+
       // Update light helpers and run per-object animations
       objects.objects.value.forEach(obj => {
         if (obj.userData?.lightHelper) {
           obj.userData.lightHelper.update()
         }
-        // Run custom animation if defined
-        if (obj.userData?.animate) {
-          obj.userData.animate(time, obj)
+        // Run custom animation if defined (only when not paused)
+        if (obj.userData?.animate && !animationPaused.value) {
+          obj.userData.animate(effectiveTime, obj)
         }
       })
 
@@ -215,6 +233,10 @@ export function useThreePlayground() {
 
     // Quick actions
     quickActions,
+
+    // Animation control
+    animationPaused,
+    setAnimationPaused: (paused) => { animationPaused.value = paused },
 
     // Lifecycle
     init,

@@ -8,14 +8,18 @@ const props = defineProps({
   currentEnvironment: String,
   environmentPresets: Object,
   materialPresets: Object,
-  isImporting: Boolean
+  isImporting: Boolean,
+  isPresetActive: Boolean,
+  isAnimationPlaying: Boolean,
+  isRecording: Boolean
 })
 
 const emit = defineEmits([
   'add-shape', 'add-spotlight', 'add-pointlight', 'clear', 'reset-camera',
   'delete-selected', 'duplicate-selected', 'deselect',
   'screenshot', 'export-gltf', 'export-glb', 'import',
-  'toggle-bloom', 'environment-change', 'material-change', 'load-preset'
+  'toggle-bloom', 'environment-change', 'material-change', 'load-preset',
+  'toggle-animation', 'toggle-recording'
 ])
 
 const showPresets = ref(false)
@@ -95,6 +99,53 @@ const toggleMenu = (menu) => {
           {{ preset.name }}
         </button>
       </div>
+    </div>
+
+    <!-- Play/Pause for presets OR Record/Stop for manual mode -->
+    <div v-if="isPresetActive" class="flex items-center">
+      <button
+        @click="emit('toggle-animation')"
+        :class="[
+          'flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors',
+          isAnimationPlaying
+            ? 'text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20'
+            : 'text-green-400 bg-green-500/10 hover:bg-green-500/20'
+        ]"
+        :title="isAnimationPlaying ? 'Pausar animación' : 'Reproducir animación'"
+      >
+        <!-- Pause icon -->
+        <svg v-if="isAnimationPlaying" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+        </svg>
+        <!-- Play icon -->
+        <svg v-else class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        {{ isAnimationPlaying ? 'Pausar' : 'Play' }}
+      </button>
+    </div>
+
+    <div v-else class="flex items-center">
+      <button
+        @click="emit('toggle-recording')"
+        :class="[
+          'flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors',
+          isRecording
+            ? 'text-red-400 bg-red-500/20 hover:bg-red-500/30 animate-pulse'
+            : 'text-red-400 bg-red-500/10 hover:bg-red-500/20'
+        ]"
+        :title="isRecording ? 'Detener grabación' : 'Grabar escena'"
+      >
+        <!-- Stop icon -->
+        <svg v-if="isRecording" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="12" height="12" rx="1"/>
+        </svg>
+        <!-- Record icon -->
+        <svg v-else class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="6"/>
+        </svg>
+        {{ isRecording ? 'Detener' : 'Grabar' }}
+      </button>
     </div>
 
     <div class="w-px h-6 bg-neutral-800"></div>

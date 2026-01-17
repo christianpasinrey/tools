@@ -10,6 +10,9 @@ const playground = useThreePlayground()
 const canvasContainer = ref(null)
 const fileInput = ref(null)
 const isPresetActive = ref(false)
+const isAnimationPlaying = ref(true)
+const isRecording = ref(false)
+const recordedKeyframes = ref([])
 
 // Computed
 const hasObjects = computed(() => playground.objects.value.length > 0)
@@ -21,6 +24,28 @@ watch(isPresetActive, () => {
     window.dispatchEvent(new Event('resize'))
   })
 })
+
+// Animation control
+const toggleAnimation = () => {
+  isAnimationPlaying.value = !isAnimationPlaying.value
+  playground.setAnimationPaused(!isAnimationPlaying.value)
+}
+
+// Recording control
+const toggleRecording = () => {
+  if (!isRecording.value) {
+    // Start recording
+    isRecording.value = true
+    recordedKeyframes.value = []
+  } else {
+    // Stop recording and save
+    isRecording.value = false
+    if (recordedKeyframes.value.length > 0) {
+      console.log('Recorded keyframes:', recordedKeyframes.value)
+      // TODO: Could export or save the recording
+    }
+  }
+}
 
 // Keyboard shortcuts
 const handleKeydown = (e) => {
@@ -236,6 +261,11 @@ onUnmounted(() => {
       :environment-presets="playground.ENVIRONMENT_PRESETS"
       :material-presets="playground.MATERIAL_PRESETS"
       :is-importing="playground.isImporting.value"
+      :is-preset-active="isPresetActive"
+      :is-animation-playing="isAnimationPlaying"
+      :is-recording="isRecording"
+      @toggle-animation="toggleAnimation"
+      @toggle-recording="toggleRecording"
       @add-shape="(shape) => { isPresetActive = false; playground.addShape(shape) }"
       @add-spotlight="() => { isPresetActive = false; playground.addSpotlight() }"
       @add-pointlight="() => { isPresetActive = false; playground.addPointLight() }"
