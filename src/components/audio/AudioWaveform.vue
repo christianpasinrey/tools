@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, onUnmounted } from 'vue'
 
 const props = defineProps({
   isLoading: Boolean,
@@ -9,12 +9,17 @@ const props = defineProps({
   regionEnd: Number,
   currentTime: Number,
   duration: Number,
-  isDragging: Boolean
+  isDragging: Boolean,
+  isPlaying: Boolean,
+  themeColor: String,
+  getFrequencyData: Function
 })
 
 const emit = defineEmits(['drop', 'dragover', 'dragleave', 'click', 'containerReady'])
 
 const waveformContainer = ref(null)
+const frequencyCanvas = ref(null)
+let animationId = null
 
 const formatTime = (seconds) => {
   if (!seconds || isNaN(seconds)) return '00:00:000'
@@ -23,6 +28,65 @@ const formatTime = (seconds) => {
   const ms = Math.floor((seconds % 1) * 1000)
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}:${ms.toString().padStart(3, '0')}`
 }
+
+// Frequency visualizer animation
+const drawFrequency = () => {
+  if (!frequencyCanvas.value || !props.getFrequencyData) return
+
+  const canvas = frequencyCanvas.value
+  const ctx = canvas.getContext('2d')
+  const data = props.getFrequencyData()
+
+  if (!data) return
+
+  // Set canvas size
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio
+  canvas.height = canvas.offsetHeight * window.devicePixelRatio
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
+
+  const width = canvas.offsetWidth
+  const height = canvas.offsetHeight
+
+  ctx.clearRect(0, 0, width, height)
+
+  // Draw bars
+  const barCount = 64
+  const barWidth = width / barCount - 2
+  const step = Math.floor(data.length / barCount)
+
+  ctx.fillStyle = props.themeColor || '#22c55e'
+
+  for (let i = 0; i < barCount; i++) {
+    const value = data[i * step] / 255
+    const barHeight = value * height * 0.9
+    const x = i * (barWidth + 2)
+    const y = height - barHeight
+
+    ctx.fillRect(x, y, barWidth, barHeight)
+  }
+
+  if (props.isPlaying) {
+    animationId = requestAnimationFrame(drawFrequency)
+  }
+}
+
+// Watch isPlaying to start/stop animation
+watch(
+  () => props.isPlaying,
+  (playing) => {
+    if (playing) {
+      drawFrequency()
+    } else if (animationId) {
+      cancelAnimationFrame(animationId)
+      animationId = null
+      // Clear canvas when stopped
+      if (frequencyCanvas.value) {
+        const ctx = frequencyCanvas.value.getContext('2d')
+        ctx.clearRect(0, 0, frequencyCanvas.value.width, frequencyCanvas.value.height)
+      }
+    }
+  }
+)
 
 // When hasFile becomes true, emit container
 watch(
@@ -37,6 +101,10 @@ watch(
   },
   { immediate: true }
 )
+
+onUnmounted(() => {
+  if (animationId) cancelAnimationFrame(animationId)
+})
 
 defineExpose({
   getContainer: () => waveformContainer.value
@@ -95,6 +163,11 @@ defineExpose({
         <div v-if="!hasSelection && !isLoading" class="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-neutral-900/90 rounded text-[10px] text-neutral-600 z-10 pointer-events-none">
           Click and drag to select region
         </div>
+      </div>
+
+      <!-- Frequency Visualizer (only when playing) -->
+      <div v-show="isPlaying" class="h-20 bg-neutral-900/80 border-b border-neutral-800 shrink-0">
+        <canvas ref="frequencyCanvas" class="w-full h-full"></canvas>
       </div>
 
       <!-- Timeline -->
