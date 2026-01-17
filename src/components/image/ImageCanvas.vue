@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 
 const props = defineProps({
   hasFile: Boolean,
@@ -21,12 +21,19 @@ const cropDragging = ref(null) // 'move' | 'nw' | 'ne' | 'sw' | 'se' | 'n' | 's'
 const cropStart = ref({ x: 0, y: 0 })
 const cropRectStart = ref({ x: 0, y: 0, width: 0, height: 0 })
 
-onMounted(async () => {
-  await nextTick()
-  if (canvasRef.value) {
-    emit('canvas-ready', canvasRef.value)
-  }
-})
+// Watch for canvas to appear when hasFile becomes true
+watch(
+  () => props.hasFile,
+  async (hasFile) => {
+    if (hasFile) {
+      await nextTick()
+      if (canvasRef.value) {
+        emit('canvas-ready', canvasRef.value)
+      }
+    }
+  },
+  { immediate: true }
+)
 
 // Crop handlers
 const getMousePos = (e) => {

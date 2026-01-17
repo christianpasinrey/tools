@@ -4,6 +4,7 @@ import { useImageEditor } from '../composables/useImageEditor'
 import ImageToolbar from '../components/image/ImageToolbar.vue'
 import ImageCanvas from '../components/image/ImageCanvas.vue'
 import ImageSidebar from '../components/image/ImageSidebar.vue'
+import ImageHistory from '../components/image/ImageHistory.vue'
 
 const editor = useImageEditor()
 const fileInput = ref(null)
@@ -48,6 +49,10 @@ const onCanvasReady = (canvas) => {
   editor.initCanvas(canvas)
   if (editor.originalImage.value) {
     editor.renderImage()
+    // Save initial state to history if empty
+    if (editor.history.value.length === 0) {
+      editor.saveToHistory()
+    }
   }
 }
 
@@ -161,7 +166,7 @@ const doExport = () => {
       @cancel-crop="editor.cancelCrop"
       @filter="(f) => editor.applyFilter(f)"
       @apply-adjustments="editor.applyAdjustments"
-      @reset="editor.resetAdjustments(); editor.renderImage()"
+      @reset="editor.resetToOriginal"
       @zoom="(v) => editor.setZoom(v)"
       @color-change="editor.setThemeColor"
     />

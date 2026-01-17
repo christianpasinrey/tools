@@ -71,17 +71,15 @@ export function useImageEditor() {
           imageWidth.value = img.width
           imageHeight.value = img.height
 
-          // Reset adjustments
+          // Reset adjustments and zoom for new file
           resetAdjustments()
+          zoom.value = 1
 
           // Clear history
           history.value = []
           historyIndex.value = -1
 
-          // Draw and save initial state
-          renderImage()
-          saveToHistory()
-
+          // Note: renderImage will be called when canvas is ready
           isLoading.value = false
           resolve()
         }
@@ -99,7 +97,7 @@ export function useImageEditor() {
     })
   }
 
-  // Reset all adjustments
+  // Reset all adjustments (zoom is view-only, not reset here)
   const resetAdjustments = () => {
     brightness.value = 0
     contrast.value = 0
@@ -113,7 +111,6 @@ export function useImageEditor() {
     rotation.value = 0
     flipH.value = false
     flipV.value = false
-    zoom.value = 1
   }
 
   // Render image with current adjustments
@@ -431,6 +428,23 @@ export function useImageEditor() {
     img.src = tempCanvas.toDataURL('image/png')
   }
 
+  // Generate thumbnail from canvas
+  const generateThumbnail = (sourceCanvas, maxSize = 80) => {
+    const w = sourceCanvas.width
+    const h = sourceCanvas.height
+    const scale = Math.min(maxSize / w, maxSize / h)
+    const thumbW = Math.floor(w * scale)
+    const thumbH = Math.floor(h * scale)
+
+    const thumbCanvas = document.createElement('canvas')
+    thumbCanvas.width = thumbW
+    thumbCanvas.height = thumbH
+    const thumbCtx = thumbCanvas.getContext('2d')
+    thumbCtx.drawImage(sourceCanvas, 0, 0, thumbW, thumbH)
+
+    return thumbCanvas.toDataURL('image/jpeg', 0.7)
+  }
+
   // History management
   const saveToHistory = () => {
     if (!canvas.value) return
@@ -440,9 +454,10 @@ export function useImageEditor() {
       history.value = history.value.slice(0, historyIndex.value + 1)
     }
 
-    // Save current state
+    // Save current state with thumbnail
     const state = {
       imageData: canvas.value.toDataURL('image/png'),
+      thumbnail: generateThumbnail(canvas.value),
       width: canvas.value.width,
       height: canvas.value.height
     }
@@ -484,6 +499,20 @@ export function useImageEditor() {
     img.src = state.imageData
   }
 
+  // Reset to original (first history state)
+  const resetToOriginal = () => {
+    if (history.value.length === 0) return
+    historyIndex.value = 0
+    restoreFromHistory()
+  }
+
+  // Restore from specific index
+  const restoreFromIndex = (index) => {
+    if (index < 0 || index >= history.value.length) return
+    historyIndex.value = index
+    restoreFromHistory()
+  }
+
   // Export
   const exportImage = (format = 'png', quality = 0.92) => {
     if (!canvas.value) return
@@ -515,6 +544,7 @@ export function useImageEditor() {
     history.value = []
     historyIndex.value = -1
     resetAdjustments()
+    zoom.value = 1
     if (canvas.value && ctx.value) {
       ctx.value.clearRect(0, 0, canvas.value.width, canvas.value.height)
     }
@@ -573,6 +603,9 @@ export function useImageEditor() {
     applyFilter,
     undo,
     redo,
+    saveToHistory,
+    resetToOriginal,
+    restoreFromIndex,
     exportImage,
     setZoom,
     setThemeColor,
