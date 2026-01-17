@@ -81,7 +81,7 @@ const adjustmentControls = [
     </div>
 
     <!-- Adjustments -->
-    <div class="flex-1 overflow-y-auto">
+    <div class="flex-1 overflow-y-auto scrollbar-thin">
       <div class="px-3 py-2">
         <h3 class="text-neutral-500 text-[10px] uppercase tracking-wider mb-3">Ajustes</h3>
 

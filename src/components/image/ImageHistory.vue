@@ -9,7 +9,7 @@ const emit = defineEmits(['restore'])
 </script>
 
 <template>
-  <div class="h-24 bg-neutral-900 border-t border-neutral-800 flex items-center gap-2 px-3 overflow-x-auto shrink-0">
+  <div class="h-24 bg-neutral-900 border-t border-neutral-800 flex items-center gap-2 px-3 overflow-x-auto shrink-0 scrollbar-thin scrollbar-accent">
     <span class="text-neutral-600 text-[10px] uppercase tracking-wider shrink-0">Historial</span>
 
     <div class="flex items-center gap-2 py-2">

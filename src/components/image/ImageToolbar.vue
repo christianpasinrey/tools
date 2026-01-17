@@ -7,19 +7,24 @@ const props = defineProps({
   canRedo: Boolean,
   zoom: Number,
   themeColor: String,
-  isCropping: Boolean
+  isCropping: Boolean,
+  isPainting: Boolean,
+  brushColor: String,
+  brushSize: Number
 })
 
 const emit = defineEmits([
   'open', 'export', 'undo', 'redo',
   'rotate-left', 'rotate-right', 'flip-h', 'flip-v',
   'crop', 'apply-crop', 'cancel-crop',
+  'paint', 'stop-paint', 'brush-color', 'brush-size', 'eyedropper',
   'filter', 'apply-adjustments', 'reset',
   'zoom', 'color-change'
 ])
 
 const showFilters = ref(false)
 const showColors = ref(false)
+const showBrushSettings = ref(false)
 
 const colors = [
   '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899',
@@ -90,7 +95,7 @@ const filters = [
     </div>
 
     <!-- Transform Tools -->
-    <div v-if="hasFile && !isCropping" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
+    <div v-if="hasFile && !isCropping && !isPainting" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="emit('rotate-left')"
         class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
@@ -136,6 +141,15 @@ const filters = [
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 3v3M3 7h3m0 0v10a2 2 0 002 2h10m-12-12h12a2 2 0 012 2v10m0-12h3m-3 0V3m0 18v-3"/>
         </svg>
       </button>
+      <button
+        @click="emit('paint')"
+        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        title="Pintar"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+        </svg>
+      </button>
     </div>
 
     <!-- Crop Actions -->
@@ -161,8 +175,71 @@ const filters = [
       </button>
     </div>
 
+    <!-- Paint Actions -->
+    <div v-if="isPainting" class="flex items-center gap-2 pr-2 border-r border-neutral-800">
+      <!-- Color picker with preview -->
+      <div class="relative">
+        <button
+          @click="showBrushSettings = !showBrushSettings"
+          class="flex items-center gap-1.5 px-2 py-1.5 rounded text-xs font-medium transition-colors bg-neutral-800 hover:bg-neutral-700"
+          title="Color del pincel"
+        >
+          <div class="w-4 h-4 rounded border border-neutral-600" :style="{ backgroundColor: brushColor }"></div>
+          <svg class="w-3 h-3 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+
+        <!-- Brush Settings Dropdown -->
+        <div v-if="showBrushSettings" class="absolute top-full left-0 mt-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl z-50 w-48">
+          <div class="mb-3">
+            <label class="text-neutral-400 text-[10px] uppercase tracking-wider mb-2 block">Color</label>
+            <input
+              type="color"
+              :value="brushColor"
+              @input="emit('brush-color', $event.target.value)"
+              class="w-full h-8 rounded cursor-pointer bg-transparent border-0"
+            />
+          </div>
+          <div>
+            <label class="text-neutral-400 text-[10px] uppercase tracking-wider mb-2 block">Tamaño: {{ brushSize }}px</label>
+            <input
+              type="range"
+              min="1"
+              max="50"
+              :value="brushSize"
+              @input="emit('brush-size', parseInt($event.target.value))"
+              class="w-full h-1 bg-neutral-700 rounded appearance-none cursor-pointer"
+              :style="{ accentColor: brushColor }"
+            />
+          </div>
+        </div>
+      </div>
+
+      <button
+        @click="emit('eyedropper')"
+        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        title="Cuentagotas - Seleccionar color de la imagen"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a2 2 0 01-2-2v-1l7-7 3 3-7 7H7zm10-14l-3-3 1.5-1.5a2.12 2.12 0 013 3L17 7z"/>
+        </svg>
+      </button>
+
+      <button
+        @click="emit('stop-paint')"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
+        :style="{ backgroundColor: themeColor + '20', color: themeColor }"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>
+        </svg>
+        Listo
+      </button>
+    </div>
+
     <!-- Filters -->
-    <div v-if="hasFile && !isCropping" class="flex items-center gap-1 pr-2 border-r border-neutral-800 relative">
+    <div v-if="hasFile && !isCropping && !isPainting" class="flex items-center gap-1 pr-2 border-r border-neutral-800 relative">
       <button
         @click="showFilters = !showFilters"
         :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', showFilters ? 'bg-neutral-800 text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800']"
@@ -187,7 +264,7 @@ const filters = [
     </div>
 
     <!-- Actions -->
-    <div v-if="hasFile && !isCropping" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
+    <div v-if="hasFile && !isCropping && !isPainting" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="emit('apply-adjustments')"
         class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"

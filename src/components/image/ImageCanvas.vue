@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, computed } from 'vue'
 
 const props = defineProps({
   hasFile: Boolean,
@@ -8,13 +8,29 @@ const props = defineProps({
   zoom: Number,
   themeColor: String,
   isCropping: Boolean,
-  cropRect: Object
+  cropRect: Object,
+  isPainting: Boolean,
+  isEyedropping: Boolean,
+  eyedropperPreview: Object
 })
 
-const emit = defineEmits(['drop', 'dragover', 'dragleave', 'click', 'canvas-ready', 'crop-update'])
+const emit = defineEmits([
+  'drop', 'dragover', 'dragleave', 'click', 'canvas-ready', 'crop-update',
+  'draw-start', 'draw-move', 'draw-end',
+  'eyedropper-move', 'eyedropper-pick'
+])
 
 const canvasRef = ref(null)
 const containerRef = ref(null)
+const canvasWrapperRef = ref(null)
+
+// Cursor style
+const cursorStyle = computed(() => {
+  if (props.isEyedropping) return 'crosshair'
+  if (props.isPainting) return 'crosshair'
+  if (props.isCropping) return 'default'
+  return 'default'
+})
 
 // Crop dragging state
 const cropDragging = ref(null) // 'move' | 'nw' | 'ne' | 'sw' | 'se' | 'n' | 's' | 'e' | 'w'
@@ -117,12 +133,65 @@ const stopCropDrag = () => {
   window.removeEventListener('mousemove', onCropDrag)
   window.removeEventListener('mouseup', stopCropDrag)
 }
+
+// Drawing/Painting handlers
+const getCanvasCoords = (e) => {
+  if (!canvasWrapperRef.value || !canvasRef.value) return null
+  const rect = canvasWrapperRef.value.getBoundingClientRect()
+  const x = (e.clientX - rect.left) / props.zoom
+  const y = (e.clientY - rect.top) / props.zoom
+  return {
+    x: Math.max(0, Math.min(canvasRef.value.width, x)),
+    y: Math.max(0, Math.min(canvasRef.value.height, y)),
+    screenX: e.clientX,
+    screenY: e.clientY
+  }
+}
+
+const onCanvasMouseDown = (e) => {
+  const coords = getCanvasCoords(e)
+  if (!coords) return
+
+  if (props.isEyedropping) {
+    emit('eyedropper-pick', coords.x, coords.y)
+  } else if (props.isPainting) {
+    emit('draw-start', coords.x, coords.y)
+    window.addEventListener('mousemove', onCanvasMouseMove)
+    window.addEventListener('mouseup', onCanvasMouseUp)
+  }
+}
+
+const onCanvasMouseMove = (e) => {
+  const coords = getCanvasCoords(e)
+  if (!coords) return
+
+  if (props.isEyedropping) {
+    emit('eyedropper-move', coords.x, coords.y, coords.screenX, coords.screenY)
+  } else if (props.isPainting) {
+    emit('draw-move', coords.x, coords.y)
+  }
+}
+
+const onCanvasMouseUp = () => {
+  emit('draw-end')
+  window.removeEventListener('mousemove', onCanvasMouseMove)
+  window.removeEventListener('mouseup', onCanvasMouseUp)
+}
+
+const onCanvasHover = (e) => {
+  if (props.isEyedropping) {
+    const coords = getCanvasCoords(e)
+    if (coords) {
+      emit('eyedropper-move', coords.x, coords.y, coords.screenX, coords.screenY)
+    }
+  }
+}
 </script>
 
 <template>
   <div
     ref="containerRef"
-    class="flex-1 relative bg-neutral-900/50 border-y border-neutral-800 overflow-auto"
+    class="flex-1 relative bg-neutral-900/50 border-y border-neutral-800 overflow-auto scrollbar-thin"
     @dragover.prevent="emit('dragover')"
     @dragleave="emit('dragleave')"
     @drop.prevent="emit('drop', $event)"
@@ -146,6 +215,7 @@ const stopCropDrag = () => {
     <div v-else class="absolute inset-0 flex items-center justify-center p-4">
       <!-- Checkered background -->
       <div
+        ref="canvasWrapperRef"
         class="relative shadow-2xl"
         :style="{
           transform: `scale(${zoom})`,
@@ -153,10 +223,13 @@ const stopCropDrag = () => {
           backgroundImage: 'linear-gradient(45deg, #262626 25%, transparent 25%), linear-gradient(-45deg, #262626 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #262626 75%), linear-gradient(-45deg, transparent 75%, #262626 75%)',
           backgroundSize: '20px 20px',
           backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
-          backgroundColor: '#171717'
+          backgroundColor: '#171717',
+          cursor: cursorStyle
         }"
+        @mousedown="onCanvasMouseDown"
+        @mousemove="onCanvasHover"
       >
-        <canvas ref="canvasRef" class="block"></canvas>
+        <canvas ref="canvasRef" class="block pointer-events-none"></canvas>
 
         <!-- Crop Overlay -->
         <div v-if="isCropping" class="absolute inset-0">
@@ -236,6 +309,25 @@ const stopCropDrag = () => {
           <div class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" :style="{ borderColor: themeColor }"></div>
           <span class="text-neutral-400 text-sm">Cargando imagen...</span>
         </div>
+      </div>
+    </div>
+
+    <!-- Eyedropper Preview (floating) -->
+    <div
+      v-if="eyedropperPreview?.visible"
+      class="fixed pointer-events-none z-50 flex items-center gap-2 px-2 py-1.5 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl"
+      :style="{
+        left: (eyedropperPreview.x + 20) + 'px',
+        top: (eyedropperPreview.y - 40) + 'px'
+      }"
+    >
+      <div
+        class="w-8 h-8 rounded border-2 border-white shadow-inner"
+        :style="{ backgroundColor: eyedropperPreview.color }"
+      ></div>
+      <div class="text-xs">
+        <div class="text-white font-mono">{{ eyedropperPreview.color?.toUpperCase() }}</div>
+        <div class="text-neutral-500 text-[10px]">Click para seleccionar</div>
       </div>
     </div>
   </div>

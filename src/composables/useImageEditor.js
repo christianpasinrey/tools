@@ -33,6 +33,15 @@ export function useImageEditor() {
   const isCropping = ref(false)
   const cropRect = ref({ x: 0, y: 0, width: 0, height: 0 })
 
+  // Drawing state
+  const isDrawing = ref(false)
+  const isPainting = ref(false)
+  const isEyedropping = ref(false)
+  const brushColor = ref('#ff0000')
+  const brushSize = ref(5)
+  const lastPoint = ref(null)
+  const eyedropperPreview = ref({ x: 0, y: 0, color: '#000000', visible: false })
+
   // History
   const history = ref([])
   const historyIndex = ref(-1)
@@ -347,6 +356,112 @@ export function useImageEditor() {
     isCropping.value = false
   }
 
+  // Drawing/Painting
+  const startPaintMode = () => {
+    isPainting.value = true
+    isCropping.value = false
+  }
+
+  const stopPaintMode = () => {
+    isPainting.value = false
+    // Save the drawing when exiting paint mode
+    if (canvas.value) {
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = canvas.value.width
+      tempCanvas.height = canvas.value.height
+      const tempCtx = tempCanvas.getContext('2d')
+      tempCtx.drawImage(canvas.value, 0, 0)
+
+      const img = new Image()
+      img.onload = () => {
+        originalImage.value = img
+        resetAdjustments()
+        renderImage()
+        saveToHistory()
+      }
+      img.src = tempCanvas.toDataURL('image/png')
+    }
+  }
+
+  const setBrushColor = (color) => {
+    brushColor.value = color
+  }
+
+  const setBrushSize = (size) => {
+    brushSize.value = size
+  }
+
+  const startDrawing = (x, y) => {
+    if (!isPainting.value || !ctx.value) return
+    isDrawing.value = true
+    lastPoint.value = { x, y }
+
+    // Draw initial dot
+    const c = ctx.value
+    c.fillStyle = brushColor.value
+    c.beginPath()
+    c.arc(x, y, brushSize.value / 2, 0, Math.PI * 2)
+    c.fill()
+  }
+
+  const draw = (x, y) => {
+    if (!isDrawing.value || !isPainting.value || !ctx.value || !lastPoint.value) return
+
+    const c = ctx.value
+    c.strokeStyle = brushColor.value
+    c.lineWidth = brushSize.value
+    c.lineCap = 'round'
+    c.lineJoin = 'round'
+
+    c.beginPath()
+    c.moveTo(lastPoint.value.x, lastPoint.value.y)
+    c.lineTo(x, y)
+    c.stroke()
+
+    lastPoint.value = { x, y }
+  }
+
+  const stopDrawing = () => {
+    isDrawing.value = false
+    lastPoint.value = null
+  }
+
+  // Eyedropper
+  const startEyedropper = () => {
+    isEyedropping.value = true
+  }
+
+  const stopEyedropper = () => {
+    isEyedropping.value = false
+    eyedropperPreview.value.visible = false
+  }
+
+  const updateEyedropperPreview = (x, y, screenX, screenY) => {
+    if (!isEyedropping.value || !ctx.value || !canvas.value) return
+
+    // Get pixel color
+    const pixel = ctx.value.getImageData(x, y, 1, 1).data
+    const color = `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
+
+    eyedropperPreview.value = {
+      x: screenX,
+      y: screenY,
+      color,
+      visible: true,
+      imageX: x,
+      imageY: y
+    }
+  }
+
+  const pickColor = (x, y) => {
+    if (!ctx.value || !canvas.value) return
+
+    const pixel = ctx.value.getImageData(x, y, 1, 1).data
+    const color = `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
+    brushColor.value = color
+    stopEyedropper()
+  }
+
   // Filters
   const applyFilter = (filterName) => {
     if (!canvas.value || !ctx.value) return
@@ -567,6 +682,14 @@ export function useImageEditor() {
     isCropping,
     cropRect,
 
+    // Drawing
+    isPainting,
+    isDrawing,
+    isEyedropping,
+    brushColor,
+    brushSize,
+    eyedropperPreview,
+
     // Adjustments
     brightness,
     contrast,
@@ -600,6 +723,17 @@ export function useImageEditor() {
     startCrop,
     applyCrop,
     cancelCrop,
+    startPaintMode,
+    stopPaintMode,
+    setBrushColor,
+    setBrushSize,
+    startDrawing,
+    draw,
+    stopDrawing,
+    startEyedropper,
+    stopEyedropper,
+    updateEyedropperPreview,
+    pickColor,
     applyFilter,
     undo,
     redo,
