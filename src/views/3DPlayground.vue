@@ -292,66 +292,55 @@ const loadPreset = (presetId) => {
       }
       break
     case 'waves':
-      // Animated wave mesh - like ocean surface
-      const waveSegments = 100
-      const waveSize = 20
-      const waveGeometry = new THREE.PlaneGeometry(waveSize, waveSize, waveSegments, waveSegments)
+      // Ocean-like animated wave surface
+      const waveGeo = new THREE.PlaneGeometry(20, 20, 80, 80)
+      waveGeo.rotateX(-Math.PI / 2)
 
-      // Rotate to be horizontal (XZ plane)
-      waveGeometry.rotateX(-Math.PI / 2)
-
-      // Store original X and Z positions for wave calculation
-      const positions = waveGeometry.attributes.position
-      const waveData = []
-      for (let i = 0; i < positions.count; i++) {
-        waveData.push({
-          x: positions.getX(i),
-          z: positions.getZ(i),
-          originalY: positions.getY(i)
+      // Store grid coordinates for wave calculation
+      const wavePositions = waveGeo.attributes.position
+      const gridCoords = []
+      for (let i = 0; i < wavePositions.count; i++) {
+        gridCoords.push({
+          x: wavePositions.getX(i),
+          z: wavePositions.getZ(i)
         })
       }
 
-      const waveMaterial = new THREE.MeshStandardMaterial({
-        color: new THREE.Color('#22c55e'),
+      const waveMat = new THREE.MeshStandardMaterial({
+        color: 0x22c55e,
         metalness: 0.3,
-        roughness: 0.4,
+        roughness: 0.6,
         side: THREE.DoubleSide,
-        wireframe: true,
-        wireframeLinewidth: 1
+        wireframe: true
       })
 
-      const waveMesh = new THREE.Mesh(waveGeometry, waveMaterial)
-      waveMesh.position.y = 0
+      const waveMesh = new THREE.Mesh(waveGeo, waveMat)
 
       waveMesh.userData = {
         type: 'waves',
         id: Date.now(),
         isUserObject: true,
-        waveData: waveData,
-        animate: (time, obj) => {
-          const pos = obj.geometry.attributes.position
-          const data = obj.userData.waveData
+        gridCoords: gridCoords,
+        animate: (t, mesh) => {
+          const pos = mesh.geometry.attributes.position
+          const coords = mesh.userData.gridCoords
 
           for (let i = 0; i < pos.count; i++) {
-            const { x, z } = data[i]
-
-            // Multiple wave layers for realistic ocean effect
-            const wave1 = Math.sin(x * 0.3 + time * 2) * 0.5
-            const wave2 = Math.sin(z * 0.4 + time * 1.5) * 0.4
-            const wave3 = Math.sin((x + z) * 0.2 + time * 1.2) * 0.3
-            const wave4 = Math.cos(x * 0.5 - time * 1.8) * Math.sin(z * 0.5 + time) * 0.2
-
-            const height = wave1 + wave2 + wave3 + wave4
-            pos.setY(i, height)
+            const { x, z } = coords[i]
+            const y = Math.sin(x * 0.5 + t * 2) * Math.cos(z * 0.5 + t * 1.5) * 1.2
+            pos.setY(i, y)
           }
 
           pos.needsUpdate = true
-          obj.geometry.computeVertexNormals()
+          mesh.geometry.computeVertexNormals()
         }
       }
 
       playground.scene.value.add(waveMesh)
       playground.objects.value = [...playground.objects.value, waveMesh]
+      console.log('Waves mesh created:', waveMesh)
+      console.log('Total vertices:', waveGeo.attributes.position.count)
+      console.log('Objects in scene:', playground.objects.value.length)
       break
   }
 }
