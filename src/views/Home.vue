@@ -22,10 +22,10 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/gif-maker',
-    name: 'GIF Maker',
-    description: 'Crea GIFs desde videos o imágenes. Control de FPS y optimización de tamaño.',
-    icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z',
+    path: '/3d-playground',
+    name: '3D Playground',
+    description: 'Experimenta con gráficos 3D, shaders y visualizaciones interactivas.',
+    icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
     status: 'coming'
   }
 ]
