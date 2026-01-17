@@ -156,12 +156,25 @@ export function useThreePlayground() {
 
   // Clear all objects
   const clearScene = () => {
-    if (!scene) return
+    if (!scene) {
+      console.log('No scene to clear')
+      return
+    }
 
-    console.log('Clearing scene, objects:', objects.value.length)
+    console.log('Clearing scene, objects array:', objects.value.length)
+    console.log('Scene children before:', scene.children.length)
 
-    // Remove each object from scene
-    objects.value.forEach(obj => {
+    // Remove user objects from scene (keep lights and grid)
+    const toRemove = []
+    scene.children.forEach(child => {
+      if (child.userData && child.userData.id) {
+        toRemove.push(child)
+      }
+    })
+
+    console.log('Objects to remove from scene:', toRemove.length)
+
+    toRemove.forEach(obj => {
       scene.remove(obj)
       if (obj.geometry) obj.geometry.dispose()
       if (obj.material) {
@@ -175,7 +188,9 @@ export function useThreePlayground() {
 
     // Clear the array
     objects.value = []
-    console.log('After clear, objects:', objects.value.length)
+
+    console.log('Scene children after:', scene.children.length)
+    console.log('Objects array after:', objects.value.length)
   }
 
   // Load preset scene
