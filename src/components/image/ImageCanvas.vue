@@ -199,16 +199,20 @@ const onCanvasHover = (e) => {
     <!-- Empty State -->
     <div
       v-if="!hasFile"
-      @click="emit('click')"
-      :class="['absolute inset-0 flex flex-col items-center justify-center cursor-pointer transition-colors', isDragging ? 'bg-green-500/5' : 'hover:bg-neutral-900/50']"
+      class="absolute inset-0 p-4"
     >
-      <div class="w-16 h-16 rounded-lg bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-4">
-        <svg class="w-7 h-7 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-        </svg>
+      <div
+        @click="emit('click')"
+        :class="['h-full flex flex-col items-center justify-center cursor-pointer transition-colors rounded-lg border-2 border-dashed bg-neutral-900/50', isDragging ? 'border-green-500/50 bg-green-500/5' : 'border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50']"
+      >
+        <div class="w-16 h-16 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center mb-4">
+          <svg class="w-7 h-7 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <p class="text-neutral-400 text-sm mb-1">Arrastra una imagen aquí</p>
+        <p class="text-neutral-600 text-xs">JPG, PNG, GIF, WebP, BMP</p>
       </div>
-      <p class="text-neutral-400 text-sm mb-1">Drop image file here</p>
-      <p class="text-neutral-600 text-xs">JPG, PNG, GIF, WebP, BMP</p>
     </div>
 
     <!-- Canvas Container -->

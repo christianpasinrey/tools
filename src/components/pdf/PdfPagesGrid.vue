@@ -59,15 +59,15 @@ const onDragEnd = () => {
     <div
       v-if="!hasFile"
       @click="emit('click')"
-      :class="['h-full flex flex-col items-center justify-center cursor-pointer transition-colors rounded-lg border-2 border-dashed', isDragging ? 'border-green-500/50 bg-green-500/5' : 'border-neutral-800 hover:border-neutral-700 hover:bg-neutral-900/50']"
+      :class="['h-full flex flex-col items-center justify-center cursor-pointer transition-colors rounded-lg border-2 border-dashed bg-neutral-900/50', isDragging ? 'border-green-500/50 bg-green-500/5' : 'border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50']"
     >
-      <div class="w-16 h-16 rounded-lg bg-neutral-900 border border-neutral-800 flex items-center justify-center mb-4">
-        <svg class="w-7 h-7 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="w-16 h-16 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
         </svg>
       </div>
-      <p class="text-neutral-400 text-sm mb-1">Drop PDF file here</p>
-      <p class="text-neutral-600 text-xs">or click to browse</p>
+      <p class="text-neutral-400 text-sm mb-1">Arrastra un PDF aquí</p>
+      <p class="text-neutral-600 text-xs">o haz clic para buscar</p>
     </div>
 
     <!-- Loading State -->
