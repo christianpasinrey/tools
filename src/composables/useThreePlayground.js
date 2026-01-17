@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { TransformControls } from 'three/examples/jsm/controls/TransformControls.js'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 export function useThreePlayground() {
   // Core Three.js objects (not reactive)
@@ -9,11 +8,18 @@ export function useThreePlayground() {
   let camera = null
   let renderer = null
   let orbitControls = null
-  let transformControls = null
   let animationId = null
   let containerEl = null
   let raycaster = null
   let mouse = null
+
+  // Drag state
+  let isDragging = false
+  let dragPlane = null
+  let dragOffset = new THREE.Vector3()
+  let initialRotation = new THREE.Euler()
+  let initialScale = new THREE.Vector3()
+  let dragStart = new THREE.Vector2()
 
   // Reactive state
   const objects = ref([])
@@ -54,13 +60,8 @@ export function useThreePlayground() {
     orbitControls.minDistance = 2
     orbitControls.maxDistance = 50
 
-    // Transform Controls
-    transformControls = new TransformControls(camera, renderer.domElement)
-    transformControls.addEventListener('dragging-changed', (event) => {
-      orbitControls.enabled = !event.value
-    })
-    transformControls.setSize(0.75)
-    scene.add(transformControls.getHelper())
+    // Drag plane for moving objects
+    dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
@@ -112,11 +113,16 @@ export function useThreePlayground() {
 
   // Select an object
   const selectObject = (obj) => {
-    if (!transformControls) return
+    if (!transformControls || !scene) return
 
     selectedObject.value = obj
     transformControls.attach(obj)
     transformControls.setMode(transformMode.value)
+
+    // Add to scene if not already there
+    if (!scene.children.includes(transformControls)) {
+      scene.add(transformControls)
+    }
   }
 
   // Deselect object
@@ -447,7 +453,7 @@ export function useThreePlayground() {
 
     if (transformControls) {
       transformControls.detach()
-      if (scene) scene.remove(transformControls.getHelper())
+      if (scene) scene.remove(transformControls)
       transformControls.dispose()
     }
 
