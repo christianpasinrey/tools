@@ -11,7 +11,8 @@ const props = defineProps({
   isImporting: Boolean,
   isPresetActive: Boolean,
   isAnimationPlaying: Boolean,
-  isRecording: Boolean
+  isRecording: Boolean,
+  savedScenes: Array
 })
 
 const emit = defineEmits([
@@ -19,8 +20,10 @@ const emit = defineEmits([
   'delete-selected', 'duplicate-selected', 'deselect',
   'screenshot', 'export-gltf', 'export-glb', 'import',
   'toggle-bloom', 'environment-change', 'material-change', 'load-preset',
-  'toggle-animation', 'toggle-recording'
+  'toggle-animation', 'toggle-recording', 'load-saved-scene', 'delete-saved-scene'
 ])
+
+const showSavedScenes = ref(false)
 
 const showPresets = ref(false)
 const showShapes = ref(false)
@@ -54,6 +57,7 @@ const closeAllMenus = () => {
   showExport.value = false
   showEnvironment.value = false
   showMaterials.value = false
+  showSavedScenes.value = false
 }
 
 const toggleMenu = (menu) => {
@@ -61,12 +65,14 @@ const toggleMenu = (menu) => {
                   menu === 'shapes' ? showShapes.value :
                   menu === 'export' ? showExport.value :
                   menu === 'environment' ? showEnvironment.value :
+                  menu === 'saved' ? showSavedScenes.value :
                   showMaterials.value
   closeAllMenus()
   if (menu === 'presets') showPresets.value = !current
   else if (menu === 'shapes') showShapes.value = !current
   else if (menu === 'export') showExport.value = !current
   else if (menu === 'environment') showEnvironment.value = !current
+  else if (menu === 'saved') showSavedScenes.value = !current
   else if (menu === 'materials') showMaterials.value = !current
 }
 </script>
@@ -125,7 +131,7 @@ const toggleMenu = (menu) => {
       </button>
     </div>
 
-    <div v-else class="flex items-center">
+    <div v-else class="flex items-center gap-1">
       <button
         @click="emit('toggle-recording')"
         :class="[
@@ -146,6 +152,49 @@ const toggleMenu = (menu) => {
         </svg>
         {{ isRecording ? 'Detener' : 'Grabar' }}
       </button>
+
+      <!-- Saved Scenes dropdown -->
+      <div v-if="savedScenes?.length > 0" class="relative">
+        <button
+          @click="toggleMenu('saved')"
+          class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 transition-colors"
+          title="Escenas guardadas"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
+          </svg>
+          <span>Mis Escenas</span>
+          <span class="bg-blue-500/30 text-blue-300 text-[10px] px-1.5 rounded-full">{{ savedScenes.length }}</span>
+        </button>
+
+        <div v-if="showSavedScenes" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[200px]">
+          <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Escenas Guardadas</div>
+          <div
+            v-for="scene in savedScenes"
+            :key="scene.id"
+            class="flex items-center gap-2 px-2 py-1.5 hover:bg-neutral-800 group"
+          >
+            <button
+              @click="emit('load-saved-scene', scene); closeAllMenus()"
+              class="flex-1 text-left text-xs text-neutral-300 hover:text-white"
+            >
+              <div class="font-medium">{{ scene.name }}</div>
+              <div class="text-[10px] text-neutral-500">
+                {{ scene.objects?.length || 0 }} objetos · {{ scene.duration?.toFixed(1) || 0 }}s · {{ scene.timestamp }}
+              </div>
+            </button>
+            <button
+              @click.stop="emit('delete-saved-scene', scene.id)"
+              class="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-red-500/20 hover:text-red-400 text-neutral-500 transition-all"
+              title="Eliminar"
+            >
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="w-px h-6 bg-neutral-800"></div>

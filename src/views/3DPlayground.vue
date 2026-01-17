@@ -12,7 +12,9 @@ const fileInput = ref(null)
 const isPresetActive = ref(false)
 const isAnimationPlaying = ref(true)
 const isRecording = ref(false)
-const recordedKeyframes = ref([])
+const savedScenes = ref([])  // Stored custom scenes
+const recordingInterval = ref(null)  // Interval for recording keyframes
+const recordedFrames = ref([])  // Frames being recorded
 
 // Computed
 const hasObjects = computed(() => playground.objects.value.length > 0)
@@ -31,20 +33,133 @@ const toggleAnimation = () => {
   playground.setAnimationPaused(!isAnimationPlaying.value)
 }
 
-// Recording control
+// Capture current frame
+const captureFrame = () => {
+  const objects = playground.objects.value
+  if (objects.length === 0) return null
+
+  return objects.map(obj => ({
+    id: obj.userData?.id,
+    type: obj.userData?.type || 'cube',
+    position: { x: obj.position.x, y: obj.position.y, z: obj.position.z },
+    rotation: { x: obj.rotation.x, y: obj.rotation.y, z: obj.rotation.z },
+    scale: { x: obj.scale.x, y: obj.scale.y, z: obj.scale.z },
+    color: obj.material?.color?.getHexString() || '22c55e'
+  }))
+}
+
+// Recording control - captures frames over time
 const toggleRecording = () => {
   if (!isRecording.value) {
     // Start recording
     isRecording.value = true
-    recordedKeyframes.value = []
+    recordedFrames.value = []
+
+    // Capture first frame immediately
+    const firstFrame = captureFrame()
+    if (firstFrame) recordedFrames.value.push(firstFrame)
+
+    // Capture frames every 100ms (10 fps)
+    recordingInterval.value = setInterval(() => {
+      const frame = captureFrame()
+      if (frame) recordedFrames.value.push(frame)
+    }, 100)
   } else {
-    // Stop recording and save
+    // Stop recording
     isRecording.value = false
-    if (recordedKeyframes.value.length > 0) {
-      console.log('Recorded keyframes:', recordedKeyframes.value)
-      // TODO: Could export or save the recording
+    if (recordingInterval.value) {
+      clearInterval(recordingInterval.value)
+      recordingInterval.value = null
     }
+
+    // Save recorded scene if we have frames
+    if (recordedFrames.value.length > 1) {
+      const sceneData = {
+        id: Date.now(),
+        name: `Escena ${savedScenes.value.length + 1}`,
+        timestamp: new Date().toLocaleTimeString(),
+        duration: recordedFrames.value.length * 0.1, // seconds
+        frames: [...recordedFrames.value],
+        // Store first frame for preview
+        objects: recordedFrames.value[0]
+      }
+      savedScenes.value = [...savedScenes.value, sceneData]
+    }
+    recordedFrames.value = []
   }
+}
+
+// Load a saved scene with playback animation
+const loadSavedScene = (scene) => {
+  playground.quickActions.clearScene()
+
+  // Treat saved scenes like presets (show play/pause, hide object list)
+  isPresetActive.value = true
+  isAnimationPlaying.value = true
+  playground.setAnimationPaused(false)
+
+  const frames = scene.frames
+  const duration = scene.duration || frames.length * 0.1
+  const firstFrame = frames[0]
+
+  // Create objects from first frame
+  const createdMeshes = []
+  firstFrame.forEach((objData, index) => {
+    const mesh = playground.addShape(objData.type)
+    if (mesh) {
+      mesh.position.set(objData.position.x, objData.position.y, objData.position.z)
+      mesh.rotation.set(objData.rotation.x, objData.rotation.y, objData.rotation.z)
+      mesh.scale.set(objData.scale.x, objData.scale.y, objData.scale.z)
+      if (mesh.material?.color) {
+        mesh.material.color.setStyle('#' + objData.color)
+      }
+
+      // Add playback animation
+      mesh.userData.frames = frames
+      mesh.userData.frameIndex = index
+      mesh.userData.duration = duration
+      mesh.userData.animate = (time, obj) => {
+        const frameData = obj.userData.frames
+        const idx = obj.userData.frameIndex
+        const dur = obj.userData.duration
+
+        // Loop time
+        const loopTime = time % dur
+        // Calculate frame index (with interpolation)
+        const frameProgress = (loopTime / dur) * (frameData.length - 1)
+        const frameA = Math.floor(frameProgress)
+        const frameB = Math.min(frameA + 1, frameData.length - 1)
+        const t = frameProgress - frameA // Interpolation factor
+
+        const dataA = frameData[frameA]?.[idx]
+        const dataB = frameData[frameB]?.[idx]
+
+        if (dataA && dataB) {
+          // Interpolate position
+          obj.position.x = dataA.position.x + (dataB.position.x - dataA.position.x) * t
+          obj.position.y = dataA.position.y + (dataB.position.y - dataA.position.y) * t
+          obj.position.z = dataA.position.z + (dataB.position.z - dataA.position.z) * t
+
+          // Interpolate rotation
+          obj.rotation.x = dataA.rotation.x + (dataB.rotation.x - dataA.rotation.x) * t
+          obj.rotation.y = dataA.rotation.y + (dataB.rotation.y - dataA.rotation.y) * t
+          obj.rotation.z = dataA.rotation.z + (dataB.rotation.z - dataA.rotation.z) * t
+
+          // Interpolate scale
+          obj.scale.x = dataA.scale.x + (dataB.scale.x - dataA.scale.x) * t
+          obj.scale.y = dataA.scale.y + (dataB.scale.y - dataA.scale.y) * t
+          obj.scale.z = dataA.scale.z + (dataB.scale.z - dataA.scale.z) * t
+        }
+      }
+
+      createdMeshes.push(mesh)
+    }
+  })
+}
+
+// Delete a saved scene
+const deleteSavedScene = (sceneId) => {
+  savedScenes.value = savedScenes.value.filter(s => s.id !== sceneId)
 }
 
 // Keyboard shortcuts
@@ -264,8 +379,11 @@ onUnmounted(() => {
       :is-preset-active="isPresetActive"
       :is-animation-playing="isAnimationPlaying"
       :is-recording="isRecording"
+      :saved-scenes="savedScenes"
       @toggle-animation="toggleAnimation"
       @toggle-recording="toggleRecording"
+      @load-saved-scene="loadSavedScene"
+      @delete-saved-scene="deleteSavedScene"
       @add-shape="(shape) => { isPresetActive = false; playground.addShape(shape) }"
       @add-spotlight="() => { isPresetActive = false; playground.addSpotlight() }"
       @add-pointlight="() => { isPresetActive = false; playground.addPointLight() }"
