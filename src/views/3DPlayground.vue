@@ -109,7 +109,7 @@ onUnmounted(() => {
     />
 
     <!-- Main Content -->
-    <div class="flex-1 flex overflow-hidden">
+    <div class="flex-1 flex overflow-hidden min-h-0">
       <!-- Objects List (left sidebar) -->
       <ThreeObjectsList
         :objects="playground.objects.value"
@@ -191,16 +191,17 @@ onUnmounted(() => {
       </div>
 
       <!-- Properties Panel (right sidebar) -->
-      <div class="w-56 bg-neutral-900 border-l border-neutral-800 shrink-0">
-        <ThreePropertiesPanel
-          v-if="playground.selectedObject.value"
-          :selected-object="playground.selectedObject.value"
-          :material-presets="playground.MATERIAL_PRESETS"
-          :material-properties="playground.getSelectedMaterialProperties.value"
-          @color-change="playground.setSelectedColor"
-          @material-change="playground.applyMaterialToSelected"
-          @material-property-change="(prop, val) => playground.updateSelectedMaterialProperty(prop, val)"
-        />
+      <div class="w-56 bg-neutral-900 border-l border-neutral-800 shrink-0 flex flex-col h-full">
+        <template v-if="playground.selectedObject.value">
+          <ThreePropertiesPanel
+            :selected-object="playground.selectedObject.value"
+            :material-presets="playground.MATERIAL_PRESETS"
+            :material-properties="playground.getSelectedMaterialProperties.value"
+            @color-change="playground.setSelectedColor"
+            @material-change="playground.applyMaterialToSelected"
+            @material-property-change="(prop, val) => playground.updateSelectedMaterialProperty(prop, val)"
+          />
+        </template>
         <div v-else class="p-4 text-xs text-neutral-500 text-center">
           Selecciona un objeto
         </div>

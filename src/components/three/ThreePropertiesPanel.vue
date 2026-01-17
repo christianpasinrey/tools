@@ -88,7 +88,7 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
 </script>
 
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col flex-1 min-h-0">
     <!-- Header -->
     <div class="px-3 py-2 border-b border-neutral-800 flex items-center gap-2 shrink-0">
       <svg v-if="isLight" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
