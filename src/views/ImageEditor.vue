@@ -205,6 +205,15 @@ const doExport = () => {
       />
     </div>
 
+    <!-- History Bar -->
+    <ImageHistory
+      v-if="editor.hasFile.value && editor.history.value.length > 0"
+      :history="editor.history.value"
+      :history-index="editor.historyIndex.value"
+      :theme-color="editor.themeColor.value"
+      @restore="(index) => editor.restoreFromIndex(index)"
+    />
+
     <!-- Hidden File Input -->
     <input
       ref="fileInput"
