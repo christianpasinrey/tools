@@ -60,7 +60,7 @@ export function useThreePlayground() {
       orbitControls.enabled = !event.value
     })
     transformControls.setSize(0.75)
-    scene.add(transformControls)
+    scene.add(transformControls.getHelper())
 
     // Lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
