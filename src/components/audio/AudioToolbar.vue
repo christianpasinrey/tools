@@ -90,6 +90,17 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
       </button>
     </div>
 
+    <!-- Color -->
+    <div v-if="hasFile" class="flex items-center gap-1 px-2 border-r border-neutral-800">
+      <button
+        v-for="color in colors"
+        :key="color"
+        @click="emit('colorChange', color)"
+        :class="['w-4 h-4 rounded-full transition-all', themeColor === color ? 'ring-1 ring-white ring-offset-1 ring-offset-neutral-900' : 'hover:scale-125']"
+        :style="{ backgroundColor: color }"
+      ></button>
+    </div>
+
     <!-- Zoom -->
     <div v-if="hasFile" class="flex items-center gap-2 px-2 ml-auto text-neutral-500">
       <span class="text-[10px] uppercase tracking-wider">Zoom</span>
