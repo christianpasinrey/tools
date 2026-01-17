@@ -139,14 +139,14 @@ export function useThreePlayground() {
   const animate = () => {
     animationId = requestAnimationFrame(animate)
 
-    // Update objects with animation
+    // Update objects with animation (only if not selected)
     objects.value.forEach(obj => {
-      if (obj.userData && obj.userData.animate) {
+      if (obj.userData && obj.userData.animate && obj !== selectedObject.value) {
         obj.userData.animate(obj)
       }
     })
 
-    if (controls) controls.update()
+    if (orbitControls) orbitControls.update()
     if (renderer && scene && camera) {
       renderer.render(scene, camera)
     }
