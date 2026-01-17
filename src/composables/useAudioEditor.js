@@ -20,6 +20,9 @@ export function useAudioEditor() {
   // Theme color
   const themeColor = ref('#22c55e')
 
+  // Visual style
+  const visualStyle = ref('line') // 'line' | 'bars' | 'equalizer'
+
   // History
   const history = shallowRef([])
   const historyIndex = ref(-1)
@@ -270,6 +273,18 @@ export function useAudioEditor() {
     }
   }
 
+  const setVisualStyle = (style) => {
+    visualStyle.value = style
+    if (wavesurfer) {
+      const styleOptions = {
+        line: { barWidth: 0, barGap: 0, barRadius: 0, barAlign: '' },
+        bars: { barWidth: 3, barGap: 2, barRadius: 2, barAlign: '' },
+        equalizer: { barWidth: 3, barGap: 2, barRadius: 0, barAlign: 'bottom' }
+      }
+      wavesurfer.setOptions(styleOptions[style] || styleOptions.line)
+    }
+  }
+
   // Helper to lighten/darken color
   const adjustBrightness = (hex, percent) => {
     const num = parseInt(hex.replace('#', ''), 16)
@@ -494,6 +509,7 @@ export function useAudioEditor() {
     history,
     historyIndex,
     themeColor,
+    visualStyle,
 
     // Computed
     canUndo,
@@ -513,6 +529,7 @@ export function useAudioEditor() {
     setVolume,
     setZoom,
     setThemeColor,
+    setVisualStyle,
     undo,
     redo,
     trimToSelection,
