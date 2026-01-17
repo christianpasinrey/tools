@@ -303,12 +303,13 @@ const loadPreset = (presetId) => {
 
       const waveMaterial = new THREE.MeshStandardMaterial({
         color: new THREE.Color('#22c55e'),
-        metalness: 0.4,
-        roughness: 0.3,
-        side: THREE.DoubleSide
+        metalness: 0.2,
+        roughness: 0.5,
+        side: THREE.DoubleSide,
+        wireframe: true
       })
       const waveMesh = new THREE.Mesh(waveGeometry, waveMaterial)
-      waveMesh.position.y = 0
+      waveMesh.position.y = 1
 
       waveMesh.userData = {
         type: 'waves',
