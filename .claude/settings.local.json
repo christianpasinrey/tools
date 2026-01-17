@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b \"C:\\laragon\\www\\tools\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
