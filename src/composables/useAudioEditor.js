@@ -29,7 +29,6 @@ export function useAudioEditor() {
   let currentBuffer = null
   let wavesurfer = null
   let regionsPlugin = null
-  let minimapInstance = null
 
   // Computed
   const canUndo = computed(() => historyIndex.value > 0)
@@ -104,7 +103,6 @@ export function useAudioEditor() {
     const WaveSurfer = (await import('wavesurfer.js')).default
     const RegionsPlugin = (await import('wavesurfer.js/dist/plugins/regions.js')).default
     const TimelinePlugin = (await import('wavesurfer.js/dist/plugins/timeline.js')).default
-    const MinimapPlugin = (await import('wavesurfer.js/dist/plugins/minimap.js')).default
     const HoverPlugin = (await import('wavesurfer.js/dist/plugins/hover.js')).default
 
     regionsPlugin = RegionsPlugin.create()
@@ -117,14 +115,6 @@ export function useAudioEditor() {
         fontSize: '10px',
         color: '#666'
       }
-    })
-
-    const minimapContainer = container.closest('.flex-col')?.querySelector('.minimap-container')
-    minimapInstance = MinimapPlugin.create({
-      height: 30,
-      waveColor: adjustBrightness(themeColor.value, 20),
-      progressColor: themeColor.value,
-      container: minimapContainer
     })
 
     const hoverPlugin = HoverPlugin.create({
@@ -148,7 +138,7 @@ export function useAudioEditor() {
       minPxPerSec: zoomLevel.value,
       fillParent: false,
       autoScroll: true,
-      plugins: [regionsPlugin, timelinePlugin, minimapInstance, hoverPlugin]
+      plugins: [regionsPlugin, timelinePlugin, hoverPlugin]
     })
 
     const url = URL.createObjectURL(file)
@@ -276,12 +266,6 @@ export function useAudioEditor() {
       wavesurfer.setOptions({
         waveColor: color,
         progressColor: adjustBrightness(color, 30)
-      })
-    }
-    if (minimapInstance) {
-      minimapInstance.setOptions({
-        waveColor: adjustBrightness(color, 20),
-        progressColor: color
       })
     }
   }
