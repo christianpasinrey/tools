@@ -79,8 +79,10 @@ export function useThreePlayground() {
     // Handle resize
     window.addEventListener('resize', handleResize)
 
-    // Handle click for selection
-    renderer.domElement.addEventListener('click', handleClick)
+    // Handle mouse for selection and dragging
+    renderer.domElement.addEventListener('mousedown', handleMouseDown)
+    renderer.domElement.addEventListener('mousemove', handleMouseMove)
+    renderer.domElement.addEventListener('mouseup', handleMouseUp)
     renderer.domElement.addEventListener('dblclick', handleDoubleClick)
 
     isInitialized.value = true
