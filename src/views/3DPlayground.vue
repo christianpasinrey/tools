@@ -226,22 +226,20 @@ const loadPreset = (presetId) => {
       }
       break
     case 'spheres':
-      // Multiple spheres orbiting around center
+      // Multiple spheres orbiting around center (same speed)
       for (let i = 0; i < 5; i++) {
         const sphere = playground.addShape('sphere')
         if (sphere) {
           const startAngle = (i / 5) * Math.PI * 2
           const radius = 3
-          const speed = 0.5 + i * 0.1
 
           sphere.position.set(Math.cos(startAngle) * radius, 0.5, Math.sin(startAngle) * radius)
           sphere.scale.setScalar(1)
 
           sphere.userData.orbitRadius = radius
-          sphere.userData.orbitSpeed = speed
           sphere.userData.startAngle = startAngle
           sphere.userData.animate = (time, obj) => {
-            const angle = obj.userData.startAngle + time * obj.userData.orbitSpeed
+            const angle = obj.userData.startAngle + time * 0.5
             const r = obj.userData.orbitRadius
             obj.position.x = Math.cos(angle) * r
             obj.position.z = Math.sin(angle) * r
