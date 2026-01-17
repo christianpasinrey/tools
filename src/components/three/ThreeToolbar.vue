@@ -104,6 +104,61 @@ const colors = [
 
     <div class="w-px h-6 bg-neutral-800"></div>
 
+    <!-- Transform Mode (when object selected) -->
+    <div v-if="hasSelection" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
+      <button
+        @click="emit('transform-mode', 'translate')"
+        :class="['p-1.5 rounded transition-colors', transformMode === 'translate' ? 'bg-neutral-700 text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800']"
+        title="Mover (G)"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+        </svg>
+      </button>
+      <button
+        @click="emit('transform-mode', 'rotate')"
+        :class="['p-1.5 rounded transition-colors', transformMode === 'rotate' ? 'bg-neutral-700 text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800']"
+        title="Rotar (R)"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+      </button>
+      <button
+        @click="emit('transform-mode', 'scale')"
+        :class="['p-1.5 rounded transition-colors', transformMode === 'scale' ? 'bg-neutral-700 text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800']"
+        title="Escalar (S)"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4"/>
+        </svg>
+      </button>
+
+      <div class="w-px h-4 bg-neutral-700 mx-1"></div>
+
+      <button
+        @click="emit('delete-selected')"
+        class="p-1.5 rounded text-neutral-400 hover:text-red-400 hover:bg-neutral-800 transition-colors"
+        title="Eliminar seleccionado (Supr)"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+      </button>
+
+      <button
+        @click="emit('deselect')"
+        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        title="Deseleccionar (Esc)"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="w-px h-6 bg-neutral-800"></div>
+
     <!-- View Actions -->
     <div class="flex items-center gap-1">
       <button
@@ -112,7 +167,7 @@ const colors = [
         title="Resetear cámara"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l-4 4m0 0l-4-4m4 4V3m0 17a9 9 0 110-18"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12a9 9 0 1018 0 9 9 0 00-18 0zm9-4v4l3 3"/>
         </svg>
         Cámara
       </button>
