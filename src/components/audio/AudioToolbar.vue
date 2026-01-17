@@ -4,15 +4,27 @@ defineProps({
   hasSelection: Boolean,
   canUndo: Boolean,
   canRedo: Boolean,
-  zoomLevel: Number
+  zoomLevel: Number,
+  themeColor: String
 })
 
 const emit = defineEmits([
   'open', 'export', 'undo', 'redo',
   'trim', 'delete', 'silence',
   'fadeIn', 'fadeOut', 'normalize',
-  'zoom'
+  'zoom', 'colorChange'
 ])
+
+const colors = [
+  '#22c55e', // Green
+  '#3b82f6', // Blue
+  '#8b5cf6', // Purple
+  '#ec4899', // Pink
+  '#f97316', // Orange
+  '#eab308', // Yellow
+  '#ef4444', // Red
+  '#06b6d4', // Cyan
+]
 
 const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
 </script>
