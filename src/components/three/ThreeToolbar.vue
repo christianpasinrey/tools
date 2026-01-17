@@ -18,15 +18,18 @@ const showPresets = ref(false)
 const showColors = ref(false)
 
 const shapes = [
-  { id: 'cube', name: 'Cubo' },
-  { id: 'sphere', name: 'Esfera' },
-  { id: 'torus', name: 'Toro' },
-  { id: 'cone', name: 'Cono' },
-  { id: 'cylinder', name: 'Cilindro' },
-  { id: 'tetrahedron', name: 'Tetraedro' },
-  { id: 'octahedron', name: 'Octaedro' },
-  { id: 'dodecahedron', name: 'Dodecaedro' },
-  { id: 'torusKnot', name: 'Nudo Tórico' }
+  { id: 'cube', name: 'Cubo', icon: 'shape' },
+  { id: 'sphere', name: 'Esfera', icon: 'shape' },
+  { id: 'torus', name: 'Toro', icon: 'shape' },
+  { id: 'cone', name: 'Cono', icon: 'shape' },
+  { id: 'cylinder', name: 'Cilindro', icon: 'shape' },
+  { id: 'tetrahedron', name: 'Tetraedro', icon: 'shape' },
+  { id: 'octahedron', name: 'Octaedro', icon: 'shape' },
+  { id: 'dodecahedron', name: 'Dodecaedro', icon: 'shape' },
+  { id: 'torusKnot', name: 'Nudo Tórico', icon: 'shape' },
+  { id: 'divider' },
+  { id: 'spotlight', name: 'Foco', icon: 'light' },
+  { id: 'pointlight', name: 'Luz Puntual', icon: 'light' }
 ]
 
 const presets = [
@@ -90,15 +93,23 @@ const colors = [
         </svg>
       </button>
 
-      <div v-if="showShapes" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[140px]">
-        <button
-          v-for="shape in shapes"
-          :key="shape.id"
-          @click="emit('add-shape', shape.id); showShapes = false"
-          class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors"
-        >
-          {{ shape.name }}
-        </button>
+      <div v-if="showShapes" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
+        <template v-for="shape in shapes" :key="shape.id">
+          <!-- Divider -->
+          <div v-if="shape.id === 'divider'" class="h-px bg-neutral-800 my-1"></div>
+          <!-- Shape/Light button -->
+          <button
+            v-else
+            @click="emit('add-shape', shape.id); showShapes = false"
+            class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+          >
+            <!-- Light icon -->
+            <svg v-if="shape.icon === 'light'" class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7zm2 15h-4v-1h4v1zm0-3h-4v-1h4v1zM9 21a1 1 0 001 1h4a1 1 0 001-1v-1H9v1z"/>
+            </svg>
+            {{ shape.name }}
+          </button>
+        </template>
       </div>
     </div>
 

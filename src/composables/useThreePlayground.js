@@ -70,14 +70,29 @@ export function useThreePlayground() {
     // Drag plane for moving objects
     dragPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+    // Lights - reduced ambient for better spotlight visibility
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3)
     scene.add(ambientLight)
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5)
     directionalLight.position.set(5, 10, 5)
     directionalLight.castShadow = true
+    directionalLight.shadow.mapSize.width = 2048
+    directionalLight.shadow.mapSize.height = 2048
     scene.add(directionalLight)
+
+    // Floor plane to receive shadows and light
+    const floorGeometry = new THREE.PlaneGeometry(20, 20)
+    const floorMaterial = new THREE.MeshStandardMaterial({
+      color: 0x111111,
+      roughness: 0.9,
+      metalness: 0.1
+    })
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial)
+    floor.rotation.x = -Math.PI / 2
+    floor.position.y = -0.01
+    floor.receiveShadow = true
+    scene.add(floor)
 
     // Grid helper
     const gridHelper = new THREE.GridHelper(20, 20, 0x333333, 0x222222)
@@ -199,6 +214,8 @@ export function useThreePlayground() {
           selectedObject.value.position.copy(intersection.add(dragOffset))
         }
       }
+      // Sync light position if dragging a light
+      syncLightPosition(selectedObject.value)
     } else if (transformMode.value === 'rotate') {
       const deltaX = (event.clientX - dragStart.x) * 0.01
       const deltaY = (event.clientY - dragStart.y) * 0.01
@@ -259,6 +276,20 @@ export function useThreePlayground() {
   // Set transform mode
   const setTransformMode = (mode) => {
     transformMode.value = mode
+  }
+
+  // Sync light position with its mesh representation
+  const syncLightPosition = (obj) => {
+    if (!obj || !obj.userData) return
+
+    const { light, helper } = obj.userData
+
+    if (light) {
+      light.position.copy(obj.position)
+      if (helper) {
+        helper.update()
+      }
+    }
   }
 
   // Animation loop
@@ -387,22 +418,24 @@ export function useThreePlayground() {
 
     const color = new THREE.Color(themeColor.value)
 
-    // Create spotlight
-    const spotlight = new THREE.SpotLight(color, 50)
-    spotlight.position.set(
-      (Math.random() - 0.5) * 4,
-      5,
-      (Math.random() - 0.5) * 4
-    )
-    spotlight.angle = Math.PI / 6
-    spotlight.penumbra = 0.3
-    spotlight.decay = 2
-    spotlight.distance = 20
-    spotlight.castShadow = true
+    // Position the light
+    const posX = (Math.random() - 0.5) * 4
+    const posZ = (Math.random() - 0.5) * 4
 
-    // Create a target for the spotlight
+    // Create spotlight with higher intensity
+    const spotlight = new THREE.SpotLight(color, 100)
+    spotlight.position.set(posX, 5, posZ)
+    spotlight.angle = Math.PI / 5
+    spotlight.penumbra = 0.5
+    spotlight.decay = 1.5
+    spotlight.distance = 30
+    spotlight.castShadow = true
+    spotlight.shadow.mapSize.width = 1024
+    spotlight.shadow.mapSize.height = 1024
+
+    // Create a target below the light
     const target = new THREE.Object3D()
-    target.position.set(0, 0, 0)
+    target.position.set(posX, 0, posZ)
     scene.add(target)
     spotlight.target = target
 
@@ -410,9 +443,13 @@ export function useThreePlayground() {
     const helper = new THREE.SpotLightHelper(spotlight)
     scene.add(helper)
 
-    // Create a small sphere to represent the light (for selection)
-    const sphereGeom = new THREE.SphereGeometry(0.15, 16, 16)
-    const sphereMat = new THREE.MeshBasicMaterial({ color: color })
+    // Create a small emissive sphere to represent the light (for selection)
+    const sphereGeom = new THREE.SphereGeometry(0.2, 16, 16)
+    const sphereMat = new THREE.MeshBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.9
+    })
     const lightMesh = new THREE.Mesh(sphereGeom, sphereMat)
     lightMesh.position.copy(spotlight.position)
 
@@ -438,24 +475,30 @@ export function useThreePlayground() {
 
     const color = new THREE.Color(themeColor.value)
 
-    // Create point light
-    const pointLight = new THREE.PointLight(color, 50)
+    // Create point light with higher intensity
+    const pointLight = new THREE.PointLight(color, 80)
     pointLight.position.set(
       (Math.random() - 0.5) * 4,
       3,
       (Math.random() - 0.5) * 4
     )
-    pointLight.decay = 2
-    pointLight.distance = 15
+    pointLight.decay = 1.5
+    pointLight.distance = 20
     pointLight.castShadow = true
+    pointLight.shadow.mapSize.width = 1024
+    pointLight.shadow.mapSize.height = 1024
 
     // Create helper
     const helper = new THREE.PointLightHelper(pointLight, 0.3)
     scene.add(helper)
 
-    // Create a small sphere to represent the light (for selection)
-    const sphereGeom = new THREE.SphereGeometry(0.15, 16, 16)
-    const sphereMat = new THREE.MeshBasicMaterial({ color: color })
+    // Create a small emissive sphere to represent the light (for selection)
+    const sphereGeom = new THREE.SphereGeometry(0.2, 16, 16)
+    const sphereMat = new THREE.MeshBasicMaterial({
+      color: color,
+      transparent: true,
+      opacity: 0.9
+    })
     const lightMesh = new THREE.Mesh(sphereGeom, sphereMat)
     lightMesh.position.copy(pointLight.position)
 
@@ -490,6 +533,17 @@ export function useThreePlayground() {
     })
 
     toRemove.forEach(obj => {
+      // If it's a light, also remove the light and helper
+      if (obj.userData) {
+        const { light, helper, target } = obj.userData
+        if (light) scene.remove(light)
+        if (helper) {
+          scene.remove(helper)
+          helper.dispose()
+        }
+        if (target) scene.remove(target)
+      }
+
       scene.remove(obj)
       if (obj.geometry) obj.geometry.dispose()
       if (obj.material) {
@@ -661,6 +715,17 @@ export function useThreePlayground() {
 
     const obj = selectedObject.value
     deselectObject()
+
+    // If it's a light, also remove the light and helper
+    if (obj.userData) {
+      const { light, helper, target } = obj.userData
+      if (light) scene.remove(light)
+      if (helper) {
+        scene.remove(helper)
+        helper.dispose()
+      }
+      if (target) scene.remove(target)
+    }
 
     scene.remove(obj)
     if (obj.geometry) obj.geometry.dispose()

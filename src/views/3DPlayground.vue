@@ -77,9 +77,13 @@ onUnmounted(() => {
 
       <!-- Object Counter / Selection Info -->
       <div class="absolute bottom-4 left-4 flex flex-col gap-2">
-        <div v-if="playground.selectedObject.value" class="px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs">
+        <div v-if="playground.selectedObject.value" class="px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs flex items-center gap-2">
+          <!-- Light icon if it's a light -->
+          <svg v-if="playground.selectedObject.value.userData?.light" class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7zm2 15h-4v-1h4v1zm0-3h-4v-1h4v1zM9 21a1 1 0 001 1h4a1 1 0 001-1v-1H9v1z"/>
+          </svg>
           <span class="text-neutral-500">Seleccionado:</span>
-          <span class="text-white ml-1">{{ playground.selectedObject.value.userData?.type || 'Objeto' }}</span>
+          <span class="text-white">{{ playground.selectedObject.value.userData?.type || 'Objeto' }}</span>
         </div>
         <div v-if="hasObjects" class="px-3 py-1.5 bg-neutral-900/80 border border-neutral-800 rounded text-xs text-neutral-400">
           {{ playground.objects.value.length }} objeto{{ playground.objects.value.length !== 1 ? 's' : '' }}
