@@ -112,6 +112,9 @@ export function useAudioEditor() {
       barGap: 1,
       height: 'auto',
       normalize: true,
+      minPxPerSec: zoomLevel.value,
+      scrollParent: true,
+      autoScroll: true,
       plugins: [regionsPlugin]
     })
 
@@ -226,8 +229,12 @@ export function useAudioEditor() {
   }
 
   const setZoom = (val) => {
+    console.log('setZoom called:', val, 'wavesurfer:', !!wavesurfer)
     zoomLevel.value = val
-    wavesurfer?.zoom(val)
+    if (wavesurfer) {
+      wavesurfer.zoom(val)
+      console.log('zoom applied')
+    }
   }
 
   // Undo/Redo

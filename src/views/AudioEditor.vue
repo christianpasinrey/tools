@@ -75,7 +75,7 @@ onUnmounted(() => editor.destroy())
       @fade-in="editor.applyFadeIn"
       @fade-out="editor.applyFadeOut"
       @normalize="editor.normalize"
-      @zoom="editor.setZoom"
+      @zoom="(val) => editor.setZoom(val)"
     />
 
     <!-- Main Content -->
