@@ -292,22 +292,34 @@ const loadPreset = (presetId) => {
       }
       break
     case 'waves':
-      // Animated wave mesh floor (like a blanket)
-      const segments = 60
-      const size = 15
-      const waveGeometry = new THREE.PlaneGeometry(size, size, segments, segments)
-      waveGeometry.rotateX(-Math.PI / 2) // Make it horizontal in geometry itself
+      // Animated wave mesh - like ocean surface
+      const waveSegments = 100
+      const waveSize = 20
+      const waveGeometry = new THREE.PlaneGeometry(waveSize, waveSize, waveSegments, waveSegments)
 
-      // Store original positions for wave calculation
-      const originalPositions = new Float32Array(waveGeometry.attributes.position.array)
+      // Rotate to be horizontal (XZ plane)
+      waveGeometry.rotateX(-Math.PI / 2)
+
+      // Store original X and Z positions for wave calculation
+      const positions = waveGeometry.attributes.position
+      const waveData = []
+      for (let i = 0; i < positions.count; i++) {
+        waveData.push({
+          x: positions.getX(i),
+          z: positions.getZ(i),
+          originalY: positions.getY(i)
+        })
+      }
 
       const waveMaterial = new THREE.MeshStandardMaterial({
         color: new THREE.Color('#22c55e'),
-        metalness: 0.2,
-        roughness: 0.5,
+        metalness: 0.3,
+        roughness: 0.4,
         side: THREE.DoubleSide,
-        wireframe: true
+        wireframe: true,
+        wireframeLinewidth: 1
       })
+
       const waveMesh = new THREE.Mesh(waveGeometry, waveMaterial)
       waveMesh.position.y = 0
 
@@ -315,19 +327,24 @@ const loadPreset = (presetId) => {
         type: 'waves',
         id: Date.now(),
         isUserObject: true,
-        originalPositions: originalPositions,
+        waveData: waveData,
         animate: (time, obj) => {
           const pos = obj.geometry.attributes.position
-          const orig = obj.userData.originalPositions
+          const data = obj.userData.waveData
 
           for (let i = 0; i < pos.count; i++) {
-            const ix = i * 3
-            const x = orig[ix]
-            const z = orig[ix + 2]
-            // Wave on Y axis (height)
-            const wave = Math.sin(x * 0.4 + time * 1.5) * Math.cos(z * 0.4 + time * 1.2) * 0.8
-            pos.setY(i, wave)
+            const { x, z } = data[i]
+
+            // Multiple wave layers for realistic ocean effect
+            const wave1 = Math.sin(x * 0.3 + time * 2) * 0.5
+            const wave2 = Math.sin(z * 0.4 + time * 1.5) * 0.4
+            const wave3 = Math.sin((x + z) * 0.2 + time * 1.2) * 0.3
+            const wave4 = Math.cos(x * 0.5 - time * 1.8) * Math.sin(z * 0.5 + time) * 0.2
+
+            const height = wave1 + wave2 + wave3 + wave4
+            pos.setY(i, height)
           }
+
           pos.needsUpdate = true
           obj.geometry.computeVertexNormals()
         }

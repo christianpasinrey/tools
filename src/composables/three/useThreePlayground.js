@@ -146,11 +146,30 @@ export function useThreePlayground() {
 
     // Clear scene
     clearScene: () => {
+      // Deselect first
+      objects.deselectObject()
+
+      // Remove all user objects from scene and array
       const objectsToRemove = [...objects.objects.value]
       objectsToRemove.forEach(obj => {
-        objects.selectedObject.value = obj
-        objects.deleteSelected()
+        // Remove from Three.js scene
+        if (core.scene.value && obj.parent) {
+          obj.parent.remove(obj)
+        }
+
+        // Dispose geometry and material
+        if (obj.geometry) obj.geometry.dispose()
+        if (obj.material) {
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach(m => m.dispose())
+          } else {
+            obj.material.dispose()
+          }
+        }
       })
+
+      // Clear the objects array
+      objects.objects.value = []
     },
 
     // Reset camera
