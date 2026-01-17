@@ -146,11 +146,12 @@ export function useThreePlayground() {
 
     // Clear scene
     clearScene: () => {
+      objects.deselectObject()
       const objectsToRemove = [...objects.objects.value]
       objectsToRemove.forEach(obj => {
-        objects.selectedObject.value = obj
-        objects.deleteSelected()
+        objects.deleteObject(obj)
       })
+      objects.objects.value = []
     },
 
     // Reset camera
