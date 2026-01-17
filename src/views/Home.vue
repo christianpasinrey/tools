@@ -7,6 +7,27 @@ const threeCanvas = ref(null)
 
 let scene, camera, renderer, particles, animationId
 
+const createCircleTexture = () => {
+  const canvas = document.createElement('canvas')
+  canvas.width = 64
+  canvas.height = 64
+  const ctx = canvas.getContext('2d')
+
+  const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32)
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
+  gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)')
+  gradient.addColorStop(0.7, 'rgba(255, 255, 255, 0.3)')
+  gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
+
+  ctx.fillStyle = gradient
+  ctx.beginPath()
+  ctx.arc(32, 32, 32, 0, Math.PI * 2)
+  ctx.fill()
+
+  const texture = new THREE.CanvasTexture(canvas)
+  return texture
+}
+
 const initThree = () => {
   if (!threeCanvas.value) return
 
@@ -26,8 +47,11 @@ const initThree = () => {
   renderer.setSize(window.innerWidth, window.innerHeight)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+  // Circle texture for round particles
+  const circleTexture = createCircleTexture()
+
   // Particles
-  const particleCount = 200
+  const particleCount = 150
   const positions = new Float32Array(particleCount * 3)
   const colors = new Float32Array(particleCount * 3)
   const sizes = new Float32Array(particleCount)
@@ -58,12 +82,14 @@ const initThree = () => {
   geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1))
 
   const material = new THREE.PointsMaterial({
-    size: 0.5,
+    size: 1.5,
+    map: circleTexture,
     vertexColors: true,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.7,
     sizeAttenuation: true,
-    blending: THREE.AdditiveBlending
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
   })
 
   particles = new THREE.Points(geometry, material)
@@ -310,10 +336,13 @@ const packages = [
           </div>
         </div>
       </div>
+
+      <!-- Fade transition to next section -->
+      <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-neutral-950/50 to-neutral-950 pointer-events-none"></div>
     </div>
 
     <!-- Tools Grid -->
-    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24" style="z-index: 1;">
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-8" style="z-index: 1;">
       <h2
         :class="[
           'text-xs font-semibold text-neutral-500 uppercase tracking-widest mb-8 transition-all duration-700 delay-400',
