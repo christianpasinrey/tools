@@ -23,9 +23,9 @@ const routes = [
     component: () => import('../views/PdfEditor.vue')
   },
   {
-    path: '/gif-maker',
-    name: 'GifMaker',
-    component: () => import('../views/GifMaker.vue')
+    path: '/3d-playground',
+    name: '3DPlayground',
+    component: () => import('../views/3DPlayground.vue')
   }
 ]
 
