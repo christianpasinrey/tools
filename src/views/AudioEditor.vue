@@ -66,6 +66,7 @@ onUnmounted(() => editor.destroy())
       :can-redo="editor.canRedo.value"
       :zoom-level="editor.zoomLevel.value"
       :theme-color="editor.themeColor.value"
+      :visual-style="editor.visualStyle.value"
       @open="openFilePicker"
       @export="editor.exportAudio"
       @undo="editor.undo"
@@ -78,6 +79,7 @@ onUnmounted(() => editor.destroy())
       @normalize="editor.normalize"
       @zoom="(val) => editor.setZoom(val)"
       @color-change="editor.setThemeColor"
+      @style-change="editor.setVisualStyle"
     />
 
     <!-- Main Content -->
