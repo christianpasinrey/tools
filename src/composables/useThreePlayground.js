@@ -285,6 +285,9 @@ export function useThreePlayground() {
         if (keys.a) selectedObject.value.position.addScaledVector(right, -moveSpeed)
         if (keys.e) selectedObject.value.position.addScaledVector(cameraDir, moveSpeed)
         if (keys.q) selectedObject.value.position.addScaledVector(cameraDir, -moveSpeed)
+
+        // Sync light position if this is a light object
+        syncLightPosition(selectedObject.value)
       }
     }
 
@@ -348,6 +351,10 @@ export function useThreePlayground() {
       case 'torusKnot':
         geometry = new THREE.TorusKnotGeometry(0.4, 0.15, 100, 16)
         break
+      case 'spotlight':
+        return addSpotlight()
+      case 'pointlight':
+        return addPointLight()
       default:
         geometry = new THREE.BoxGeometry(1, 1, 1)
     }
@@ -372,6 +379,99 @@ export function useThreePlayground() {
     objects.value = [...objects.value, mesh]
 
     return mesh
+  }
+
+  // Add spotlight
+  const addSpotlight = () => {
+    if (!scene) return null
+
+    const color = new THREE.Color(themeColor.value)
+
+    // Create spotlight
+    const spotlight = new THREE.SpotLight(color, 50)
+    spotlight.position.set(
+      (Math.random() - 0.5) * 4,
+      5,
+      (Math.random() - 0.5) * 4
+    )
+    spotlight.angle = Math.PI / 6
+    spotlight.penumbra = 0.3
+    spotlight.decay = 2
+    spotlight.distance = 20
+    spotlight.castShadow = true
+
+    // Create a target for the spotlight
+    const target = new THREE.Object3D()
+    target.position.set(0, 0, 0)
+    scene.add(target)
+    spotlight.target = target
+
+    // Create helper to visualize the spotlight
+    const helper = new THREE.SpotLightHelper(spotlight)
+    scene.add(helper)
+
+    // Create a small sphere to represent the light (for selection)
+    const sphereGeom = new THREE.SphereGeometry(0.15, 16, 16)
+    const sphereMat = new THREE.MeshBasicMaterial({ color: color })
+    const lightMesh = new THREE.Mesh(sphereGeom, sphereMat)
+    lightMesh.position.copy(spotlight.position)
+
+    // Link everything together
+    lightMesh.userData = {
+      type: 'spotlight',
+      id: Date.now(),
+      light: spotlight,
+      helper: helper,
+      target: target
+    }
+
+    scene.add(spotlight)
+    scene.add(lightMesh)
+    objects.value = [...objects.value, lightMesh]
+
+    return lightMesh
+  }
+
+  // Add point light
+  const addPointLight = () => {
+    if (!scene) return null
+
+    const color = new THREE.Color(themeColor.value)
+
+    // Create point light
+    const pointLight = new THREE.PointLight(color, 50)
+    pointLight.position.set(
+      (Math.random() - 0.5) * 4,
+      3,
+      (Math.random() - 0.5) * 4
+    )
+    pointLight.decay = 2
+    pointLight.distance = 15
+    pointLight.castShadow = true
+
+    // Create helper
+    const helper = new THREE.PointLightHelper(pointLight, 0.3)
+    scene.add(helper)
+
+    // Create a small sphere to represent the light (for selection)
+    const sphereGeom = new THREE.SphereGeometry(0.15, 16, 16)
+    const sphereMat = new THREE.MeshBasicMaterial({ color: color })
+    const lightMesh = new THREE.Mesh(sphereGeom, sphereMat)
+    lightMesh.position.copy(pointLight.position)
+
+    // Link everything together
+    lightMesh.userData = {
+      type: 'pointlight',
+      id: Date.now(),
+      light: pointLight,
+      helper: helper
+    }
+
+    scene.add(pointLight)
+    scene.add(lightMesh)
+    objects.value = [...objects.value, lightMesh]
+
+    return lightMesh
   }
 
   // Clear all objects
