@@ -15,13 +15,22 @@ const emit = defineEmits([
   'add-shape', 'add-spotlight', 'add-pointlight', 'clear', 'reset-camera',
   'delete-selected', 'duplicate-selected', 'deselect',
   'screenshot', 'export-gltf', 'export-glb', 'import',
-  'toggle-bloom', 'environment-change', 'material-change'
+  'toggle-bloom', 'environment-change', 'material-change', 'load-preset'
 ])
 
+const showPresets = ref(false)
 const showShapes = ref(false)
 const showExport = ref(false)
 const showEnvironment = ref(false)
 const showMaterials = ref(false)
+
+const presets = [
+  { id: 'empty', name: 'Vacio' },
+  { id: 'cube', name: 'Cubo Rotativo' },
+  { id: 'spheres', name: 'Orbita de Esferas' },
+  { id: 'particles', name: 'Sistema de Particulas' },
+  { id: 'waves', name: 'Ondas' }
+]
 
 const shapes = [
   { id: 'cube', name: 'Cubo' },
@@ -36,6 +45,7 @@ const shapes = [
 ]
 
 const closeAllMenus = () => {
+  showPresets.value = false
   showShapes.value = false
   showExport.value = false
   showEnvironment.value = false
@@ -43,12 +53,14 @@ const closeAllMenus = () => {
 }
 
 const toggleMenu = (menu) => {
-  const current = menu === 'shapes' ? showShapes.value :
+  const current = menu === 'presets' ? showPresets.value :
+                  menu === 'shapes' ? showShapes.value :
                   menu === 'export' ? showExport.value :
                   menu === 'environment' ? showEnvironment.value :
                   showMaterials.value
   closeAllMenus()
-  if (menu === 'shapes') showShapes.value = !current
+  if (menu === 'presets') showPresets.value = !current
+  else if (menu === 'shapes') showShapes.value = !current
   else if (menu === 'export') showExport.value = !current
   else if (menu === 'environment') showEnvironment.value = !current
   else if (menu === 'materials') showMaterials.value = !current
@@ -57,6 +69,36 @@ const toggleMenu = (menu) => {
 
 <template>
   <div class="h-11 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-1 shrink-0">
+    <!-- Presets / Escenas -->
+    <div class="relative">
+      <button
+        @click="toggleMenu('presets')"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+        </svg>
+        <span>Escenas</span>
+        <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+
+      <div v-if="showPresets" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[180px]">
+        <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Plantillas</div>
+        <button
+          v-for="preset in presets"
+          :key="preset.id"
+          @click="emit('load-preset', preset.id); closeAllMenus()"
+          class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors"
+        >
+          {{ preset.name }}
+        </button>
+      </div>
+    </div>
+
+    <div class="w-px h-6 bg-neutral-800"></div>
+
     <!-- Add Shapes -->
     <div class="relative">
       <button

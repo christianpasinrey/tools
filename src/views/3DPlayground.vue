@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import * as THREE from 'three'
 import { useThreePlayground } from '../composables/three/useThreePlayground'
 import ThreeToolbar from '../components/three/ThreeToolbar.vue'
 import ThreePropertiesPanel from '../components/three/ThreePropertiesPanel.vue'
@@ -8,9 +9,18 @@ import ThreeObjectsList from '../components/three/ThreeObjectsList.vue'
 const playground = useThreePlayground()
 const canvasContainer = ref(null)
 const fileInput = ref(null)
+const isPresetActive = ref(false)
 
 // Computed
 const hasObjects = computed(() => playground.objects.value.length > 0)
+
+// Watch for preset mode changes to trigger resize
+watch(isPresetActive, () => {
+  nextTick(() => {
+    // Trigger window resize event for Three.js to recalculate
+    window.dispatchEvent(new Event('resize'))
+  })
+})
 
 // Keyboard shortcuts
 const handleKeydown = (e) => {
@@ -52,6 +62,143 @@ const handleDeleteFromList = (obj) => {
   playground.deleteObject(obj)
 }
 
+// Load scene preset
+const loadPreset = (presetId) => {
+  // Clear current scene first
+  playground.quickActions.clearScene()
+
+  // Activate preset mode (hide objects list) except for empty
+  isPresetActive.value = presetId !== 'empty'
+
+  switch (presetId) {
+    case 'empty':
+      // Just empty scene, nothing to add
+      break
+    case 'cube':
+      // Single rotating cube in center
+      const cube = playground.addShape('cube')
+      if (cube) {
+        cube.position.set(0, 1, 0)
+        cube.userData.animate = (time, obj) => {
+          obj.rotation.x = time * 0.5
+          obj.rotation.y = time * 0.8
+        }
+      }
+      break
+    case 'spheres':
+      // Multiple spheres in orbit arrangement
+      for (let i = 0; i < 5; i++) {
+        const sphere = playground.addShape('sphere')
+        if (sphere) {
+          const angle = (i / 5) * Math.PI * 2
+          sphere.position.set(Math.cos(angle) * 3, 0.5, Math.sin(angle) * 3)
+        }
+      }
+      break
+    case 'particles':
+      // Many tiny spheres orbiting in random directions
+      for (let i = 0; i < 150; i++) {
+        const sphere = playground.addShape('sphere')
+        if (sphere) {
+          const radius = 3 + Math.random() * 12
+          const orbitSpeed = 0.05 + Math.random() * 0.2
+
+          // Random orbit axis for each particle
+          const orbitAxis = new THREE.Vector3(
+            Math.random() - 0.5,
+            Math.random() - 0.5,
+            Math.random() - 0.5
+          ).normalize()
+
+          // Create perpendicular vectors for orbit plane
+          const perpVector = new THREE.Vector3(1, 0, 0)
+          if (Math.abs(orbitAxis.dot(perpVector)) > 0.9) {
+            perpVector.set(0, 1, 0)
+          }
+          const orbitX = new THREE.Vector3().crossVectors(orbitAxis, perpVector).normalize()
+          const orbitY = new THREE.Vector3().crossVectors(orbitAxis, orbitX).normalize()
+
+          // Random starting angle
+          const startAngle = Math.random() * Math.PI * 2
+
+          // Initial position
+          const initialPos = new THREE.Vector3()
+            .addScaledVector(orbitX, Math.cos(startAngle) * radius)
+            .addScaledVector(orbitY, Math.sin(startAngle) * radius)
+
+          sphere.position.copy(initialPos)
+          sphere.scale.setScalar(0.02 + Math.random() * 0.05)
+
+          // Make them emissive/bright
+          if (sphere.material) {
+            sphere.material.emissive = sphere.material.color.clone()
+            sphere.material.emissiveIntensity = 0.5
+          }
+
+          // Store orbit data
+          sphere.userData.orbitX = orbitX
+          sphere.userData.orbitY = orbitY
+          sphere.userData.orbitRadius = radius
+          sphere.userData.orbitSpeed = orbitSpeed
+          sphere.userData.startAngle = startAngle
+          sphere.userData.animate = (time, obj) => {
+            const angle = obj.userData.startAngle + time * obj.userData.orbitSpeed
+            const r = obj.userData.orbitRadius
+            obj.position.set(0, 0, 0)
+              .addScaledVector(obj.userData.orbitX, Math.cos(angle) * r)
+              .addScaledVector(obj.userData.orbitY, Math.sin(angle) * r)
+          }
+        }
+      }
+      break
+    case 'waves':
+      // Animated wave mesh floor (like a blanket)
+      const segments = 60
+      const size = 15
+      const waveGeometry = new THREE.PlaneGeometry(size, size, segments, segments)
+      waveGeometry.rotateX(-Math.PI / 2) // Make it horizontal in geometry itself
+
+      // Store original positions for wave calculation
+      const originalPositions = new Float32Array(waveGeometry.attributes.position.array)
+
+      const waveMaterial = new THREE.MeshStandardMaterial({
+        color: new THREE.Color('#22c55e'),
+        metalness: 0.2,
+        roughness: 0.5,
+        side: THREE.DoubleSide,
+        wireframe: true
+      })
+      const waveMesh = new THREE.Mesh(waveGeometry, waveMaterial)
+      waveMesh.position.y = 0
+
+      waveMesh.userData = {
+        type: 'waves',
+        id: Date.now(),
+        isUserObject: true,
+        originalPositions: originalPositions,
+        animate: (time, obj) => {
+          const pos = obj.geometry.attributes.position
+          const orig = obj.userData.originalPositions
+
+          for (let i = 0; i < pos.count; i++) {
+            const ix = i * 3
+            const x = orig[ix]
+            const z = orig[ix + 2]
+            // Wave on Y axis (height)
+            const wave = Math.sin(x * 0.4 + time * 1.5) * Math.cos(z * 0.4 + time * 1.2) * 0.8
+            pos.setY(i, wave)
+          }
+          pos.needsUpdate = true
+          obj.geometry.computeVertexNormals()
+        }
+      }
+
+      playground.scene.value.add(waveMesh)
+      playground.objects.value = [...playground.objects.value, waveMesh]
+      break
+  }
+}
+
 // Initialize on mount
 onMounted(() => {
   if (canvasContainer.value) {
@@ -89,9 +236,9 @@ onUnmounted(() => {
       :environment-presets="playground.ENVIRONMENT_PRESETS"
       :material-presets="playground.MATERIAL_PRESETS"
       :is-importing="playground.isImporting.value"
-      @add-shape="playground.addShape"
-      @add-spotlight="playground.addSpotlight"
-      @add-pointlight="playground.addPointLight"
+      @add-shape="(shape) => { isPresetActive = false; playground.addShape(shape) }"
+      @add-spotlight="() => { isPresetActive = false; playground.addSpotlight() }"
+      @add-pointlight="() => { isPresetActive = false; playground.addPointLight() }"
       @clear="playground.quickActions.clearScene"
       @reset-camera="playground.resetCamera"
       @delete-selected="playground.deleteSelected"
@@ -100,16 +247,18 @@ onUnmounted(() => {
       @screenshot="playground.quickActions.screenshot"
       @export-gltf="playground.quickActions.exportGLTF"
       @export-glb="playground.quickActions.exportGLB"
-      @import="triggerImport"
+      @import="() => { isPresetActive = false; triggerImport() }"
       @toggle-bloom="playground.setBloomEnabled(!playground.bloomEnabled.value)"
       @environment-change="playground.loadEnvironment"
       @material-change="playground.applyMaterialToSelected"
+      @load-preset="loadPreset"
     />
 
     <!-- Main Content -->
     <div class="flex-1 flex overflow-hidden min-h-0">
-      <!-- Objects List (left sidebar) -->
+      <!-- Objects List (left sidebar) - hidden in preset mode -->
       <ThreeObjectsList
+        v-if="!isPresetActive"
         :objects="playground.objects.value"
         :selected-object="playground.selectedObject.value"
         @select="handleSelectFromList"

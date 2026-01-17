@@ -36,11 +36,15 @@ export function useThreePlayground() {
 
     // Setup render loop with post-processing
     core.setSkipDefaultRender(true) // We handle rendering ourselves
-    core.onAnimate(() => {
-      // Update light helpers if needed
+    core.onAnimate((time) => {
+      // Update light helpers and run per-object animations
       objects.objects.value.forEach(obj => {
         if (obj.userData?.lightHelper) {
           obj.userData.lightHelper.update()
+        }
+        // Run custom animation if defined
+        if (obj.userData?.animate) {
+          obj.userData.animate(time, obj)
         }
       })
 

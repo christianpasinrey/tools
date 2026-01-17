@@ -92,11 +92,15 @@ export function useThreeCore() {
   let skipDefaultRender = false
 
   // Animation loop
-  const animate = () => {
+  let startTime = null
+  const animate = (timestamp) => {
     animationId = requestAnimationFrame(animate)
 
-    // Run all animation callbacks
-    animationCallbacks.forEach(cb => cb())
+    if (!startTime) startTime = timestamp
+    const time = (timestamp - startTime) / 1000 // Time in seconds
+
+    // Run all animation callbacks with time
+    animationCallbacks.forEach(cb => cb(time))
 
     if (orbitControls.value) orbitControls.value.update()
 
