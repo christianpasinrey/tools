@@ -113,7 +113,7 @@ export function useAudioEditor() {
       height: 'auto',
       normalize: true,
       minPxPerSec: zoomLevel.value,
-      scrollParent: true,
+      fillParent: false,
       autoScroll: true,
       plugins: [regionsPlugin]
     })
@@ -124,7 +124,11 @@ export function useAudioEditor() {
     wavesurfer.on('ready', () => {
       isLoading.value = false
       duration.value = wavesurfer.getDuration()
-      wavesurfer.zoom(zoomLevel.value)
+      // Calculate zoom to fit container initially
+      const containerWidth = container.clientWidth
+      const fitZoom = containerWidth / wavesurfer.getDuration()
+      zoomLevel.value = Math.round(fitZoom)
+      wavesurfer.zoom(fitZoom)
     })
 
     wavesurfer.on('audioprocess', () => currentTime.value = wavesurfer.getCurrentTime())
@@ -229,12 +233,8 @@ export function useAudioEditor() {
   }
 
   const setZoom = (val) => {
-    console.log('setZoom called:', val, 'wavesurfer:', !!wavesurfer)
     zoomLevel.value = val
-    if (wavesurfer) {
-      wavesurfer.zoom(val)
-      console.log('zoom applied')
-    }
+    wavesurfer?.zoom(val)
   }
 
   // Undo/Redo

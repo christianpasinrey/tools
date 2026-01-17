@@ -83,8 +83,8 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
       <span class="text-[10px] uppercase tracking-wider">Zoom</span>
       <input
         type="range"
-        min="10"
-        max="200"
+        min="1"
+        max="500"
         :value="zoomLevel"
         @input="handleZoom"
         class="w-20 h-1 bg-neutral-800 rounded appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-neutral-500 [&::-webkit-slider-thumb]:rounded-sm"
