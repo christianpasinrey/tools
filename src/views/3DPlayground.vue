@@ -303,10 +303,9 @@ const loadPreset = (presetId) => {
 
       const waveMaterial = new THREE.MeshStandardMaterial({
         color: new THREE.Color('#22c55e'),
-        metalness: 0.2,
-        roughness: 0.5,
-        side: THREE.DoubleSide,
-        wireframe: true
+        metalness: 0.4,
+        roughness: 0.3,
+        side: THREE.DoubleSide
       })
       const waveMesh = new THREE.Mesh(waveGeometry, waveMaterial)
       waveMesh.position.y = 0
@@ -324,8 +323,10 @@ const loadPreset = (presetId) => {
             const ix = i * 3
             const x = orig[ix]
             const z = orig[ix + 2]
-            // Wave on Y axis (height)
-            const wave = Math.sin(x * 0.4 + time * 1.5) * Math.cos(z * 0.4 + time * 1.2) * 0.8
+            // Ocean-like waves (sum of sine waves, not multiplication)
+            const wave = Math.sin(x * 0.5 + time) * 0.3
+                       + Math.sin(z * 0.5 + time * 1.3) * 0.3
+                       + Math.sin((x + z) * 0.3 + time * 0.7) * 0.2
             pos.setY(i, wave)
           }
           pos.needsUpdate = true
