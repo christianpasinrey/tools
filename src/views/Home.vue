@@ -4,48 +4,28 @@ const tools = [
     path: '/audio-editor',
     name: 'Audio Editor',
     description: 'Corta, une y aplica efectos a archivos de audio. Visualización de ondas en tiempo real.',
-    icon: '🎵',
-    gradient: 'from-violet-500 to-purple-600',
+    icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3',
     status: 'active'
   },
   {
     path: '/image-editor',
     name: 'Image Editor',
     description: 'Edita imágenes con filtros, recortes, ajustes de color y más herramientas profesionales.',
-    icon: '🖼️',
-    gradient: 'from-emerald-500 to-teal-600',
+    icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
     status: 'coming'
   },
   {
     path: '/pdf-editor',
     name: 'PDF Editor',
     description: 'Combina, divide, rota y anota documentos PDF directamente en el navegador.',
-    icon: '📄',
-    gradient: 'from-orange-500 to-red-600',
+    icon: 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z',
     status: 'coming'
   },
   {
     path: '/gif-maker',
     name: 'GIF Maker',
     description: 'Crea GIFs desde videos o imágenes. Control de FPS y optimización de tamaño.',
-    icon: '🎞️',
-    gradient: 'from-pink-500 to-rose-600',
-    status: 'coming'
-  },
-  {
-    path: '/svg-editor',
-    name: 'SVG Editor',
-    description: 'Edita y manipula archivos SVG de forma visual. Perfecto para iconos.',
-    icon: '✏️',
-    gradient: 'from-cyan-500 to-blue-600',
-    status: 'coming'
-  },
-  {
-    path: '/video-editor',
-    name: 'Video Editor',
-    description: 'Corta clips, añade texto y transiciones. Procesamiento 100% en el navegador.',
-    icon: '🎬',
-    gradient: 'from-amber-500 to-yellow-600',
+    icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z',
     status: 'coming'
   }
 ]
@@ -55,38 +35,37 @@ const tools = [
   <div class="min-h-screen">
     <!-- Hero Section -->
     <div class="relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 blur-3xl"></div>
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-violet-500/10 border border-violet-500/20 rounded-full mb-8">
-          <span class="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></span>
-          <span class="text-violet-300 text-sm font-medium">100% en el navegador, sin servidores</span>
+      <div class="absolute inset-0 bg-gradient-to-br from-green-600/5 to-transparent"></div>
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded text-xs mb-8">
+          <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+          <span class="text-green-400 font-medium">100% en el navegador, sin servidores</span>
         </div>
 
-        <h1 class="text-5xl sm:text-7xl font-bold text-white mb-6">
-          Web
-          <span class="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">Tools</span>
+        <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">
+          Web <span class="text-green-500">Tools</span>
         </h1>
 
-        <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-12">
+        <p class="text-neutral-400 max-w-xl mx-auto mb-10">
           Herramientas profesionales de edición que funcionan completamente en tu navegador.
           Sin subir archivos, sin registro, sin límites.
         </p>
 
-        <div class="flex flex-wrap justify-center gap-4">
-          <div class="flex items-center gap-2 text-slate-400">
-            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex flex-wrap justify-center gap-6 text-sm">
+          <div class="flex items-center gap-2 text-neutral-500">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
             <span>Privacidad total</span>
           </div>
-          <div class="flex items-center gap-2 text-slate-400">
-            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center gap-2 text-neutral-500">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
             <span>Sin instalación</span>
           </div>
-          <div class="flex items-center gap-2 text-slate-400">
-            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="flex items-center gap-2 text-neutral-500">
+            <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
             </svg>
             <span>Gratis y open source</span>
@@ -96,44 +75,47 @@ const tools = [
     </div>
 
     <!-- Tools Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-      <h2 class="text-2xl font-semibold text-white mb-8">Herramientas disponibles</h2>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <h2 class="text-sm font-medium text-neutral-500 uppercase tracking-wider mb-6">Herramientas</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <router-link
           v-for="tool in tools"
           :key="tool.path"
           :to="tool.status === 'active' ? tool.path : '#'"
           :class="[
-            'group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 transition-all duration-300',
+            'group relative bg-neutral-900 border border-neutral-800 rounded-lg p-5 transition-all',
             tool.status === 'active'
-              ? 'hover:border-violet-500/50 hover:bg-slate-800/80 cursor-pointer hover:-translate-y-1'
-              : 'opacity-60 cursor-not-allowed'
+              ? 'hover:border-green-500/50 hover:bg-neutral-900/80 cursor-pointer'
+              : 'opacity-50 cursor-not-allowed'
           ]"
         >
           <!-- Status Badge -->
           <div v-if="tool.status === 'coming'" class="absolute top-4 right-4">
-            <span class="px-2 py-1 bg-slate-700 text-slate-400 text-xs font-medium rounded-full">Próximamente</span>
+            <span class="px-2 py-0.5 bg-neutral-800 text-neutral-500 text-[10px] font-medium rounded">Próximamente</span>
           </div>
 
-          <!-- Icon -->
-          <div :class="['w-14 h-14 rounded-xl bg-gradient-to-br flex items-center justify-center text-2xl mb-4', tool.gradient]">
-            {{ tool.icon }}
-          </div>
+          <div class="flex items-start gap-4">
+            <!-- Icon -->
+            <div class="w-10 h-10 rounded bg-neutral-800 border border-neutral-700 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-neutral-400 group-hover:text-green-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="tool.icon" />
+              </svg>
+            </div>
 
-          <!-- Content -->
-          <h3 class="text-xl font-semibold text-white mb-2 group-hover:text-violet-300 transition-colors">
-            {{ tool.name }}
-          </h3>
-          <p class="text-slate-400 text-sm leading-relaxed">
-            {{ tool.description }}
-          </p>
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+              <h3 class="text-white font-medium mb-1 group-hover:text-green-400 transition-colors">
+                {{ tool.name }}
+              </h3>
+              <p class="text-neutral-500 text-sm leading-relaxed">
+                {{ tool.description }}
+              </p>
+            </div>
 
-          <!-- Arrow -->
-          <div v-if="tool.status === 'active'" class="mt-4 flex items-center text-violet-400 text-sm font-medium">
-            <span>Abrir herramienta</span>
-            <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            <!-- Arrow -->
+            <svg v-if="tool.status === 'active'" class="w-5 h-5 text-neutral-600 group-hover:text-green-500 group-hover:translate-x-1 transition-all shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path>
             </svg>
           </div>
         </router-link>
