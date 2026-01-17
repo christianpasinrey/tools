@@ -1,7 +1,8 @@
 <script setup>
 defineProps({
   isPlaying: Boolean,
-  volume: Number
+  volume: Number,
+  themeColor: String
 })
 
 const emit = defineEmits(['play', 'stop', 'skipForward', 'skipBackward', 'volume'])
@@ -19,7 +20,7 @@ const handleVolume = (e) => emit('volume', parseFloat(e.target.value))
       <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12"/></svg>
     </button>
 
-    <button @click="emit('play')" :class="['w-11 h-11 rounded-full flex items-center justify-center transition-all', isPlaying ? 'bg-green-600 text-white' : 'bg-green-500 text-white hover:bg-green-400']">
+    <button @click="emit('play')" class="w-11 h-11 rounded-full flex items-center justify-center transition-all text-white hover:brightness-110" :style="{ backgroundColor: themeColor }">
       <svg v-if="!isPlaying" class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
       <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
     </button>

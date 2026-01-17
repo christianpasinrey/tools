@@ -17,6 +17,9 @@ export function useAudioEditor() {
   const regionStart = ref(0)
   const regionEnd = ref(0)
 
+  // Theme color
+  const themeColor = ref('#22c55e')
+
   // History
   const history = shallowRef([])
   const historyIndex = ref(-1)
@@ -26,6 +29,7 @@ export function useAudioEditor() {
   let currentBuffer = null
   let wavesurfer = null
   let regionsPlugin = null
+  let minimapInstance = null
 
   // Computed
   const canUndo = computed(() => historyIndex.value > 0)
@@ -116,10 +120,10 @@ export function useAudioEditor() {
     })
 
     const minimapContainer = container.closest('.flex-col')?.querySelector('.minimap-container')
-    const minimapPlugin = MinimapPlugin.create({
+    minimapInstance = MinimapPlugin.create({
       height: 30,
-      waveColor: '#4ade80',
-      progressColor: '#22c55e',
+      waveColor: adjustBrightness(themeColor.value, 20),
+      progressColor: themeColor.value,
       container: minimapContainer
     })
 
@@ -144,7 +148,7 @@ export function useAudioEditor() {
       minPxPerSec: zoomLevel.value,
       fillParent: false,
       autoScroll: true,
-      plugins: [regionsPlugin, timelinePlugin, minimapPlugin, hoverPlugin]
+      plugins: [regionsPlugin, timelinePlugin, minimapInstance, hoverPlugin]
     })
 
     const url = URL.createObjectURL(file)
@@ -264,6 +268,32 @@ export function useAudioEditor() {
   const setZoom = (val) => {
     zoomLevel.value = val
     wavesurfer?.zoom(val)
+  }
+
+  const setThemeColor = (color) => {
+    themeColor.value = color
+    if (wavesurfer) {
+      wavesurfer.setOptions({
+        waveColor: color,
+        progressColor: adjustBrightness(color, 30)
+      })
+    }
+    if (minimapInstance) {
+      minimapInstance.setOptions({
+        waveColor: adjustBrightness(color, 20),
+        progressColor: color
+      })
+    }
+  }
+
+  // Helper to lighten/darken color
+  const adjustBrightness = (hex, percent) => {
+    const num = parseInt(hex.replace('#', ''), 16)
+    const amt = Math.round(2.55 * percent)
+    const R = Math.min(255, Math.max(0, (num >> 16) + amt))
+    const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amt))
+    const B = Math.min(255, Math.max(0, (num & 0x0000FF) + amt))
+    return `#${(1 << 24 | R << 16 | G << 8 | B).toString(16).slice(1)}`
   }
 
   // Undo/Redo
@@ -479,6 +509,7 @@ export function useAudioEditor() {
     regionEnd,
     history,
     historyIndex,
+    themeColor,
 
     // Computed
     canUndo,
@@ -497,6 +528,7 @@ export function useAudioEditor() {
     skipBackward,
     setVolume,
     setZoom,
+    setThemeColor,
     undo,
     redo,
     trimToSelection,

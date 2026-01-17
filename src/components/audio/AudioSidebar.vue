@@ -3,7 +3,8 @@ defineProps({
   fileName: String,
   fileInfo: Object,
   historyIndex: Number,
-  historyLength: Number
+  historyLength: Number,
+  themeColor: String
 })
 
 const emit = defineEmits(['close', 'export'])
@@ -19,8 +20,8 @@ const formatShortTime = (seconds) => {
     <!-- File -->
     <div class="p-3 border-b border-neutral-800">
       <div class="flex items-center gap-2 mb-2">
-        <div class="w-8 h-8 rounded bg-green-500/10 flex items-center justify-center">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-8 h-8 rounded flex items-center justify-center" :style="{ backgroundColor: themeColor + '1a' }">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" :style="{ color: themeColor }">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
           </svg>
         </div>
@@ -65,8 +66,8 @@ const formatShortTime = (seconds) => {
       <div class="flex items-center gap-2">
         <div class="flex-1 h-1.5 bg-neutral-800 rounded overflow-hidden">
           <div
-            class="h-full bg-green-500/50 transition-all"
-            :style="{ width: ((historyIndex + 1) / historyLength * 100) + '%' }"
+            class="h-full transition-all"
+            :style="{ width: ((historyIndex + 1) / historyLength * 100) + '%', backgroundColor: themeColor + '80' }"
           ></div>
         </div>
         <span class="text-[10px] text-neutral-500 font-mono">{{ historyIndex + 1 }}/{{ historyLength }}</span>
@@ -75,7 +76,11 @@ const formatShortTime = (seconds) => {
 
     <!-- Export -->
     <div class="mt-auto p-3">
-      <button @click="emit('export')" class="w-full h-8 rounded bg-green-600 hover:bg-green-500 text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5">
+      <button
+        @click="emit('export')"
+        class="w-full h-8 rounded text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5 hover:brightness-110"
+        :style="{ backgroundColor: themeColor }"
+      >
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
         </svg>

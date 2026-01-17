@@ -53,7 +53,7 @@ onUnmounted(() => editor.destroy())
     <!-- Processing Overlay -->
     <div v-if="editor.isProcessing.value" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
       <div class="flex items-center gap-3 px-5 py-3 bg-neutral-900 border border-neutral-800 rounded">
-        <div class="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        <div class="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" :style="{ borderColor: editor.themeColor.value, borderTopColor: 'transparent' }"></div>
         <span class="text-sm">Procesando...</span>
       </div>
     </div>
@@ -105,6 +105,7 @@ onUnmounted(() => editor.destroy())
         :file-info="editor.fileInfo.value"
         :history-index="editor.historyIndex.value"
         :history-length="editor.history.value.length"
+        :theme-color="editor.themeColor.value"
         @close="editor.clearFile"
         @export="editor.exportAudio"
       />
@@ -115,6 +116,7 @@ onUnmounted(() => editor.destroy())
       v-if="showTransport"
       :is-playing="editor.isPlaying.value"
       :volume="editor.volume.value"
+      :theme-color="editor.themeColor.value"
       @play="editor.togglePlay"
       @stop="editor.stop"
       @skip-forward="editor.skipForward"
