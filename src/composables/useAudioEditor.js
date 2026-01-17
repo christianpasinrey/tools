@@ -32,6 +32,7 @@ export function useAudioEditor() {
   let currentBuffer = null
   let wavesurfer = null
   let regionsPlugin = null
+  let analyserNode = null
 
   // Computed
   const canUndo = computed(() => historyIndex.value > 0)
@@ -155,6 +156,17 @@ export function useAudioEditor() {
       const fitZoom = containerWidth / wavesurfer.getDuration()
       zoomLevel.value = Math.round(fitZoom)
       wavesurfer.zoom(fitZoom)
+
+      // Setup analyser for real-time frequency visualization
+      const mediaElement = wavesurfer.getMediaElement()
+      if (mediaElement && !analyserNode) {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)()
+        const source = ctx.createMediaElementSource(mediaElement)
+        analyserNode = ctx.createAnalyser()
+        analyserNode.fftSize = 256
+        source.connect(analyserNode)
+        analyserNode.connect(ctx.destination)
+      }
     })
 
     wavesurfer.on('audioprocess', () => currentTime.value = wavesurfer.getCurrentTime())
@@ -283,6 +295,13 @@ export function useAudioEditor() {
       }
       wavesurfer.setOptions(styleOptions[style] || styleOptions.line)
     }
+  }
+
+  const getFrequencyData = () => {
+    if (!analyserNode) return null
+    const dataArray = new Uint8Array(analyserNode.frequencyBinCount)
+    analyserNode.getByteFrequencyData(dataArray)
+    return dataArray
   }
 
   // Helper to lighten/darken color
@@ -530,6 +549,7 @@ export function useAudioEditor() {
     setZoom,
     setThemeColor,
     setVisualStyle,
+    getFrequencyData,
     undo,
     redo,
     trimToSelection,
