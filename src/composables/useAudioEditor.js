@@ -50,16 +50,17 @@ export function useAudioEditor() {
     return audioContext
   }
 
+  // Pending file to load
+  let pendingFile = null
+  let containerRef = null
+
   // Load audio file
   const loadFile = async (file, container) => {
-    if (!container) {
-      console.error('Container not provided')
-      return
-    }
-
     isLoading.value = true
     audioFile.value = file
     audioFileName.value = file.name
+    pendingFile = file
+    containerRef = container
 
     initAudioContext()
 
@@ -70,10 +71,22 @@ export function useAudioEditor() {
       history.value = [currentBuffer]
       historyIndex.value = 0
 
-      await initWavesurfer(container, file)
+      // Try to init wavesurfer, container might not be ready yet
+      if (container) {
+        await initWavesurfer(container, file)
+      }
     } catch (error) {
       console.error('Error loading audio:', error)
       isLoading.value = false
+    }
+  }
+
+  // Called when container becomes available
+  const setContainer = async (container) => {
+    containerRef = container
+    if (pendingFile && container && isLoading.value) {
+      await initWavesurfer(container, pendingFile)
+      pendingFile = null
     }
   }
 
@@ -439,6 +452,7 @@ export function useAudioEditor() {
 
     // Methods
     loadFile,
+    setContainer,
     play,
     pause,
     togglePlay,
