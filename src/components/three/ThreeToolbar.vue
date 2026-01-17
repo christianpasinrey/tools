@@ -3,12 +3,14 @@ import { ref } from 'vue'
 
 const props = defineProps({
   themeColor: String,
-  hasObjects: Boolean
+  hasObjects: Boolean,
+  hasSelection: Boolean,
+  transformMode: String
 })
 
 const emit = defineEmits([
   'add-shape', 'load-preset', 'clear', 'reset-camera',
-  'toggle-wireframe', 'color-change'
+  'toggle-wireframe', 'color-change', 'transform-mode', 'delete-selected', 'deselect'
 ])
 
 const showShapes = ref(false)
