@@ -100,9 +100,6 @@ defineExpose({
         </div>
       </div>
 
-      <!-- Spectrogram Container -->
-      <div class="spectrogram-container h-[100px] bg-neutral-900 border-b border-neutral-800 shrink-0"></div>
-
       <!-- Timeline -->
       <div class="h-6 bg-neutral-900 border-b border-neutral-800 flex items-center px-4 text-[10px] text-neutral-600 font-mono shrink-0">
         <div class="flex-1">{{ formatTime(currentTime) }}</div>

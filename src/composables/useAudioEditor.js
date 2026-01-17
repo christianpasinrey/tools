@@ -101,7 +101,6 @@ export function useAudioEditor() {
     const RegionsPlugin = (await import('wavesurfer.js/dist/plugins/regions.js')).default
     const TimelinePlugin = (await import('wavesurfer.js/dist/plugins/timeline.js')).default
     const MinimapPlugin = (await import('wavesurfer.js/dist/plugins/minimap.js')).default
-    const SpectrogramPlugin = (await import('wavesurfer.js/dist/plugins/spectrogram.js')).default
     const HoverPlugin = (await import('wavesurfer.js/dist/plugins/hover.js')).default
 
     regionsPlugin = RegionsPlugin.create()
@@ -122,14 +121,6 @@ export function useAudioEditor() {
       waveColor: '#4ade80',
       progressColor: '#22c55e',
       container: minimapContainer
-    })
-
-    const spectrogramContainer = container.closest('.flex-col')?.querySelector('.spectrogram-container')
-    const spectrogramPlugin = SpectrogramPlugin.create({
-      labels: false,
-      height: 100,
-      colorMap: 'igray',
-      container: spectrogramContainer
     })
 
     const hoverPlugin = HoverPlugin.create({
@@ -153,7 +144,7 @@ export function useAudioEditor() {
       minPxPerSec: zoomLevel.value,
       fillParent: false,
       autoScroll: true,
-      plugins: [regionsPlugin, timelinePlugin, minimapPlugin, spectrogramPlugin, hoverPlugin]
+      plugins: [regionsPlugin, timelinePlugin, minimapPlugin, hoverPlugin]
     })
 
     const url = URL.createObjectURL(file)
