@@ -5,15 +5,22 @@ defineProps({
   canUndo: Boolean,
   canRedo: Boolean,
   zoomLevel: Number,
-  themeColor: String
+  themeColor: String,
+  visualStyle: String
 })
 
 const emit = defineEmits([
   'open', 'export', 'undo', 'redo',
   'trim', 'delete', 'silence',
   'fadeIn', 'fadeOut', 'normalize',
-  'zoom', 'colorChange'
+  'zoom', 'colorChange', 'styleChange'
 ])
+
+const styles = [
+  { id: 'line', icon: 'M2 12h4l3-9 4 18 3-9h4' }, // Line wave
+  { id: 'bars', icon: 'M4 8v8M8 5v14M12 7v10M16 5v14M20 8v8' }, // Bars centered
+  { id: 'equalizer', icon: 'M4 20v-8M8 20v-14M12 20v-10M16 20v-14M20 20v-8' } // Bars from bottom
+]
 
 const colors = [
   '#22c55e', // Green
@@ -99,6 +106,20 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
         :class="['w-4 h-4 rounded-full transition-all', themeColor === color ? 'ring-1 ring-white ring-offset-1 ring-offset-neutral-900' : 'hover:scale-125']"
         :style="{ backgroundColor: color }"
       ></button>
+    </div>
+
+    <!-- Style -->
+    <div v-if="hasFile" class="flex items-center gap-1 px-2 border-r border-neutral-800">
+      <button
+        v-for="style in styles"
+        :key="style.id"
+        @click="emit('styleChange', style.id)"
+        :class="['w-6 h-6 rounded flex items-center justify-center transition-colors', visualStyle === style.id ? 'bg-neutral-700 text-white' : 'text-neutral-500 hover:bg-neutral-800 hover:text-neutral-300']"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path :d="style.icon" />
+        </svg>
+      </button>
     </div>
 
     <!-- Zoom -->
