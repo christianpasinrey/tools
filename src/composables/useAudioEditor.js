@@ -108,9 +108,9 @@ export function useAudioEditor() {
       progressColor: '#4ade80',
       cursorColor: '#fbbf24',
       cursorWidth: 1,
-      barWidth: 1,
+      barWidth: 2,
       barGap: 1,
-      height: 200,
+      height: 'auto',
       normalize: true,
       plugins: [regionsPlugin]
     })
