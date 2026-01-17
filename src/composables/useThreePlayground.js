@@ -400,10 +400,24 @@ export function useThreePlayground() {
 
   // Reset camera
   const resetCamera = () => {
-    if (!camera || !controls) return
+    if (!camera || !orbitControls) return
     camera.position.set(5, 5, 5)
-    controls.target.set(0, 0, 0)
-    controls.update()
+    orbitControls.target.set(0, 0, 0)
+    orbitControls.update()
+  }
+
+  // Delete selected object
+  const deleteSelected = () => {
+    if (!selectedObject.value || !scene) return
+
+    const obj = selectedObject.value
+    deselectObject()
+
+    scene.remove(obj)
+    if (obj.geometry) obj.geometry.dispose()
+    if (obj.material) obj.material.dispose()
+
+    objects.value = objects.value.filter(o => o !== obj)
   }
 
   // Toggle wireframe
