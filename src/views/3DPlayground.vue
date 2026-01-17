@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useThreePlayground } from '../composables/useThreePlayground'
 import ThreeToolbar from '../components/three/ThreeToolbar.vue'
 
@@ -16,6 +16,11 @@ onMounted(() => {
     // Load default scene
     playground.loadPreset('cube')
   }
+})
+
+// Cleanup
+onUnmounted(() => {
+  playground.destroy()
 })
 </script>
 
