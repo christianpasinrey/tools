@@ -446,7 +446,8 @@ export function useThreePlayground() {
     clearScene()
 
     if (transformControls) {
-      scene?.remove(transformControls)
+      transformControls.detach()
+      if (scene) scene.remove(transformControls.getHelper())
       transformControls.dispose()
     }
 
