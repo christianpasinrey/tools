@@ -67,6 +67,9 @@ defineExpose({
 
     <!-- Waveform Area (shown when hasFile, container always exists) -->
     <template v-else>
+      <!-- Minimap Container -->
+      <div class="minimap-container h-[30px] bg-neutral-900 border-b border-neutral-800 shrink-0"></div>
+
       <div class="flex-1 relative bg-neutral-900/50 border-y border-neutral-800 overflow-x-auto overflow-y-hidden">
         <!-- Grid -->
         <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(to right, rgba(64,64,64,0.3) 1px, transparent 1px); background-size: 100px 100%;"></div>
@@ -96,6 +99,9 @@ defineExpose({
           Click and drag to select region
         </div>
       </div>
+
+      <!-- Spectrogram Container -->
+      <div class="spectrogram-container h-[100px] bg-neutral-900 border-b border-neutral-800 shrink-0"></div>
 
       <!-- Timeline -->
       <div class="h-6 bg-neutral-900 border-b border-neutral-800 flex items-center px-4 text-[10px] text-neutral-600 font-mono shrink-0">

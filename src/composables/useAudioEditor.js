@@ -99,8 +99,46 @@ export function useAudioEditor() {
 
     const WaveSurfer = (await import('wavesurfer.js')).default
     const RegionsPlugin = (await import('wavesurfer.js/dist/plugins/regions.js')).default
+    const TimelinePlugin = (await import('wavesurfer.js/dist/plugins/timeline.js')).default
+    const MinimapPlugin = (await import('wavesurfer.js/dist/plugins/minimap.js')).default
+    const SpectrogramPlugin = (await import('wavesurfer.js/dist/plugins/spectrogram.js')).default
+    const HoverPlugin = (await import('wavesurfer.js/dist/plugins/hover.js')).default
 
     regionsPlugin = RegionsPlugin.create()
+
+    const timelinePlugin = TimelinePlugin.create({
+      height: 20,
+      timeInterval: 0.5,
+      primaryLabelInterval: 5,
+      style: {
+        fontSize: '10px',
+        color: '#666'
+      }
+    })
+
+    const minimapContainer = container.closest('.flex-col')?.querySelector('.minimap-container')
+    const minimapPlugin = MinimapPlugin.create({
+      height: 30,
+      waveColor: '#4ade80',
+      progressColor: '#22c55e',
+      container: minimapContainer
+    })
+
+    const spectrogramContainer = container.closest('.flex-col')?.querySelector('.spectrogram-container')
+    const spectrogramPlugin = SpectrogramPlugin.create({
+      labels: false,
+      height: 100,
+      colorMap: 'igray',
+      container: spectrogramContainer
+    })
+
+    const hoverPlugin = HoverPlugin.create({
+      lineColor: '#fbbf24',
+      lineWidth: 1,
+      labelBackground: '#1a1a1a',
+      labelColor: '#fff',
+      labelSize: '10px'
+    })
 
     wavesurfer = WaveSurfer.create({
       container,
@@ -115,7 +153,7 @@ export function useAudioEditor() {
       minPxPerSec: zoomLevel.value,
       fillParent: false,
       autoScroll: true,
-      plugins: [regionsPlugin]
+      plugins: [regionsPlugin, timelinePlugin, minimapPlugin, spectrogramPlugin, hoverPlugin]
     })
 
     const url = URL.createObjectURL(file)
