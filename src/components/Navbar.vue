@@ -29,11 +29,14 @@ const EFFECT_DISTANCE = 80
 const onDockMouseMove = (e) => {
   if (!dockRef.value) return
 
-  const dockRect = dockRef.value.getBoundingClientRect()
   const mouseX = e.clientX
 
-  iconRefs.value.forEach((iconEl, index) => {
-    if (!iconEl) return
+  iconRefs.value.forEach((iconRef, index) => {
+    if (!iconRef) return
+
+    // Get DOM element from Vue component ref
+    const iconEl = iconRef.$el || iconRef
+    if (!iconEl || typeof iconEl.getBoundingClientRect !== 'function') return
 
     const iconRect = iconEl.getBoundingClientRect()
     const iconCenterX = iconRect.left + iconRect.width / 2
