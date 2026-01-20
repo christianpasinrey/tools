@@ -1,0 +1,173 @@
+{
+  "title": "Notion",
+  "description": "Atajos, bloques y fórmulas de Notion",
+  "sections": [
+    {
+      "name": "Navegación",
+      "items": [
+        { "keys": ["Ctrl", "P"], "desc": "Búsqueda rápida" },
+        { "keys": ["Ctrl", "L"], "desc": "Ir a página" },
+        { "keys": ["Ctrl", "\\\\"], "desc": "Toggle sidebar" },
+        { "keys": ["Ctrl", "["], "desc": "Ir atrás" },
+        { "keys": ["Ctrl", "]"], "desc": "Ir adelante" },
+        { "keys": ["Ctrl", "Shift", "L"], "desc": "Modo oscuro" },
+        { "keys": ["Ctrl", "N"], "desc": "Nueva página" }
+      ]
+    },
+    {
+      "name": "Edición de Texto",
+      "items": [
+        { "keys": ["Ctrl", "B"], "desc": "Negrita" },
+        { "keys": ["Ctrl", "I"], "desc": "Cursiva" },
+        { "keys": ["Ctrl", "U"], "desc": "Subrayado" },
+        { "keys": ["Ctrl", "Shift", "S"], "desc": "Tachado" },
+        { "keys": ["Ctrl", "K"], "desc": "Añadir link" },
+        { "keys": ["Ctrl", "E"], "desc": "Código inline" },
+        { "keys": ["Ctrl", "Shift", "M"], "desc": "Comentario" },
+        { "keys": ["Tab"], "desc": "Indentar" },
+        { "keys": ["Shift", "Tab"], "desc": "Desindentar" }
+      ]
+    },
+    {
+      "name": "Bloques con /",
+      "items": [
+        { "cmd": "/text", "desc": "Bloque de texto" },
+        { "cmd": "/h1, /h2, /h3", "desc": "Encabezados" },
+        { "cmd": "/todo", "desc": "Checkbox" },
+        { "cmd": "/bullet", "desc": "Lista con viñetas" },
+        { "cmd": "/num", "desc": "Lista numerada" },
+        { "cmd": "/toggle", "desc": "Lista desplegable" },
+        { "cmd": "/quote", "desc": "Cita" },
+        { "cmd": "/divider", "desc": "Línea divisora" },
+        { "cmd": "/callout", "desc": "Callout con icono" },
+        { "cmd": "/code", "desc": "Bloque de código" },
+        { "cmd": "/table", "desc": "Tabla simple" },
+        { "cmd": "/database", "desc": "Base de datos" }
+      ]
+    },
+    {
+      "name": "Bases de Datos",
+      "items": [
+        { "cmd": "/table-inline", "desc": "Tabla inline" },
+        { "cmd": "/board", "desc": "Vista Kanban" },
+        { "cmd": "/calendar", "desc": "Vista calendario" },
+        { "cmd": "/gallery", "desc": "Vista galería" },
+        { "cmd": "/list", "desc": "Vista lista" },
+        { "cmd": "/timeline", "desc": "Vista timeline" },
+        { "cmd": "/linked", "desc": "Vista vinculada" }
+      ]
+    },
+    {
+      "name": "Propiedades de Database",
+      "items": [
+        { "cmd": "Text", "desc": "Texto simple" },
+        { "cmd": "Number", "desc": "Número" },
+        { "cmd": "Select", "desc": "Opción única" },
+        { "cmd": "Multi-select", "desc": "Múltiples opciones" },
+        { "cmd": "Date", "desc": "Fecha" },
+        { "cmd": "Person", "desc": "Usuario" },
+        { "cmd": "Checkbox", "desc": "Casilla" },
+        { "cmd": "URL", "desc": "Enlace" },
+        { "cmd": "Email", "desc": "Correo" },
+        { "cmd": "Phone", "desc": "Teléfono" },
+        { "cmd": "Formula", "desc": "Fórmula" },
+        { "cmd": "Relation", "desc": "Relación" },
+        { "cmd": "Rollup", "desc": "Agregación" },
+        { "cmd": "Created time", "desc": "Fecha creación" },
+        { "cmd": "Last edited", "desc": "Última edición" }
+      ]
+    },
+    {
+      "name": "Fórmulas - Texto",
+      "items": [
+        { "cmd": "prop(\"Name\")", "desc": "Obtener propiedad" },
+        { "cmd": "concat(a, b)", "desc": "Concatenar" },
+        { "cmd": "length(text)", "desc": "Longitud" },
+        { "cmd": "lower(text)", "desc": "Minúsculas" },
+        { "cmd": "upper(text)", "desc": "Mayúsculas" },
+        { "cmd": "replace(t, old, new)", "desc": "Reemplazar" },
+        { "cmd": "replaceAll(t, regex, new)", "desc": "Reemplazar todos" },
+        { "cmd": "slice(text, start, end)", "desc": "Subcadena" },
+        { "cmd": "contains(text, search)", "desc": "Contiene" },
+        { "cmd": "test(text, regex)", "desc": "Test regex" }
+      ]
+    },
+    {
+      "name": "Fórmulas - Números",
+      "items": [
+        { "cmd": "add(a, b) o a + b", "desc": "Suma" },
+        { "cmd": "subtract(a, b) o a - b", "desc": "Resta" },
+        { "cmd": "multiply(a, b) o a * b", "desc": "Multiplicación" },
+        { "cmd": "divide(a, b) o a / b", "desc": "División" },
+        { "cmd": "mod(a, b)", "desc": "Módulo" },
+        { "cmd": "pow(base, exp)", "desc": "Potencia" },
+        { "cmd": "sqrt(n)", "desc": "Raíz cuadrada" },
+        { "cmd": "abs(n)", "desc": "Valor absoluto" },
+        { "cmd": "round(n)", "desc": "Redondear" },
+        { "cmd": "floor(n)", "desc": "Redondear abajo" },
+        { "cmd": "ceil(n)", "desc": "Redondear arriba" },
+        { "cmd": "min(a, b)", "desc": "Mínimo" },
+        { "cmd": "max(a, b)", "desc": "Máximo" }
+      ]
+    },
+    {
+      "name": "Fórmulas - Fechas",
+      "items": [
+        { "cmd": "now()", "desc": "Fecha/hora actual" },
+        { "cmd": "today()", "desc": "Fecha actual" },
+        { "cmd": "year(date)", "desc": "Extraer año" },
+        { "cmd": "month(date)", "desc": "Extraer mes" },
+        { "cmd": "day(date)", "desc": "Extraer día" },
+        { "cmd": "hour(date)", "desc": "Extraer hora" },
+        { "cmd": "minute(date)", "desc": "Extraer minutos" },
+        { "cmd": "dateBetween(d1, d2, \"days\")", "desc": "Diferencia en días" },
+        { "cmd": "dateAdd(date, n, \"months\")", "desc": "Sumar tiempo" },
+        { "cmd": "dateSubtract(date, n, \"weeks\")", "desc": "Restar tiempo" },
+        { "cmd": "formatDate(date, \"MMMM D, YYYY\")", "desc": "Formatear" }
+      ]
+    },
+    {
+      "name": "Fórmulas - Lógica",
+      "items": [
+        { "cmd": "if(cond, true, false)", "desc": "Condicional" },
+        { "cmd": "and(a, b)", "desc": "AND lógico" },
+        { "cmd": "or(a, b)", "desc": "OR lógico" },
+        { "cmd": "not(a)", "desc": "NOT lógico" },
+        { "cmd": "empty(prop)", "desc": "¿Está vacío?" },
+        { "cmd": "equal(a, b)", "desc": "¿Son iguales?" },
+        { "cmd": "larger(a, b)", "desc": "a > b" },
+        { "cmd": "smaller(a, b)", "desc": "a < b" }
+      ]
+    },
+    {
+      "name": "Markdown en Notion",
+      "items": [
+        { "cmd": "**texto**", "desc": "Negrita" },
+        { "cmd": "*texto* o _texto_", "desc": "Cursiva" },
+        { "cmd": "~~texto~~", "desc": "Tachado" },
+        { "cmd": "`código`", "desc": "Código inline" },
+        { "cmd": "[]", "desc": "Checkbox vacío" },
+        { "cmd": "[x]", "desc": "Checkbox marcado" },
+        { "cmd": "---", "desc": "Divider" },
+        { "cmd": ">", "desc": "Toggle list" },
+        { "cmd": "\"", "desc": "Quote" }
+      ]
+    },
+    {
+      "name": "Bloques Especiales",
+      "items": [
+        { "cmd": "/embed", "desc": "Incrustar URL" },
+        { "cmd": "/image", "desc": "Imagen" },
+        { "cmd": "/video", "desc": "Video" },
+        { "cmd": "/audio", "desc": "Audio" },
+        { "cmd": "/file", "desc": "Archivo" },
+        { "cmd": "/pdf", "desc": "PDF incrustado" },
+        { "cmd": "/bookmark", "desc": "Marcador web" },
+        { "cmd": "/equation", "desc": "Ecuación LaTeX" },
+        { "cmd": "/toc", "desc": "Tabla de contenidos" },
+        { "cmd": "/button", "desc": "Botón (templates)" },
+        { "cmd": "/synced", "desc": "Bloque sincronizado" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "title": "Excel / Sheets",
+  "description": "Fórmulas y funciones de hojas de cálculo",
+  "sections": [
+    {
+      "name": "Matemáticas Básicas",
+      "items": [
+        { "cmd": "=SUMA(A1:A10)", "desc": "Sumar rango" },
+        { "cmd": "=PROMEDIO(A1:A10)", "desc": "Media aritmética" },
+        { "cmd": "=MAX(A1:A10)", "desc": "Valor máximo" },
+        { "cmd": "=MIN(A1:A10)", "desc": "Valor mínimo" },
+        { "cmd": "=CONTAR(A1:A10)", "desc": "Contar números" },
+        { "cmd": "=CONTARA(A1:A10)", "desc": "Contar no vacías" },
+        { "cmd": "=MEDIANA(A1:A10)", "desc": "Mediana" },
+        { "cmd": "=MODA(A1:A10)", "desc": "Moda" },
+        { "cmd": "=DESVEST(A1:A10)", "desc": "Desviación estándar" },
+        { "cmd": "=PRODUCTO(A1:A10)", "desc": "Multiplicar rango" }
+      ]
+    },
+    {
+      "name": "Condicionales",
+      "items": [
+        { "cmd": "=SI(cond, verdadero, falso)", "desc": "Condicional simple" },
+        { "cmd": "=SI.ERROR(fórmula, valor)", "desc": "Capturar errores" },
+        { "cmd": "=SI.CONJUNTO(c1,v1,c2,v2)", "desc": "Múltiples condiciones" },
+        { "cmd": "=Y(cond1, cond2)", "desc": "AND lógico" },
+        { "cmd": "=O(cond1, cond2)", "desc": "OR lógico" },
+        { "cmd": "=NO(cond)", "desc": "NOT lógico" },
+        { "cmd": "=ELEGIR(índice, v1, v2, v3)", "desc": "Selección por índice" }
+      ]
+    },
+    {
+      "name": "Suma/Cuenta Condicional",
+      "items": [
+        { "cmd": "=SUMAR.SI(rango, criterio)", "desc": "Suma con condición" },
+        { "cmd": "=SUMAR.SI.CONJUNTO(suma, rango1, crit1, ...)", "desc": "Suma multicondición" },
+        { "cmd": "=CONTAR.SI(rango, criterio)", "desc": "Contar con condición" },
+        { "cmd": "=CONTAR.SI.CONJUNTO(rango1, crit1, ...)", "desc": "Contar multicondición" },
+        { "cmd": "=PROMEDIO.SI(rango, criterio)", "desc": "Promedio condicional" },
+        { "cmd": "=PROMEDIO.SI.CONJUNTO(...)", "desc": "Promedio multicondición" }
+      ]
+    },
+    {
+      "name": "Criterios",
+      "items": [
+        { "cmd": "\">10\"", "desc": "Mayor que 10" },
+        { "cmd": "\">=10\"", "desc": "Mayor o igual a 10" },
+        { "cmd": "\"<>\"&A1", "desc": "Diferente a celda" },
+        { "cmd": "\"*texto*\"", "desc": "Contiene texto" },
+        { "cmd": "\"texto*\"", "desc": "Empieza con" },
+        { "cmd": "\"*texto\"", "desc": "Termina con" },
+        { "cmd": "\"???\"", "desc": "Exactamente 3 caracteres" }
+      ]
+    },
+    {
+      "name": "Búsqueda",
+      "items": [
+        { "cmd": "=BUSCARV(valor, tabla, col, 0)", "desc": "Búsqueda vertical" },
+        { "cmd": "=BUSCARH(valor, tabla, fila, 0)", "desc": "Búsqueda horizontal" },
+        { "cmd": "=BUSCARX(valor, buscar, devolver)", "desc": "Búsqueda moderna" },
+        { "cmd": "=INDICE(rango, fila, col)", "desc": "Valor en posición" },
+        { "cmd": "=COINCIDIR(valor, rango, 0)", "desc": "Posición de valor" },
+        { "cmd": "=INDICE(rango, COINCIDIR(...))", "desc": "Combo índice-coincidir" },
+        { "cmd": "=FILTRAR(rango, condición)", "desc": "Filtrar datos" }
+      ]
+    },
+    {
+      "name": "Texto",
+      "items": [
+        { "cmd": "=CONCATENAR(A1, \" \", B1)", "desc": "Unir textos" },
+        { "cmd": "=CONCAT(A1:A10)", "desc": "Concatenar rango" },
+        { "cmd": "=UNIRCADENAS(\",\", 1, A1:A10)", "desc": "Unir con separador" },
+        { "cmd": "=IZQUIERDA(texto, n)", "desc": "Primeros n caracteres" },
+        { "cmd": "=DERECHA(texto, n)", "desc": "Últimos n caracteres" },
+        { "cmd": "=EXTRAE(texto, inicio, n)", "desc": "Subcadena" },
+        { "cmd": "=LARGO(texto)", "desc": "Longitud" },
+        { "cmd": "=MAYUSC(texto)", "desc": "Mayúsculas" },
+        { "cmd": "=MINUSC(texto)", "desc": "Minúsculas" },
+        { "cmd": "=NOMPROPIO(texto)", "desc": "Capitalizar" },
+        { "cmd": "=ESPACIOS(texto)", "desc": "Quitar espacios extra" },
+        { "cmd": "=SUSTITUIR(texto, viejo, nuevo)", "desc": "Reemplazar texto" },
+        { "cmd": "=ENCONTRAR(buscar, texto)", "desc": "Posición (case sensitive)" },
+        { "cmd": "=HALLAR(buscar, texto)", "desc": "Posición (no sensitive)" }
+      ]
+    },
+    {
+      "name": "Fechas",
+      "items": [
+        { "cmd": "=HOY()", "desc": "Fecha actual" },
+        { "cmd": "=AHORA()", "desc": "Fecha y hora actual" },
+        { "cmd": "=AÑO(fecha)", "desc": "Extraer año" },
+        { "cmd": "=MES(fecha)", "desc": "Extraer mes" },
+        { "cmd": "=DIA(fecha)", "desc": "Extraer día" },
+        { "cmd": "=DIASEM(fecha)", "desc": "Día de la semana" },
+        { "cmd": "=FECHA(año, mes, día)", "desc": "Crear fecha" },
+        { "cmd": "=SIFECHA(inicio, fin, \"d\")", "desc": "Diferencia en días" },
+        { "cmd": "=SIFECHA(inicio, fin, \"m\")", "desc": "Diferencia en meses" },
+        { "cmd": "=SIFECHA(inicio, fin, \"y\")", "desc": "Diferencia en años" },
+        { "cmd": "=FECHA.MES(fecha, meses)", "desc": "Sumar meses" },
+        { "cmd": "=FIN.MES(fecha, meses)", "desc": "Fin de mes" },
+        { "cmd": "=DIAS.LAB(inicio, fin)", "desc": "Días laborables" }
+      ]
+    },
+    {
+      "name": "Números",
+      "items": [
+        { "cmd": "=REDONDEAR(número, decimales)", "desc": "Redondear" },
+        { "cmd": "=REDONDEAR.MAS(número, dec)", "desc": "Redondear arriba" },
+        { "cmd": "=REDONDEAR.MENOS(número, dec)", "desc": "Redondear abajo" },
+        { "cmd": "=ENTERO(número)", "desc": "Parte entera" },
+        { "cmd": "=RESIDUO(número, divisor)", "desc": "Módulo" },
+        { "cmd": "=ABS(número)", "desc": "Valor absoluto" },
+        { "cmd": "=POTENCIA(base, exp)", "desc": "Potencia" },
+        { "cmd": "=RAIZ(número)", "desc": "Raíz cuadrada" },
+        { "cmd": "=ALEATORIO()", "desc": "Aleatorio 0-1" },
+        { "cmd": "=ALEATORIO.ENTRE(min, max)", "desc": "Aleatorio entero" }
+      ]
+    },
+    {
+      "name": "Arrays (Fórmulas Dinámicas)",
+      "items": [
+        { "cmd": "=UNICOS(rango)", "desc": "Valores únicos" },
+        { "cmd": "=ORDENAR(rango, col, orden)", "desc": "Ordenar datos" },
+        { "cmd": "=ORDENARPOR(rango, por, orden)", "desc": "Ordenar por otra col" },
+        { "cmd": "=FILTRAR(rango, cond, vacio)", "desc": "Filtrar con condición" },
+        { "cmd": "=SECUENCIA(filas, cols, ini, inc)", "desc": "Generar secuencia" },
+        { "cmd": "=TRANSPONER(rango)", "desc": "Transponer matriz" }
+      ]
+    },
+    {
+      "name": "Información",
+      "items": [
+        { "cmd": "=ESBLANCO(celda)", "desc": "¿Está vacía?" },
+        { "cmd": "=ESNUMERO(celda)", "desc": "¿Es número?" },
+        { "cmd": "=ESTEXTO(celda)", "desc": "¿Es texto?" },
+        { "cmd": "=ESERROR(celda)", "desc": "¿Es error?" },
+        { "cmd": "=TIPO(celda)", "desc": "Tipo de dato" },
+        { "cmd": "=N(valor)", "desc": "Convertir a número" },
+        { "cmd": "=VALOR(texto)", "desc": "Texto a número" },
+        { "cmd": "=TEXTO(número, formato)", "desc": "Número a texto" }
+      ]
+    },
+    {
+      "name": "Referencias",
+      "items": [
+        { "cmd": "A1", "desc": "Referencia relativa" },
+        { "cmd": "$A$1", "desc": "Referencia absoluta" },
+        { "cmd": "$A1", "desc": "Columna absoluta" },
+        { "cmd": "A$1", "desc": "Fila absoluta" },
+        { "cmd": "Hoja2!A1", "desc": "Otra hoja" },
+        { "cmd": "=INDIRECTO(\"A\"&B1)", "desc": "Referencia dinámica" },
+        { "cmd": "=DESREF(ref, filas, cols)", "desc": "Desplazar referencia" }
+      ]
+    },
+    {
+      "name": "Estadísticas",
+      "items": [
+        { "cmd": "=K.ESIMO.MAYOR(rango, k)", "desc": "K-ésimo mayor" },
+        { "cmd": "=K.ESIMO.MENOR(rango, k)", "desc": "K-ésimo menor" },
+        { "cmd": "=PERCENTIL(rango, k)", "desc": "Percentil" },
+        { "cmd": "=CUARTIL(rango, cuartil)", "desc": "Cuartil (1-4)" },
+        { "cmd": "=VAR(rango)", "desc": "Varianza muestral" },
+        { "cmd": "=COEF.DE.CORREL(rango1, rango2)", "desc": "Correlación" },
+        { "cmd": "=TENDENCIA(y, x, nuevo_x)", "desc": "Regresión lineal" }
+      ]
+    }
+  ]
+}

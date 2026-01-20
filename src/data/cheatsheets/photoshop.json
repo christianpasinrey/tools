@@ -1,0 +1,171 @@
+{
+  "title": "Photoshop",
+  "description": "Atajos de teclado esenciales de Photoshop",
+  "sections": [
+    {
+      "name": "Archivo",
+      "items": [
+        { "keys": ["Ctrl", "N"], "desc": "Nuevo documento" },
+        { "keys": ["Ctrl", "O"], "desc": "Abrir archivo" },
+        { "keys": ["Ctrl", "S"], "desc": "Guardar" },
+        { "keys": ["Ctrl", "Shift", "S"], "desc": "Guardar como" },
+        { "keys": ["Ctrl", "Shift", "Alt", "S"], "desc": "Guardar para web" },
+        { "keys": ["Ctrl", "W"], "desc": "Cerrar documento" },
+        { "keys": ["Ctrl", "P"], "desc": "Imprimir" },
+        { "keys": ["Ctrl", "Q"], "desc": "Salir" }
+      ]
+    },
+    {
+      "name": "Edición",
+      "items": [
+        { "keys": ["Ctrl", "Z"], "desc": "Deshacer" },
+        { "keys": ["Ctrl", "Shift", "Z"], "desc": "Rehacer" },
+        { "keys": ["Ctrl", "Alt", "Z"], "desc": "Paso atrás" },
+        { "keys": ["Ctrl", "X"], "desc": "Cortar" },
+        { "keys": ["Ctrl", "C"], "desc": "Copiar" },
+        { "keys": ["Ctrl", "V"], "desc": "Pegar" },
+        { "keys": ["Ctrl", "Shift", "V"], "desc": "Pegar en lugar" },
+        { "keys": ["Ctrl", "T"], "desc": "Transformar libre" },
+        { "keys": ["Ctrl", "Shift", "T"], "desc": "Repetir transformación" },
+        { "keys": ["Delete"], "desc": "Rellenar con fondo" },
+        { "keys": ["Shift", "F5"], "desc": "Diálogo de relleno" }
+      ]
+    },
+    {
+      "name": "Herramientas de Selección",
+      "items": [
+        { "keys": ["M"], "desc": "Marco rectangular/elíptico" },
+        { "keys": ["L"], "desc": "Lazo" },
+        { "keys": ["W"], "desc": "Varita mágica / Selección rápida" },
+        { "keys": ["Ctrl", "A"], "desc": "Seleccionar todo" },
+        { "keys": ["Ctrl", "D"], "desc": "Deseleccionar" },
+        { "keys": ["Ctrl", "Shift", "I"], "desc": "Invertir selección" },
+        { "keys": ["Shift", "+"], "desc": "Añadir a selección" },
+        { "keys": ["Alt", "+"], "desc": "Restar de selección" },
+        { "keys": ["Q"], "desc": "Modo máscara rápida" },
+        { "keys": ["Ctrl", "Shift", "D"], "desc": "Restaurar selección" }
+      ]
+    },
+    {
+      "name": "Herramientas de Pintura",
+      "items": [
+        { "keys": ["B"], "desc": "Pincel" },
+        { "keys": ["E"], "desc": "Borrador" },
+        { "keys": ["G"], "desc": "Bote de pintura / Degradado" },
+        { "keys": ["S"], "desc": "Tampón de clonar" },
+        { "keys": ["J"], "desc": "Pincel corrector" },
+        { "keys": ["Y"], "desc": "Pincel de historia" },
+        { "keys": ["["], "desc": "Reducir tamaño pincel" },
+        { "keys": ["]"], "desc": "Aumentar tamaño pincel" },
+        { "keys": ["Shift", "["], "desc": "Reducir dureza" },
+        { "keys": ["Shift", "]"], "desc": "Aumentar dureza" },
+        { "keys": ["1-9, 0"], "desc": "Opacidad 10-100%" }
+      ]
+    },
+    {
+      "name": "Otras Herramientas",
+      "items": [
+        { "keys": ["V"], "desc": "Mover" },
+        { "keys": ["C"], "desc": "Recortar" },
+        { "keys": ["I"], "desc": "Cuentagotas" },
+        { "keys": ["T"], "desc": "Texto" },
+        { "keys": ["P"], "desc": "Pluma" },
+        { "keys": ["A"], "desc": "Selección directa" },
+        { "keys": ["U"], "desc": "Formas" },
+        { "keys": ["H"], "desc": "Mano" },
+        { "keys": ["Z"], "desc": "Zoom" },
+        { "keys": ["R"], "desc": "Rotar vista" },
+        { "keys": ["O"], "desc": "Sobreexponer/Subexponer" },
+        { "keys": ["K"], "desc": "Sector" }
+      ]
+    },
+    {
+      "name": "Vista y Zoom",
+      "items": [
+        { "keys": ["Ctrl", "+"], "desc": "Zoom in" },
+        { "keys": ["Ctrl", "-"], "desc": "Zoom out" },
+        { "keys": ["Ctrl", "0"], "desc": "Ajustar a ventana" },
+        { "keys": ["Ctrl", "1"], "desc": "Zoom 100%" },
+        { "keys": ["Espacio"], "desc": "Mano temporal" },
+        { "keys": ["F"], "desc": "Cambiar modo pantalla" },
+        { "keys": ["Tab"], "desc": "Ocultar/mostrar paneles" },
+        { "keys": ["Ctrl", "'"], "desc": "Mostrar cuadrícula" },
+        { "keys": ["Ctrl", ";"], "desc": "Mostrar guías" },
+        { "keys": ["Ctrl", "R"], "desc": "Mostrar reglas" }
+      ]
+    },
+    {
+      "name": "Capas",
+      "items": [
+        { "keys": ["Ctrl", "Shift", "N"], "desc": "Nueva capa" },
+        { "keys": ["Ctrl", "J"], "desc": "Duplicar capa" },
+        { "keys": ["Ctrl", "Shift", "J"], "desc": "Capa vía cortar" },
+        { "keys": ["Ctrl", "E"], "desc": "Combinar hacia abajo" },
+        { "keys": ["Ctrl", "Shift", "E"], "desc": "Combinar visibles" },
+        { "keys": ["Ctrl", "G"], "desc": "Agrupar capas" },
+        { "keys": ["Ctrl", "Shift", "G"], "desc": "Desagrupar" },
+        { "keys": ["Ctrl", "]"], "desc": "Traer al frente" },
+        { "keys": ["Ctrl", "["], "desc": "Enviar atrás" },
+        { "keys": ["Ctrl", "Shift", "]"], "desc": "Traer al frente (todo)" },
+        { "keys": ["Ctrl", "Shift", "["], "desc": "Enviar atrás (todo)" },
+        { "keys": ["Alt", "click capa"], "desc": "Seleccionar contenido" }
+      ]
+    },
+    {
+      "name": "Ajustes",
+      "items": [
+        { "keys": ["Ctrl", "L"], "desc": "Niveles" },
+        { "keys": ["Ctrl", "M"], "desc": "Curvas" },
+        { "keys": ["Ctrl", "U"], "desc": "Tono/Saturación" },
+        { "keys": ["Ctrl", "B"], "desc": "Balance de color" },
+        { "keys": ["Ctrl", "Shift", "U"], "desc": "Desaturar" },
+        { "keys": ["Ctrl", "I"], "desc": "Invertir" },
+        { "keys": ["Ctrl", "Shift", "L"], "desc": "Niveles automáticos" },
+        { "keys": ["Ctrl", "Shift", "Alt", "L"], "desc": "Contraste automático" }
+      ]
+    },
+    {
+      "name": "Filtros",
+      "items": [
+        { "keys": ["Ctrl", "F"], "desc": "Último filtro usado" },
+        { "keys": ["Ctrl", "Shift", "F"], "desc": "Atenuar filtro" },
+        { "keys": ["Ctrl", "Alt", "F"], "desc": "Filtro con opciones" },
+        { "keys": ["Ctrl", "Shift", "X"], "desc": "Licuar" },
+        { "keys": ["Ctrl", "Shift", "A"], "desc": "Camera Raw" }
+      ]
+    },
+    {
+      "name": "Colores",
+      "items": [
+        { "keys": ["D"], "desc": "Colores por defecto (B/N)" },
+        { "keys": ["X"], "desc": "Intercambiar frontal/fondo" },
+        { "keys": ["Alt", "Delete"], "desc": "Rellenar con frontal" },
+        { "keys": ["Ctrl", "Delete"], "desc": "Rellenar con fondo" },
+        { "keys": ["Alt", "click"], "desc": "Muestrear color" }
+      ]
+    },
+    {
+      "name": "Texto",
+      "items": [
+        { "keys": ["Ctrl", "Shift", "<"], "desc": "Reducir tamaño" },
+        { "keys": ["Ctrl", "Shift", ">"], "desc": "Aumentar tamaño" },
+        { "keys": ["Ctrl", "Shift", "L"], "desc": "Alinear izquierda" },
+        { "keys": ["Ctrl", "Shift", "C"], "desc": "Alinear centro" },
+        { "keys": ["Ctrl", "Shift", "R"], "desc": "Alinear derecha" },
+        { "keys": ["Ctrl", "Enter"], "desc": "Confirmar texto" },
+        { "keys": ["Esc"], "desc": "Cancelar texto" }
+      ]
+    },
+    {
+      "name": "Transformar",
+      "items": [
+        { "keys": ["Ctrl", "T"], "desc": "Transformación libre" },
+        { "keys": ["Shift", "arrastrar"], "desc": "Proporcional" },
+        { "keys": ["Alt", "arrastrar"], "desc": "Desde centro" },
+        { "keys": ["Ctrl", "arrastrar"], "desc": "Distorsionar" },
+        { "keys": ["Enter"], "desc": "Aplicar transformación" },
+        { "keys": ["Esc"], "desc": "Cancelar transformación" }
+      ]
+    }
+  ]
+}

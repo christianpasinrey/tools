@@ -1,11 +1,31 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
-import { cheatsheetData, sheets } from '@/data/cheatsheets'
+import { cheatsheetData, sheets, categories } from '@/data/cheatsheets'
 import * as THREE from 'three'
 
 const activeSheet = ref('macos')
+const activeCategory = ref(null)
 const threeCanvas = ref(null)
+
+// Get sheet data by id
+const getSheetById = (id) => sheets.find(s => s.id === id)
+
+// Toggle category dropdown
+const toggleCategory = (categoryId) => {
+  activeCategory.value = activeCategory.value === categoryId ? null : categoryId
+}
+
+// Select sheet and close dropdown
+const selectSheet = (sheetId) => {
+  activeSheet.value = sheetId
+  activeCategory.value = null
+}
+
+// Close dropdown when clicking outside
+const closeDropdown = () => {
+  activeCategory.value = null
+}
 
 // Three.js variables
 let scene, camera, renderer, particles, animationId

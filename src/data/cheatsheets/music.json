@@ -1,0 +1,155 @@
+{
+  "title": "Teoría Musical",
+  "description": "Escalas, acordes, intervalos y armonía",
+  "sections": [
+    {
+      "name": "Notas Musicales",
+      "items": [
+        { "cmd": "C - Do", "desc": "Nota base" },
+        { "cmd": "D - Re", "desc": "Tono arriba de Do" },
+        { "cmd": "E - Mi", "desc": "Semitono arriba de Re" },
+        { "cmd": "F - Fa", "desc": "Semitono arriba de Mi" },
+        { "cmd": "G - Sol", "desc": "Tono arriba de Fa" },
+        { "cmd": "A - La", "desc": "Tono arriba de Sol (440Hz)" },
+        { "cmd": "B - Si", "desc": "Semitono arriba de La" },
+        { "cmd": "# (sostenido)", "desc": "Sube medio tono" },
+        { "cmd": "♭ (bemol)", "desc": "Baja medio tono" }
+      ]
+    },
+    {
+      "name": "Intervalos",
+      "items": [
+        { "cmd": "Unísono - 0 semitonos", "desc": "Misma nota" },
+        { "cmd": "2ª menor - 1 semitono", "desc": "Tensión" },
+        { "cmd": "2ª mayor - 2 semitonos", "desc": "Un tono" },
+        { "cmd": "3ª menor - 3 semitonos", "desc": "Acorde menor" },
+        { "cmd": "3ª mayor - 4 semitonos", "desc": "Acorde mayor" },
+        { "cmd": "4ª justa - 5 semitonos", "desc": "Consonante" },
+        { "cmd": "Tritono - 6 semitonos", "desc": "Disonante (4ª aum/5ª dim)" },
+        { "cmd": "5ª justa - 7 semitonos", "desc": "Muy consonante" },
+        { "cmd": "6ª menor - 8 semitonos", "desc": "Melancólico" },
+        { "cmd": "6ª mayor - 9 semitonos", "desc": "Brillante" },
+        { "cmd": "7ª menor - 10 semitonos", "desc": "Dominante" },
+        { "cmd": "7ª mayor - 11 semitonos", "desc": "Tensión" },
+        { "cmd": "Octava - 12 semitonos", "desc": "Misma nota, otra altura" }
+      ]
+    },
+    {
+      "name": "Escala Mayor",
+      "items": [
+        { "cmd": "Fórmula: T-T-S-T-T-T-S", "desc": "T=Tono, S=Semitono" },
+        { "cmd": "C Mayor: C D E F G A B", "desc": "Sin alteraciones" },
+        { "cmd": "G Mayor: G A B C D E F#", "desc": "1 sostenido" },
+        { "cmd": "D Mayor: D E F# G A B C#", "desc": "2 sostenidos" },
+        { "cmd": "F Mayor: F G A Bb C D E", "desc": "1 bemol" },
+        { "cmd": "Bb Mayor: Bb C D Eb F G A", "desc": "2 bemoles" },
+        { "cmd": "I-ii-iii-IV-V-vi-vii°", "desc": "Grados (mayús=mayor)" }
+      ]
+    },
+    {
+      "name": "Escala Menor Natural",
+      "items": [
+        { "cmd": "Fórmula: T-S-T-T-S-T-T", "desc": "Relativa menor" },
+        { "cmd": "A menor: A B C D E F G", "desc": "Relativa de C mayor" },
+        { "cmd": "E menor: E F# G A B C D", "desc": "Relativa de G mayor" },
+        { "cmd": "D menor: D E F G A Bb C", "desc": "Relativa de F mayor" },
+        { "cmd": "i-ii°-III-iv-v-VI-VII", "desc": "Grados menores" }
+      ]
+    },
+    {
+      "name": "Otras Escalas",
+      "items": [
+        { "cmd": "Menor armónica: T-S-T-T-S-T½-S", "desc": "7º grado subido" },
+        { "cmd": "Menor melódica: T-S-T-T-T-T-S (↑)", "desc": "6º y 7º subidos" },
+        { "cmd": "Pentatónica mayor: 1-2-3-5-6", "desc": "Sin 4ª ni 7ª" },
+        { "cmd": "Pentatónica menor: 1-b3-4-5-b7", "desc": "Blues/rock" },
+        { "cmd": "Blues: 1-b3-4-#4-5-b7", "desc": "Penta + blue note" },
+        { "cmd": "Cromática: 12 semitonos", "desc": "Todas las notas" }
+      ]
+    },
+    {
+      "name": "Modos Griegos",
+      "items": [
+        { "cmd": "Jónico (I): T-T-S-T-T-T-S", "desc": "= Escala mayor" },
+        { "cmd": "Dórico (ii): T-S-T-T-T-S-T", "desc": "Menor con 6ª mayor" },
+        { "cmd": "Frigio (iii): S-T-T-T-S-T-T", "desc": "Menor con 2ª menor" },
+        { "cmd": "Lidio (IV): T-T-T-S-T-T-S", "desc": "Mayor con 4ª aumentada" },
+        { "cmd": "Mixolidio (V): T-T-S-T-T-S-T", "desc": "Mayor con 7ª menor" },
+        { "cmd": "Eólico (vi): T-S-T-T-S-T-T", "desc": "= Escala menor natural" },
+        { "cmd": "Locrio (vii°): S-T-T-S-T-T-T", "desc": "Disminuido" }
+      ]
+    },
+    {
+      "name": "Acordes Tríadas",
+      "items": [
+        { "cmd": "Mayor: 1-3-5", "desc": "4 + 3 semitonos" },
+        { "cmd": "menor: 1-b3-5", "desc": "3 + 4 semitonos" },
+        { "cmd": "Aumentado: 1-3-#5", "desc": "4 + 4 semitonos" },
+        { "cmd": "Disminuido: 1-b3-b5", "desc": "3 + 3 semitonos" },
+        { "cmd": "sus2: 1-2-5", "desc": "Suspendido 2ª" },
+        { "cmd": "sus4: 1-4-5", "desc": "Suspendido 4ª" }
+      ]
+    },
+    {
+      "name": "Acordes Séptima",
+      "items": [
+        { "cmd": "Maj7: 1-3-5-7", "desc": "Mayor con 7ª mayor" },
+        { "cmd": "7 (dom): 1-3-5-b7", "desc": "Mayor con 7ª menor" },
+        { "cmd": "m7: 1-b3-5-b7", "desc": "Menor con 7ª menor" },
+        { "cmd": "m7b5: 1-b3-b5-b7", "desc": "Semidisminuido" },
+        { "cmd": "dim7: 1-b3-b5-bb7", "desc": "Disminuido" },
+        { "cmd": "mMaj7: 1-b3-5-7", "desc": "Menor con 7ª mayor" },
+        { "cmd": "add9: 1-3-5-9", "desc": "Con 9ª añadida" }
+      ]
+    },
+    {
+      "name": "Extensiones",
+      "items": [
+        { "cmd": "9 = 2ª + octava", "desc": "Novena" },
+        { "cmd": "11 = 4ª + octava", "desc": "Oncena" },
+        { "cmd": "13 = 6ª + octava", "desc": "Trecena" },
+        { "cmd": "9: 1-3-5-b7-9", "desc": "Dominante 9" },
+        { "cmd": "Maj9: 1-3-5-7-9", "desc": "Mayor 9" },
+        { "cmd": "m9: 1-b3-5-b7-9", "desc": "Menor 9" },
+        { "cmd": "add: sin 7ª", "desc": "add9, add11" },
+        { "cmd": "sus: reemplaza 3ª", "desc": "7sus4, etc." }
+      ]
+    },
+    {
+      "name": "Círculo de Quintas",
+      "items": [
+        { "cmd": "Arriba: C (0)", "desc": "Sin alteraciones" },
+        { "cmd": "Derecha (+5as): G D A E B F#", "desc": "Añade # (F# C# G#...)" },
+        { "cmd": "Izquierda (+4as): F Bb Eb Ab Db Gb", "desc": "Añade b (Bb Eb Ab...)" },
+        { "cmd": "Relativa menor: -3 semitonos", "desc": "Am es relativa de C" },
+        { "cmd": "V → I: resolución", "desc": "G → C, D → G" },
+        { "cmd": "ii-V-I: progresión común", "desc": "Dm-G-C" }
+      ]
+    },
+    {
+      "name": "Progresiones Comunes",
+      "items": [
+        { "cmd": "I-IV-V-I", "desc": "Blues básico" },
+        { "cmd": "I-V-vi-IV", "desc": "Pop (miles de canciones)" },
+        { "cmd": "ii-V-I", "desc": "Jazz estándar" },
+        { "cmd": "I-vi-IV-V", "desc": "50s progression" },
+        { "cmd": "vi-IV-I-V", "desc": "Variante pop" },
+        { "cmd": "I-bVII-IV-I", "desc": "Rock" },
+        { "cmd": "i-bVI-bIII-bVII", "desc": "Menor épico" },
+        { "cmd": "12 bar blues", "desc": "I-I-I-I-IV-IV-I-I-V-IV-I-V" }
+      ]
+    },
+    {
+      "name": "Figuras Rítmicas",
+      "items": [
+        { "cmd": "Redonda: 4 tiempos", "desc": "○" },
+        { "cmd": "Blanca: 2 tiempos", "desc": "𝅗𝅥" },
+        { "cmd": "Negra: 1 tiempo", "desc": "♩" },
+        { "cmd": "Corchea: 1/2 tiempo", "desc": "♪" },
+        { "cmd": "Semicorchea: 1/4 tiempo", "desc": "♬" },
+        { "cmd": "Puntillo: +50% duración", "desc": "Ej: negra. = 1.5 tiempos" },
+        { "cmd": "Tresillo: 3 en tiempo de 2", "desc": "Subdivisión ternaria" }
+      ]
+    }
+  ]
+}

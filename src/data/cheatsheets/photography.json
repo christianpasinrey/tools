@@ -1,0 +1,165 @@
+{
+  "title": "Fotografía",
+  "description": "Exposición, composición y técnicas fotográficas",
+  "sections": [
+    {
+      "name": "Triángulo de Exposición",
+      "items": [
+        { "cmd": "Apertura (f/)", "desc": "Controla luz y profundidad" },
+        { "cmd": "Velocidad (s)", "desc": "Controla luz y movimiento" },
+        { "cmd": "ISO", "desc": "Sensibilidad del sensor" },
+        { "cmd": "EV = log₂(f²/t)", "desc": "Valor de exposición" },
+        { "cmd": "1 stop = doble/mitad de luz", "desc": "Unidad de medida" }
+      ]
+    },
+    {
+      "name": "Apertura (f/stop)",
+      "items": [
+        { "cmd": "f/1.4, f/2, f/2.8, f/4...", "desc": "Escala de aperturas" },
+        { "cmd": "f/ bajo (1.4-2.8)", "desc": "Mucha luz, poca profundidad" },
+        { "cmd": "f/ alto (8-16)", "desc": "Poca luz, mucha profundidad" },
+        { "cmd": "f/1.4 → f/2 = -1 stop", "desc": "Mitad de luz" },
+        { "cmd": "Bokeh", "desc": "Desenfoque de fondo (f/ bajo)" },
+        { "cmd": "Sweet spot: f/5.6-f/8", "desc": "Máxima nitidez del lente" },
+        { "cmd": "Difracción: f/16+", "desc": "Pérdida de nitidez" }
+      ]
+    },
+    {
+      "name": "Velocidad de Obturación",
+      "items": [
+        { "cmd": "1/4000, 1/2000, 1/1000...", "desc": "Escala de velocidades" },
+        { "cmd": "1/1000+ s", "desc": "Congela acción rápida" },
+        { "cmd": "1/250 s", "desc": "Deportes, niños" },
+        { "cmd": "1/125 s", "desc": "Personas en movimiento" },
+        { "cmd": "1/60 s", "desc": "Mínimo sin trípode (50mm)" },
+        { "cmd": "1/focal mm", "desc": "Regla para evitar trepidación" },
+        { "cmd": "1-30 s", "desc": "Larga exposición (trípode)" },
+        { "cmd": "Bulb (B)", "desc": "Exposición manual prolongada" }
+      ]
+    },
+    {
+      "name": "ISO",
+      "items": [
+        { "cmd": "ISO 100-200", "desc": "Base, mínimo ruido" },
+        { "cmd": "ISO 400-800", "desc": "Interior con luz" },
+        { "cmd": "ISO 1600-3200", "desc": "Poca luz, ruido visible" },
+        { "cmd": "ISO 6400+", "desc": "Muy poca luz, mucho ruido" },
+        { "cmd": "ISO nativo", "desc": "Mejor calidad del sensor" },
+        { "cmd": "Auto ISO", "desc": "Cámara elige" },
+        { "cmd": "Ruido = grano digital", "desc": "Aumenta con ISO alto" }
+      ]
+    },
+    {
+      "name": "Modos de Cámara",
+      "items": [
+        { "cmd": "M (Manual)", "desc": "Control total" },
+        { "cmd": "Av/A (Apertura)", "desc": "Tú: f/, Cámara: velocidad" },
+        { "cmd": "Tv/S (Velocidad)", "desc": "Tú: velocidad, Cámara: f/" },
+        { "cmd": "P (Programa)", "desc": "Cámara elige ambos" },
+        { "cmd": "Auto", "desc": "Todo automático" },
+        { "cmd": "Compensación EV", "desc": "+/- en modos semi-auto" }
+      ]
+    },
+    {
+      "name": "Medición de Luz",
+      "items": [
+        { "cmd": "Matricial/Evaluativa", "desc": "Toda la escena" },
+        { "cmd": "Ponderada al centro", "desc": "Énfasis en centro" },
+        { "cmd": "Puntual", "desc": "Solo punto central (2-3%)" },
+        { "cmd": "Histograma", "desc": "Gráfico de exposición" },
+        { "cmd": "Derechas (ETTR)", "desc": "Exponer al límite sin quemar" },
+        { "cmd": "Altas luces parpadeantes", "desc": "Aviso de sobreexposición" }
+      ]
+    },
+    {
+      "name": "Enfoque",
+      "items": [
+        { "cmd": "AF-S / One Shot", "desc": "Enfoque único (estáticos)" },
+        { "cmd": "AF-C / AI Servo", "desc": "Continuo (movimiento)" },
+        { "cmd": "AF-A / AI Focus", "desc": "Automático" },
+        { "cmd": "MF (Manual)", "desc": "Enfoque manual" },
+        { "cmd": "Punto único", "desc": "Un punto de enfoque" },
+        { "cmd": "Zona/Grupo", "desc": "Área de puntos" },
+        { "cmd": "Seguimiento", "desc": "Sigue al sujeto" },
+        { "cmd": "Eye AF", "desc": "Detecta ojos" },
+        { "cmd": "Back button focus", "desc": "Enfoque con botón trasero" }
+      ]
+    },
+    {
+      "name": "Composición - Reglas",
+      "items": [
+        { "cmd": "Regla de tercios", "desc": "Sujeto en intersecciones" },
+        { "cmd": "Proporción áurea", "desc": "Espiral de Fibonacci" },
+        { "cmd": "Líneas guía", "desc": "Dirigen la mirada" },
+        { "cmd": "Marco natural", "desc": "Elementos que enmarcan" },
+        { "cmd": "Espacio negativo", "desc": "Área vacía intencional" },
+        { "cmd": "Simetría", "desc": "Balance visual" },
+        { "cmd": "Patrones y texturas", "desc": "Repetición visual" },
+        { "cmd": "Punto de fuga", "desc": "Perspectiva" }
+      ]
+    },
+    {
+      "name": "Tipos de Plano",
+      "items": [
+        { "cmd": "Gran plano general", "desc": "Paisaje, contexto amplio" },
+        { "cmd": "Plano general", "desc": "Persona completa + entorno" },
+        { "cmd": "Plano americano", "desc": "Persona desde rodillas" },
+        { "cmd": "Plano medio", "desc": "Persona desde cintura" },
+        { "cmd": "Plano medio corto", "desc": "Persona desde pecho" },
+        { "cmd": "Primer plano", "desc": "Rostro" },
+        { "cmd": "Primerísimo primer plano", "desc": "Detalle del rostro" },
+        { "cmd": "Plano detalle", "desc": "Objeto específico" }
+      ]
+    },
+    {
+      "name": "Ángulos",
+      "items": [
+        { "cmd": "Normal / Neutro", "desc": "A altura de ojos" },
+        { "cmd": "Picado", "desc": "Desde arriba (pequeñez)" },
+        { "cmd": "Contrapicado", "desc": "Desde abajo (poder)" },
+        { "cmd": "Cenital", "desc": "Perpendicular desde arriba" },
+        { "cmd": "Nadir", "desc": "Perpendicular desde abajo" },
+        { "cmd": "Dutch angle", "desc": "Inclinado (tensión)" }
+      ]
+    },
+    {
+      "name": "Luz Natural",
+      "items": [
+        { "cmd": "Golden hour", "desc": "1h tras amanecer / antes atardecer" },
+        { "cmd": "Blue hour", "desc": "Justo antes/después del sol" },
+        { "cmd": "Luz dura", "desc": "Sol directo, sombras marcadas" },
+        { "cmd": "Luz suave", "desc": "Nublado, difusa" },
+        { "cmd": "Contraluz", "desc": "Luz detrás del sujeto" },
+        { "cmd": "Luz lateral", "desc": "Textura y volumen" },
+        { "cmd": "Luz frontal", "desc": "Plana, sin sombras" },
+        { "cmd": "Rembrandt", "desc": "Triángulo de luz en mejilla" }
+      ]
+    },
+    {
+      "name": "Balance de Blancos",
+      "items": [
+        { "cmd": "AWB", "desc": "Automático" },
+        { "cmd": "☀️ Luz día: 5200K", "desc": "Sol directo" },
+        { "cmd": "☁️ Nublado: 6000K", "desc": "Cálido" },
+        { "cmd": "🏠 Sombra: 7000K", "desc": "Más cálido" },
+        { "cmd": "💡 Tungsteno: 3200K", "desc": "Bombillas" },
+        { "cmd": "📍 Fluorescente: 4000K", "desc": "Tubos" },
+        { "cmd": "⚡ Flash: 5500K", "desc": "Similar a día" },
+        { "cmd": "Kelvin manual", "desc": "Ajuste preciso" }
+      ]
+    },
+    {
+      "name": "Distancia Focal",
+      "items": [
+        { "cmd": "Ultra angular: <24mm", "desc": "Paisaje, arquitectura" },
+        { "cmd": "Angular: 24-35mm", "desc": "Calle, interiores" },
+        { "cmd": "Normal: 35-50mm", "desc": "Similar al ojo humano" },
+        { "cmd": "Tele corto: 85-135mm", "desc": "Retratos" },
+        { "cmd": "Teleobjetivo: 200mm+", "desc": "Deportes, fauna" },
+        { "cmd": "Macro", "desc": "Ratio 1:1 o mayor" },
+        { "cmd": "Ojo de pez: <14mm", "desc": "Distorsión extrema" },
+        { "cmd": "Compresión", "desc": "Tele acerca planos" }
+      ]
+    }
+  ]
+}

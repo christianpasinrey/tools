@@ -1,0 +1,160 @@
+{
+  "title": "Matemáticas",
+  "description": "Álgebra, cálculo, trigonometría y geometría",
+  "sections": [
+    {
+      "name": "Álgebra Básica",
+      "items": [
+        { "cmd": "(a + b)² = a² + 2ab + b²", "desc": "Binomio al cuadrado" },
+        { "cmd": "(a - b)² = a² - 2ab + b²", "desc": "Binomio al cuadrado" },
+        { "cmd": "(a + b)(a - b) = a² - b²", "desc": "Diferencia de cuadrados" },
+        { "cmd": "(a + b)³ = a³ + 3a²b + 3ab² + b³", "desc": "Binomio al cubo" },
+        { "cmd": "a³ + b³ = (a + b)(a² - ab + b²)", "desc": "Suma de cubos" },
+        { "cmd": "a³ - b³ = (a - b)(a² + ab + b²)", "desc": "Diferencia de cubos" }
+      ]
+    },
+    {
+      "name": "Ecuaciones",
+      "items": [
+        { "cmd": "ax + b = 0 → x = -b/a", "desc": "Ecuación lineal" },
+        { "cmd": "x = (-b ± √(b²-4ac)) / 2a", "desc": "Fórmula cuadrática" },
+        { "cmd": "Δ = b² - 4ac", "desc": "Discriminante" },
+        { "cmd": "Δ > 0: 2 soluciones reales", "desc": "Discriminante positivo" },
+        { "cmd": "Δ = 0: 1 solución real", "desc": "Discriminante cero" },
+        { "cmd": "Δ < 0: soluciones complejas", "desc": "Discriminante negativo" },
+        { "cmd": "x₁ + x₂ = -b/a", "desc": "Suma de raíces" },
+        { "cmd": "x₁ × x₂ = c/a", "desc": "Producto de raíces" }
+      ]
+    },
+    {
+      "name": "Exponentes y Logaritmos",
+      "items": [
+        { "cmd": "aᵐ × aⁿ = aᵐ⁺ⁿ", "desc": "Producto de potencias" },
+        { "cmd": "aᵐ / aⁿ = aᵐ⁻ⁿ", "desc": "División de potencias" },
+        { "cmd": "(aᵐ)ⁿ = aᵐⁿ", "desc": "Potencia de potencia" },
+        { "cmd": "a⁰ = 1", "desc": "Exponente cero" },
+        { "cmd": "a⁻ⁿ = 1/aⁿ", "desc": "Exponente negativo" },
+        { "cmd": "logₐ(xy) = logₐx + logₐy", "desc": "Log de producto" },
+        { "cmd": "logₐ(x/y) = logₐx - logₐy", "desc": "Log de cociente" },
+        { "cmd": "logₐ(xⁿ) = n × logₐx", "desc": "Log de potencia" },
+        { "cmd": "logₐb = logc b / logc a", "desc": "Cambio de base" },
+        { "cmd": "ln x = logₑ x", "desc": "Logaritmo natural" },
+        { "cmd": "e ≈ 2.71828", "desc": "Número de Euler" }
+      ]
+    },
+    {
+      "name": "Trigonometría",
+      "items": [
+        { "cmd": "sin θ = opuesto / hipotenusa", "desc": "Seno" },
+        { "cmd": "cos θ = adyacente / hipotenusa", "desc": "Coseno" },
+        { "cmd": "tan θ = opuesto / adyacente", "desc": "Tangente" },
+        { "cmd": "tan θ = sin θ / cos θ", "desc": "Tangente como cociente" },
+        { "cmd": "sin² θ + cos² θ = 1", "desc": "Identidad pitagórica" },
+        { "cmd": "1 + tan² θ = sec² θ", "desc": "Identidad" },
+        { "cmd": "1 + cot² θ = csc² θ", "desc": "Identidad" },
+        { "cmd": "sin(2θ) = 2 sin θ cos θ", "desc": "Ángulo doble" },
+        { "cmd": "cos(2θ) = cos²θ - sin²θ", "desc": "Ángulo doble" }
+      ]
+    },
+    {
+      "name": "Valores Trigonométricos",
+      "items": [
+        { "cmd": "sin 0° = 0", "desc": "cos 0° = 1" },
+        { "cmd": "sin 30° = 1/2", "desc": "cos 30° = √3/2" },
+        { "cmd": "sin 45° = √2/2", "desc": "cos 45° = √2/2" },
+        { "cmd": "sin 60° = √3/2", "desc": "cos 60° = 1/2" },
+        { "cmd": "sin 90° = 1", "desc": "cos 90° = 0" },
+        { "cmd": "π rad = 180°", "desc": "Conversión" },
+        { "cmd": "rad = grados × π/180", "desc": "Grados a radianes" }
+      ]
+    },
+    {
+      "name": "Derivadas",
+      "items": [
+        { "cmd": "d/dx [c] = 0", "desc": "Constante" },
+        { "cmd": "d/dx [x] = 1", "desc": "Variable" },
+        { "cmd": "d/dx [xⁿ] = n×xⁿ⁻¹", "desc": "Potencia" },
+        { "cmd": "d/dx [eˣ] = eˣ", "desc": "Exponencial" },
+        { "cmd": "d/dx [aˣ] = aˣ ln(a)", "desc": "Exponencial base a" },
+        { "cmd": "d/dx [ln x] = 1/x", "desc": "Logaritmo natural" },
+        { "cmd": "d/dx [sin x] = cos x", "desc": "Seno" },
+        { "cmd": "d/dx [cos x] = -sin x", "desc": "Coseno" },
+        { "cmd": "d/dx [tan x] = sec² x", "desc": "Tangente" },
+        { "cmd": "(f×g)' = f'g + fg'", "desc": "Regla del producto" },
+        { "cmd": "(f/g)' = (f'g - fg')/g²", "desc": "Regla del cociente" },
+        { "cmd": "(f∘g)' = f'(g) × g'", "desc": "Regla de la cadena" }
+      ]
+    },
+    {
+      "name": "Integrales",
+      "items": [
+        { "cmd": "∫ xⁿ dx = xⁿ⁺¹/(n+1) + C", "desc": "Potencia (n≠-1)" },
+        { "cmd": "∫ 1/x dx = ln|x| + C", "desc": "Logaritmo" },
+        { "cmd": "∫ eˣ dx = eˣ + C", "desc": "Exponencial" },
+        { "cmd": "∫ sin x dx = -cos x + C", "desc": "Seno" },
+        { "cmd": "∫ cos x dx = sin x + C", "desc": "Coseno" },
+        { "cmd": "∫ sec² x dx = tan x + C", "desc": "Secante cuadrado" },
+        { "cmd": "∫ₐᵇ f(x)dx = F(b) - F(a)", "desc": "Teorema fundamental" },
+        { "cmd": "∫ u dv = uv - ∫ v du", "desc": "Por partes" }
+      ]
+    },
+    {
+      "name": "Límites",
+      "items": [
+        { "cmd": "lim (x→a) f(x) = L", "desc": "Definición de límite" },
+        { "cmd": "lim (x→0) sin(x)/x = 1", "desc": "Límite notable" },
+        { "cmd": "lim (x→∞) (1+1/x)ˣ = e", "desc": "Límite de Euler" },
+        { "cmd": "L'Hôpital: 0/0 o ∞/∞", "desc": "lim f/g = lim f'/g'" }
+      ]
+    },
+    {
+      "name": "Geometría Analítica",
+      "items": [
+        { "cmd": "d = √((x₂-x₁)² + (y₂-y₁)²)", "desc": "Distancia entre puntos" },
+        { "cmd": "M = ((x₁+x₂)/2, (y₁+y₂)/2)", "desc": "Punto medio" },
+        { "cmd": "m = (y₂-y₁)/(x₂-x₁)", "desc": "Pendiente" },
+        { "cmd": "y - y₁ = m(x - x₁)", "desc": "Ecuación punto-pendiente" },
+        { "cmd": "y = mx + b", "desc": "Forma pendiente-ordenada" },
+        { "cmd": "Ax + By + C = 0", "desc": "Forma general" },
+        { "cmd": "m₁ × m₂ = -1", "desc": "Rectas perpendiculares" },
+        { "cmd": "m₁ = m₂", "desc": "Rectas paralelas" }
+      ]
+    },
+    {
+      "name": "Geometría - Áreas",
+      "items": [
+        { "cmd": "A = l × w", "desc": "Rectángulo" },
+        { "cmd": "A = s²", "desc": "Cuadrado" },
+        { "cmd": "A = (b × h) / 2", "desc": "Triángulo" },
+        { "cmd": "A = πr²", "desc": "Círculo" },
+        { "cmd": "A = (b₁ + b₂)h / 2", "desc": "Trapecio" },
+        { "cmd": "A = (d₁ × d₂) / 2", "desc": "Rombo" },
+        { "cmd": "C = 2πr", "desc": "Circunferencia" }
+      ]
+    },
+    {
+      "name": "Geometría - Volúmenes",
+      "items": [
+        { "cmd": "V = l × w × h", "desc": "Prisma rectangular" },
+        { "cmd": "V = s³", "desc": "Cubo" },
+        { "cmd": "V = πr²h", "desc": "Cilindro" },
+        { "cmd": "V = (1/3)πr²h", "desc": "Cono" },
+        { "cmd": "V = (4/3)πr³", "desc": "Esfera" },
+        { "cmd": "V = (1/3)Bh", "desc": "Pirámide" },
+        { "cmd": "SA = 4πr²", "desc": "Superficie esfera" }
+      ]
+    },
+    {
+      "name": "Sucesiones y Series",
+      "items": [
+        { "cmd": "aₙ = a₁ + (n-1)d", "desc": "Término n aritmética" },
+        { "cmd": "Sₙ = n(a₁ + aₙ)/2", "desc": "Suma aritmética" },
+        { "cmd": "aₙ = a₁ × rⁿ⁻¹", "desc": "Término n geométrica" },
+        { "cmd": "Sₙ = a₁(1-rⁿ)/(1-r)", "desc": "Suma geométrica finita" },
+        { "cmd": "S∞ = a₁/(1-r), |r|<1", "desc": "Suma geométrica infinita" },
+        { "cmd": "Σₖ₌₁ⁿ k = n(n+1)/2", "desc": "Suma de naturales" },
+        { "cmd": "Σₖ₌₁ⁿ k² = n(n+1)(2n+1)/6", "desc": "Suma de cuadrados" }
+      ]
+    }
+  ]
+}
