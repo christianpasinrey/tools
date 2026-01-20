@@ -51,6 +51,11 @@ const routes = [
     path: '/cheatsheets',
     name: 'CheatSheets',
     component: () => import('../views/CheatSheets.vue')
+  },
+  {
+    path: '/markdown-editor',
+    name: 'MarkdownEditor',
+    component: () => import('../views/MarkdownEditor.vue')
   }
 ]
 
