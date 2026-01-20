@@ -1,0 +1,168 @@
+{
+  "title": "HTTP & REST",
+  "description": "Códigos de estado, métodos y headers HTTP",
+  "sections": [
+    {
+      "name": "Métodos HTTP",
+      "items": [
+        { "cmd": "GET", "desc": "Obtener recurso" },
+        { "cmd": "POST", "desc": "Crear recurso" },
+        { "cmd": "PUT", "desc": "Reemplazar recurso completo" },
+        { "cmd": "PATCH", "desc": "Actualizar parcialmente" },
+        { "cmd": "DELETE", "desc": "Eliminar recurso" },
+        { "cmd": "HEAD", "desc": "GET sin body (solo headers)" },
+        { "cmd": "OPTIONS", "desc": "Métodos permitidos (CORS)" },
+        { "cmd": "CONNECT", "desc": "Túnel TCP/IP" },
+        { "cmd": "TRACE", "desc": "Debug de ruta" }
+      ]
+    },
+    {
+      "name": "1xx Informativo",
+      "items": [
+        { "cmd": "100 Continue", "desc": "Continuar con request" },
+        { "cmd": "101 Switching Protocols", "desc": "Cambio a WebSocket" },
+        { "cmd": "102 Processing", "desc": "Request en proceso" },
+        { "cmd": "103 Early Hints", "desc": "Precargar recursos" }
+      ]
+    },
+    {
+      "name": "2xx Éxito",
+      "items": [
+        { "cmd": "200 OK", "desc": "Éxito general" },
+        { "cmd": "201 Created", "desc": "Recurso creado" },
+        { "cmd": "202 Accepted", "desc": "Aceptado, procesando" },
+        { "cmd": "204 No Content", "desc": "Éxito sin body" },
+        { "cmd": "206 Partial Content", "desc": "Contenido parcial (Range)" },
+        { "cmd": "207 Multi-Status", "desc": "Múltiples resultados" }
+      ]
+    },
+    {
+      "name": "3xx Redirección",
+      "items": [
+        { "cmd": "301 Moved Permanently", "desc": "Movido (cacheable)" },
+        { "cmd": "302 Found", "desc": "Redirección temporal" },
+        { "cmd": "303 See Other", "desc": "Ver en otra URI (GET)" },
+        { "cmd": "304 Not Modified", "desc": "Usar cache" },
+        { "cmd": "307 Temporary Redirect", "desc": "Temporal (mantiene método)" },
+        { "cmd": "308 Permanent Redirect", "desc": "Permanente (mantiene método)" }
+      ]
+    },
+    {
+      "name": "4xx Error Cliente",
+      "items": [
+        { "cmd": "400 Bad Request", "desc": "Request malformado" },
+        { "cmd": "401 Unauthorized", "desc": "No autenticado" },
+        { "cmd": "403 Forbidden", "desc": "Sin permisos" },
+        { "cmd": "404 Not Found", "desc": "No encontrado" },
+        { "cmd": "405 Method Not Allowed", "desc": "Método no permitido" },
+        { "cmd": "406 Not Acceptable", "desc": "Content-Type no soportado" },
+        { "cmd": "408 Request Timeout", "desc": "Timeout del cliente" },
+        { "cmd": "409 Conflict", "desc": "Conflicto de estado" },
+        { "cmd": "410 Gone", "desc": "Eliminado permanente" },
+        { "cmd": "413 Payload Too Large", "desc": "Body muy grande" },
+        { "cmd": "415 Unsupported Media Type", "desc": "Media type no soportado" },
+        { "cmd": "422 Unprocessable Entity", "desc": "Validación fallida" },
+        { "cmd": "429 Too Many Requests", "desc": "Rate limit excedido" },
+        { "cmd": "451 Unavailable Legal", "desc": "Bloqueado legalmente" }
+      ]
+    },
+    {
+      "name": "5xx Error Servidor",
+      "items": [
+        { "cmd": "500 Internal Server Error", "desc": "Error genérico servidor" },
+        { "cmd": "501 Not Implemented", "desc": "Funcionalidad no existe" },
+        { "cmd": "502 Bad Gateway", "desc": "Error de proxy/gateway" },
+        { "cmd": "503 Service Unavailable", "desc": "Servicio no disponible" },
+        { "cmd": "504 Gateway Timeout", "desc": "Timeout de upstream" },
+        { "cmd": "505 HTTP Version Not Supported", "desc": "Versión HTTP no soportada" },
+        { "cmd": "507 Insufficient Storage", "desc": "Sin espacio" },
+        { "cmd": "508 Loop Detected", "desc": "Loop infinito" }
+      ]
+    },
+    {
+      "name": "Headers de Request",
+      "items": [
+        { "cmd": "Authorization: Bearer <token>", "desc": "Token de autenticación" },
+        { "cmd": "Content-Type: application/json", "desc": "Tipo de body" },
+        { "cmd": "Accept: application/json", "desc": "Tipo respuesta deseado" },
+        { "cmd": "Accept-Language: es-ES", "desc": "Idioma preferido" },
+        { "cmd": "Accept-Encoding: gzip", "desc": "Compresión aceptada" },
+        { "cmd": "User-Agent: ...", "desc": "Info del cliente" },
+        { "cmd": "Host: example.com", "desc": "Dominio destino" },
+        { "cmd": "Origin: http://...", "desc": "Origen CORS" },
+        { "cmd": "Referer: http://...", "desc": "Página anterior" },
+        { "cmd": "Cookie: name=value", "desc": "Enviar cookies" },
+        { "cmd": "If-None-Match: \"etag\"", "desc": "Cache condicional" },
+        { "cmd": "If-Modified-Since: date", "desc": "Cache por fecha" }
+      ]
+    },
+    {
+      "name": "Headers de Response",
+      "items": [
+        { "cmd": "Content-Type: application/json", "desc": "Tipo de body" },
+        { "cmd": "Content-Length: 1234", "desc": "Tamaño en bytes" },
+        { "cmd": "Content-Encoding: gzip", "desc": "Compresión usada" },
+        { "cmd": "Cache-Control: max-age=3600", "desc": "Control de cache" },
+        { "cmd": "ETag: \"abc123\"", "desc": "Versión del recurso" },
+        { "cmd": "Last-Modified: date", "desc": "Última modificación" },
+        { "cmd": "Location: /new-url", "desc": "URL de redirección" },
+        { "cmd": "Set-Cookie: name=value", "desc": "Establecer cookie" },
+        { "cmd": "WWW-Authenticate: Bearer", "desc": "Método de auth" },
+        { "cmd": "Retry-After: 120", "desc": "Reintentar en N seg" }
+      ]
+    },
+    {
+      "name": "Headers CORS",
+      "items": [
+        { "cmd": "Access-Control-Allow-Origin: *", "desc": "Orígenes permitidos" },
+        { "cmd": "Access-Control-Allow-Methods", "desc": "Métodos permitidos" },
+        { "cmd": "Access-Control-Allow-Headers", "desc": "Headers permitidos" },
+        { "cmd": "Access-Control-Allow-Credentials", "desc": "Permitir cookies" },
+        { "cmd": "Access-Control-Max-Age: 86400", "desc": "Cache preflight" },
+        { "cmd": "Access-Control-Expose-Headers", "desc": "Headers visibles al JS" }
+      ]
+    },
+    {
+      "name": "Headers de Seguridad",
+      "items": [
+        { "cmd": "Strict-Transport-Security", "desc": "Forzar HTTPS" },
+        { "cmd": "Content-Security-Policy", "desc": "Política de contenido" },
+        { "cmd": "X-Content-Type-Options: nosniff", "desc": "No detectar MIME" },
+        { "cmd": "X-Frame-Options: DENY", "desc": "No permitir iframe" },
+        { "cmd": "X-XSS-Protection: 1; mode=block", "desc": "Filtro XSS" },
+        { "cmd": "Referrer-Policy: no-referrer", "desc": "Control de Referer" }
+      ]
+    },
+    {
+      "name": "Content-Types Comunes",
+      "items": [
+        { "cmd": "application/json", "desc": "JSON" },
+        { "cmd": "application/xml", "desc": "XML" },
+        { "cmd": "application/x-www-form-urlencoded", "desc": "Form data" },
+        { "cmd": "multipart/form-data", "desc": "Archivos" },
+        { "cmd": "text/html", "desc": "HTML" },
+        { "cmd": "text/plain", "desc": "Texto plano" },
+        { "cmd": "text/css", "desc": "CSS" },
+        { "cmd": "application/javascript", "desc": "JavaScript" },
+        { "cmd": "image/png | image/jpeg | image/webp", "desc": "Imágenes" },
+        { "cmd": "application/pdf", "desc": "PDF" },
+        { "cmd": "application/octet-stream", "desc": "Binario genérico" }
+      ]
+    },
+    {
+      "name": "REST Best Practices",
+      "items": [
+        { "cmd": "GET /users", "desc": "Listar recursos" },
+        { "cmd": "GET /users/:id", "desc": "Obtener uno" },
+        { "cmd": "POST /users", "desc": "Crear recurso" },
+        { "cmd": "PUT /users/:id", "desc": "Reemplazar" },
+        { "cmd": "PATCH /users/:id", "desc": "Actualizar parcial" },
+        { "cmd": "DELETE /users/:id", "desc": "Eliminar" },
+        { "cmd": "GET /users/:id/posts", "desc": "Recursos anidados" },
+        { "cmd": "?page=1&limit=20", "desc": "Paginación" },
+        { "cmd": "?sort=name&order=asc", "desc": "Ordenamiento" },
+        { "cmd": "?filter[status]=active", "desc": "Filtrado" }
+      ]
+    }
+  ]
+}

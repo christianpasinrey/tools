@@ -1,0 +1,172 @@
+{
+  "title": "Python",
+  "description": "Sintaxis, built-ins y patrones de Python",
+  "sections": [
+    {
+      "name": "Tipos de Datos",
+      "items": [
+        { "cmd": "str", "desc": "Cadena de texto" },
+        { "cmd": "int", "desc": "Entero" },
+        { "cmd": "float", "desc": "Decimal" },
+        { "cmd": "bool", "desc": "True/False" },
+        { "cmd": "list", "desc": "Lista mutable []" },
+        { "cmd": "tuple", "desc": "Tupla inmutable ()" },
+        { "cmd": "dict", "desc": "Diccionario {}" },
+        { "cmd": "set", "desc": "Conjunto único {}" },
+        { "cmd": "frozenset", "desc": "Set inmutable" },
+        { "cmd": "None", "desc": "Valor nulo" },
+        { "cmd": "bytes", "desc": "Bytes b''" },
+        { "cmd": "complex", "desc": "Número complejo" }
+      ]
+    },
+    {
+      "name": "Strings",
+      "items": [
+        { "cmd": "f'Hola {nombre}'", "desc": "F-string" },
+        { "cmd": "f'{x:.2f}'", "desc": "F-string con formato" },
+        { "cmd": "f'{x:>10}'", "desc": "Alinear derecha" },
+        { "cmd": "f'{x=}'", "desc": "Debug (3.8+)" },
+        { "cmd": "s.strip()", "desc": "Quitar espacios" },
+        { "cmd": "s.split(',')", "desc": "Dividir" },
+        { "cmd": "','.join(list)", "desc": "Unir lista" },
+        { "cmd": "s.replace('a', 'b')", "desc": "Reemplazar" },
+        { "cmd": "s.startswith('x')", "desc": "Empieza con" },
+        { "cmd": "s.lower() / s.upper()", "desc": "Minús/mayús" }
+      ]
+    },
+    {
+      "name": "Listas",
+      "items": [
+        { "cmd": "[x for x in items]", "desc": "List comprehension" },
+        { "cmd": "[x for x in items if cond]", "desc": "Con filtro" },
+        { "cmd": "[x if c else y for x in i]", "desc": "Con ternario" },
+        { "cmd": "list.append(x)", "desc": "Añadir al final" },
+        { "cmd": "list.extend([x, y])", "desc": "Añadir varios" },
+        { "cmd": "list.insert(i, x)", "desc": "Insertar en pos" },
+        { "cmd": "list.pop()", "desc": "Quitar último" },
+        { "cmd": "list.remove(x)", "desc": "Quitar por valor" },
+        { "cmd": "list.sort(key=fn)", "desc": "Ordenar in-place" },
+        { "cmd": "sorted(list, reverse=True)", "desc": "Ordenar copia" },
+        { "cmd": "list[::-1]", "desc": "Invertir" },
+        { "cmd": "list[start:end:step]", "desc": "Slicing" }
+      ]
+    },
+    {
+      "name": "Diccionarios",
+      "items": [
+        { "cmd": "{k: v for k, v in items}", "desc": "Dict comprehension" },
+        { "cmd": "d.get('key', default)", "desc": "Get con default" },
+        { "cmd": "d.setdefault('key', [])", "desc": "Set si no existe" },
+        { "cmd": "d.keys() / d.values()", "desc": "Claves/valores" },
+        { "cmd": "d.items()", "desc": "Pares (k, v)" },
+        { "cmd": "d.update(other)", "desc": "Merge dicts" },
+        { "cmd": "{**d1, **d2}", "desc": "Merge con spread" },
+        { "cmd": "d | other", "desc": "Merge (3.9+)" },
+        { "cmd": "d.pop('key')", "desc": "Quitar y devolver" }
+      ]
+    },
+    {
+      "name": "Funciones",
+      "items": [
+        { "cmd": "def fn(x, y=1):", "desc": "Con default" },
+        { "cmd": "def fn(*args):", "desc": "Args variables" },
+        { "cmd": "def fn(**kwargs):", "desc": "Kwargs" },
+        { "cmd": "def fn(*, x):", "desc": "Solo keyword" },
+        { "cmd": "def fn(x, /, y):", "desc": "Solo positional" },
+        { "cmd": "lambda x: x * 2", "desc": "Lambda" },
+        { "cmd": "def fn() -> int:", "desc": "Type hint retorno" },
+        { "cmd": "def fn(x: str) -> str:", "desc": "Type hints" }
+      ]
+    },
+    {
+      "name": "Decoradores",
+      "items": [
+        { "cmd": "@decorator", "desc": "Aplicar decorador" },
+        { "cmd": "@functools.wraps(fn)", "desc": "Preservar metadata" },
+        { "cmd": "@property", "desc": "Getter" },
+        { "cmd": "@name.setter", "desc": "Setter" },
+        { "cmd": "@staticmethod", "desc": "Sin self" },
+        { "cmd": "@classmethod", "desc": "Con cls" },
+        { "cmd": "@dataclass", "desc": "Data class" },
+        { "cmd": "@lru_cache", "desc": "Cachear resultados" }
+      ]
+    },
+    {
+      "name": "Clases",
+      "items": [
+        { "cmd": "class A(B):", "desc": "Herencia" },
+        { "cmd": "def __init__(self):", "desc": "Constructor" },
+        { "cmd": "def __str__(self):", "desc": "Para print()" },
+        { "cmd": "def __repr__(self):", "desc": "Representación" },
+        { "cmd": "def __len__(self):", "desc": "Para len()" },
+        { "cmd": "def __getitem__(self, k):", "desc": "Para obj[k]" },
+        { "cmd": "def __iter__(self):", "desc": "Para iteración" },
+        { "cmd": "def __call__(self):", "desc": "obj()" },
+        { "cmd": "def __enter__(self):", "desc": "Context manager" },
+        { "cmd": "super().__init__()", "desc": "Llamar padre" }
+      ]
+    },
+    {
+      "name": "Built-ins Útiles",
+      "items": [
+        { "cmd": "map(fn, iterable)", "desc": "Aplicar función" },
+        { "cmd": "filter(fn, iterable)", "desc": "Filtrar" },
+        { "cmd": "zip(a, b)", "desc": "Emparejar" },
+        { "cmd": "enumerate(list)", "desc": "Con índice" },
+        { "cmd": "any(iterable)", "desc": "Alguno True" },
+        { "cmd": "all(iterable)", "desc": "Todos True" },
+        { "cmd": "sum(list)", "desc": "Sumar" },
+        { "cmd": "min() / max()", "desc": "Mínimo/máximo" },
+        { "cmd": "sorted(x, key=fn)", "desc": "Ordenar" },
+        { "cmd": "reversed(list)", "desc": "Invertir" },
+        { "cmd": "isinstance(x, Type)", "desc": "Comprobar tipo" },
+        { "cmd": "hasattr(obj, 'attr')", "desc": "Tiene atributo" }
+      ]
+    },
+    {
+      "name": "Context Managers",
+      "items": [
+        { "cmd": "with open('f') as f:", "desc": "Abrir archivo" },
+        { "cmd": "with A() as a, B() as b:", "desc": "Múltiples" },
+        { "cmd": "@contextmanager", "desc": "Crear con generator" },
+        { "cmd": "yield", "desc": "Punto de pausa" }
+      ]
+    },
+    {
+      "name": "Excepciones",
+      "items": [
+        { "cmd": "try: ... except E:", "desc": "Capturar excepción" },
+        { "cmd": "except E as e:", "desc": "Con alias" },
+        { "cmd": "except (A, B):", "desc": "Múltiples" },
+        { "cmd": "else:", "desc": "Si no hay error" },
+        { "cmd": "finally:", "desc": "Siempre ejecuta" },
+        { "cmd": "raise ValueError('msg')", "desc": "Lanzar" },
+        { "cmd": "raise from e", "desc": "Encadenar" }
+      ]
+    },
+    {
+      "name": "Async",
+      "items": [
+        { "cmd": "async def fn():", "desc": "Función async" },
+        { "cmd": "await coroutine", "desc": "Esperar" },
+        { "cmd": "asyncio.run(main())", "desc": "Ejecutar" },
+        { "cmd": "asyncio.gather(*coros)", "desc": "Paralelo" },
+        { "cmd": "async for x in aiter:", "desc": "Async for" },
+        { "cmd": "async with ctx:", "desc": "Async with" }
+      ]
+    },
+    {
+      "name": "Módulos Útiles",
+      "items": [
+        { "cmd": "from pathlib import Path", "desc": "Rutas modernas" },
+        { "cmd": "from collections import Counter", "desc": "Contadores" },
+        { "cmd": "from itertools import chain", "desc": "Iteradores" },
+        { "cmd": "from functools import reduce", "desc": "Reduce" },
+        { "cmd": "from typing import List, Dict", "desc": "Type hints" },
+        { "cmd": "from dataclasses import dataclass", "desc": "Data classes" },
+        { "cmd": "import json", "desc": "JSON" },
+        { "cmd": "import re", "desc": "Regex" }
+      ]
+    }
+  ]
+}

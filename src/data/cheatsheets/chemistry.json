@@ -1,0 +1,150 @@
+{
+  "title": "Química",
+  "description": "Elementos, fórmulas y conceptos químicos",
+  "sections": [
+    {
+      "name": "Grupos de la Tabla Periódica",
+      "items": [
+        { "cmd": "Grupo 1: Li, Na, K, Rb, Cs, Fr", "desc": "Alcalinos (+1)" },
+        { "cmd": "Grupo 2: Be, Mg, Ca, Sr, Ba, Ra", "desc": "Alcalinotérreos (+2)" },
+        { "cmd": "Grupo 17: F, Cl, Br, I, At", "desc": "Halógenos (-1)" },
+        { "cmd": "Grupo 18: He, Ne, Ar, Kr, Xe, Rn", "desc": "Gases nobles (0)" },
+        { "cmd": "Grupos 3-12", "desc": "Metales de transición" },
+        { "cmd": "Grupo 14: C, Si, Ge, Sn, Pb", "desc": "Carbonoideos" },
+        { "cmd": "Grupo 15: N, P, As, Sb, Bi", "desc": "Nitrogenoideos" },
+        { "cmd": "Grupo 16: O, S, Se, Te, Po", "desc": "Calcógenos" }
+      ]
+    },
+    {
+      "name": "Elementos Comunes",
+      "items": [
+        { "cmd": "H (1) - Hidrógeno", "desc": "1.008 u" },
+        { "cmd": "C (6) - Carbono", "desc": "12.01 u" },
+        { "cmd": "N (7) - Nitrógeno", "desc": "14.01 u" },
+        { "cmd": "O (8) - Oxígeno", "desc": "16.00 u" },
+        { "cmd": "Na (11) - Sodio", "desc": "22.99 u" },
+        { "cmd": "Cl (17) - Cloro", "desc": "35.45 u" },
+        { "cmd": "Fe (26) - Hierro", "desc": "55.85 u" },
+        { "cmd": "Cu (29) - Cobre", "desc": "63.55 u" }
+      ]
+    },
+    {
+      "name": "Estequiometría",
+      "items": [
+        { "cmd": "n = m / M", "desc": "Moles = masa / masa molar" },
+        { "cmd": "N = n × Nₐ", "desc": "Número de partículas" },
+        { "cmd": "Nₐ = 6.022×10²³", "desc": "Número de Avogadro" },
+        { "cmd": "M = Σ(masa atómica)", "desc": "Masa molar" },
+        { "cmd": "% masa = (masa parte / masa total) × 100", "desc": "Composición porcentual" },
+        { "cmd": "Reactivo limitante", "desc": "El que se agota primero" },
+        { "cmd": "Rendimiento = (real / teórico) × 100", "desc": "% rendimiento" }
+      ]
+    },
+    {
+      "name": "Gases",
+      "items": [
+        { "cmd": "PV = nRT", "desc": "Ley de gas ideal" },
+        { "cmd": "R = 0.0821 L·atm/(mol·K)", "desc": "Constante de gases" },
+        { "cmd": "R = 8.314 J/(mol·K)", "desc": "Constante en SI" },
+        { "cmd": "P₁V₁/T₁ = P₂V₂/T₂", "desc": "Ley combinada" },
+        { "cmd": "P₁V₁ = P₂V₂", "desc": "Ley de Boyle (T cte)" },
+        { "cmd": "V₁/T₁ = V₂/T₂", "desc": "Ley de Charles (P cte)" },
+        { "cmd": "Vm = 22.4 L/mol", "desc": "Volumen molar (STP)" },
+        { "cmd": "STP: 0°C, 1 atm", "desc": "Condiciones estándar" }
+      ]
+    },
+    {
+      "name": "Soluciones",
+      "items": [
+        { "cmd": "M = mol soluto / L solución", "desc": "Molaridad" },
+        { "cmd": "m = mol soluto / kg solvente", "desc": "Molalidad" },
+        { "cmd": "% m/v = (g soluto / mL sol) × 100", "desc": "Porcentaje masa/volumen" },
+        { "cmd": "% m/m = (g soluto / g sol) × 100", "desc": "Porcentaje masa/masa" },
+        { "cmd": "C₁V₁ = C₂V₂", "desc": "Dilución" },
+        { "cmd": "ppm = mg/L", "desc": "Partes por millón" }
+      ]
+    },
+    {
+      "name": "Ácidos y Bases",
+      "items": [
+        { "cmd": "pH = -log[H⁺]", "desc": "Definición de pH" },
+        { "cmd": "pOH = -log[OH⁻]", "desc": "Definición de pOH" },
+        { "cmd": "pH + pOH = 14", "desc": "A 25°C" },
+        { "cmd": "Kw = [H⁺][OH⁻] = 10⁻¹⁴", "desc": "Producto iónico agua" },
+        { "cmd": "Ka = [H⁺][A⁻]/[HA]", "desc": "Constante de acidez" },
+        { "cmd": "Kb = [BH⁺][OH⁻]/[B]", "desc": "Constante de basicidad" },
+        { "cmd": "pH < 7 = ácido", "desc": "Solución ácida" },
+        { "cmd": "pH > 7 = básico", "desc": "Solución básica" }
+      ]
+    },
+    {
+      "name": "Equilibrio Químico",
+      "items": [
+        { "cmd": "Keq = [productos]/[reactivos]", "desc": "Constante de equilibrio" },
+        { "cmd": "Q < K → avanza", "desc": "Hacia productos" },
+        { "cmd": "Q > K → retrocede", "desc": "Hacia reactivos" },
+        { "cmd": "Q = K → equilibrio", "desc": "Sin cambio neto" },
+        { "cmd": "ΔG = -RT ln(K)", "desc": "Energía libre y K" },
+        { "cmd": "Principio de Le Chatelier", "desc": "Sistema contrarresta cambios" }
+      ]
+    },
+    {
+      "name": "Termoquímica",
+      "items": [
+        { "cmd": "ΔH < 0", "desc": "Reacción exotérmica" },
+        { "cmd": "ΔH > 0", "desc": "Reacción endotérmica" },
+        { "cmd": "ΔH° = Σ ΔHf°(prod) - Σ ΔHf°(react)", "desc": "Ley de Hess" },
+        { "cmd": "q = mcΔT", "desc": "Calor = masa × c × ΔT" },
+        { "cmd": "ΔG = ΔH - TΔS", "desc": "Energía libre de Gibbs" },
+        { "cmd": "ΔG < 0", "desc": "Reacción espontánea" }
+      ]
+    },
+    {
+      "name": "Electroquímica",
+      "items": [
+        { "cmd": "Oxidación: pérdida de e⁻", "desc": "LEO (Lose Electrons Oxidation)" },
+        { "cmd": "Reducción: ganancia de e⁻", "desc": "GER (Gain Electrons Reduction)" },
+        { "cmd": "E°cel = E°cátodo - E°ánodo", "desc": "Potencial de celda" },
+        { "cmd": "ΔG° = -nFE°", "desc": "Energía libre y potencial" },
+        { "cmd": "F = 96485 C/mol", "desc": "Constante de Faraday" },
+        { "cmd": "Ánodo: oxidación", "desc": "Electrodo negativo" },
+        { "cmd": "Cátodo: reducción", "desc": "Electrodo positivo" }
+      ]
+    },
+    {
+      "name": "Nomenclatura Inorgánica",
+      "items": [
+        { "cmd": "Óxidos: metal + O", "desc": "Ej: Fe₂O₃ óxido de hierro(III)" },
+        { "cmd": "Hidróxidos: metal + OH", "desc": "Ej: NaOH hidróxido de sodio" },
+        { "cmd": "Ácidos hidrácidos: H + no metal", "desc": "Ej: HCl ácido clorhídrico" },
+        { "cmd": "Ácidos oxoácidos: H + no metal + O", "desc": "Ej: H₂SO₄ ácido sulfúrico" },
+        { "cmd": "Sales binarias: metal + no metal", "desc": "Ej: NaCl cloruro de sodio" },
+        { "cmd": "Sales ternarias: metal + radical", "desc": "Ej: CaCO₃ carbonato de calcio" }
+      ]
+    },
+    {
+      "name": "Enlaces",
+      "items": [
+        { "cmd": "Iónico", "desc": "Metal + no metal (transferencia e⁻)" },
+        { "cmd": "Covalente", "desc": "No metal + no metal (comparten e⁻)" },
+        { "cmd": "Metálico", "desc": "Metal + metal (mar de e⁻)" },
+        { "cmd": "Polar", "desc": "ΔEN > 0.4" },
+        { "cmd": "No polar", "desc": "ΔEN < 0.4" },
+        { "cmd": "Puente de hidrógeno", "desc": "H unido a F, O, N" }
+      ]
+    },
+    {
+      "name": "Orgánica Básica",
+      "items": [
+        { "cmd": "Alcanos: CₙH₂ₙ₊₂", "desc": "Enlaces simples (-ano)" },
+        { "cmd": "Alquenos: CₙH₂ₙ", "desc": "Doble enlace (-eno)" },
+        { "cmd": "Alquinos: CₙH₂ₙ₋₂", "desc": "Triple enlace (-ino)" },
+        { "cmd": "-OH", "desc": "Alcohol" },
+        { "cmd": "-COOH", "desc": "Ácido carboxílico" },
+        { "cmd": "-NH₂", "desc": "Amina" },
+        { "cmd": "-CHO", "desc": "Aldehído" },
+        { "cmd": "C=O", "desc": "Cetona" }
+      ]
+    }
+  ]
+}

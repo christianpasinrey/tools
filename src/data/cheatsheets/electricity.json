@@ -1,0 +1,148 @@
+{
+  "title": "Electricidad",
+  "description": "Fórmulas, leyes y componentes eléctricos",
+  "sections": [
+    {
+      "name": "Ley de Ohm",
+      "items": [
+        { "cmd": "V = I × R", "desc": "Voltaje = Corriente × Resistencia" },
+        { "cmd": "I = V / R", "desc": "Corriente = Voltaje / Resistencia" },
+        { "cmd": "R = V / I", "desc": "Resistencia = Voltaje / Corriente" },
+        { "cmd": "V (Volt)", "desc": "Unidad de voltaje" },
+        { "cmd": "I (Ampere)", "desc": "Unidad de corriente" },
+        { "cmd": "R (Ohm, Ω)", "desc": "Unidad de resistencia" }
+      ]
+    },
+    {
+      "name": "Potencia Eléctrica",
+      "items": [
+        { "cmd": "P = V × I", "desc": "Potencia = Voltaje × Corriente" },
+        { "cmd": "P = I² × R", "desc": "Potencia con corriente" },
+        { "cmd": "P = V² / R", "desc": "Potencia con voltaje" },
+        { "cmd": "P (Watt, W)", "desc": "Unidad de potencia" },
+        { "cmd": "E = P × t", "desc": "Energía = Potencia × tiempo" },
+        { "cmd": "kWh = kW × h", "desc": "Kilovatio-hora" },
+        { "cmd": "1 HP = 746 W", "desc": "Caballo de fuerza" }
+      ]
+    },
+    {
+      "name": "Resistencias",
+      "items": [
+        { "cmd": "Serie: Rt = R₁ + R₂ + R₃", "desc": "Suma directa" },
+        { "cmd": "Paralelo: 1/Rt = 1/R₁ + 1/R₂", "desc": "Suma de inversos" },
+        { "cmd": "2 en paralelo: Rt = (R₁×R₂)/(R₁+R₂)", "desc": "Fórmula rápida" },
+        { "cmd": "R = ρ × L / A", "desc": "Resistencia de conductor" },
+        { "cmd": "ρ (rho)", "desc": "Resistividad del material" },
+        { "cmd": "L = longitud, A = área", "desc": "Dimensiones del conductor" }
+      ]
+    },
+    {
+      "name": "Capacitores",
+      "items": [
+        { "cmd": "C = Q / V", "desc": "Capacitancia" },
+        { "cmd": "C (Farad, F)", "desc": "Unidad de capacitancia" },
+        { "cmd": "Paralelo: Ct = C₁ + C₂ + C₃", "desc": "Suma directa" },
+        { "cmd": "Serie: 1/Ct = 1/C₁ + 1/C₂", "desc": "Suma de inversos" },
+        { "cmd": "E = ½CV²", "desc": "Energía almacenada" },
+        { "cmd": "τ = RC", "desc": "Constante de tiempo RC" },
+        { "cmd": "C = ε₀εᵣA/d", "desc": "Capacitor de placas" }
+      ]
+    },
+    {
+      "name": "Inductores",
+      "items": [
+        { "cmd": "V = L × (dI/dt)", "desc": "Voltaje inducido" },
+        { "cmd": "L (Henry, H)", "desc": "Unidad de inductancia" },
+        { "cmd": "Serie: Lt = L₁ + L₂ + L₃", "desc": "Suma directa" },
+        { "cmd": "Paralelo: 1/Lt = 1/L₁ + 1/L₂", "desc": "Suma de inversos" },
+        { "cmd": "E = ½LI²", "desc": "Energía almacenada" },
+        { "cmd": "τ = L/R", "desc": "Constante de tiempo RL" },
+        { "cmd": "XL = 2πfL", "desc": "Reactancia inductiva" }
+      ]
+    },
+    {
+      "name": "Corriente Alterna (AC)",
+      "items": [
+        { "cmd": "Vp = √2 × Vrms", "desc": "Voltaje pico" },
+        { "cmd": "Vrms = Vp / √2", "desc": "Voltaje RMS" },
+        { "cmd": "Vrms = 0.707 × Vp", "desc": "Aproximación" },
+        { "cmd": "f = 1/T", "desc": "Frecuencia" },
+        { "cmd": "ω = 2πf", "desc": "Frecuencia angular" },
+        { "cmd": "v(t) = Vp × sin(ωt)", "desc": "Voltaje instantáneo" },
+        { "cmd": "XC = 1/(2πfC)", "desc": "Reactancia capacitiva" },
+        { "cmd": "Z = √(R² + (XL-XC)²)", "desc": "Impedancia" }
+      ]
+    },
+    {
+      "name": "Leyes de Kirchhoff",
+      "items": [
+        { "cmd": "LCK: ΣI = 0 (en un nodo)", "desc": "Ley de corrientes" },
+        { "cmd": "LVK: ΣV = 0 (en un lazo)", "desc": "Ley de voltajes" },
+        { "cmd": "I entrante = I saliente", "desc": "En cada nodo" },
+        { "cmd": "Σ subidas V = Σ caídas V", "desc": "En cada malla" }
+      ]
+    },
+    {
+      "name": "Transformadores",
+      "items": [
+        { "cmd": "Vp/Vs = Np/Ns", "desc": "Relación de vueltas" },
+        { "cmd": "Vp × Ip = Vs × Is", "desc": "Conservación de potencia" },
+        { "cmd": "Np/Ns > 1", "desc": "Reductor" },
+        { "cmd": "Np/Ns < 1", "desc": "Elevador" },
+        { "cmd": "η = Ps/Pp × 100%", "desc": "Eficiencia" }
+      ]
+    },
+    {
+      "name": "Semiconductores",
+      "items": [
+        { "cmd": "Diodo: conduce en directa", "desc": "Vf ≈ 0.7V (Si), 0.3V (Ge)" },
+        { "cmd": "LED: emisor de luz", "desc": "Vf ≈ 1.8-3.3V" },
+        { "cmd": "Zener: regulador de voltaje", "desc": "Conduce en inversa" },
+        { "cmd": "Transistor BJT", "desc": "Ic = β × Ib" },
+        { "cmd": "MOSFET", "desc": "Controlado por voltaje" },
+        { "cmd": "β (hFE)", "desc": "Ganancia de corriente" }
+      ]
+    },
+    {
+      "name": "Código de Colores (Resistencias)",
+      "items": [
+        { "cmd": "Negro = 0", "desc": "Multiplier: ×1Ω" },
+        { "cmd": "Marrón = 1", "desc": "Multiplier: ×10Ω" },
+        { "cmd": "Rojo = 2", "desc": "Multiplier: ×100Ω" },
+        { "cmd": "Naranja = 3", "desc": "Multiplier: ×1kΩ" },
+        { "cmd": "Amarillo = 4", "desc": "Multiplier: ×10kΩ" },
+        { "cmd": "Verde = 5", "desc": "Multiplier: ×100kΩ" },
+        { "cmd": "Azul = 6", "desc": "Multiplier: ×1MΩ" },
+        { "cmd": "Violeta = 7", "desc": "-" },
+        { "cmd": "Gris = 8", "desc": "-" },
+        { "cmd": "Blanco = 9", "desc": "-" },
+        { "cmd": "Dorado = ±5%", "desc": "Tolerancia" },
+        { "cmd": "Plateado = ±10%", "desc": "Tolerancia" }
+      ]
+    },
+    {
+      "name": "Prefijos SI",
+      "items": [
+        { "cmd": "p (pico) = 10⁻¹²", "desc": "0.000000000001" },
+        { "cmd": "n (nano) = 10⁻⁹", "desc": "0.000000001" },
+        { "cmd": "μ (micro) = 10⁻⁶", "desc": "0.000001" },
+        { "cmd": "m (mili) = 10⁻³", "desc": "0.001" },
+        { "cmd": "k (kilo) = 10³", "desc": "1,000" },
+        { "cmd": "M (mega) = 10⁶", "desc": "1,000,000" },
+        { "cmd": "G (giga) = 10⁹", "desc": "1,000,000,000" }
+      ]
+    },
+    {
+      "name": "Símbolos de Circuitos",
+      "items": [
+        { "cmd": "—/\\/\\/—", "desc": "Resistencia" },
+        { "cmd": "—||—", "desc": "Capacitor" },
+        { "cmd": "—⌒⌒⌒—", "desc": "Inductor" },
+        { "cmd": "—▷|—", "desc": "Diodo" },
+        { "cmd": "—⊕—", "desc": "Fuente de voltaje" },
+        { "cmd": "—⊗—", "desc": "Fuente de corriente" },
+        { "cmd": "⏚", "desc": "Tierra (GND)" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "title": "TypeScript",
+  "description": "Tipos, utilities y sintaxis de TypeScript",
+  "sections": [
+    {
+      "name": "Tipos Básicos",
+      "items": [
+        { "cmd": "string", "desc": "Cadena de texto" },
+        { "cmd": "number", "desc": "Número (int o float)" },
+        { "cmd": "boolean", "desc": "true o false" },
+        { "cmd": "null", "desc": "Valor nulo" },
+        { "cmd": "undefined", "desc": "Sin definir" },
+        { "cmd": "any", "desc": "Cualquier tipo (evitar)" },
+        { "cmd": "unknown", "desc": "Tipo desconocido (seguro)" },
+        { "cmd": "never", "desc": "Nunca retorna" },
+        { "cmd": "void", "desc": "Sin retorno" },
+        { "cmd": "object", "desc": "Cualquier objeto" },
+        { "cmd": "symbol", "desc": "Símbolo único" },
+        { "cmd": "bigint", "desc": "Enteros grandes" }
+      ]
+    },
+    {
+      "name": "Arrays y Tuplas",
+      "items": [
+        { "cmd": "string[]", "desc": "Array de strings" },
+        { "cmd": "Array<number>", "desc": "Array genérico" },
+        { "cmd": "[string, number]", "desc": "Tupla" },
+        { "cmd": "readonly string[]", "desc": "Array inmutable" },
+        { "cmd": "[...string[]]", "desc": "Rest en tupla" },
+        { "cmd": "number[][]", "desc": "Array bidimensional" }
+      ]
+    },
+    {
+      "name": "Interfaces",
+      "items": [
+        { "cmd": "interface User { name: string }", "desc": "Definir interface" },
+        { "cmd": "interface A extends B", "desc": "Extender interface" },
+        { "cmd": "prop?: string", "desc": "Propiedad opcional" },
+        { "cmd": "readonly prop: string", "desc": "Solo lectura" },
+        { "cmd": "[key: string]: any", "desc": "Index signature" },
+        { "cmd": "(x: number): void", "desc": "Call signature" },
+        { "cmd": "new (x: string): Object", "desc": "Construct signature" }
+      ]
+    },
+    {
+      "name": "Types",
+      "items": [
+        { "cmd": "type Name = string", "desc": "Type alias" },
+        { "cmd": "type Union = A | B", "desc": "Union type" },
+        { "cmd": "type Inter = A & B", "desc": "Intersection" },
+        { "cmd": "type Lit = 'a' | 'b'", "desc": "Literal type" },
+        { "cmd": "type Fn = () => void", "desc": "Function type" },
+        { "cmd": "type Template = `${A}-${B}`", "desc": "Template literal" }
+      ]
+    },
+    {
+      "name": "Generics",
+      "items": [
+        { "cmd": "function fn<T>(x: T): T", "desc": "Generic function" },
+        { "cmd": "class Box<T> { value: T }", "desc": "Generic class" },
+        { "cmd": "<T extends Base>", "desc": "Constraint" },
+        { "cmd": "<T extends keyof U>", "desc": "Key constraint" },
+        { "cmd": "<T = string>", "desc": "Default type" },
+        { "cmd": "<T, U = T>", "desc": "Multiple generics" }
+      ]
+    },
+    {
+      "name": "Utility Types",
+      "items": [
+        { "cmd": "Partial<T>", "desc": "Todas opcionales" },
+        { "cmd": "Required<T>", "desc": "Todas requeridas" },
+        { "cmd": "Readonly<T>", "desc": "Todas readonly" },
+        { "cmd": "Pick<T, K>", "desc": "Seleccionar props" },
+        { "cmd": "Omit<T, K>", "desc": "Excluir props" },
+        { "cmd": "Record<K, V>", "desc": "Objeto tipado" },
+        { "cmd": "Exclude<T, U>", "desc": "Excluir de union" },
+        { "cmd": "Extract<T, U>", "desc": "Extraer de union" },
+        { "cmd": "NonNullable<T>", "desc": "Quitar null/undefined" },
+        { "cmd": "ReturnType<T>", "desc": "Tipo de retorno" },
+        { "cmd": "Parameters<T>", "desc": "Tipos de params" },
+        { "cmd": "Awaited<T>", "desc": "Tipo de Promise" }
+      ]
+    },
+    {
+      "name": "Type Guards",
+      "items": [
+        { "cmd": "typeof x === 'string'", "desc": "Typeof guard" },
+        { "cmd": "x instanceof Class", "desc": "Instanceof guard" },
+        { "cmd": "'prop' in obj", "desc": "In guard" },
+        { "cmd": "x is Type", "desc": "Custom type predicate" },
+        { "cmd": "x as Type", "desc": "Type assertion" },
+        { "cmd": "<Type>x", "desc": "Assertion (legacy)" },
+        { "cmd": "x!", "desc": "Non-null assertion" }
+      ]
+    },
+    {
+      "name": "Mapped Types",
+      "items": [
+        { "cmd": "{ [K in keyof T]: V }", "desc": "Mapped type" },
+        { "cmd": "{ [K in keyof T]?: T[K] }", "desc": "Optional mapped" },
+        { "cmd": "{ -readonly [K in keyof T]: T[K] }", "desc": "Quitar readonly" },
+        { "cmd": "{ [K in keyof T as `get${K}`]: T[K] }", "desc": "Key remapping" }
+      ]
+    },
+    {
+      "name": "Conditional Types",
+      "items": [
+        { "cmd": "T extends U ? X : Y", "desc": "Conditional type" },
+        { "cmd": "infer R", "desc": "Inferir tipo" },
+        { "cmd": "T extends (infer R)[] ? R : T", "desc": "Unwrap array" },
+        { "cmd": "T extends (...args: any) => infer R ? R : never", "desc": "Inferir retorno" }
+      ]
+    },
+    {
+      "name": "Decorators",
+      "items": [
+        { "cmd": "@decorator", "desc": "Aplicar decorator" },
+        { "cmd": "@decorator()", "desc": "Decorator factory" },
+        { "cmd": "@classDecorator", "desc": "En clase" },
+        { "cmd": "@methodDecorator", "desc": "En método" },
+        { "cmd": "@propertyDecorator", "desc": "En propiedad" },
+        { "cmd": "@parameterDecorator", "desc": "En parámetro" }
+      ]
+    },
+    {
+      "name": "Módulos",
+      "items": [
+        { "cmd": "export { x }", "desc": "Named export" },
+        { "cmd": "export default x", "desc": "Default export" },
+        { "cmd": "import { x } from 'mod'", "desc": "Named import" },
+        { "cmd": "import x from 'mod'", "desc": "Default import" },
+        { "cmd": "import * as m from 'mod'", "desc": "Namespace import" },
+        { "cmd": "import type { T } from 'mod'", "desc": "Type-only import" },
+        { "cmd": "export type { T }", "desc": "Type-only export" }
+      ]
+    },
+    {
+      "name": "Configuración",
+      "items": [
+        { "cmd": "strict: true", "desc": "Modo estricto" },
+        { "cmd": "noImplicitAny: true", "desc": "Sin any implícito" },
+        { "cmd": "strictNullChecks: true", "desc": "Null checks" },
+        { "cmd": "esModuleInterop: true", "desc": "Interop ES modules" },
+        { "cmd": "skipLibCheck: true", "desc": "Saltar check libs" },
+        { "cmd": "target: 'ES2022'", "desc": "Target JS" },
+        { "cmd": "module: 'ESNext'", "desc": "Sistema módulos" }
+      ]
+    }
+  ]
+}

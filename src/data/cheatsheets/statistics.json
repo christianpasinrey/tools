@@ -1,0 +1,135 @@
+{
+  "title": "Estadística",
+  "description": "Fórmulas, distribuciones y tests estadísticos",
+  "sections": [
+    {
+      "name": "Medidas de Tendencia Central",
+      "items": [
+        { "cmd": "x̄ = Σxᵢ / n", "desc": "Media aritmética" },
+        { "cmd": "Mediana", "desc": "Valor central (n+1)/2" },
+        { "cmd": "Moda", "desc": "Valor más frecuente" },
+        { "cmd": "Media geométrica = ⁿ√(x₁×x₂×...×xₙ)", "desc": "Para tasas de cambio" },
+        { "cmd": "Media ponderada = Σ(wᵢxᵢ) / Σwᵢ", "desc": "Con pesos" }
+      ]
+    },
+    {
+      "name": "Medidas de Dispersión",
+      "items": [
+        { "cmd": "Rango = máx - mín", "desc": "Amplitud" },
+        { "cmd": "σ² = Σ(xᵢ - μ)² / N", "desc": "Varianza poblacional" },
+        { "cmd": "s² = Σ(xᵢ - x̄)² / (n-1)", "desc": "Varianza muestral" },
+        { "cmd": "σ = √σ²", "desc": "Desviación estándar" },
+        { "cmd": "CV = (σ / μ) × 100", "desc": "Coeficiente de variación" },
+        { "cmd": "IQR = Q₃ - Q₁", "desc": "Rango intercuartílico" },
+        { "cmd": "MAD = mediana(|xᵢ - mediana|)", "desc": "Desviación absoluta mediana" }
+      ]
+    },
+    {
+      "name": "Probabilidad",
+      "items": [
+        { "cmd": "P(A) = casos favorables / casos totales", "desc": "Probabilidad clásica" },
+        { "cmd": "0 ≤ P(A) ≤ 1", "desc": "Rango de probabilidad" },
+        { "cmd": "P(A') = 1 - P(A)", "desc": "Complemento" },
+        { "cmd": "P(A∪B) = P(A) + P(B) - P(A∩B)", "desc": "Unión" },
+        { "cmd": "P(A∩B) = P(A) × P(B|A)", "desc": "Intersección" },
+        { "cmd": "P(B|A) = P(A∩B) / P(A)", "desc": "Probabilidad condicional" },
+        { "cmd": "P(A|B) = P(B|A)P(A) / P(B)", "desc": "Teorema de Bayes" },
+        { "cmd": "A, B independientes si P(A∩B) = P(A)P(B)", "desc": "Independencia" }
+      ]
+    },
+    {
+      "name": "Combinatoria",
+      "items": [
+        { "cmd": "n! = n × (n-1) × ... × 1", "desc": "Factorial" },
+        { "cmd": "P(n,r) = n! / (n-r)!", "desc": "Permutaciones" },
+        { "cmd": "C(n,r) = n! / (r!(n-r)!)", "desc": "Combinaciones" },
+        { "cmd": "Pⁿᵣ = nʳ", "desc": "Permutaciones con repetición" },
+        { "cmd": "(a+b)ⁿ = Σ C(n,k) aⁿ⁻ᵏbᵏ", "desc": "Binomio de Newton" }
+      ]
+    },
+    {
+      "name": "Distribución Normal",
+      "items": [
+        { "cmd": "Z = (x - μ) / σ", "desc": "Estandarización" },
+        { "cmd": "N(μ, σ²)", "desc": "Notación normal" },
+        { "cmd": "N(0, 1)", "desc": "Normal estándar" },
+        { "cmd": "68% en μ ± 1σ", "desc": "Regla empírica" },
+        { "cmd": "95% en μ ± 2σ", "desc": "Regla empírica" },
+        { "cmd": "99.7% en μ ± 3σ", "desc": "Regla empírica" }
+      ]
+    },
+    {
+      "name": "Otras Distribuciones",
+      "items": [
+        { "cmd": "Binomial: P(X=k) = C(n,k)pᵏ(1-p)ⁿ⁻ᵏ", "desc": "n ensayos, prob p" },
+        { "cmd": "E(X) = np, Var(X) = np(1-p)", "desc": "Media y var binomial" },
+        { "cmd": "Poisson: P(X=k) = (λᵏe⁻λ) / k!", "desc": "Eventos raros" },
+        { "cmd": "E(X) = Var(X) = λ", "desc": "Media y var Poisson" },
+        { "cmd": "Exponencial: f(x) = λe⁻λˣ", "desc": "Tiempo entre eventos" },
+        { "cmd": "t de Student", "desc": "Muestras pequeñas" },
+        { "cmd": "Chi-cuadrado χ²", "desc": "Bondad de ajuste" },
+        { "cmd": "F de Fisher", "desc": "Comparar varianzas" }
+      ]
+    },
+    {
+      "name": "Intervalos de Confianza",
+      "items": [
+        { "cmd": "IC = x̄ ± z(α/2) × (σ/√n)", "desc": "Para μ (σ conocida)" },
+        { "cmd": "IC = x̄ ± t(α/2) × (s/√n)", "desc": "Para μ (σ desconocida)" },
+        { "cmd": "IC = p̂ ± z(α/2) × √(p̂(1-p̂)/n)", "desc": "Para proporción" },
+        { "cmd": "z₀.₉₅ = 1.96", "desc": "95% confianza" },
+        { "cmd": "z₀.₉₉ = 2.576", "desc": "99% confianza" },
+        { "cmd": "n = (z × σ / E)²", "desc": "Tamaño de muestra" }
+      ]
+    },
+    {
+      "name": "Tests de Hipótesis",
+      "items": [
+        { "cmd": "H₀: hipótesis nula", "desc": "Lo que queremos rechazar" },
+        { "cmd": "H₁: hipótesis alternativa", "desc": "Lo que queremos probar" },
+        { "cmd": "α = nivel de significancia", "desc": "Típicamente 0.05" },
+        { "cmd": "p-valor < α → rechazar H₀", "desc": "Criterio de rechazo" },
+        { "cmd": "Error Tipo I: rechazar H₀ verdadera", "desc": "Falso positivo (α)" },
+        { "cmd": "Error Tipo II: no rechazar H₀ falsa", "desc": "Falso negativo (β)" },
+        { "cmd": "Potencia = 1 - β", "desc": "Prob detectar efecto" }
+      ]
+    },
+    {
+      "name": "Tests Comunes",
+      "items": [
+        { "cmd": "t-test una muestra", "desc": "μ vs valor hipotético" },
+        { "cmd": "t-test dos muestras", "desc": "Comparar dos μ" },
+        { "cmd": "t-test pareado", "desc": "Muestras relacionadas" },
+        { "cmd": "χ² bondad de ajuste", "desc": "Distribución observada vs esperada" },
+        { "cmd": "χ² independencia", "desc": "Relación entre categóricas" },
+        { "cmd": "ANOVA", "desc": "Comparar 3+ medias" },
+        { "cmd": "Mann-Whitney U", "desc": "t-test no paramétrico" },
+        { "cmd": "Kruskal-Wallis", "desc": "ANOVA no paramétrico" }
+      ]
+    },
+    {
+      "name": "Regresión",
+      "items": [
+        { "cmd": "y = β₀ + β₁x + ε", "desc": "Regresión lineal simple" },
+        { "cmd": "β₁ = Σ(xᵢ-x̄)(yᵢ-ȳ) / Σ(xᵢ-x̄)²", "desc": "Pendiente" },
+        { "cmd": "β₀ = ȳ - β₁x̄", "desc": "Intercepto" },
+        { "cmd": "R² = SSR / SST", "desc": "Coef. determinación" },
+        { "cmd": "R² = 1 - SSE/SST", "desc": "Alternativa" },
+        { "cmd": "r = Σ(xᵢ-x̄)(yᵢ-ȳ) / (n-1)sₓsᵧ", "desc": "Correlación de Pearson" },
+        { "cmd": "-1 ≤ r ≤ 1", "desc": "Rango correlación" }
+      ]
+    },
+    {
+      "name": "Correlación",
+      "items": [
+        { "cmd": "r = 1", "desc": "Correlación positiva perfecta" },
+        { "cmd": "r = -1", "desc": "Correlación negativa perfecta" },
+        { "cmd": "r = 0", "desc": "Sin correlación lineal" },
+        { "cmd": "|r| < 0.3", "desc": "Correlación débil" },
+        { "cmd": "0.3 ≤ |r| < 0.7", "desc": "Correlación moderada" },
+        { "cmd": "|r| ≥ 0.7", "desc": "Correlación fuerte" },
+        { "cmd": "Spearman ρ", "desc": "Correlación de rangos" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "title": "SQL Avanzado",
+  "description": "JOINs, window functions, CTEs y más",
+  "sections": [
+    {
+      "name": "SELECT Básico",
+      "items": [
+        { "cmd": "SELECT * FROM tabla", "desc": "Seleccionar todo" },
+        { "cmd": "SELECT col1, col2 FROM tabla", "desc": "Columnas específicas" },
+        { "cmd": "SELECT DISTINCT col FROM tabla", "desc": "Valores únicos" },
+        { "cmd": "SELECT col AS alias FROM tabla", "desc": "Alias de columna" },
+        { "cmd": "SELECT * FROM tabla LIMIT 10", "desc": "Limitar resultados" },
+        { "cmd": "SELECT * FROM tabla LIMIT 10 OFFSET 20", "desc": "Paginación" }
+      ]
+    },
+    {
+      "name": "WHERE y Filtros",
+      "items": [
+        { "cmd": "WHERE col = 'valor'", "desc": "Igualdad" },
+        { "cmd": "WHERE col != 'valor'", "desc": "Diferente" },
+        { "cmd": "WHERE col > 10", "desc": "Mayor que" },
+        { "cmd": "WHERE col BETWEEN 1 AND 10", "desc": "Rango" },
+        { "cmd": "WHERE col IN ('a', 'b', 'c')", "desc": "Lista de valores" },
+        { "cmd": "WHERE col LIKE 'pat%'", "desc": "Pattern matching" },
+        { "cmd": "WHERE col ILIKE 'pat%'", "desc": "Case insensitive (PG)" },
+        { "cmd": "WHERE col IS NULL", "desc": "Es nulo" },
+        { "cmd": "WHERE col IS NOT NULL", "desc": "No es nulo" },
+        { "cmd": "WHERE cond1 AND cond2", "desc": "AND lógico" },
+        { "cmd": "WHERE cond1 OR cond2", "desc": "OR lógico" },
+        { "cmd": "WHERE NOT cond", "desc": "Negación" }
+      ]
+    },
+    {
+      "name": "JOINs",
+      "items": [
+        { "cmd": "INNER JOIN t2 ON t1.id = t2.id", "desc": "Solo coincidencias" },
+        { "cmd": "LEFT JOIN t2 ON t1.id = t2.id", "desc": "Todo de izquierda" },
+        { "cmd": "RIGHT JOIN t2 ON t1.id = t2.id", "desc": "Todo de derecha" },
+        { "cmd": "FULL OUTER JOIN t2 ON t1.id = t2.id", "desc": "Todo de ambas" },
+        { "cmd": "CROSS JOIN t2", "desc": "Producto cartesiano" },
+        { "cmd": "SELF JOIN tabla t1, tabla t2", "desc": "Join consigo misma" },
+        { "cmd": "NATURAL JOIN t2", "desc": "Join por cols iguales" },
+        { "cmd": "LEFT JOIN t2 USING (col)", "desc": "Join por columna" }
+      ]
+    },
+    {
+      "name": "Agregaciones",
+      "items": [
+        { "cmd": "COUNT(*)", "desc": "Contar filas" },
+        { "cmd": "COUNT(DISTINCT col)", "desc": "Contar únicos" },
+        { "cmd": "SUM(col)", "desc": "Sumar" },
+        { "cmd": "AVG(col)", "desc": "Promedio" },
+        { "cmd": "MIN(col) / MAX(col)", "desc": "Mínimo/máximo" },
+        { "cmd": "GROUP BY col1, col2", "desc": "Agrupar" },
+        { "cmd": "HAVING COUNT(*) > 5", "desc": "Filtrar grupos" },
+        { "cmd": "GROUP BY ROLLUP(col1, col2)", "desc": "Subtotales" },
+        { "cmd": "GROUP BY CUBE(col1, col2)", "desc": "Todas combinaciones" }
+      ]
+    },
+    {
+      "name": "Window Functions",
+      "items": [
+        { "cmd": "ROW_NUMBER() OVER(ORDER BY col)", "desc": "Número de fila" },
+        { "cmd": "RANK() OVER(ORDER BY col)", "desc": "Ranking (gaps)" },
+        { "cmd": "DENSE_RANK() OVER(ORDER BY col)", "desc": "Ranking (sin gaps)" },
+        { "cmd": "NTILE(4) OVER(ORDER BY col)", "desc": "Dividir en N grupos" },
+        { "cmd": "LAG(col, 1) OVER(ORDER BY date)", "desc": "Valor anterior" },
+        { "cmd": "LEAD(col, 1) OVER(ORDER BY date)", "desc": "Valor siguiente" },
+        { "cmd": "FIRST_VALUE(col) OVER(PARTITION BY g)", "desc": "Primer valor" },
+        { "cmd": "LAST_VALUE(col) OVER(...)", "desc": "Último valor" },
+        { "cmd": "SUM(col) OVER(PARTITION BY g)", "desc": "Suma por grupo" },
+        { "cmd": "AVG(col) OVER(ORDER BY d ROWS 3 PRECEDING)", "desc": "Media móvil" },
+        { "cmd": "PARTITION BY col", "desc": "Particionar ventana" }
+      ]
+    },
+    {
+      "name": "CTEs (WITH)",
+      "items": [
+        { "cmd": "WITH cte AS (SELECT ...)", "desc": "CTE básico" },
+        { "cmd": "WITH cte1 AS (...), cte2 AS (...)", "desc": "Múltiples CTEs" },
+        { "cmd": "WITH RECURSIVE cte AS (...)", "desc": "CTE recursivo" },
+        { "cmd": "SELECT * FROM cte", "desc": "Usar CTE" }
+      ]
+    },
+    {
+      "name": "Subqueries",
+      "items": [
+        { "cmd": "SELECT * FROM (SELECT ...) AS sub", "desc": "En FROM" },
+        { "cmd": "WHERE col IN (SELECT ...)", "desc": "En WHERE" },
+        { "cmd": "WHERE EXISTS (SELECT ...)", "desc": "Existe resultado" },
+        { "cmd": "WHERE col = (SELECT MAX(...))", "desc": "Subquery escalar" },
+        { "cmd": "SELECT (SELECT ...) AS col", "desc": "En SELECT" }
+      ]
+    },
+    {
+      "name": "CASE y Condicionales",
+      "items": [
+        { "cmd": "CASE WHEN cond THEN val END", "desc": "CASE básico" },
+        { "cmd": "CASE WHEN c1 THEN v1 ELSE v2 END", "desc": "Con ELSE" },
+        { "cmd": "CASE col WHEN 'a' THEN 1 END", "desc": "CASE simple" },
+        { "cmd": "COALESCE(col1, col2, 'default')", "desc": "Primer no nulo" },
+        { "cmd": "NULLIF(col1, col2)", "desc": "Null si iguales" },
+        { "cmd": "GREATEST(a, b, c)", "desc": "Mayor valor" },
+        { "cmd": "LEAST(a, b, c)", "desc": "Menor valor" }
+      ]
+    },
+    {
+      "name": "Operaciones de Conjunto",
+      "items": [
+        { "cmd": "SELECT ... UNION SELECT ...", "desc": "Unión (sin duplicados)" },
+        { "cmd": "SELECT ... UNION ALL SELECT ...", "desc": "Unión (con duplicados)" },
+        { "cmd": "SELECT ... INTERSECT SELECT ...", "desc": "Intersección" },
+        { "cmd": "SELECT ... EXCEPT SELECT ...", "desc": "Diferencia" }
+      ]
+    },
+    {
+      "name": "Modificación de Datos",
+      "items": [
+        { "cmd": "INSERT INTO t (cols) VALUES (vals)", "desc": "Insertar fila" },
+        { "cmd": "INSERT INTO t SELECT ...", "desc": "Insert desde select" },
+        { "cmd": "UPDATE t SET col = val WHERE ...", "desc": "Actualizar" },
+        { "cmd": "DELETE FROM t WHERE ...", "desc": "Eliminar filas" },
+        { "cmd": "TRUNCATE TABLE t", "desc": "Vaciar tabla" },
+        { "cmd": "INSERT ... ON CONFLICT DO UPDATE", "desc": "Upsert (PG)" },
+        { "cmd": "INSERT ... ON DUPLICATE KEY UPDATE", "desc": "Upsert (MySQL)" }
+      ]
+    },
+    {
+      "name": "Funciones de Texto",
+      "items": [
+        { "cmd": "CONCAT(s1, s2)", "desc": "Concatenar" },
+        { "cmd": "UPPER(s) / LOWER(s)", "desc": "Mayús/minús" },
+        { "cmd": "TRIM(s)", "desc": "Quitar espacios" },
+        { "cmd": "SUBSTRING(s, start, len)", "desc": "Subcadena" },
+        { "cmd": "LENGTH(s) / CHAR_LENGTH(s)", "desc": "Longitud" },
+        { "cmd": "REPLACE(s, old, new)", "desc": "Reemplazar" },
+        { "cmd": "SPLIT_PART(s, delim, n)", "desc": "Dividir (PG)" }
+      ]
+    },
+    {
+      "name": "Funciones de Fecha",
+      "items": [
+        { "cmd": "NOW() / CURRENT_TIMESTAMP", "desc": "Fecha/hora actual" },
+        { "cmd": "CURRENT_DATE", "desc": "Solo fecha" },
+        { "cmd": "DATE_TRUNC('month', date)", "desc": "Truncar fecha (PG)" },
+        { "cmd": "EXTRACT(YEAR FROM date)", "desc": "Extraer parte" },
+        { "cmd": "DATE_ADD(date, INTERVAL 1 DAY)", "desc": "Sumar (MySQL)" },
+        { "cmd": "date + INTERVAL '1 day'", "desc": "Sumar (PG)" },
+        { "cmd": "DATEDIFF(d1, d2)", "desc": "Diferencia (MySQL)" },
+        { "cmd": "AGE(d1, d2)", "desc": "Diferencia (PG)" }
+      ]
+    }
+  ]
+}

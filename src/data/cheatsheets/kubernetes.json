@@ -1,0 +1,148 @@
+{
+  "title": "Kubernetes",
+  "description": "Comandos kubectl y conceptos de K8s",
+  "sections": [
+    {
+      "name": "Contexto y Config",
+      "items": [
+        { "cmd": "kubectl config get-contexts", "desc": "Ver contextos" },
+        { "cmd": "kubectl config use-context <name>", "desc": "Cambiar contexto" },
+        { "cmd": "kubectl config current-context", "desc": "Contexto actual" },
+        { "cmd": "kubectl cluster-info", "desc": "Info del cluster" },
+        { "cmd": "kubectl get nodes", "desc": "Listar nodos" },
+        { "cmd": "kubectl get namespaces", "desc": "Listar namespaces" },
+        { "cmd": "kubectl config set-context --current --namespace=<ns>", "desc": "Cambiar namespace" }
+      ]
+    },
+    {
+      "name": "Pods",
+      "items": [
+        { "cmd": "kubectl get pods", "desc": "Listar pods" },
+        { "cmd": "kubectl get pods -A", "desc": "Todos los namespaces" },
+        { "cmd": "kubectl get pods -o wide", "desc": "Con más info" },
+        { "cmd": "kubectl get pods -w", "desc": "Watch cambios" },
+        { "cmd": "kubectl describe pod <name>", "desc": "Detalles del pod" },
+        { "cmd": "kubectl logs <pod>", "desc": "Ver logs" },
+        { "cmd": "kubectl logs -f <pod>", "desc": "Follow logs" },
+        { "cmd": "kubectl logs <pod> -c <container>", "desc": "Logs de container" },
+        { "cmd": "kubectl logs --previous <pod>", "desc": "Logs anteriores" },
+        { "cmd": "kubectl exec -it <pod> -- /bin/sh", "desc": "Shell en pod" },
+        { "cmd": "kubectl delete pod <name>", "desc": "Eliminar pod" },
+        { "cmd": "kubectl run <name> --image=<img>", "desc": "Crear pod rápido" }
+      ]
+    },
+    {
+      "name": "Deployments",
+      "items": [
+        { "cmd": "kubectl get deployments", "desc": "Listar deployments" },
+        { "cmd": "kubectl create deployment <name> --image=<img>", "desc": "Crear deployment" },
+        { "cmd": "kubectl scale deployment <name> --replicas=3", "desc": "Escalar" },
+        { "cmd": "kubectl set image deployment/<name> <c>=<img>", "desc": "Actualizar imagen" },
+        { "cmd": "kubectl rollout status deployment/<name>", "desc": "Estado del rollout" },
+        { "cmd": "kubectl rollout history deployment/<name>", "desc": "Historial" },
+        { "cmd": "kubectl rollout undo deployment/<name>", "desc": "Rollback" },
+        { "cmd": "kubectl rollout restart deployment/<name>", "desc": "Reiniciar pods" },
+        { "cmd": "kubectl delete deployment <name>", "desc": "Eliminar" }
+      ]
+    },
+    {
+      "name": "Services",
+      "items": [
+        { "cmd": "kubectl get services", "desc": "Listar services" },
+        { "cmd": "kubectl get svc", "desc": "Alias corto" },
+        { "cmd": "kubectl expose deployment <name> --port=80", "desc": "Exponer deployment" },
+        { "cmd": "kubectl expose deployment <name> --type=NodePort", "desc": "NodePort" },
+        { "cmd": "kubectl expose deployment <name> --type=LoadBalancer", "desc": "LoadBalancer" },
+        { "cmd": "kubectl port-forward svc/<name> 8080:80", "desc": "Port forward" },
+        { "cmd": "kubectl delete service <name>", "desc": "Eliminar service" }
+      ]
+    },
+    {
+      "name": "ConfigMaps y Secrets",
+      "items": [
+        { "cmd": "kubectl get configmaps", "desc": "Listar configmaps" },
+        { "cmd": "kubectl create configmap <name> --from-file=<path>", "desc": "Desde archivo" },
+        { "cmd": "kubectl create configmap <name> --from-literal=key=val", "desc": "Desde literal" },
+        { "cmd": "kubectl get secrets", "desc": "Listar secrets" },
+        { "cmd": "kubectl create secret generic <name> --from-literal=k=v", "desc": "Crear secret" },
+        { "cmd": "kubectl get secret <name> -o jsonpath='{.data}'", "desc": "Ver data (base64)" },
+        { "cmd": "echo <base64> | base64 -d", "desc": "Decodificar secret" }
+      ]
+    },
+    {
+      "name": "Recursos YAML",
+      "items": [
+        { "cmd": "kubectl apply -f <file.yaml>", "desc": "Aplicar YAML" },
+        { "cmd": "kubectl apply -f <dir>/", "desc": "Aplicar directorio" },
+        { "cmd": "kubectl apply -f <url>", "desc": "Aplicar desde URL" },
+        { "cmd": "kubectl delete -f <file.yaml>", "desc": "Eliminar desde YAML" },
+        { "cmd": "kubectl diff -f <file.yaml>", "desc": "Ver diferencias" },
+        { "cmd": "kubectl get <resource> -o yaml", "desc": "Exportar a YAML" },
+        { "cmd": "kubectl create deployment <n> --image=<i> --dry-run=client -o yaml", "desc": "Generar YAML" }
+      ]
+    },
+    {
+      "name": "Ingress",
+      "items": [
+        { "cmd": "kubectl get ingress", "desc": "Listar ingress" },
+        { "cmd": "kubectl describe ingress <name>", "desc": "Detalles" },
+        { "cmd": "kubectl get ingressclass", "desc": "Ver ingress classes" }
+      ]
+    },
+    {
+      "name": "Persistent Volumes",
+      "items": [
+        { "cmd": "kubectl get pv", "desc": "Persistent volumes" },
+        { "cmd": "kubectl get pvc", "desc": "Persistent volume claims" },
+        { "cmd": "kubectl describe pvc <name>", "desc": "Detalles de PVC" },
+        { "cmd": "kubectl get storageclass", "desc": "Storage classes" }
+      ]
+    },
+    {
+      "name": "Namespaces",
+      "items": [
+        { "cmd": "kubectl create namespace <name>", "desc": "Crear namespace" },
+        { "cmd": "kubectl delete namespace <name>", "desc": "Eliminar namespace" },
+        { "cmd": "kubectl get all -n <namespace>", "desc": "Todo en namespace" },
+        { "cmd": "-n <namespace>", "desc": "Flag de namespace" }
+      ]
+    },
+    {
+      "name": "Debugging",
+      "items": [
+        { "cmd": "kubectl describe <resource> <name>", "desc": "Detalles y eventos" },
+        { "cmd": "kubectl get events --sort-by=.metadata.creationTimestamp", "desc": "Eventos ordenados" },
+        { "cmd": "kubectl top pods", "desc": "CPU/memoria pods" },
+        { "cmd": "kubectl top nodes", "desc": "CPU/memoria nodos" },
+        { "cmd": "kubectl debug <pod> -it --image=busybox", "desc": "Debug container" },
+        { "cmd": "kubectl cp <pod>:<path> <local>", "desc": "Copiar desde pod" },
+        { "cmd": "kubectl cp <local> <pod>:<path>", "desc": "Copiar a pod" }
+      ]
+    },
+    {
+      "name": "Labels y Selectors",
+      "items": [
+        { "cmd": "kubectl get pods -l app=nginx", "desc": "Filtrar por label" },
+        { "cmd": "kubectl get pods -l 'env in (prod,dev)'", "desc": "Label set-based" },
+        { "cmd": "kubectl label pod <name> env=prod", "desc": "Añadir label" },
+        { "cmd": "kubectl label pod <name> env-", "desc": "Quitar label" },
+        { "cmd": "kubectl annotate pod <name> desc='info'", "desc": "Añadir anotación" }
+      ]
+    },
+    {
+      "name": "Recursos Comunes",
+      "items": [
+        { "cmd": "po / pods", "desc": "Pods" },
+        { "cmd": "deploy / deployments", "desc": "Deployments" },
+        { "cmd": "svc / services", "desc": "Services" },
+        { "cmd": "cm / configmaps", "desc": "ConfigMaps" },
+        { "cmd": "secret / secrets", "desc": "Secrets" },
+        { "cmd": "ing / ingress", "desc": "Ingress" },
+        { "cmd": "ns / namespaces", "desc": "Namespaces" },
+        { "cmd": "no / nodes", "desc": "Nodes" },
+        { "cmd": "pv / persistentvolumes", "desc": "PV" },
+        { "cmd": "pvc / persistentvolumeclaims", "desc": "PVC" }
+      ]
+    }
+  ]
+}

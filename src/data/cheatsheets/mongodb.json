@@ -1,0 +1,161 @@
+{
+  "title": "MongoDB",
+  "description": "Queries, operadores y aggregation pipeline",
+  "sections": [
+    {
+      "name": "CRUD Básico",
+      "items": [
+        { "cmd": "db.col.insertOne({doc})", "desc": "Insertar uno" },
+        { "cmd": "db.col.insertMany([{doc1}, {doc2}])", "desc": "Insertar varios" },
+        { "cmd": "db.col.find({query})", "desc": "Buscar" },
+        { "cmd": "db.col.findOne({query})", "desc": "Buscar uno" },
+        { "cmd": "db.col.updateOne({q}, {$set: {}})", "desc": "Actualizar uno" },
+        { "cmd": "db.col.updateMany({q}, {update})", "desc": "Actualizar varios" },
+        { "cmd": "db.col.replaceOne({q}, {doc})", "desc": "Reemplazar doc" },
+        { "cmd": "db.col.deleteOne({query})", "desc": "Eliminar uno" },
+        { "cmd": "db.col.deleteMany({query})", "desc": "Eliminar varios" }
+      ]
+    },
+    {
+      "name": "Operadores de Comparación",
+      "items": [
+        { "cmd": "{ field: value }", "desc": "Igualdad" },
+        { "cmd": "{ field: { $eq: value } }", "desc": "Igual a" },
+        { "cmd": "{ field: { $ne: value } }", "desc": "Diferente de" },
+        { "cmd": "{ field: { $gt: value } }", "desc": "Mayor que" },
+        { "cmd": "{ field: { $gte: value } }", "desc": "Mayor o igual" },
+        { "cmd": "{ field: { $lt: value } }", "desc": "Menor que" },
+        { "cmd": "{ field: { $lte: value } }", "desc": "Menor o igual" },
+        { "cmd": "{ field: { $in: [a, b] } }", "desc": "En lista" },
+        { "cmd": "{ field: { $nin: [a, b] } }", "desc": "No en lista" }
+      ]
+    },
+    {
+      "name": "Operadores Lógicos",
+      "items": [
+        { "cmd": "{ $and: [{c1}, {c2}] }", "desc": "AND" },
+        { "cmd": "{ $or: [{c1}, {c2}] }", "desc": "OR" },
+        { "cmd": "{ $not: { condition } }", "desc": "NOT" },
+        { "cmd": "{ $nor: [{c1}, {c2}] }", "desc": "NOR" },
+        { "cmd": "{ field: { $exists: true } }", "desc": "Campo existe" },
+        { "cmd": "{ field: { $type: 'string' } }", "desc": "Tipo de dato" }
+      ]
+    },
+    {
+      "name": "Operadores de Array",
+      "items": [
+        { "cmd": "{ arr: value }", "desc": "Array contiene" },
+        { "cmd": "{ arr: { $all: [a, b] } }", "desc": "Contiene todos" },
+        { "cmd": "{ arr: { $size: 3 } }", "desc": "Tamaño exacto" },
+        { "cmd": "{ arr: { $elemMatch: {q} } }", "desc": "Elemento cumple" },
+        { "cmd": "{ 'arr.0': value }", "desc": "Por índice" },
+        { "cmd": "{ 'arr.field': value }", "desc": "Campo en array" }
+      ]
+    },
+    {
+      "name": "Operadores de Update",
+      "items": [
+        { "cmd": "{ $set: { field: value } }", "desc": "Establecer campo" },
+        { "cmd": "{ $unset: { field: '' } }", "desc": "Eliminar campo" },
+        { "cmd": "{ $inc: { field: 1 } }", "desc": "Incrementar" },
+        { "cmd": "{ $mul: { field: 2 } }", "desc": "Multiplicar" },
+        { "cmd": "{ $min: { field: 10 } }", "desc": "Mínimo" },
+        { "cmd": "{ $max: { field: 100 } }", "desc": "Máximo" },
+        { "cmd": "{ $rename: { old: 'new' } }", "desc": "Renombrar campo" },
+        { "cmd": "{ $currentDate: { f: true } }", "desc": "Fecha actual" },
+        { "cmd": "{ $push: { arr: value } }", "desc": "Añadir a array" },
+        { "cmd": "{ $addToSet: { arr: value } }", "desc": "Añadir si no existe" },
+        { "cmd": "{ $pop: { arr: 1 } }", "desc": "Quitar último" },
+        { "cmd": "{ $pull: { arr: value } }", "desc": "Quitar por valor" },
+        { "cmd": "{ $pullAll: { arr: [a,b] } }", "desc": "Quitar varios" }
+      ]
+    },
+    {
+      "name": "Proyección y Ordenamiento",
+      "items": [
+        { "cmd": ".find({}, { field: 1 })", "desc": "Incluir campo" },
+        { "cmd": ".find({}, { field: 0 })", "desc": "Excluir campo" },
+        { "cmd": ".find({}, { _id: 0 })", "desc": "Excluir _id" },
+        { "cmd": ".sort({ field: 1 })", "desc": "Ordenar ASC" },
+        { "cmd": ".sort({ field: -1 })", "desc": "Ordenar DESC" },
+        { "cmd": ".limit(10)", "desc": "Limitar resultados" },
+        { "cmd": ".skip(20)", "desc": "Saltar N docs" },
+        { "cmd": ".count()", "desc": "Contar docs" }
+      ]
+    },
+    {
+      "name": "Aggregation Pipeline",
+      "items": [
+        { "cmd": "$match: { query }", "desc": "Filtrar docs" },
+        { "cmd": "$project: { field: 1 }", "desc": "Proyectar campos" },
+        { "cmd": "$group: { _id: '$f', sum: {$sum: 1} }", "desc": "Agrupar" },
+        { "cmd": "$sort: { field: 1 }", "desc": "Ordenar" },
+        { "cmd": "$limit: 10", "desc": "Limitar" },
+        { "cmd": "$skip: 20", "desc": "Saltar" },
+        { "cmd": "$unwind: '$array'", "desc": "Expandir array" },
+        { "cmd": "$lookup: { from, localField, ... }", "desc": "Join" },
+        { "cmd": "$addFields: { newF: expr }", "desc": "Añadir campos" },
+        { "cmd": "$count: 'total'", "desc": "Contar" }
+      ]
+    },
+    {
+      "name": "Operadores de Agregación",
+      "items": [
+        { "cmd": "$sum: '$field'", "desc": "Sumar" },
+        { "cmd": "$avg: '$field'", "desc": "Promedio" },
+        { "cmd": "$min: '$field'", "desc": "Mínimo" },
+        { "cmd": "$max: '$field'", "desc": "Máximo" },
+        { "cmd": "$first: '$field'", "desc": "Primero del grupo" },
+        { "cmd": "$last: '$field'", "desc": "Último del grupo" },
+        { "cmd": "$push: '$field'", "desc": "Array con valores" },
+        { "cmd": "$addToSet: '$field'", "desc": "Array único" }
+      ]
+    },
+    {
+      "name": "Expresiones",
+      "items": [
+        { "cmd": "$concat: ['$f1', ' ', '$f2']", "desc": "Concatenar" },
+        { "cmd": "$substr: ['$f', 0, 5]", "desc": "Subcadena" },
+        { "cmd": "$toUpper: '$field'", "desc": "Mayúsculas" },
+        { "cmd": "$toLower: '$field'", "desc": "Minúsculas" },
+        { "cmd": "$cond: [cond, true, false]", "desc": "Condicional" },
+        { "cmd": "$ifNull: ['$f', 'default']", "desc": "Si es null" },
+        { "cmd": "$dateToString: { format, date }", "desc": "Formatear fecha" },
+        { "cmd": "$year: '$date'", "desc": "Extraer año" }
+      ]
+    },
+    {
+      "name": "Índices",
+      "items": [
+        { "cmd": "db.col.createIndex({ field: 1 })", "desc": "Índice simple" },
+        { "cmd": "db.col.createIndex({ f1: 1, f2: -1 })", "desc": "Compuesto" },
+        { "cmd": "db.col.createIndex({ f: 1 }, { unique: true })", "desc": "Único" },
+        { "cmd": "db.col.createIndex({ f: 'text' })", "desc": "Texto" },
+        { "cmd": "db.col.createIndex({ loc: '2dsphere' })", "desc": "Geoespacial" },
+        { "cmd": "db.col.getIndexes()", "desc": "Listar índices" },
+        { "cmd": "db.col.dropIndex('name')", "desc": "Eliminar índice" }
+      ]
+    },
+    {
+      "name": "Búsqueda de Texto",
+      "items": [
+        { "cmd": "{ $text: { $search: 'palabra' } }", "desc": "Buscar texto" },
+        { "cmd": "{ $text: { $search: '\"frase exacta\"' } }", "desc": "Frase exacta" },
+        { "cmd": "{ $text: { $search: 'a -b' } }", "desc": "Excluir palabra" },
+        { "cmd": "{ score: { $meta: 'textScore' } }", "desc": "Relevancia" }
+      ]
+    },
+    {
+      "name": "Administración",
+      "items": [
+        { "cmd": "show dbs", "desc": "Listar bases de datos" },
+        { "cmd": "use dbname", "desc": "Cambiar BD" },
+        { "cmd": "show collections", "desc": "Listar colecciones" },
+        { "cmd": "db.createCollection('name')", "desc": "Crear colección" },
+        { "cmd": "db.col.drop()", "desc": "Eliminar colección" },
+        { "cmd": "db.dropDatabase()", "desc": "Eliminar BD" },
+        { "cmd": "db.col.stats()", "desc": "Estadísticas" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "title": "Markdown",
+  "description": "Sintaxis completa de Markdown",
+  "sections": [
+    {
+      "name": "Encabezados",
+      "items": [
+        { "cmd": "# H1", "desc": "Encabezado nivel 1" },
+        { "cmd": "## H2", "desc": "Encabezado nivel 2" },
+        { "cmd": "### H3", "desc": "Encabezado nivel 3" },
+        { "cmd": "#### H4", "desc": "Encabezado nivel 4" },
+        { "cmd": "##### H5", "desc": "Encabezado nivel 5" },
+        { "cmd": "###### H6", "desc": "Encabezado nivel 6" }
+      ]
+    },
+    {
+      "name": "Énfasis",
+      "items": [
+        { "cmd": "*cursiva* o _cursiva_", "desc": "Texto en cursiva" },
+        { "cmd": "**negrita** o __negrita__", "desc": "Texto en negrita" },
+        { "cmd": "***negrita cursiva***", "desc": "Combinado" },
+        { "cmd": "~~tachado~~", "desc": "Texto tachado" },
+        { "cmd": "==resaltado==", "desc": "Resaltado (algunos)" },
+        { "cmd": "^superíndice^", "desc": "Superíndice (ext)" },
+        { "cmd": "~subíndice~", "desc": "Subíndice (ext)" }
+      ]
+    },
+    {
+      "name": "Listas",
+      "items": [
+        { "cmd": "- item", "desc": "Lista no ordenada" },
+        { "cmd": "* item", "desc": "Alternativa -" },
+        { "cmd": "+ item", "desc": "Alternativa +" },
+        { "cmd": "1. item", "desc": "Lista ordenada" },
+        { "cmd": "   - sub", "desc": "Lista anidada (3 espacios)" },
+        { "cmd": "- [x] tarea", "desc": "Checkbox marcado" },
+        { "cmd": "- [ ] tarea", "desc": "Checkbox vacío" }
+      ]
+    },
+    {
+      "name": "Links",
+      "items": [
+        { "cmd": "[texto](url)", "desc": "Link básico" },
+        { "cmd": "[texto](url \"título\")", "desc": "Link con título" },
+        { "cmd": "<https://url.com>", "desc": "Autolink" },
+        { "cmd": "<email@example.com>", "desc": "Link email" },
+        { "cmd": "[texto][ref]", "desc": "Link referencia" },
+        { "cmd": "[ref]: url", "desc": "Definir referencia" },
+        { "cmd": "[texto](#ancla)", "desc": "Link a sección" }
+      ]
+    },
+    {
+      "name": "Imágenes",
+      "items": [
+        { "cmd": "![alt](url)", "desc": "Imagen básica" },
+        { "cmd": "![alt](url \"título\")", "desc": "Con título" },
+        { "cmd": "[![alt](img)](link)", "desc": "Imagen con link" },
+        { "cmd": "![alt][ref]", "desc": "Imagen referencia" }
+      ]
+    },
+    {
+      "name": "Código",
+      "items": [
+        { "cmd": "`código inline`", "desc": "Código en línea" },
+        { "cmd": "```lang ... ```", "desc": "Bloque de código" },
+        { "cmd": "```javascript", "desc": "Con highlight" },
+        { "cmd": "```diff", "desc": "Mostrar diff" },
+        { "cmd": "    código", "desc": "4 espacios = código" }
+      ]
+    },
+    {
+      "name": "Citas y Líneas",
+      "items": [
+        { "cmd": "> cita", "desc": "Blockquote" },
+        { "cmd": "> > anidada", "desc": "Cita anidada" },
+        { "cmd": "---", "desc": "Línea horizontal" },
+        { "cmd": "***", "desc": "Alternativa hr" },
+        { "cmd": "___", "desc": "Alternativa hr" }
+      ]
+    },
+    {
+      "name": "Tablas",
+      "items": [
+        { "cmd": "| Col1 | Col2 |", "desc": "Fila de tabla" },
+        { "cmd": "|------|------|", "desc": "Separador (requerido)" },
+        { "cmd": "| :--- |", "desc": "Alinear izquierda" },
+        { "cmd": "| :--: |", "desc": "Alinear centro" },
+        { "cmd": "| ---: |", "desc": "Alinear derecha" }
+      ]
+    },
+    {
+      "name": "HTML en Markdown",
+      "items": [
+        { "cmd": "<br>", "desc": "Salto de línea" },
+        { "cmd": "<details><summary>", "desc": "Acordeón" },
+        { "cmd": "<kbd>Ctrl</kbd>", "desc": "Tecla de teclado" },
+        { "cmd": "<sub>subíndice</sub>", "desc": "Subíndice" },
+        { "cmd": "<sup>superíndice</sup>", "desc": "Superíndice" },
+        { "cmd": "<!-- comentario -->", "desc": "Comentario oculto" }
+      ]
+    },
+    {
+      "name": "Escapes",
+      "items": [
+        { "cmd": "\\*", "desc": "Asterisco literal" },
+        { "cmd": "\\#", "desc": "Hash literal" },
+        { "cmd": "\\[", "desc": "Corchete literal" },
+        { "cmd": "\\`", "desc": "Backtick literal" },
+        { "cmd": "\\|", "desc": "Pipe literal" }
+      ]
+    },
+    {
+      "name": "GitHub Flavored",
+      "items": [
+        { "cmd": "@username", "desc": "Mención usuario" },
+        { "cmd": "#123", "desc": "Referencia issue" },
+        { "cmd": "org/repo#123", "desc": "Issue otro repo" },
+        { "cmd": ":emoji:", "desc": "Emoji por nombre" },
+        { "cmd": "```mermaid", "desc": "Diagramas Mermaid" },
+        { "cmd": "```geojson", "desc": "Mapas GeoJSON" },
+        { "cmd": "```math", "desc": "Fórmulas LaTeX" }
+      ]
+    },
+    {
+      "name": "Notas al Pie",
+      "items": [
+        { "cmd": "texto[^1]", "desc": "Referencia nota" },
+        { "cmd": "[^1]: nota", "desc": "Definir nota al pie" },
+        { "cmd": "[^nota]: texto largo", "desc": "Nota con nombre" }
+      ]
+    },
+    {
+      "name": "Definiciones",
+      "items": [
+        { "cmd": "término", "desc": "Palabra a definir" },
+        { "cmd": ": definición", "desc": "Su definición" }
+      ]
+    }
+  ]
+}

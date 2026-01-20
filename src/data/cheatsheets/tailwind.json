@@ -1,0 +1,180 @@
+{
+  "title": "Tailwind CSS",
+  "description": "Clases de utilidad más usadas de Tailwind",
+  "sections": [
+    {
+      "name": "Spacing (Margin/Padding)",
+      "items": [
+        { "cmd": "m-{0-96}", "desc": "Margin all sides" },
+        { "cmd": "mx-auto", "desc": "Centrar horizontal" },
+        { "cmd": "mt-4 / mb-4", "desc": "Margin top/bottom" },
+        { "cmd": "ml-4 / mr-4", "desc": "Margin left/right" },
+        { "cmd": "p-{0-96}", "desc": "Padding all sides" },
+        { "cmd": "px-4 / py-4", "desc": "Padding x/y" },
+        { "cmd": "space-x-4", "desc": "Gap horizontal hijos" },
+        { "cmd": "space-y-4", "desc": "Gap vertical hijos" },
+        { "cmd": "gap-4", "desc": "Gap en flex/grid" }
+      ]
+    },
+    {
+      "name": "Width/Height",
+      "items": [
+        { "cmd": "w-{0-96} / h-{0-96}", "desc": "Ancho/alto fijo" },
+        { "cmd": "w-full / h-full", "desc": "100%" },
+        { "cmd": "w-screen / h-screen", "desc": "100vw/vh" },
+        { "cmd": "w-auto / h-auto", "desc": "Auto" },
+        { "cmd": "w-1/2, w-1/3, w-2/3", "desc": "Fracciones" },
+        { "cmd": "min-w-0 / max-w-xl", "desc": "Min/max width" },
+        { "cmd": "min-h-screen", "desc": "Min height 100vh" },
+        { "cmd": "size-{n}", "desc": "Width y height igual" }
+      ]
+    },
+    {
+      "name": "Flexbox",
+      "items": [
+        { "cmd": "flex", "desc": "Display flex" },
+        { "cmd": "flex-row / flex-col", "desc": "Dirección" },
+        { "cmd": "flex-wrap", "desc": "Permitir wrap" },
+        { "cmd": "justify-{start|center|end|between}", "desc": "Justify content" },
+        { "cmd": "items-{start|center|end|stretch}", "desc": "Align items" },
+        { "cmd": "flex-1", "desc": "Grow y shrink" },
+        { "cmd": "flex-grow / flex-shrink", "desc": "Individual" },
+        { "cmd": "flex-none", "desc": "No flex" },
+        { "cmd": "self-{start|center|end}", "desc": "Align self" }
+      ]
+    },
+    {
+      "name": "Grid",
+      "items": [
+        { "cmd": "grid", "desc": "Display grid" },
+        { "cmd": "grid-cols-{1-12}", "desc": "Columnas" },
+        { "cmd": "grid-rows-{1-6}", "desc": "Filas" },
+        { "cmd": "col-span-{1-12}", "desc": "Ocupar columnas" },
+        { "cmd": "row-span-{1-6}", "desc": "Ocupar filas" },
+        { "cmd": "col-start-{n} / col-end-{n}", "desc": "Posición" },
+        { "cmd": "gap-{n}", "desc": "Gap uniforme" },
+        { "cmd": "gap-x-{n} / gap-y-{n}", "desc": "Gap separado" },
+        { "cmd": "place-items-center", "desc": "Centrar items" }
+      ]
+    },
+    {
+      "name": "Typography",
+      "items": [
+        { "cmd": "text-{xs|sm|base|lg|xl|2xl...}", "desc": "Tamaño fuente" },
+        { "cmd": "font-{thin|normal|medium|bold}", "desc": "Peso fuente" },
+        { "cmd": "text-{left|center|right|justify}", "desc": "Alineación" },
+        { "cmd": "leading-{tight|normal|loose}", "desc": "Line height" },
+        { "cmd": "tracking-{tight|normal|wide}", "desc": "Letter spacing" },
+        { "cmd": "uppercase / lowercase / capitalize", "desc": "Transform" },
+        { "cmd": "truncate", "desc": "Truncar con ..." },
+        { "cmd": "line-clamp-{n}", "desc": "Limitar líneas" },
+        { "cmd": "whitespace-nowrap", "desc": "Sin wrap" }
+      ]
+    },
+    {
+      "name": "Colores",
+      "items": [
+        { "cmd": "text-{color}-{100-900}", "desc": "Color texto" },
+        { "cmd": "bg-{color}-{100-900}", "desc": "Background" },
+        { "cmd": "border-{color}-{100-900}", "desc": "Border color" },
+        { "cmd": "text-white / text-black", "desc": "Blanco/negro" },
+        { "cmd": "bg-transparent", "desc": "Transparente" },
+        { "cmd": "bg-gradient-to-{r|b|br}", "desc": "Gradiente" },
+        { "cmd": "from-{color} to-{color}", "desc": "Colores gradient" },
+        { "cmd": "via-{color}", "desc": "Color intermedio" }
+      ]
+    },
+    {
+      "name": "Borders",
+      "items": [
+        { "cmd": "border / border-{2|4|8}", "desc": "Border width" },
+        { "cmd": "border-{t|r|b|l}", "desc": "Border un lado" },
+        { "cmd": "rounded / rounded-{sm|md|lg|xl|full}", "desc": "Border radius" },
+        { "cmd": "rounded-{t|b|l|r}-{size}", "desc": "Radius un lado" },
+        { "cmd": "border-solid / border-dashed", "desc": "Estilo" },
+        { "cmd": "divide-x / divide-y", "desc": "Divisores hijos" },
+        { "cmd": "ring-{1-8}", "desc": "Outline ring" },
+        { "cmd": "ring-{color}", "desc": "Color ring" }
+      ]
+    },
+    {
+      "name": "Effects",
+      "items": [
+        { "cmd": "shadow-{sm|md|lg|xl|2xl}", "desc": "Box shadow" },
+        { "cmd": "opacity-{0-100}", "desc": "Opacidad" },
+        { "cmd": "blur-{sm|md|lg}", "desc": "Blur" },
+        { "cmd": "backdrop-blur-{size}", "desc": "Backdrop blur" },
+        { "cmd": "grayscale / sepia / invert", "desc": "Filtros" },
+        { "cmd": "mix-blend-{mode}", "desc": "Blend mode" }
+      ]
+    },
+    {
+      "name": "Positioning",
+      "items": [
+        { "cmd": "relative / absolute / fixed / sticky", "desc": "Position" },
+        { "cmd": "top-{n} / right-{n} / bottom-{n} / left-{n}", "desc": "Offset" },
+        { "cmd": "inset-0", "desc": "top/right/bottom/left: 0" },
+        { "cmd": "inset-x-0 / inset-y-0", "desc": "Horizontal/vertical" },
+        { "cmd": "z-{0|10|20|30|40|50}", "desc": "Z-index" },
+        { "cmd": "-z-10", "desc": "Z-index negativo" }
+      ]
+    },
+    {
+      "name": "Display/Visibility",
+      "items": [
+        { "cmd": "block / inline / inline-block", "desc": "Display" },
+        { "cmd": "hidden", "desc": "Display none" },
+        { "cmd": "invisible / visible", "desc": "Visibility" },
+        { "cmd": "overflow-{auto|hidden|scroll}", "desc": "Overflow" },
+        { "cmd": "overflow-x-auto", "desc": "Scroll horizontal" }
+      ]
+    },
+    {
+      "name": "Responsive",
+      "items": [
+        { "cmd": "sm:", "desc": ">= 640px" },
+        { "cmd": "md:", "desc": ">= 768px" },
+        { "cmd": "lg:", "desc": ">= 1024px" },
+        { "cmd": "xl:", "desc": ">= 1280px" },
+        { "cmd": "2xl:", "desc": ">= 1536px" },
+        { "cmd": "max-sm:", "desc": "< 640px" },
+        { "cmd": "md:hidden lg:block", "desc": "Combinar" }
+      ]
+    },
+    {
+      "name": "States",
+      "items": [
+        { "cmd": "hover:", "desc": "On hover" },
+        { "cmd": "focus:", "desc": "On focus" },
+        { "cmd": "active:", "desc": "On click" },
+        { "cmd": "disabled:", "desc": "Disabled state" },
+        { "cmd": "group-hover:", "desc": "Parent hover" },
+        { "cmd": "peer-focus:", "desc": "Sibling focus" },
+        { "cmd": "first: / last:", "desc": "First/last child" },
+        { "cmd": "odd: / even:", "desc": "Odd/even child" },
+        { "cmd": "dark:", "desc": "Dark mode" }
+      ]
+    },
+    {
+      "name": "Transitions",
+      "items": [
+        { "cmd": "transition", "desc": "Transition default" },
+        { "cmd": "transition-{all|colors|transform}", "desc": "Qué animar" },
+        { "cmd": "duration-{75|150|300|500}", "desc": "Duración ms" },
+        { "cmd": "ease-{in|out|in-out}", "desc": "Timing function" },
+        { "cmd": "delay-{75|150|300}", "desc": "Delay ms" }
+      ]
+    },
+    {
+      "name": "Transforms",
+      "items": [
+        { "cmd": "scale-{50|75|100|125|150}", "desc": "Escalar" },
+        { "cmd": "rotate-{0|45|90|180}", "desc": "Rotar" },
+        { "cmd": "-rotate-45", "desc": "Rotar negativo" },
+        { "cmd": "translate-x-{n} / translate-y-{n}", "desc": "Mover" },
+        { "cmd": "skew-x-{n} / skew-y-{n}", "desc": "Sesgar" },
+        { "cmd": "origin-{center|top|bottom-left}", "desc": "Transform origin" }
+      ]
+    }
+  ]
+}

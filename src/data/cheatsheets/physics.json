@@ -1,0 +1,146 @@
+{
+  "title": "Física",
+  "description": "Fórmulas fundamentales de física",
+  "sections": [
+    {
+      "name": "Cinemática",
+      "items": [
+        { "cmd": "v = d / t", "desc": "Velocidad = distancia / tiempo" },
+        { "cmd": "a = Δv / Δt", "desc": "Aceleración" },
+        { "cmd": "v = v₀ + at", "desc": "Velocidad final" },
+        { "cmd": "d = v₀t + ½at²", "desc": "Distancia con aceleración" },
+        { "cmd": "v² = v₀² + 2ad", "desc": "Velocidad sin tiempo" },
+        { "cmd": "d = ½(v₀ + v)t", "desc": "Distancia con vel. media" },
+        { "cmd": "g = 9.8 m/s²", "desc": "Gravedad terrestre" },
+        { "cmd": "y = v₀t - ½gt²", "desc": "Caída libre (altura)" }
+      ]
+    },
+    {
+      "name": "Dinámica (Fuerzas)",
+      "items": [
+        { "cmd": "F = ma", "desc": "Segunda ley de Newton" },
+        { "cmd": "P = mg", "desc": "Peso" },
+        { "cmd": "f = μN", "desc": "Fuerza de fricción" },
+        { "cmd": "F = -kx", "desc": "Ley de Hooke (resorte)" },
+        { "cmd": "F₁₂ = -F₂₁", "desc": "Tercera ley de Newton" },
+        { "cmd": "Fc = mv²/r", "desc": "Fuerza centrípeta" },
+        { "cmd": "τ = F × r", "desc": "Torque (momento)" },
+        { "cmd": "p = mv", "desc": "Momento lineal" }
+      ]
+    },
+    {
+      "name": "Trabajo y Energía",
+      "items": [
+        { "cmd": "W = F × d × cos(θ)", "desc": "Trabajo" },
+        { "cmd": "Ec = ½mv²", "desc": "Energía cinética" },
+        { "cmd": "Ep = mgh", "desc": "Energía potencial grav." },
+        { "cmd": "Ee = ½kx²", "desc": "Energía potencial elástica" },
+        { "cmd": "P = W / t", "desc": "Potencia" },
+        { "cmd": "P = F × v", "desc": "Potencia instantánea" },
+        { "cmd": "Em = Ec + Ep", "desc": "Energía mecánica" },
+        { "cmd": "η = Wútil / Wtotal", "desc": "Eficiencia" }
+      ]
+    },
+    {
+      "name": "Gravitación",
+      "items": [
+        { "cmd": "F = G(m₁m₂)/r²", "desc": "Ley de gravitación" },
+        { "cmd": "G = 6.67×10⁻¹¹ Nm²/kg²", "desc": "Constante gravitacional" },
+        { "cmd": "g = GM/r²", "desc": "Aceleración gravitatoria" },
+        { "cmd": "v = √(GM/r)", "desc": "Velocidad orbital" },
+        { "cmd": "T² = (4π²/GM)r³", "desc": "Periodo orbital" }
+      ]
+    },
+    {
+      "name": "Fluidos",
+      "items": [
+        { "cmd": "ρ = m / V", "desc": "Densidad" },
+        { "cmd": "P = F / A", "desc": "Presión" },
+        { "cmd": "P = ρgh", "desc": "Presión hidrostática" },
+        { "cmd": "Fb = ρVg", "desc": "Fuerza de flotación" },
+        { "cmd": "A₁v₁ = A₂v₂", "desc": "Ecuación de continuidad" },
+        { "cmd": "P + ½ρv² + ρgh = cte", "desc": "Ecuación de Bernoulli" }
+      ]
+    },
+    {
+      "name": "Termodinámica",
+      "items": [
+        { "cmd": "Q = mcΔT", "desc": "Calor específico" },
+        { "cmd": "Q = mL", "desc": "Calor latente" },
+        { "cmd": "PV = nRT", "desc": "Gas ideal" },
+        { "cmd": "R = 8.314 J/(mol·K)", "desc": "Constante de gases" },
+        { "cmd": "ΔU = Q - W", "desc": "Primera ley" },
+        { "cmd": "η = 1 - Tc/Th", "desc": "Eficiencia de Carnot" },
+        { "cmd": "ΔS = Q/T", "desc": "Entropía" },
+        { "cmd": "K = °C + 273.15", "desc": "Celsius a Kelvin" }
+      ]
+    },
+    {
+      "name": "Ondas",
+      "items": [
+        { "cmd": "v = fλ", "desc": "Velocidad de onda" },
+        { "cmd": "T = 1/f", "desc": "Periodo" },
+        { "cmd": "v = √(T/μ)", "desc": "Velocidad en cuerda" },
+        { "cmd": "f' = f(v±vo)/(v∓vs)", "desc": "Efecto Doppler" },
+        { "cmd": "I = P/A", "desc": "Intensidad" },
+        { "cmd": "β = 10 log(I/I₀)", "desc": "Nivel sonoro (dB)" }
+      ]
+    },
+    {
+      "name": "Óptica",
+      "items": [
+        { "cmd": "c = 3×10⁸ m/s", "desc": "Velocidad de la luz" },
+        { "cmd": "n = c/v", "desc": "Índice de refracción" },
+        { "cmd": "n₁sinθ₁ = n₂sinθ₂", "desc": "Ley de Snell" },
+        { "cmd": "1/f = 1/do + 1/di", "desc": "Ecuación de lentes" },
+        { "cmd": "m = -di/do", "desc": "Magnificación" },
+        { "cmd": "θc = arcsin(n₂/n₁)", "desc": "Ángulo crítico" }
+      ]
+    },
+    {
+      "name": "Electricidad",
+      "items": [
+        { "cmd": "F = kq₁q₂/r²", "desc": "Ley de Coulomb" },
+        { "cmd": "k = 9×10⁹ Nm²/C²", "desc": "Constante de Coulomb" },
+        { "cmd": "E = F/q", "desc": "Campo eléctrico" },
+        { "cmd": "V = W/q", "desc": "Potencial eléctrico" },
+        { "cmd": "V = kq/r", "desc": "Potencial de carga puntual" },
+        { "cmd": "C = Q/V", "desc": "Capacitancia" },
+        { "cmd": "U = ½CV²", "desc": "Energía en capacitor" }
+      ]
+    },
+    {
+      "name": "Circuitos",
+      "items": [
+        { "cmd": "V = IR", "desc": "Ley de Ohm" },
+        { "cmd": "P = IV = I²R = V²/R", "desc": "Potencia eléctrica" },
+        { "cmd": "Rs = R₁ + R₂ + ...", "desc": "Resistencias en serie" },
+        { "cmd": "1/Rp = 1/R₁ + 1/R₂ + ...", "desc": "Resistencias en paralelo" },
+        { "cmd": "Cs = C₁ + C₂ + ...", "desc": "Capacitores en paralelo" },
+        { "cmd": "1/Cp = 1/C₁ + 1/C₂ + ...", "desc": "Capacitores en serie" }
+      ]
+    },
+    {
+      "name": "Magnetismo",
+      "items": [
+        { "cmd": "F = qvB sinθ", "desc": "Fuerza magnética" },
+        { "cmd": "F = BIL sinθ", "desc": "Fuerza en conductor" },
+        { "cmd": "B = μ₀I/(2πr)", "desc": "Campo de cable" },
+        { "cmd": "Φ = BA cosθ", "desc": "Flujo magnético" },
+        { "cmd": "ε = -dΦ/dt", "desc": "Ley de Faraday" },
+        { "cmd": "μ₀ = 4π×10⁻⁷ T·m/A", "desc": "Permeabilidad vacío" }
+      ]
+    },
+    {
+      "name": "Física Moderna",
+      "items": [
+        { "cmd": "E = mc²", "desc": "Equivalencia masa-energía" },
+        { "cmd": "E = hf", "desc": "Energía del fotón" },
+        { "cmd": "h = 6.63×10⁻³⁴ J·s", "desc": "Constante de Planck" },
+        { "cmd": "λ = h/p", "desc": "Longitud de onda de Broglie" },
+        { "cmd": "ΔxΔp ≥ ħ/2", "desc": "Principio de incertidumbre" },
+        { "cmd": "E = hf - φ", "desc": "Efecto fotoeléctrico" }
+      ]
+    }
+  ]
+}
