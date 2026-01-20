@@ -236,6 +236,22 @@ const packages = [
     stars: '103k'
   },
   {
+    name: 'codemirror/dev',
+    description: 'In-browser code editor with syntax highlighting, autocompletion and more.',
+    url: 'https://github.com/codemirror/dev',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: '5.5k'
+  },
+  {
+    name: 'nodeca/js-yaml',
+    description: 'JavaScript YAML parser and serializer. Very fast.',
+    url: 'https://github.com/nodeca/js-yaml',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: '6.3k'
+  },
+  {
     name: 'katspaugh/wavesurfer.js',
     description: 'Audio waveform player with real-time visualization.',
     url: 'https://github.com/katspaugh/wavesurfer.js',
