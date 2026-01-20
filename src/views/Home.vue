@@ -609,7 +609,7 @@ const recentCommits = [
         Herramientas disponibles
       </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 overflow-hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <router-link
           v-for="(tool, index) in tools"
           :key="tool.path"
