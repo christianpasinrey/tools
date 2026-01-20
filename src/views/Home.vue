@@ -715,8 +715,7 @@ const recentCommits = [
         href="https://github.com/christianpasinrey/tools"
         target="_blank"
         rel="noopener noreferrer"
-        class="glass-container group block scroll-animated"
-        :style="repoStyle"
+        class="glass-container group block"
       >
         <div class="glass-filter"></div>
         <div class="glass-overlay"></div>
