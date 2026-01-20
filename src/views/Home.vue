@@ -518,16 +518,17 @@ const recentCommits = [
 </script>
 
 <template>
-  <div class="min-h-screen relative">
+  <div class="min-h-screen relative overflow-x-clip">
     <!-- Three.js Canvas Background -->
     <canvas ref="threeCanvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0;"></canvas>
 
+    <!-- Gradient Orbs with parallax - fixed position so they don't get clipped -->
+    <div class="fixed top-20 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.2}px)` }"></div>
+    <div class="fixed top-40 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-[100px] animate-float pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.35}px)` }"></div>
+    <div class="fixed top-1/2 left-1/2 w-72 h-72 bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" style="z-index: 0; animation-delay: 1s;" :style="{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.5}px)` }"></div>
+
     <!-- Hero Section -->
-    <div ref="heroSection" class="relative overflow-hidden" style="z-index: 1;">
-      <!-- Gradient Orbs with parallax -->
-      <div class="absolute top-20 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow scroll-animated" :style="{ transform: `translateY(${scrollY * 0.2}px)` }"></div>
-      <div class="absolute top-40 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-[100px] animate-float scroll-animated" :style="{ transform: `translateY(${scrollY * 0.35}px)` }"></div>
-      <div class="absolute -bottom-20 left-1/2 w-72 h-72 bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow scroll-animated" style="animation-delay: 1s;" :style="{ transform: `translateY(${scrollY * 0.5}px)` }"></div>
+    <div ref="heroSection" class="relative" style="z-index: 1;">
 
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40 text-center scroll-animated" :style="heroStyle">
         <!-- Badge -->
@@ -599,8 +600,6 @@ const recentCommits = [
         </div>
       </div>
 
-      <!-- Fade transition to next section -->
-      <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-neutral-950/50 to-neutral-950 pointer-events-none"></div>
     </div>
 
     <!-- Tools Grid -->
