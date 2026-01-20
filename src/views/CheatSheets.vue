@@ -1,10 +1,223 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import { cheatsheetData, sheets } from '@/data/cheatsheets'
 
 const activeSheet = ref('macos')
 const currentSheet = computed(() => cheatsheetData[activeSheet.value])
 const currentSheetType = computed(() => sheets.find(s => s.id === activeSheet.value)?.type || 'shortcuts')
+const isExporting = ref(false)
+
+async function exportToPDF() {
+  isExporting.value = true
+
+  try {
+    const sheet = currentSheet.value
+    const pdfDoc = await PDFDocument.create()
+
+    // Fonts
+    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+    const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const fontMono = await pdfDoc.embedFont(StandardFonts.Courier)
+
+    // Colors
+    const colors = {
+      bg: rgb(0.04, 0.04, 0.04),
+      cardBg: rgb(0.08, 0.08, 0.08),
+      title: rgb(0.13, 0.77, 0.37), // #22c55e
+      text: rgb(0.9, 0.9, 0.9),
+      textMuted: rgb(0.6, 0.6, 0.6),
+      code: rgb(0.49, 0.83, 0.99), // #7dd3fc
+      keyBg: rgb(0.2, 0.2, 0.2),
+      border: rgb(0.15, 0.15, 0.15)
+    }
+
+    // Page settings
+    const pageWidth = 842 // A4 landscape
+    const pageHeight = 595
+    const margin = 30
+    const colGap = 15
+    const numCols = 3
+    const colWidth = (pageWidth - margin * 2 - colGap * (numCols - 1)) / numCols
+
+    let page = pdfDoc.addPage([pageWidth, pageHeight])
+    let colIndex = 0
+    let yPos = pageHeight - margin
+
+    // Draw background
+    const drawBackground = (p) => {
+      p.drawRectangle({
+        x: 0, y: 0,
+        width: pageWidth, height: pageHeight,
+        color: colors.bg
+      })
+    }
+    drawBackground(page)
+
+    // Title
+    page.drawText(sheet.title, {
+      x: margin,
+      y: yPos - 5,
+      size: 18,
+      font: fontBold,
+      color: colors.title
+    })
+
+    page.drawText(sheet.description, {
+      x: margin,
+      y: yPos - 22,
+      size: 9,
+      font: fontRegular,
+      color: colors.textMuted
+    })
+
+    yPos -= 45
+    const startY = yPos
+    const colHeights = [0, 0, 0]
+
+    // Process sections
+    for (const section of sheet.sections) {
+      // Calculate section height
+      const headerHeight = 20
+      const itemHeight = 14
+      const padding = 16
+      const sectionHeight = headerHeight + section.items.length * itemHeight + padding
+
+      // Find best column (shortest)
+      colIndex = colHeights.indexOf(Math.min(...colHeights))
+      const colX = margin + colIndex * (colWidth + colGap)
+      const colY = startY - colHeights[colIndex]
+
+      // Check if we need a new page
+      if (colY - sectionHeight < margin) {
+        // If all columns are full, new page
+        if (Math.min(...colHeights) > startY - margin - 50) {
+          page = pdfDoc.addPage([pageWidth, pageHeight])
+          drawBackground(page)
+          colHeights.fill(0)
+          colIndex = 0
+        }
+      }
+
+      const currentY = startY - colHeights[colIndex]
+      const currentX = margin + colIndex * (colWidth + colGap)
+
+      // Card background
+      page.drawRectangle({
+        x: currentX,
+        y: currentY - sectionHeight,
+        width: colWidth,
+        height: sectionHeight,
+        color: colors.cardBg,
+        borderColor: colors.border,
+        borderWidth: 0.5
+      })
+
+      // Section title bar
+      page.drawRectangle({
+        x: currentX,
+        y: currentY - headerHeight,
+        width: 3,
+        height: 12,
+        color: colors.title
+      })
+
+      page.drawText(section.name.toUpperCase(), {
+        x: currentX + 8,
+        y: currentY - 14,
+        size: 8,
+        font: fontBold,
+        color: colors.title
+      })
+
+      // Items
+      let itemY = currentY - headerHeight - 6
+      for (const item of section.items) {
+        itemY -= itemHeight
+
+        if (item.keys) {
+          // Keyboard shortcut
+          let keyX = currentX + 6
+          for (const key of item.keys) {
+            const keyWidth = fontMono.widthOfTextAtSize(key, 7) + 8
+            page.drawRectangle({
+              x: keyX,
+              y: itemY - 2,
+              width: keyWidth,
+              height: 11,
+              color: colors.keyBg,
+              borderColor: colors.border,
+              borderWidth: 0.3
+            })
+            page.drawText(key, {
+              x: keyX + 4,
+              y: itemY + 1,
+              size: 7,
+              font: fontMono,
+              color: colors.text
+            })
+            keyX += keyWidth + 3
+          }
+          // Description (right aligned)
+          const descWidth = fontRegular.widthOfTextAtSize(item.desc, 7)
+          page.drawText(item.desc, {
+            x: currentX + colWidth - descWidth - 6,
+            y: itemY + 1,
+            size: 7,
+            font: fontRegular,
+            color: colors.textMuted
+          })
+        } else if (item.cmd) {
+          // Command
+          const cmdText = item.cmd.length > 35 ? item.cmd.substring(0, 35) + '...' : item.cmd
+          page.drawText(cmdText, {
+            x: currentX + 6,
+            y: itemY + 1,
+            size: 7,
+            font: fontMono,
+            color: colors.code
+          })
+          // Description (right aligned)
+          const descText = item.desc.length > 25 ? item.desc.substring(0, 25) + '...' : item.desc
+          const descWidth = fontRegular.widthOfTextAtSize(descText, 7)
+          page.drawText(descText, {
+            x: currentX + colWidth - descWidth - 6,
+            y: itemY + 1,
+            size: 7,
+            font: fontRegular,
+            color: colors.textMuted
+          })
+        }
+      }
+
+      colHeights[colIndex] += sectionHeight + 8
+    }
+
+    // Footer
+    const footerText = `${sheet.title} Cheatsheet - Generated ${new Date().toLocaleDateString()}`
+    page.drawText(footerText, {
+      x: margin,
+      y: 15,
+      size: 7,
+      font: fontRegular,
+      color: colors.textMuted
+    })
+
+    // Download
+    const pdfBytes = await pdfDoc.save()
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${activeSheet.value}-cheatsheet.pdf`
+    a.click()
+    URL.revokeObjectURL(url)
+  } catch (error) {
+    console.error('Error exporting PDF:', error)
+  } finally {
+    isExporting.value = false
+  }
+}
 </script>
 
 <template>
@@ -48,7 +261,23 @@ const currentSheetType = computed(() => sheets.find(s => s.id === activeSheet.va
     <div class="sheet-content">
       <!-- Header -->
       <header class="sheet-header">
-        <h1 class="sheet-title">{{ currentSheet.title }}</h1>
+        <div class="header-top">
+          <h1 class="sheet-title">{{ currentSheet.title }}</h1>
+          <button
+            @click="exportToPDF"
+            :disabled="isExporting"
+            class="export-btn"
+          >
+            <svg v-if="!isExporting" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <svg v-else class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>{{ isExporting ? 'Exportando...' : 'Exportar PDF' }}</span>
+          </button>
+        </div>
         <p class="sheet-description">{{ currentSheet.description }}</p>
       </header>
 
@@ -245,16 +474,64 @@ const currentSheetType = computed(() => sheets.find(s => s.id === activeSheet.va
   margin-bottom: 16px;
 }
 
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
 .sheet-title {
   font-size: 1.5rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 2px;
+  margin: 0;
 }
 
 .sheet-description {
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.4);
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-radius: 8px;
+  color: #22c55e;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.export-btn:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.5);
+  transform: translateY(-1px);
+}
+
+.export-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.export-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 
 /* ===== MASONRY LAYOUT ===== */
