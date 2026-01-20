@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
+import CodeEditor from './CodeEditor.vue'
 
 const props = defineProps({
   htmlCode: String,
@@ -24,6 +25,7 @@ const emit = defineEmits([
 ])
 
 const showTemplates = ref(false)
+const showPreviewModal = ref(false)
 const iframeSrc = ref('about:blank')
 let debounceTimer = null
 let currentBlobUrl = null
@@ -243,13 +245,21 @@ watch([() => props.htmlCode, () => props.cssCode, () => props.jsCode], () => {
   debouncedUpdate()
 })
 
+const handleKeydown = (event) => {
+  if (event.key === 'Escape' && showPreviewModal.value) {
+    showPreviewModal.value = false
+  }
+}
+
 onMounted(() => {
   window.addEventListener('message', handleMessage)
+  window.addEventListener('keydown', handleKeydown)
   updatePreview()
 })
 
 onUnmounted(() => {
   window.removeEventListener('message', handleMessage)
+  window.removeEventListener('keydown', handleKeydown)
   clearTimeout(debounceTimer)
   if (currentBlobUrl) {
     URL.revokeObjectURL(currentBlobUrl)
@@ -346,13 +356,12 @@ const consoleTypeStyles = {
             <span class="w-2 h-2 rounded-full bg-orange-500"></span>
             HTML
           </label>
-          <textarea
-            :value="htmlCode"
-            @input="emit('update:htmlCode', $event.target.value)"
-            class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
-            placeholder="<h1>Hello</h1>"
-            spellcheck="false"
-          ></textarea>
+          <CodeEditor
+            :modelValue="htmlCode"
+            @update:modelValue="emit('update:htmlCode', $event)"
+            language="html"
+            class="flex-1 min-h-0"
+          />
         </div>
 
         <!-- Resizer HTML-CSS -->
@@ -369,13 +378,12 @@ const consoleTypeStyles = {
             <span class="w-2 h-2 rounded-full bg-blue-500"></span>
             CSS
           </label>
-          <textarea
-            :value="cssCode"
-            @input="emit('update:cssCode', $event.target.value)"
-            class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
-            placeholder="body { color: white; }"
-            spellcheck="false"
-          ></textarea>
+          <CodeEditor
+            :modelValue="cssCode"
+            @update:modelValue="emit('update:cssCode', $event)"
+            language="css"
+            class="flex-1 min-h-0"
+          />
         </div>
 
         <!-- Resizer CSS-JS -->
@@ -392,13 +400,12 @@ const consoleTypeStyles = {
             <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
             JavaScript
           </label>
-          <textarea
-            :value="jsCode"
-            @input="emit('update:jsCode', $event.target.value)"
-            class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
-            placeholder="console.log('Hello!');"
-            spellcheck="false"
-          ></textarea>
+          <CodeEditor
+            :modelValue="jsCode"
+            @update:modelValue="emit('update:jsCode', $event)"
+            language="javascript"
+            class="flex-1 min-h-0"
+          />
         </div>
       </div>
 
@@ -412,7 +419,7 @@ const consoleTypeStyles = {
 
       <!-- Preview -->
       <div
-        class="bg-white rounded-lg overflow-hidden shrink-0"
+        class="bg-white rounded-lg overflow-hidden shrink-0 relative group/preview"
         :style="{ height: previewHeight + '%' }"
       >
         <iframe
@@ -421,6 +428,17 @@ const consoleTypeStyles = {
           sandbox="allow-scripts allow-modals allow-same-origin"
           title="Preview"
         ></iframe>
+
+        <!-- Expand button -->
+        <button
+          @click="showPreviewModal = true"
+          class="absolute top-2 right-2 p-2 bg-neutral-900/80 hover:bg-neutral-900 text-white rounded-lg opacity-0 group-hover/preview:opacity-100 transition-opacity backdrop-blur-sm"
+          title="Expand preview"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+          </svg>
+        </button>
       </div>
 
       <!-- Resizer Preview-Console -->
@@ -461,5 +479,74 @@ const consoleTypeStyles = {
         </div>
       </div>
     </div>
+
+    <!-- Preview Modal -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div
+          v-if="showPreviewModal"
+          class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          @click.self="showPreviewModal = false"
+        >
+          <div class="relative w-full h-full max-w-7xl max-h-[90vh] bg-white rounded-xl overflow-hidden shadow-2xl">
+            <!-- Modal header -->
+            <div class="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-2 bg-neutral-900/90 backdrop-blur-sm">
+              <span class="text-sm text-neutral-300 font-medium">Preview</span>
+              <div class="flex items-center gap-2">
+                <button
+                  @click="emit('run')"
+                  class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium text-white transition-colors"
+                  :style="{ backgroundColor: themeColor }"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                  </svg>
+                  Refresh
+                </button>
+                <button
+                  @click="showPreviewModal = false"
+                  class="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-lg transition-colors"
+                  title="Close (Esc)"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Modal iframe -->
+            <iframe
+              :src="iframeSrc"
+              class="w-full h-full border-0 pt-12"
+              sandbox="allow-scripts allow-modals allow-same-origin"
+              title="Preview Fullscreen"
+            ></iframe>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .relative,
+.modal-leave-active .relative {
+  transition: transform 0.2s ease;
+}
+
+.modal-enter-from .relative,
+.modal-leave-to .relative {
+  transform: scale(0.95);
+}
+</style>
