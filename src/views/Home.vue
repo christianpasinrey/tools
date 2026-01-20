@@ -83,6 +83,83 @@ const getPackageStyle = (index) => {
   }
 }
 
+// 3D Tilt + Magnetic effect for package cards
+const packageCards = ref([])
+const mousePos = ref({ x: 0, y: 0 })
+const hoveredCard = ref(null)
+
+const onPackageMouseMove = (e, index) => {
+  const card = packageCards.value[index]
+  if (!card) return
+
+  const rect = card.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  const centerX = rect.width / 2
+  const centerY = rect.height / 2
+
+  // Calculate rotation (max 15deg)
+  const rotateX = ((y - centerY) / centerY) * -15
+  const rotateY = ((x - centerX) / centerX) * 15
+
+  // Calculate shine position
+  const shineX = (x / rect.width) * 100
+  const shineY = (y / rect.height) * 100
+
+  card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`
+  card.style.setProperty('--shine-x', `${shineX}%`)
+  card.style.setProperty('--shine-y', `${shineY}%`)
+}
+
+const onPackageMouseEnter = (index) => {
+  hoveredCard.value = index
+}
+
+const onPackageMouseLeave = (index) => {
+  const card = packageCards.value[index]
+  if (!card) return
+
+  hoveredCard.value = null
+  card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)'
+}
+
+// Magnetic repulsion effect - track mouse in packages section
+const onPackagesSectionMouseMove = (e) => {
+  mousePos.value = { x: e.clientX, y: e.clientY }
+
+  packageCards.value.forEach((card, index) => {
+    if (!card || hoveredCard.value === index) return
+
+    const rect = card.getBoundingClientRect()
+    const cardCenterX = rect.left + rect.width / 2
+    const cardCenterY = rect.top + rect.height / 2
+
+    const deltaX = mousePos.value.x - cardCenterX
+    const deltaY = mousePos.value.y - cardCenterY
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+
+    // Magnetic effect radius
+    const maxDistance = 200
+
+    if (distance < maxDistance) {
+      const force = (1 - distance / maxDistance) * 8
+      const moveX = -(deltaX / distance) * force
+      const moveY = -(deltaY / distance) * force
+
+      card.style.transform = `perspective(1000px) translateX(${moveX}px) translateY(${moveY}px)`
+    } else {
+      card.style.transform = 'perspective(1000px) translateX(0) translateY(0)'
+    }
+  })
+}
+
+const onPackagesSectionMouseLeave = () => {
+  packageCards.value.forEach((card) => {
+    if (!card) return
+    card.style.transform = 'perspective(1000px) translateX(0) translateY(0)'
+  })
+}
+
 let scene, camera, renderer, particles, animationId
 
 const createCircleTexture = () => {
@@ -651,18 +728,18 @@ const recentCommits = [
         <div class="glass-content p-0">
           <div class="flex flex-col md:flex-row">
             <!-- Left: Repository Info -->
-            <div class="flex-1 p-6 md:border-r border-white/5 flex flex-col">
+            <div class="flex-1 p-8 md:border-r border-white/5 flex flex-col">
               <!-- Header -->
-              <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/20">
-                    <svg class="w-5 h-5 text-white" viewBox="0 0 16 16" fill="currentColor">
+              <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-4">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/20">
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 16 16" fill="currentColor">
                       <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
                     </svg>
                   </div>
                   <div>
-                    <h3 class="text-white font-semibold group-hover:text-green-400 transition-colors">Web Tools</h3>
-                    <p class="text-neutral-500 text-xs">christianpasinrey/tools</p>
+                    <h3 class="text-white font-semibold text-lg group-hover:text-green-400 transition-colors">Web Tools</h3>
+                    <p class="text-neutral-500 text-sm">christianpasinrey/tools</p>
                   </div>
                 </div>
                 <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
@@ -673,14 +750,14 @@ const recentCommits = [
               </div>
 
               <!-- Description -->
-              <p class="text-neutral-400 text-sm leading-relaxed mb-5">
-                Herramientas de edición profesionales que funcionan
+              <p class="text-neutral-400 text-base leading-relaxed mb-6">
+                Herramientas útiles que funcionan
                 <span class="text-green-400 font-medium">100% en tu navegador</span>.
                 Sin servidores, sin uploads, privacidad total.
               </p>
 
               <!-- Features -->
-              <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-neutral-500">
+              <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-neutral-500">
                 <span class="flex items-center gap-1.5">
                   <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -702,37 +779,37 @@ const recentCommits = [
               </div>
 
               <!-- Tech stack - aligned bottom -->
-              <div class="mt-auto pt-5 border-t border-white/5">
-                <div class="flex items-center gap-4">
+              <div class="mt-auto pt-6 border-t border-white/5">
+                <div class="flex items-center gap-5">
                   <!-- Vue -->
                   <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#42b883] transition-colors" title="Vue.js">
-                    <svg class="w-4 h-4" viewBox="0 0 256 221" fill="currentColor">
+                    <svg class="w-5 h-5" viewBox="0 0 256 221" fill="currentColor">
                       <path d="M204.8 0H256L128 220.8L0 0h97.92L128 51.2L157.44 0h47.36Z" fill-opacity="0.5"/>
                       <path d="M0 0l128 220.8L256 0h-51.2L128 132.48L50.56 0H0Z" fill-opacity="0.8"/>
                     </svg>
                   </div>
                   <!-- Vite -->
                   <div class="flex items-center gap-1.5 group/vite" title="Vite">
-                    <svg class="w-4 h-4" viewBox="0 0 256 257" fill="none">
+                    <svg class="w-5 h-5" viewBox="0 0 256 257" fill="none">
                       <path d="M255 38L135 256c-3 5-10 5-13 0L1 38c-3-6 1-13 8-12l120 22c1 0 3 0 4 0l114-22c7-1 11 6 8 12Z" class="fill-neutral-500 group-hover/vite:fill-[#646CFF] transition-colors"/>
                       <path d="M185 0L96 17c-2 0-3 2-3 4l-9 117c0 2 2 4 4 4l29-6c3-1 5 2 5 4l-9 45c0 3 2 5 5 4l18-5c3-1 5 2 5 4l-14 71c-1 4 5 6 7 2l1-2L227 63c1-3-1-6-4-5l-30 6c-3 0-5-2-4-5l17-55c1-3-1-5-4-5l-17 1Z" class="fill-neutral-500 group-hover/vite:fill-[#FFBD4F] transition-colors"/>
                     </svg>
                   </div>
                   <!-- Tailwind -->
                   <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#38bdf8] transition-colors" title="Tailwind CSS">
-                    <svg class="w-4 h-4" viewBox="0 0 256 154" fill="currentColor">
+                    <svg class="w-5 h-5" viewBox="0 0 256 154" fill="currentColor">
                       <path d="M128 0Q85 0 64 43q32-22 64 0 16 11 24 33 19-43 64-43 43 0 64 43-32-22-64 0-16 11-24 33-19-43-64-43ZM64 77Q21 77 0 120q32-22 64 0 16 11 24 33 19-43 64-43 43 0 64 43-32-22-64 0-16 11-24 33-19-43-64-43Z"/>
                     </svg>
                   </div>
                   <!-- Three.js -->
                   <div class="flex items-center gap-1.5 text-neutral-500 hover:text-white transition-colors" title="Three.js">
-                    <svg class="w-4 h-4" viewBox="0 0 256 256" fill="currentColor">
+                    <svg class="w-5 h-5" viewBox="0 0 256 256" fill="currentColor">
                       <path d="M32 224L224 224L128 32L32 224ZM80 192L128 96L176 192L80 192Z" fill-opacity="0.7"/>
                     </svg>
                   </div>
                   <!-- CodeMirror -->
                   <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#d30707] transition-colors" title="CodeMirror">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill-opacity="0.7"/>
                     </svg>
                   </div>
@@ -741,7 +818,7 @@ const recentCommits = [
             </div>
 
             <!-- Right: Recent Commits -->
-            <div class="flex-1 p-6 bg-white/[0.01]">
+            <div class="flex-1 p-8 bg-white/[0.02]">
               <div class="flex items-center gap-2 mb-4">
                 <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -820,15 +897,23 @@ const recentCommits = [
         </defs>
       </svg>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        @mousemove="onPackagesSectionMouseMove"
+        @mouseleave="onPackagesSectionMouseLeave"
+      >
         <a
           v-for="(pkg, index) in packages"
           :key="pkg.name"
+          :ref="el => packageCards[index] = el"
           :href="pkg.url"
           target="_blank"
           rel="noopener noreferrer"
-          class="glass-container group scroll-animated"
+          class="glass-container group scroll-animated package-card-3d"
           :style="getPackageStyle(index)"
+          @mousemove="onPackageMouseMove($event, index)"
+          @mouseenter="onPackageMouseEnter(index)"
+          @mouseleave="onPackageMouseLeave(index)"
         >
           <!-- Liquid Glass Layers -->
           <div class="glass-filter"></div>
@@ -1047,5 +1132,41 @@ const recentCommits = [
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* 3D Tilt + Magnetic effect for package cards */
+.package-card-3d {
+  --shine-x: 50%;
+  --shine-y: 50%;
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.package-card-3d::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: radial-gradient(
+    circle at var(--shine-x) var(--shine-y),
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.package-card-3d:hover::after {
+  opacity: 1;
+}
+
+.package-card-3d:hover {
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(34, 197, 94, 0.15);
+  z-index: 10;
 }
 </style>
