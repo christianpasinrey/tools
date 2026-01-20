@@ -296,7 +296,12 @@ const onIconMouseLeave = () => {
   align-items: center;
   transform: scale(var(--scale, 1));
   transform-origin: bottom center;
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
+  z-index: 1;
+}
+
+.dock-item:hover {
+  z-index: 10;
 }
 
 /* Dock Icon */
@@ -307,23 +312,35 @@ const onIconMouseLeave = () => {
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.7);
   transition: all 0.2s ease;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
 .dock-item:hover .dock-icon {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(45, 45, 45, 1);
+  border-color: rgba(255, 255, 255, 0.15);
   color: var(--tool-color, #22c55e);
-  box-shadow: 0 0 20px color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent);
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .dock-item.is-active .dock-icon {
-  background: color-mix(in srgb, var(--tool-color, #22c55e) 20%, transparent);
-  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 40%, transparent);
+  background: color-mix(in srgb, var(--tool-color, #22c55e) 15%, rgba(0, 0, 0, 0.3));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent);
   color: var(--tool-color, #22c55e);
+  box-shadow:
+    0 0 16px color-mix(in srgb, var(--tool-color, #22c55e) 20%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
 }
 
 /* Home icon special styling */
@@ -344,22 +361,40 @@ const onIconMouseLeave = () => {
   box-shadow: 0 0 8px var(--tool-color, #22c55e);
 }
 
-/* Tooltip */
+/* Tooltip with liquid glass effect */
 .dock-tooltip {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(100% + 14px);
   left: 50%;
   transform: translateX(-50%);
-  padding: 6px 12px;
-  background: rgba(0, 0, 0, 0.9);
+  padding: 8px 14px;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
+  border-radius: 10px;
   color: white;
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
   pointer-events: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.2),
+    inset -1px -1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.dock-tooltip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
 }
 
 .dock-tooltip::after {
@@ -368,8 +403,9 @@ const onIconMouseLeave = () => {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: rgba(0, 0, 0, 0.9);
+  border: 6px solid transparent;
+  border-top-color: rgba(20, 20, 20, 0.7);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* Tooltip transition */
