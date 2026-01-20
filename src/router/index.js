@@ -41,6 +41,11 @@ const routes = [
     path: '/unit-converter',
     name: 'UnitConverter',
     component: () => import('../views/UnitConverter.vue')
+  },
+  {
+    path: '/color-picker',
+    name: 'ColorPicker',
+    component: () => import('../views/ColorPicker.vue')
   }
 ]
 

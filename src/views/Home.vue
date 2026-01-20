@@ -193,6 +193,14 @@ const tools = [
     icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
     color: 'emerald',
     status: 'active'
+  },
+  {
+    path: '/color-picker',
+    name: 'Color Picker',
+    description: 'Rueda de colores con armonías, paletas y exportación en múltiples formatos. Inspirado en Adobe Color.',
+    icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01',
+    color: 'pink',
+    status: 'active'
   }
 ]
 
@@ -245,6 +253,13 @@ const colorClasses = {
     text: 'text-emerald-400',
     glow: 'group-hover:shadow-emerald-500/20',
     icon: 'group-hover:text-emerald-400'
+  },
+  pink: {
+    bg: 'bg-pink-500/10',
+    border: 'border-pink-500/20',
+    text: 'text-pink-400',
+    glow: 'group-hover:shadow-pink-500/20',
+    icon: 'group-hover:text-pink-400'
   }
 }
 
