@@ -425,7 +425,7 @@ const consoleTypeStyles = {
         <iframe
           :src="iframeSrc"
           class="w-full h-full border-0"
-          sandbox="allow-scripts allow-modals allow-same-origin"
+          sandbox="allow-scripts allow-modals"
           title="Preview"
         ></iframe>
 
@@ -519,7 +519,7 @@ const consoleTypeStyles = {
             <iframe
               :src="iframeSrc"
               class="w-full h-full border-0 pt-12"
-              sandbox="allow-scripts allow-modals allow-same-origin"
+              sandbox="allow-scripts allow-modals"
               title="Preview Fullscreen"
             ></iframe>
           </div>
