@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 
 const props = defineProps({
   htmlCode: String,
@@ -27,6 +27,113 @@ const showTemplates = ref(false)
 const iframeSrc = ref('about:blank')
 let debounceTimer = null
 let currentBlobUrl = null
+
+// Resizable panels state
+const editorContainerRef = ref(null)
+const previewContainerRef = ref(null)
+const htmlWidth = ref(33.33)
+const cssWidth = ref(33.33)
+const jsWidth = computed(() => 100 - htmlWidth.value - cssWidth.value)
+const editorsHeight = ref(35) // percentage of main area
+const consoleHeight = ref(25) // percentage of main area
+const previewHeight = computed(() => 100 - editorsHeight.value - consoleHeight.value)
+
+let isResizing = ref(false)
+let resizeType = ref(null) // 'html-css', 'css-js', 'editors-preview', 'preview-console'
+let startX = 0
+let startY = 0
+let startWidth1 = 0
+let startWidth2 = 0
+let startHeight1 = 0
+let startHeight2 = 0
+
+const startHorizontalResize = (type, event) => {
+  isResizing.value = true
+  resizeType.value = type
+  startX = event.clientX
+
+  if (type === 'html-css') {
+    startWidth1 = htmlWidth.value
+    startWidth2 = cssWidth.value
+  } else if (type === 'css-js') {
+    startWidth1 = cssWidth.value
+    startWidth2 = jsWidth.value
+  }
+
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', stopResize)
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+}
+
+const startVerticalResize = (type, event) => {
+  isResizing.value = true
+  resizeType.value = type
+  startY = event.clientY
+
+  if (type === 'editors-preview') {
+    startHeight1 = editorsHeight.value
+    startHeight2 = previewHeight.value
+  } else if (type === 'preview-console') {
+    startHeight1 = previewHeight.value
+    startHeight2 = consoleHeight.value
+  }
+
+  document.addEventListener('mousemove', handleMouseMove)
+  document.addEventListener('mouseup', stopResize)
+  document.body.style.cursor = 'row-resize'
+  document.body.style.userSelect = 'none'
+}
+
+const handleMouseMove = (event) => {
+  if (!isResizing.value) return
+
+  if (resizeType.value === 'html-css' || resizeType.value === 'css-js') {
+    const container = editorContainerRef.value
+    if (!container) return
+
+    const containerWidth = container.offsetWidth
+    const deltaX = event.clientX - startX
+    const deltaPercent = (deltaX / containerWidth) * 100
+
+    if (resizeType.value === 'html-css') {
+      const newHtmlWidth = Math.max(10, Math.min(80 - cssWidth.value, startWidth1 + deltaPercent))
+      htmlWidth.value = newHtmlWidth
+    } else if (resizeType.value === 'css-js') {
+      const newCssWidth = Math.max(10, Math.min(80 - htmlWidth.value, startWidth1 + deltaPercent))
+      cssWidth.value = newCssWidth
+    }
+  } else if (resizeType.value === 'editors-preview' || resizeType.value === 'preview-console') {
+    const container = previewContainerRef.value
+    if (!container) return
+
+    const containerHeight = container.offsetHeight
+    const deltaY = event.clientY - startY
+    const deltaPercent = (deltaY / containerHeight) * 100
+
+    if (resizeType.value === 'editors-preview') {
+      const newEditorsHeight = Math.max(15, Math.min(70, startHeight1 + deltaPercent))
+      editorsHeight.value = newEditorsHeight
+    } else if (resizeType.value === 'preview-console') {
+      const newPreviewHeight = startHeight1 + deltaPercent
+      const newConsoleHeight = startHeight2 - deltaPercent
+      if (newPreviewHeight >= 15 && newConsoleHeight >= 10) {
+        // No need to set anything, the heights are computed
+        // We need to adjust editorsHeight or consoleHeight
+        consoleHeight.value = Math.max(10, Math.min(50, startHeight2 - deltaPercent))
+      }
+    }
+  }
+}
+
+const stopResize = () => {
+  isResizing.value = false
+  resizeType.value = null
+  document.removeEventListener('mousemove', handleMouseMove)
+  document.removeEventListener('mouseup', stopResize)
+  document.body.style.cursor = ''
+  document.body.style.userSelect = ''
+}
 
 const templates = [
   { id: 'basic', name: 'Basic', icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z' },
@@ -110,8 +217,8 @@ const generateHtml = () => {
 }
 
 const handleMessage = (event) => {
-  // Validar que el mensaje viene del iframe (mismo origen o null para srcdoc)
-  if (event.origin !== 'null' && event.origin !== window.location.origin) {
+  // Validar que el mensaje viene del iframe (blob: URL tiene origen 'null')
+  if (event.origin !== 'null' && !event.origin.startsWith('blob:')) {
     return
   }
   if (event.data && event.data.type === 'console') {
@@ -158,8 +265,9 @@ const consoleTypeStyles = {
 </script>
 
 <template>
-  <div class="h-full flex flex-col p-4 gap-4">
-    <div class="flex items-center gap-2 flex-wrap">
+  <div class="h-full flex flex-col p-4 gap-2 select-none" :class="{ 'cursor-col-resize': resizeType === 'html-css' || resizeType === 'css-js', 'cursor-row-resize': resizeType === 'editors-preview' || resizeType === 'preview-console' }">
+    <!-- Toolbar -->
+    <div class="flex items-center gap-2 flex-wrap shrink-0">
       <button
         @click="emit('run')"
         class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium text-white transition-colors"
@@ -224,62 +332,111 @@ const consoleTypeStyles = {
       </label>
     </div>
 
-    <div class="grid grid-cols-3 gap-3 h-48">
-      <div class="flex flex-col gap-1.5">
-        <label class="text-neutral-500 text-xs uppercase tracking-wider font-medium flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-orange-500"></span>
-          HTML
-        </label>
-        <textarea
-          :value="htmlCode"
-          @input="emit('update:htmlCode', $event.target.value)"
-          class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
-          placeholder="<h1>Hello</h1>"
-          spellcheck="false"
-        ></textarea>
+    <!-- Main content area -->
+    <div ref="previewContainerRef" class="flex-1 min-h-0 flex flex-col">
+      <!-- Editors Row -->
+      <div
+        ref="editorContainerRef"
+        class="flex shrink-0"
+        :style="{ height: editorsHeight + '%' }"
+      >
+        <!-- HTML Editor -->
+        <div class="flex flex-col min-w-0" :style="{ width: htmlWidth + '%' }">
+          <label class="text-neutral-500 text-xs uppercase tracking-wider font-medium flex items-center gap-1.5 px-1 py-1.5 shrink-0">
+            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+            HTML
+          </label>
+          <textarea
+            :value="htmlCode"
+            @input="emit('update:htmlCode', $event.target.value)"
+            class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
+            placeholder="<h1>Hello</h1>"
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <!-- Resizer HTML-CSS -->
+        <div
+          class="w-2 shrink-0 cursor-col-resize flex items-center justify-center group hover:bg-cyan-500/10 transition-colors"
+          @mousedown="startHorizontalResize('html-css', $event)"
+        >
+          <div class="w-0.5 h-8 bg-neutral-700 group-hover:bg-cyan-500 rounded-full transition-colors"></div>
+        </div>
+
+        <!-- CSS Editor -->
+        <div class="flex flex-col min-w-0" :style="{ width: cssWidth + '%' }">
+          <label class="text-neutral-500 text-xs uppercase tracking-wider font-medium flex items-center gap-1.5 px-1 py-1.5 shrink-0">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            CSS
+          </label>
+          <textarea
+            :value="cssCode"
+            @input="emit('update:cssCode', $event.target.value)"
+            class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
+            placeholder="body { color: white; }"
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <!-- Resizer CSS-JS -->
+        <div
+          class="w-2 shrink-0 cursor-col-resize flex items-center justify-center group hover:bg-cyan-500/10 transition-colors"
+          @mousedown="startHorizontalResize('css-js', $event)"
+        >
+          <div class="w-0.5 h-8 bg-neutral-700 group-hover:bg-cyan-500 rounded-full transition-colors"></div>
+        </div>
+
+        <!-- JavaScript Editor -->
+        <div class="flex flex-col min-w-0" :style="{ width: jsWidth + '%' }">
+          <label class="text-neutral-500 text-xs uppercase tracking-wider font-medium flex items-center gap-1.5 px-1 py-1.5 shrink-0">
+            <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+            JavaScript
+          </label>
+          <textarea
+            :value="jsCode"
+            @input="emit('update:jsCode', $event.target.value)"
+            class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
+            placeholder="console.log('Hello!');"
+            spellcheck="false"
+          ></textarea>
+        </div>
       </div>
 
-      <div class="flex flex-col gap-1.5">
-        <label class="text-neutral-500 text-xs uppercase tracking-wider font-medium flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-          CSS
-        </label>
-        <textarea
-          :value="cssCode"
-          @input="emit('update:cssCode', $event.target.value)"
-          class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
-          placeholder="body { color: white; }"
-          spellcheck="false"
-        ></textarea>
+      <!-- Resizer Editors-Preview -->
+      <div
+        class="h-2 shrink-0 cursor-row-resize flex items-center justify-center group hover:bg-cyan-500/10 transition-colors"
+        @mousedown="startVerticalResize('editors-preview', $event)"
+      >
+        <div class="h-0.5 w-12 bg-neutral-700 group-hover:bg-cyan-500 rounded-full transition-colors"></div>
       </div>
 
-      <div class="flex flex-col gap-1.5">
-        <label class="text-neutral-500 text-xs uppercase tracking-wider font-medium flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-          JavaScript
-        </label>
-        <textarea
-          :value="jsCode"
-          @input="emit('update:jsCode', $event.target.value)"
-          class="flex-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg text-neutral-300 font-mono text-xs resize-none outline-none focus:ring-1 focus:ring-cyan-500/50"
-          placeholder="console.log('Hello!');"
-          spellcheck="false"
-        ></textarea>
-      </div>
-    </div>
-
-    <div class="flex-1 min-h-0 grid grid-rows-[1fr,auto] gap-3">
-      <div class="bg-white rounded-lg overflow-hidden">
+      <!-- Preview -->
+      <div
+        class="bg-white rounded-lg overflow-hidden shrink-0"
+        :style="{ height: previewHeight + '%' }"
+      >
         <iframe
           :src="iframeSrc"
           class="w-full h-full border-0"
-          sandbox="allow-scripts allow-modals"
+          sandbox="allow-scripts allow-modals allow-same-origin"
           title="Preview"
         ></iframe>
       </div>
 
-      <div class="h-32 bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden flex flex-col">
-        <div class="flex items-center justify-between px-3 py-1.5 bg-neutral-800/50 border-b border-neutral-800">
+      <!-- Resizer Preview-Console -->
+      <div
+        class="h-2 shrink-0 cursor-row-resize flex items-center justify-center group hover:bg-cyan-500/10 transition-colors"
+        @mousedown="startVerticalResize('preview-console', $event)"
+      >
+        <div class="h-0.5 w-12 bg-neutral-700 group-hover:bg-cyan-500 rounded-full transition-colors"></div>
+      </div>
+
+      <!-- Console -->
+      <div
+        class="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden flex flex-col min-h-0"
+        :style="{ height: consoleHeight + '%' }"
+      >
+        <div class="flex items-center justify-between px-3 py-1.5 bg-neutral-800/50 border-b border-neutral-800 shrink-0">
           <span class="text-xs text-neutral-500 font-medium">Console</span>
           <button
             @click="emit('clear-console')"
