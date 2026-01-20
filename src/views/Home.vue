@@ -185,6 +185,14 @@ const tools = [
     icon: 'M4 5a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 7.414V10a1 1 0 01-2 0V6a1 1 0 011-1zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V7.414l-2.293 2.293a1 1 0 01-1.414-1.414L16.586 6H14a1 1 0 010-2zM5 14a1 1 0 011 1v2.586l2.293-2.293a1 1 0 011.414 1.414L7.414 19H10a1 1 0 010 2H6a1 1 0 01-1-1v-4a1 1 0 011-1zm14 0a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h2.586l-2.293-2.293a1 1 0 011.414-1.414L19 16.586V15a1 1 0 011-1z',
     color: 'orange',
     status: 'active'
+  },
+  {
+    path: '/unit-converter',
+    name: 'Unit Converter',
+    description: 'Convierte unidades de longitud, peso, temperatura, moneda y más. Tasas de cambio en tiempo real.',
+    icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
+    color: 'emerald',
+    status: 'active'
   }
 ]
 
@@ -230,6 +238,13 @@ const colorClasses = {
     text: 'text-orange-400',
     glow: 'group-hover:shadow-orange-500/20',
     icon: 'group-hover:text-orange-400'
+  },
+  emerald: {
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    text: 'text-emerald-400',
+    glow: 'group-hover:shadow-emerald-500/20',
+    icon: 'group-hover:text-emerald-400'
   }
 }
 

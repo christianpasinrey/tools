@@ -36,6 +36,11 @@ const routes = [
     path: '/svg-editor',
     name: 'SvgEditor',
     component: () => import('../views/SvgEditor.vue')
+  },
+  {
+    path: '/unit-converter',
+    name: 'UnitConverter',
+    component: () => import('../views/UnitConverter.vue')
   }
 ]
 
