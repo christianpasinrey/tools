@@ -37,23 +37,25 @@ const heroStyle = computed(() => ({
   opacity: Math.max(0, 1 - scrollY.value / 600)
 }))
 
-// Tool card style - enters from sides
+// Tool card style - alternates left/right by row, linked to scroll
 const getToolCardStyle = (index) => {
   const progress = getScrollProgress(toolsSection.value)
   const row = Math.floor(index / 2)
-  const isLeftCard = index % 2 === 0
+  const isRowFromRight = row % 2 === 0 // Fila 0, 2, 4... desde derecha; 1, 3... desde izquierda
+  
+  // Stagger by row - balanced delay
+  const rowDelay = row * 0.18
+  const cardProgress = Math.max(0, Math.min(1, (progress - rowDelay) * 2.4))
 
-  // Stagger by row
-  const rowDelay = row * 0.12
-  const cardProgress = Math.max(0, Math.min(1, (progress - rowDelay) * 1.8))
-
-  // Direction: left cards from -80px, right cards from +80px
-  const direction = isLeftCard ? -1 : 1
-  const translateX = (1 - cardProgress) * 80 * direction
+  // Direction: right rows slide from +500px, left rows slide from -500px (from screen edges)
+  // Starts invisible and fades in while sliding
+  const direction = isRowFromRight ? 1 : -1
+  const translateX = (1 - cardProgress) * 500 * direction
 
   return {
     opacity: cardProgress,
-    transform: `translateX(${translateX}px)`
+    transform: `translateX(${translateX}px)`,
+    transition: 'none' // No transition, smooth via scroll
   }
 }
 
@@ -647,9 +649,9 @@ const fetchGitHubCommits = async () => {
             'bg-neutral-900/50 backdrop-blur-sm border border-neutral-800/50',
             'hover:border-neutral-700/50 hover:shadow-2xl',
             colorClasses[tool.color].glow,
-            tool.status === 'active' ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'
+            tool.status === 'active' ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
+            'scroll-animated'
           ]"
-          class="scroll-animated"
           :style="getToolCardStyle(index)"
         >
           <!-- Hover gradient overlay -->
