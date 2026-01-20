@@ -57,17 +57,14 @@ const getToolCardStyle = (index) => {
   }
 }
 
-// Repo card style - with scroll-linked flip
+// Repo card style - simple fade + slide (no rotation)
 const repoStyle = computed(() => {
   const progress = getScrollProgress(repoSection.value)
-  // Flip: starts at 360deg (1 full rotation) and goes to 0
-  // Using cubic easing for smooth deceleration
-  const eased = 1 - Math.pow(1 - progress, 4)
-  const rotation = (1 - eased) * 360
+  const eased = 1 - Math.pow(1 - progress, 3)
 
   return {
-    opacity: Math.min(1, eased * 1.5),
-    transform: `perspective(1200px) rotateX(${rotation}deg) scale(${0.9 + eased * 0.1})`
+    opacity: Math.max(0.1, eased),
+    transform: `translateY(${(1 - eased) * 30}px) scale(${0.95 + eased * 0.05})`
   }
 })
 
