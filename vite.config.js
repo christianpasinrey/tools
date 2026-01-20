@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [vue(), tailwindcss()],
   build: {
+    chunkSizeWarningLimit: 1000, // 1MB - las librerías grandes son inevitables
     rollupOptions: {
       output: {
         manualChunks: {
