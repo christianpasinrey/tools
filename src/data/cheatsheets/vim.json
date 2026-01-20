@@ -1,0 +1,222 @@
+{
+  "title": "Vim Commands",
+  "description": "Atajos y comandos de Vim",
+  "sections": [
+    {
+      "name": "Modos",
+      "items": [
+        { "keys": ["Esc"], "desc": "Modo normal" },
+        { "keys": ["i"], "desc": "Insertar antes del cursor" },
+        { "keys": ["a"], "desc": "Insertar después del cursor" },
+        { "keys": ["I"], "desc": "Insertar al inicio de línea" },
+        { "keys": ["A"], "desc": "Insertar al final de línea" },
+        { "keys": ["o"], "desc": "Nueva línea debajo" },
+        { "keys": ["O"], "desc": "Nueva línea arriba" },
+        { "keys": ["s"], "desc": "Sustituir carácter" },
+        { "keys": ["S"], "desc": "Sustituir línea" },
+        { "keys": ["c"], "desc": "Cambiar (espera movimiento)" },
+        { "keys": ["C"], "desc": "Cambiar hasta fin de línea" },
+        { "keys": ["R"], "desc": "Modo reemplazo" },
+        { "keys": ["v"], "desc": "Modo visual" },
+        { "keys": ["V"], "desc": "Modo visual línea" },
+        { "keys": ["Ctrl", "v"], "desc": "Modo visual bloque" },
+        { "keys": ["gv"], "desc": "Reseleccionar último visual" }
+      ]
+    },
+    {
+      "name": "Navegación Básica",
+      "items": [
+        { "keys": ["h", "j", "k", "l"], "desc": "Izq, abajo, arriba, der" },
+        { "keys": ["w", "W"], "desc": "Siguiente palabra/PALABRA" },
+        { "keys": ["b", "B"], "desc": "Anterior palabra/PALABRA" },
+        { "keys": ["e", "E"], "desc": "Fin de palabra/PALABRA" },
+        { "keys": ["0"], "desc": "Inicio de línea" },
+        { "keys": ["$"], "desc": "Fin de línea" },
+        { "keys": ["^"], "desc": "Primer carácter no blanco" },
+        { "keys": ["g_"], "desc": "Último no blanco" },
+        { "keys": ["gg"], "desc": "Inicio de archivo" },
+        { "keys": ["G"], "desc": "Fin de archivo" },
+        { "keys": ["5G", ":5"], "desc": "Ir a línea 5" },
+        { "keys": ["%"], "desc": "Paréntesis coincidente" }
+      ]
+    },
+    {
+      "name": "Navegación Avanzada",
+      "items": [
+        { "keys": ["Ctrl", "u"], "desc": "Media página arriba" },
+        { "keys": ["Ctrl", "d"], "desc": "Media página abajo" },
+        { "keys": ["Ctrl", "b"], "desc": "Página completa arriba" },
+        { "keys": ["Ctrl", "f"], "desc": "Página completa abajo" },
+        { "keys": ["H", "M", "L"], "desc": "Top/Middle/Bottom pantalla" },
+        { "keys": ["zz"], "desc": "Centrar línea actual" },
+        { "keys": ["zt"], "desc": "Línea actual arriba" },
+        { "keys": ["zb"], "desc": "Línea actual abajo" },
+        { "keys": ["{", "}"], "desc": "Párrafo anterior/siguiente" },
+        { "keys": ["(", ")"], "desc": "Oración anterior/siguiente" },
+        { "keys": ["[[", "]]"], "desc": "Sección anterior/siguiente" },
+        { "keys": ["Ctrl", "o"], "desc": "Posición anterior" },
+        { "keys": ["Ctrl", "i"], "desc": "Posición siguiente" }
+      ]
+    },
+    {
+      "name": "Edición",
+      "items": [
+        { "keys": ["x"], "desc": "Borrar carácter" },
+        { "keys": ["X"], "desc": "Borrar carácter antes" },
+        { "keys": ["dd"], "desc": "Borrar línea" },
+        { "keys": ["D"], "desc": "Borrar hasta fin de línea" },
+        { "keys": ["dw"], "desc": "Borrar palabra" },
+        { "keys": ["diw"], "desc": "Borrar palabra interna" },
+        { "keys": ["daw"], "desc": "Borrar palabra + espacio" },
+        { "keys": ["di\""], "desc": "Borrar dentro de comillas" },
+        { "keys": ["da("], "desc": "Borrar incluyendo paréntesis" },
+        { "keys": ["yy"], "desc": "Copiar línea" },
+        { "keys": ["Y"], "desc": "Copiar hasta fin de línea" },
+        { "keys": ["yw"], "desc": "Copiar palabra" },
+        { "keys": ["p"], "desc": "Pegar después" },
+        { "keys": ["P"], "desc": "Pegar antes" },
+        { "keys": ["J"], "desc": "Unir línea siguiente" },
+        { "keys": ["gJ"], "desc": "Unir sin espacio" },
+        { "keys": ["~"], "desc": "Cambiar mayús/minús" },
+        { "keys": ["gu"], "desc": "Convertir a minúsculas" },
+        { "keys": ["gU"], "desc": "Convertir a mayúsculas" }
+      ]
+    },
+    {
+      "name": "Deshacer y Repetir",
+      "items": [
+        { "keys": ["u"], "desc": "Deshacer" },
+        { "keys": ["U"], "desc": "Deshacer toda la línea" },
+        { "keys": ["Ctrl", "r"], "desc": "Rehacer" },
+        { "keys": ["."], "desc": "Repetir último comando" },
+        { "keys": [";"], "desc": "Repetir último f/t" },
+        { "keys": [","], "desc": "Repetir último f/t (reverso)" },
+        { "keys": ["@:"], "desc": "Repetir último comando ex" },
+        { "keys": ["@@"], "desc": "Repetir última macro" }
+      ]
+    },
+    {
+      "name": "Buscar",
+      "items": [
+        { "cmd": "/pattern", "desc": "Buscar hacia adelante" },
+        { "cmd": "?pattern", "desc": "Buscar hacia atrás" },
+        { "keys": ["n"], "desc": "Siguiente coincidencia" },
+        { "keys": ["N"], "desc": "Anterior coincidencia" },
+        { "keys": ["*"], "desc": "Buscar palabra (adelante)" },
+        { "keys": ["#"], "desc": "Buscar palabra (atrás)" },
+        { "keys": ["f", "char"], "desc": "Ir a char en línea" },
+        { "keys": ["F", "char"], "desc": "Ir a char (atrás)" },
+        { "keys": ["t", "char"], "desc": "Ir antes de char" },
+        { "keys": ["T", "char"], "desc": "Ir antes de char (atrás)" },
+        { "cmd": ":noh", "desc": "Quitar resaltado" }
+      ]
+    },
+    {
+      "name": "Reemplazar",
+      "items": [
+        { "keys": ["r", "char"], "desc": "Reemplazar carácter" },
+        { "cmd": ":s/old/new/", "desc": "Reemplazar primero en línea" },
+        { "cmd": ":s/old/new/g", "desc": "Reemplazar todo en línea" },
+        { "cmd": ":%s/old/new/g", "desc": "Reemplazar en archivo" },
+        { "cmd": ":%s/old/new/gc", "desc": "Con confirmación" },
+        { "cmd": ":%s/old/new/gi", "desc": "Ignorar mayúsculas" },
+        { "cmd": ":'<,'>s/old/new/g", "desc": "En selección visual" },
+        { "cmd": ":5,10s/old/new/g", "desc": "En rango de líneas" }
+      ]
+    },
+    {
+      "name": "Archivos",
+      "items": [
+        { "cmd": ":w", "desc": "Guardar" },
+        { "cmd": ":w file", "desc": "Guardar como" },
+        { "cmd": ":q", "desc": "Salir" },
+        { "cmd": ":q!", "desc": "Salir sin guardar" },
+        { "cmd": ":wq / :x / ZZ", "desc": "Guardar y salir" },
+        { "cmd": ":e file", "desc": "Abrir archivo" },
+        { "cmd": ":e!", "desc": "Recargar archivo" },
+        { "cmd": ":r file", "desc": "Insertar contenido" },
+        { "cmd": ":r !cmd", "desc": "Insertar output de comando" },
+        { "cmd": ":saveas file", "desc": "Guardar como nuevo" }
+      ]
+    },
+    {
+      "name": "Buffers y Ventanas",
+      "items": [
+        { "cmd": ":ls / :buffers", "desc": "Listar buffers" },
+        { "cmd": ":bn / :bp", "desc": "Buffer sig/ant" },
+        { "cmd": ":b name", "desc": "Ir a buffer" },
+        { "cmd": ":bd", "desc": "Cerrar buffer" },
+        { "cmd": ":sp / :vsp", "desc": "Dividir h/v" },
+        { "keys": ["Ctrl", "w", "s"], "desc": "Dividir horizontal" },
+        { "keys": ["Ctrl", "w", "v"], "desc": "Dividir vertical" },
+        { "keys": ["Ctrl", "w", "w"], "desc": "Cambiar ventana" },
+        { "keys": ["Ctrl", "w", "h/j/k/l"], "desc": "Mover a ventana" },
+        { "keys": ["Ctrl", "w", "q"], "desc": "Cerrar ventana" },
+        { "keys": ["Ctrl", "w", "="], "desc": "Igualar tamaños" },
+        { "keys": ["Ctrl", "w", "_"], "desc": "Maximizar altura" },
+        { "keys": ["Ctrl", "w", "|"], "desc": "Maximizar ancho" }
+      ]
+    },
+    {
+      "name": "Pestañas",
+      "items": [
+        { "cmd": ":tabnew", "desc": "Nueva pestaña" },
+        { "cmd": ":tabnew file", "desc": "Abrir en pestaña" },
+        { "cmd": ":tabc", "desc": "Cerrar pestaña" },
+        { "cmd": ":tabo", "desc": "Cerrar otras pestañas" },
+        { "keys": ["gt"], "desc": "Siguiente pestaña" },
+        { "keys": ["gT"], "desc": "Anterior pestaña" },
+        { "keys": ["5gt"], "desc": "Ir a pestaña 5" }
+      ]
+    },
+    {
+      "name": "Marcas y Registros",
+      "items": [
+        { "keys": ["m", "a"], "desc": "Establecer marca a" },
+        { "keys": ["'", "a"], "desc": "Ir a marca a (línea)" },
+        { "keys": ["`", "a"], "desc": "Ir a marca a (exacto)" },
+        { "cmd": ":marks", "desc": "Listar marcas" },
+        { "keys": ["\"", "a", "yy"], "desc": "Copiar al registro a" },
+        { "keys": ["\"", "a", "p"], "desc": "Pegar del registro a" },
+        { "keys": ["\"", "+", "y"], "desc": "Copiar al clipboard" },
+        { "keys": ["\"", "+", "p"], "desc": "Pegar del clipboard" },
+        { "cmd": ":reg", "desc": "Ver registros" }
+      ]
+    },
+    {
+      "name": "Macros",
+      "items": [
+        { "keys": ["q", "a"], "desc": "Grabar macro en a" },
+        { "keys": ["q"], "desc": "Detener grabación" },
+        { "keys": ["@", "a"], "desc": "Ejecutar macro a" },
+        { "keys": ["@@"], "desc": "Repetir última macro" },
+        { "keys": ["5@a"], "desc": "Ejecutar macro 5 veces" },
+        { "cmd": ":normal @a", "desc": "Ejecutar en selección" }
+      ]
+    },
+    {
+      "name": "Indentación",
+      "items": [
+        { "keys": [">>"], "desc": "Indentar línea" },
+        { "keys": ["<<"], "desc": "Desindentar línea" },
+        { "keys": ["=="], "desc": "Auto-indentar línea" },
+        { "keys": ["gg=G"], "desc": "Auto-indentar todo" },
+        { "keys": [">"], "desc": "Indentar (visual)" },
+        { "keys": ["<"], "desc": "Desindentar (visual)" },
+        { "keys": ["="], "desc": "Auto-indentar (visual)" }
+      ]
+    },
+    {
+      "name": "Plegado (Folding)",
+      "items": [
+        { "keys": ["zf"], "desc": "Crear pliegue" },
+        { "keys": ["zo"], "desc": "Abrir pliegue" },
+        { "keys": ["zc"], "desc": "Cerrar pliegue" },
+        { "keys": ["za"], "desc": "Toggle pliegue" },
+        { "keys": ["zR"], "desc": "Abrir todos" },
+        { "keys": ["zM"], "desc": "Cerrar todos" },
+        { "keys": ["zd"], "desc": "Eliminar pliegue" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "title": "Vue.js Reference",
+  "description": "Referencia rápida de Vue 3 Composition API",
+  "sections": [
+    {
+      "name": "Reactividad",
+      "items": [
+        { "cmd": "ref(value)", "desc": "Crear referencia reactiva" },
+        { "cmd": "ref.value", "desc": "Acceder/modificar valor" },
+        { "cmd": "reactive(obj)", "desc": "Objeto reactivo profundo" },
+        { "cmd": "shallowRef(value)", "desc": "Ref superficial" },
+        { "cmd": "shallowReactive(obj)", "desc": "Reactivo superficial" },
+        { "cmd": "readonly(obj)", "desc": "Proxy de solo lectura" },
+        { "cmd": "computed(() => ...)", "desc": "Propiedad computada" },
+        { "cmd": "computed({ get, set })", "desc": "Computed con setter" },
+        { "cmd": "watch(source, callback)", "desc": "Observar cambios" },
+        { "cmd": "watch([a, b], callback)", "desc": "Watch múltiple" },
+        { "cmd": "watch(source, cb, { deep: true })", "desc": "Watch profundo" },
+        { "cmd": "watch(source, cb, { immediate: true })", "desc": "Ejecutar inmediato" },
+        { "cmd": "watchEffect(() => ...)", "desc": "Efecto auto-tracked" },
+        { "cmd": "watchPostEffect(() => ...)", "desc": "Efecto post-render" },
+        { "cmd": "toRef(obj, 'key')", "desc": "Prop a ref" },
+        { "cmd": "toRefs(obj)", "desc": "Objeto a refs" },
+        { "cmd": "toValue(refOrGetter)", "desc": "Obtener valor" },
+        { "cmd": "unref(ref)", "desc": "Desenvolver ref" },
+        { "cmd": "isRef(val)", "desc": "Es una ref?" },
+        { "cmd": "isReactive(val)", "desc": "Es reactivo?" }
+      ]
+    },
+    {
+      "name": "Ciclo de Vida",
+      "items": [
+        { "cmd": "onBeforeMount(() => ...)", "desc": "Antes de montar" },
+        { "cmd": "onMounted(() => ...)", "desc": "Después de montar" },
+        { "cmd": "onBeforeUpdate(() => ...)", "desc": "Antes de actualizar" },
+        { "cmd": "onUpdated(() => ...)", "desc": "Después de actualizar" },
+        { "cmd": "onBeforeUnmount(() => ...)", "desc": "Antes de desmontar" },
+        { "cmd": "onUnmounted(() => ...)", "desc": "Después de desmontar" },
+        { "cmd": "onActivated(() => ...)", "desc": "Keep-alive activado" },
+        { "cmd": "onDeactivated(() => ...)", "desc": "Keep-alive desactivado" },
+        { "cmd": "onErrorCaptured((err) => ...)", "desc": "Capturar error" },
+        { "cmd": "onRenderTracked((e) => ...)", "desc": "Debug: tracked" },
+        { "cmd": "onRenderTriggered((e) => ...)", "desc": "Debug: triggered" }
+      ]
+    },
+    {
+      "name": "Directivas",
+      "items": [
+        { "cmd": "v-if=\"condition\"", "desc": "Renderizado condicional" },
+        { "cmd": "v-else-if=\"condition\"", "desc": "Else if" },
+        { "cmd": "v-else", "desc": "Else" },
+        { "cmd": "v-show=\"condition\"", "desc": "Toggle CSS display" },
+        { "cmd": "v-for=\"item in items\"", "desc": "Iteración" },
+        { "cmd": "v-for=\"(item, index) in items\"", "desc": "Con índice" },
+        { "cmd": "v-for=\"(value, key) in object\"", "desc": "Iterar objeto" },
+        { "cmd": ":key=\"item.id\"", "desc": "Key único (requerido)" },
+        { "cmd": "v-model=\"value\"", "desc": "Two-way binding" },
+        { "cmd": "v-model.lazy", "desc": "Sync en change" },
+        { "cmd": "v-model.number", "desc": "Cast a número" },
+        { "cmd": "v-model.trim", "desc": "Trim espacios" },
+        { "cmd": "@click=\"handler\"", "desc": "Event listener" },
+        { "cmd": "@click.prevent", "desc": "preventDefault" },
+        { "cmd": "@click.stop", "desc": "stopPropagation" },
+        { "cmd": "@click.once", "desc": "Solo una vez" },
+        { "cmd": "@keyup.enter", "desc": "Modificador de tecla" },
+        { "cmd": ":href=\"url\"", "desc": "Bind de atributo" },
+        { "cmd": ":class=\"{ active: isActive }\"", "desc": "Clases dinámicas" },
+        { "cmd": ":style=\"{ color: activeColor }\"", "desc": "Estilos dinámicos" },
+        { "cmd": "v-html=\"rawHtml\"", "desc": "HTML raw" },
+        { "cmd": "v-text=\"text\"", "desc": "Texto" },
+        { "cmd": "v-pre", "desc": "Saltar compilación" },
+        { "cmd": "v-once", "desc": "Renderizar una vez" },
+        { "cmd": "v-memo=\"[value]\"", "desc": "Memoización" }
+      ]
+    },
+    {
+      "name": "Componentes",
+      "items": [
+        { "cmd": "defineProps(['prop'])", "desc": "Definir props" },
+        { "cmd": "defineProps({ prop: String })", "desc": "Props con tipo" },
+        { "cmd": "defineProps({ prop: { type: String, required: true }})", "desc": "Props validadas" },
+        { "cmd": "withDefaults(defineProps<T>(), {})", "desc": "Props con defaults (TS)" },
+        { "cmd": "defineEmits(['event'])", "desc": "Definir eventos" },
+        { "cmd": "defineEmits<{ (e: 'click', id: number): void }>()", "desc": "Emits tipados" },
+        { "cmd": "emit('event', payload)", "desc": "Emitir evento" },
+        { "cmd": "defineExpose({ method })", "desc": "Exponer al padre" },
+        { "cmd": "defineModel()", "desc": "v-model en componente" },
+        { "cmd": "defineSlots()", "desc": "Tipar slots" },
+        { "cmd": "defineOptions({ inheritAttrs: false })", "desc": "Opciones" },
+        { "cmd": "<slot />", "desc": "Slot por defecto" },
+        { "cmd": "<slot name=\"header\" />", "desc": "Slot nombrado" },
+        { "cmd": "<slot :item=\"item\" />", "desc": "Scoped slot" },
+        { "cmd": "$slots.default()", "desc": "Acceder a slots" },
+        { "cmd": "$attrs", "desc": "Atributos heredados" }
+      ]
+    },
+    {
+      "name": "Provide / Inject",
+      "items": [
+        { "cmd": "provide('key', value)", "desc": "Proveer valor" },
+        { "cmd": "provide('key', readonly(value))", "desc": "Proveer readonly" },
+        { "cmd": "inject('key')", "desc": "Inyectar valor" },
+        { "cmd": "inject('key', defaultValue)", "desc": "Con valor por defecto" },
+        { "cmd": "inject('key', () => default, true)", "desc": "Default como factory" }
+      ]
+    },
+    {
+      "name": "Composables",
+      "items": [
+        { "cmd": "useRoute()", "desc": "Ruta actual (Router)" },
+        { "cmd": "useRouter()", "desc": "Instancia router" },
+        { "cmd": "useStore()", "desc": "Store (Pinia)" },
+        { "cmd": "useAttrs()", "desc": "Atributos" },
+        { "cmd": "useSlots()", "desc": "Slots" },
+        { "cmd": "useCssModule()", "desc": "CSS Modules" },
+        { "cmd": "useTemplateRef('name')", "desc": "Template ref" }
+      ]
+    },
+    {
+      "name": "Template Refs",
+      "items": [
+        { "cmd": "const el = ref<HTMLElement | null>(null)", "desc": "Definir ref" },
+        { "cmd": "ref=\"el\"", "desc": "Asignar en template" },
+        { "cmd": "el.value", "desc": "Acceder al elemento" },
+        { "cmd": ":ref=\"(el) => { ... }\"", "desc": "Function ref" },
+        { "cmd": "ref=\"items\" v-for", "desc": "Refs en v-for (array)" }
+      ]
+    },
+    {
+      "name": "Componentes Especiales",
+      "items": [
+        { "cmd": "<Transition>", "desc": "Animación enter/leave" },
+        { "cmd": "<TransitionGroup>", "desc": "Animación de listas" },
+        { "cmd": "<KeepAlive>", "desc": "Cachear componentes" },
+        { "cmd": "<Teleport to=\"body\">", "desc": "Renderizar en otro lugar" },
+        { "cmd": "<Suspense>", "desc": "Async component wrapper" },
+        { "cmd": "<component :is=\"comp\">", "desc": "Componente dinámico" }
+      ]
+    },
+    {
+      "name": "Pinia",
+      "items": [
+        { "cmd": "defineStore('id', { state, actions })", "desc": "Definir store (options)" },
+        { "cmd": "defineStore('id', () => { ... })", "desc": "Definir store (setup)" },
+        { "cmd": "const store = useStore()", "desc": "Usar store" },
+        { "cmd": "store.property", "desc": "Acceder a state" },
+        { "cmd": "store.action()", "desc": "Llamar action" },
+        { "cmd": "store.$patch({ ... })", "desc": "Actualizar múltiples" },
+        { "cmd": "store.$reset()", "desc": "Resetear state" },
+        { "cmd": "storeToRefs(store)", "desc": "Desestructurar reactivo" }
+      ]
+    },
+    {
+      "name": "Vue Router",
+      "items": [
+        { "cmd": "<router-view />", "desc": "Vista de ruta" },
+        { "cmd": "<router-link to=\"/path\">", "desc": "Enlace de navegación" },
+        { "cmd": "<router-link :to=\"{ name: 'home' }\">", "desc": "Enlace por nombre" },
+        { "cmd": "router.push('/path')", "desc": "Navegar programáticamente" },
+        { "cmd": "router.push({ name: 'user', params: { id: 1 }})", "desc": "Con params" },
+        { "cmd": "router.replace('/path')", "desc": "Reemplazar historia" },
+        { "cmd": "router.go(-1)", "desc": "Navegar en historia" },
+        { "cmd": "route.params.id", "desc": "Parámetros de ruta" },
+        { "cmd": "route.query.search", "desc": "Query params" },
+        { "cmd": "route.meta", "desc": "Metadata de ruta" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "title": "Regular Expressions",
+  "description": "Patrones y sintaxis de expresiones regulares",
+  "sections": [
+    {
+      "name": "Caracteres",
+      "items": [
+        { "cmd": ".", "desc": "Cualquier carácter (excepto newline)" },
+        { "cmd": "\\d", "desc": "Dígito [0-9]" },
+        { "cmd": "\\D", "desc": "No dígito [^0-9]" },
+        { "cmd": "\\w", "desc": "Alfanumérico [a-zA-Z0-9_]" },
+        { "cmd": "\\W", "desc": "No alfanumérico" },
+        { "cmd": "\\s", "desc": "Espacio en blanco [ \\t\\n\\r\\f\\v]" },
+        { "cmd": "\\S", "desc": "No espacio" },
+        { "cmd": "\\n", "desc": "Nueva línea" },
+        { "cmd": "\\r", "desc": "Retorno de carro" },
+        { "cmd": "\\t", "desc": "Tabulación" },
+        { "cmd": "\\0", "desc": "Carácter nulo" },
+        { "cmd": "\\xhh", "desc": "Carácter hex" },
+        { "cmd": "\\uhhhh", "desc": "Carácter Unicode" }
+      ]
+    },
+    {
+      "name": "Cuantificadores",
+      "items": [
+        { "cmd": "*", "desc": "Cero o más (greedy)" },
+        { "cmd": "+", "desc": "Uno o más (greedy)" },
+        { "cmd": "?", "desc": "Cero o uno (greedy)" },
+        { "cmd": "{n}", "desc": "Exactamente n" },
+        { "cmd": "{n,}", "desc": "n o más" },
+        { "cmd": "{n,m}", "desc": "Entre n y m" },
+        { "cmd": "*?", "desc": "Cero o más (lazy)" },
+        { "cmd": "+?", "desc": "Uno o más (lazy)" },
+        { "cmd": "??", "desc": "Cero o uno (lazy)" },
+        { "cmd": "{n,m}?", "desc": "Entre n y m (lazy)" },
+        { "cmd": "*+", "desc": "Cero o más (possessive)" },
+        { "cmd": "++", "desc": "Uno o más (possessive)" }
+      ]
+    },
+    {
+      "name": "Anclas",
+      "items": [
+        { "cmd": "^", "desc": "Inicio de línea/string" },
+        { "cmd": "$", "desc": "Fin de línea/string" },
+        { "cmd": "\\b", "desc": "Límite de palabra" },
+        { "cmd": "\\B", "desc": "No límite de palabra" },
+        { "cmd": "\\A", "desc": "Inicio absoluto del string" },
+        { "cmd": "\\Z", "desc": "Fin absoluto del string" },
+        { "cmd": "\\z", "desc": "Fin absoluto (sin newline)" }
+      ]
+    },
+    {
+      "name": "Clases de Caracteres",
+      "items": [
+        { "cmd": "[abc]", "desc": "Cualquiera de estos" },
+        { "cmd": "[^abc]", "desc": "Ninguno de estos" },
+        { "cmd": "[a-z]", "desc": "Rango a-z" },
+        { "cmd": "[A-Z]", "desc": "Rango A-Z" },
+        { "cmd": "[0-9]", "desc": "Rango 0-9" },
+        { "cmd": "[a-zA-Z0-9]", "desc": "Alfanumérico" },
+        { "cmd": "[a-z&&[^aeiou]]", "desc": "Intersección (Java)" },
+        { "cmd": "[[:alpha:]]", "desc": "Clase POSIX alfabético" },
+        { "cmd": "[[:digit:]]", "desc": "Clase POSIX dígito" },
+        { "cmd": "[[:alnum:]]", "desc": "Clase POSIX alfanumérico" },
+        { "cmd": "[[:space:]]", "desc": "Clase POSIX espacio" }
+      ]
+    },
+    {
+      "name": "Grupos",
+      "items": [
+        { "cmd": "(abc)", "desc": "Grupo de captura" },
+        { "cmd": "(?:abc)", "desc": "Grupo sin captura" },
+        { "cmd": "(?<name>abc)", "desc": "Grupo nombrado" },
+        { "cmd": "(?P<name>abc)", "desc": "Grupo nombrado (Python)" },
+        { "cmd": "\\1", "desc": "Backreference grupo 1" },
+        { "cmd": "\\k<name>", "desc": "Backreference nombrado" },
+        { "cmd": "(?P=name)", "desc": "Backreference (Python)" },
+        { "cmd": "(a|b)", "desc": "Alternativa dentro de grupo" }
+      ]
+    },
+    {
+      "name": "Lookahead / Lookbehind",
+      "items": [
+        { "cmd": "(?=abc)", "desc": "Lookahead positivo" },
+        { "cmd": "(?!abc)", "desc": "Lookahead negativo" },
+        { "cmd": "(?<=abc)", "desc": "Lookbehind positivo" },
+        { "cmd": "(?<!abc)", "desc": "Lookbehind negativo" },
+        { "cmd": "a(?=b)", "desc": "'a' seguido de 'b'" },
+        { "cmd": "a(?!b)", "desc": "'a' no seguido de 'b'" },
+        { "cmd": "(?<=a)b", "desc": "'b' precedido de 'a'" },
+        { "cmd": "(?<!a)b", "desc": "'b' no precedido de 'a'" }
+      ]
+    },
+    {
+      "name": "Operadores",
+      "items": [
+        { "cmd": "a|b", "desc": "Alternativa (a OR b)" },
+        { "cmd": "\\", "desc": "Escapar carácter especial" },
+        { "cmd": "\\\\", "desc": "Backslash literal" },
+        { "cmd": "\\.", "desc": "Punto literal" },
+        { "cmd": "\\*", "desc": "Asterisco literal" },
+        { "cmd": "\\+", "desc": "Plus literal" },
+        { "cmd": "\\?", "desc": "Interrogación literal" },
+        { "cmd": "\\(", "desc": "Paréntesis literal" },
+        { "cmd": "\\[", "desc": "Corchete literal" },
+        { "cmd": "\\{", "desc": "Llave literal" }
+      ]
+    },
+    {
+      "name": "Flags",
+      "items": [
+        { "cmd": "g", "desc": "Global (todas las coincidencias)" },
+        { "cmd": "i", "desc": "Case insensitive" },
+        { "cmd": "m", "desc": "Multiline (^ y $ por línea)" },
+        { "cmd": "s", "desc": "Dotall (. incluye newline)" },
+        { "cmd": "u", "desc": "Unicode" },
+        { "cmd": "x", "desc": "Extended (ignorar espacios)" },
+        { "cmd": "y", "desc": "Sticky (desde lastIndex)" },
+        { "cmd": "d", "desc": "Indices de grupos (JS)" }
+      ]
+    },
+    {
+      "name": "Patrones Comunes",
+      "items": [
+        { "cmd": "^\\S+@\\S+\\.\\S+$", "desc": "Email básico" },
+        { "cmd": "^https?://", "desc": "URL con http(s)" },
+        { "cmd": "^\\d{4}-\\d{2}-\\d{2}$", "desc": "Fecha YYYY-MM-DD" },
+        { "cmd": "^\\d{1,3}(\\.\\d{1,3}){3}$", "desc": "IPv4 básico" },
+        { "cmd": "^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$", "desc": "Color hex" },
+        { "cmd": "^\\+?\\d{1,3}[-.\\s]?\\d+$", "desc": "Teléfono básico" },
+        { "cmd": "^[a-zA-Z0-9_-]{3,16}$", "desc": "Username" },
+        { "cmd": "^(?=.*[A-Z])(?=.*[0-9]).{8,}$", "desc": "Password fuerte" }
+      ]
+    },
+    {
+      "name": "JavaScript",
+      "items": [
+        { "cmd": "/pattern/flags", "desc": "Literal de regex" },
+        { "cmd": "new RegExp('pattern', 'flags')", "desc": "Constructor" },
+        { "cmd": "regex.test(str)", "desc": "Probar coincidencia" },
+        { "cmd": "regex.exec(str)", "desc": "Ejecutar y obtener match" },
+        { "cmd": "str.match(regex)", "desc": "Obtener matches" },
+        { "cmd": "str.matchAll(regex)", "desc": "Iterador de matches" },
+        { "cmd": "str.replace(regex, repl)", "desc": "Reemplazar" },
+        { "cmd": "str.replaceAll(regex, repl)", "desc": "Reemplazar todos" },
+        { "cmd": "str.search(regex)", "desc": "Índice de match" },
+        { "cmd": "str.split(regex)", "desc": "Dividir por regex" },
+        { "cmd": "$1, $2", "desc": "Referencias en replace" },
+        { "cmd": "$&", "desc": "Match completo" },
+        { "cmd": "$`", "desc": "Antes del match" },
+        { "cmd": "$'", "desc": "Después del match" }
+      ]
+    },
+    {
+      "name": "Modificadores Inline",
+      "items": [
+        { "cmd": "(?i)", "desc": "Activar case insensitive" },
+        { "cmd": "(?-i)", "desc": "Desactivar case insensitive" },
+        { "cmd": "(?i:abc)", "desc": "Case insensitive solo para grupo" },
+        { "cmd": "(?m)", "desc": "Activar multiline" },
+        { "cmd": "(?s)", "desc": "Activar dotall" },
+        { "cmd": "(?x)", "desc": "Activar extended" },
+        { "cmd": "(?ims)", "desc": "Múltiples flags" }
+      ]
+    }
+  ]
+}

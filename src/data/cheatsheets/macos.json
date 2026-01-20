@@ -1,0 +1,112 @@
+{
+  "title": "macOS Keyboard Shortcuts",
+  "description": "Atajos de teclado esenciales para macOS",
+  "sections": [
+    {
+      "name": "General",
+      "items": [
+        { "keys": ["Cmd", "C"], "desc": "Copiar" },
+        { "keys": ["Cmd", "V"], "desc": "Pegar" },
+        { "keys": ["Cmd", "X"], "desc": "Cortar" },
+        { "keys": ["Cmd", "Z"], "desc": "Deshacer" },
+        { "keys": ["Cmd", "Shift", "Z"], "desc": "Rehacer" },
+        { "keys": ["Cmd", "A"], "desc": "Seleccionar todo" },
+        { "keys": ["Cmd", "F"], "desc": "Buscar" },
+        { "keys": ["Cmd", "G"], "desc": "Buscar siguiente" },
+        { "keys": ["Cmd", "S"], "desc": "Guardar" },
+        { "keys": ["Cmd", "Shift", "S"], "desc": "Guardar como" },
+        { "keys": ["Cmd", "P"], "desc": "Imprimir" },
+        { "keys": ["Cmd", "W"], "desc": "Cerrar ventana" },
+        { "keys": ["Cmd", "Q"], "desc": "Cerrar aplicación" },
+        { "keys": ["Cmd", "H"], "desc": "Ocultar aplicación" },
+        { "keys": ["Cmd", "M"], "desc": "Minimizar ventana" },
+        { "keys": ["Cmd", "Tab"], "desc": "Cambiar aplicación" },
+        { "keys": ["Cmd", "`"], "desc": "Cambiar ventana (misma app)" },
+        { "keys": ["Cmd", ","], "desc": "Preferencias de la app" }
+      ]
+    },
+    {
+      "name": "Finder",
+      "items": [
+        { "keys": ["Cmd", "N"], "desc": "Nueva ventana Finder" },
+        { "keys": ["Cmd", "T"], "desc": "Nueva pestaña" },
+        { "keys": ["Cmd", "Shift", "N"], "desc": "Nueva carpeta" },
+        { "keys": ["Cmd", "Delete"], "desc": "Mover a papelera" },
+        { "keys": ["Cmd", "Shift", "Delete"], "desc": "Vaciar papelera" },
+        { "keys": ["Space"], "desc": "Vista rápida" },
+        { "keys": ["Cmd", "I"], "desc": "Obtener información" },
+        { "keys": ["Cmd", "D"], "desc": "Duplicar" },
+        { "keys": ["Cmd", "L"], "desc": "Crear alias" },
+        { "keys": ["Cmd", "Shift", "."], "desc": "Mostrar archivos ocultos" },
+        { "keys": ["Cmd", "1"], "desc": "Vista iconos" },
+        { "keys": ["Cmd", "2"], "desc": "Vista lista" },
+        { "keys": ["Cmd", "3"], "desc": "Vista columnas" },
+        { "keys": ["Cmd", "4"], "desc": "Vista galería" },
+        { "keys": ["Cmd", "["], "desc": "Carpeta anterior" },
+        { "keys": ["Cmd", "]"], "desc": "Carpeta siguiente" },
+        { "keys": ["Cmd", "↑"], "desc": "Carpeta padre" },
+        { "keys": ["Cmd", "↓"], "desc": "Abrir selección" }
+      ]
+    },
+    {
+      "name": "Capturas de Pantalla",
+      "items": [
+        { "keys": ["Cmd", "Shift", "3"], "desc": "Captura pantalla completa" },
+        { "keys": ["Cmd", "Shift", "4"], "desc": "Captura selección" },
+        { "keys": ["Cmd", "Shift", "4", "Space"], "desc": "Captura ventana" },
+        { "keys": ["Cmd", "Shift", "5"], "desc": "Opciones de captura" },
+        { "keys": ["Cmd", "Shift", "6"], "desc": "Captura Touch Bar" },
+        { "keys": ["Ctrl", "+", "captura"], "desc": "Guardar en portapapeles" }
+      ]
+    },
+    {
+      "name": "Sistema",
+      "items": [
+        { "keys": ["Cmd", "Space"], "desc": "Búsqueda Spotlight" },
+        { "keys": ["Cmd", "Ctrl", "Q"], "desc": "Bloquear pantalla" },
+        { "keys": ["Cmd", "Opt", "Esc"], "desc": "Forzar cierre" },
+        { "keys": ["Ctrl", "Cmd", "Power"], "desc": "Reinicio forzado" },
+        { "keys": ["Cmd", "Opt", "D"], "desc": "Mostrar/ocultar Dock" },
+        { "keys": ["F11"], "desc": "Mostrar escritorio" },
+        { "keys": ["Ctrl", "↑"], "desc": "Mission Control" },
+        { "keys": ["Ctrl", "↓"], "desc": "Ventanas de la app" },
+        { "keys": ["Ctrl", "←/→"], "desc": "Cambiar escritorio" },
+        { "keys": ["Cmd", "Ctrl", "F"], "desc": "Pantalla completa" },
+        { "keys": ["Cmd", "Opt", "Eject"], "desc": "Suspender" },
+        { "keys": ["Ctrl", "Shift", "Power"], "desc": "Apagar pantalla" }
+      ]
+    },
+    {
+      "name": "Edición de Texto",
+      "items": [
+        { "keys": ["Cmd", "←"], "desc": "Inicio de línea" },
+        { "keys": ["Cmd", "→"], "desc": "Fin de línea" },
+        { "keys": ["Opt", "←"], "desc": "Palabra anterior" },
+        { "keys": ["Opt", "→"], "desc": "Palabra siguiente" },
+        { "keys": ["Cmd", "↑"], "desc": "Inicio del documento" },
+        { "keys": ["Cmd", "↓"], "desc": "Fin del documento" },
+        { "keys": ["Opt", "Delete"], "desc": "Borrar palabra anterior" },
+        { "keys": ["Fn", "Delete"], "desc": "Suprimir hacia adelante" },
+        { "keys": ["Ctrl", "K"], "desc": "Borrar hasta fin de línea" },
+        { "keys": ["Ctrl", "A"], "desc": "Inicio de línea" },
+        { "keys": ["Ctrl", "E"], "desc": "Fin de línea" },
+        { "keys": ["Ctrl", "T"], "desc": "Transponer caracteres" }
+      ]
+    },
+    {
+      "name": "Safari / Navegador",
+      "items": [
+        { "keys": ["Cmd", "T"], "desc": "Nueva pestaña" },
+        { "keys": ["Cmd", "Shift", "T"], "desc": "Reabrir pestaña cerrada" },
+        { "keys": ["Cmd", "W"], "desc": "Cerrar pestaña" },
+        { "keys": ["Cmd", "L"], "desc": "Ir a barra de direcciones" },
+        { "keys": ["Cmd", "R"], "desc": "Recargar página" },
+        { "keys": ["Cmd", "Shift", "R"], "desc": "Recargar sin caché" },
+        { "keys": ["Cmd", "←"], "desc": "Página anterior" },
+        { "keys": ["Cmd", "→"], "desc": "Página siguiente" },
+        { "keys": ["Cmd", "1-9"], "desc": "Ir a pestaña N" },
+        { "keys": ["Cmd", "Opt", "I"], "desc": "Herramientas desarrollo" }
+      ]
+    }
+  ]
+}

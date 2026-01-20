@@ -1,0 +1,173 @@
+{
+  "title": "Laravel Commands",
+  "description": "Comandos Artisan y helpers de Laravel",
+  "sections": [
+    {
+      "name": "Artisan Básicos",
+      "items": [
+        { "cmd": "php artisan serve", "desc": "Servidor de desarrollo" },
+        { "cmd": "php artisan serve --port=8080", "desc": "Puerto específico" },
+        { "cmd": "php artisan list", "desc": "Listar comandos" },
+        { "cmd": "php artisan help <cmd>", "desc": "Ayuda de comando" },
+        { "cmd": "php artisan tinker", "desc": "REPL interactivo" },
+        { "cmd": "php artisan env", "desc": "Entorno actual" },
+        { "cmd": "php artisan about", "desc": "Info de la app" },
+        { "cmd": "php artisan inspire", "desc": "Frase inspiradora" }
+      ]
+    },
+    {
+      "name": "Generadores",
+      "items": [
+        { "cmd": "php artisan make:model Post", "desc": "Crear modelo" },
+        { "cmd": "php artisan make:model Post -m", "desc": "Modelo + migración" },
+        { "cmd": "php artisan make:model Post -mcr", "desc": "Modelo + migración + controller resource" },
+        { "cmd": "php artisan make:model Post -a", "desc": "Modelo con todo" },
+        { "cmd": "php artisan make:controller PostController", "desc": "Controller" },
+        { "cmd": "php artisan make:controller PostController -r", "desc": "Controller resource" },
+        { "cmd": "php artisan make:controller PostController --api", "desc": "API controller" },
+        { "cmd": "php artisan make:migration create_posts_table", "desc": "Migración" },
+        { "cmd": "php artisan make:seeder PostSeeder", "desc": "Seeder" },
+        { "cmd": "php artisan make:factory PostFactory", "desc": "Factory" },
+        { "cmd": "php artisan make:middleware CheckAge", "desc": "Middleware" },
+        { "cmd": "php artisan make:request StorePost", "desc": "Form request" },
+        { "cmd": "php artisan make:policy PostPolicy", "desc": "Policy" },
+        { "cmd": "php artisan make:event OrderShipped", "desc": "Evento" },
+        { "cmd": "php artisan make:listener SendNotification", "desc": "Listener" },
+        { "cmd": "php artisan make:job ProcessPodcast", "desc": "Job" },
+        { "cmd": "php artisan make:mail OrderConfirmation", "desc": "Mailable" },
+        { "cmd": "php artisan make:notification InvoicePaid", "desc": "Notificación" },
+        { "cmd": "php artisan make:command SendEmails", "desc": "Comando" },
+        { "cmd": "php artisan make:resource PostResource", "desc": "API Resource" },
+        { "cmd": "php artisan make:test PostTest", "desc": "Test" },
+        { "cmd": "php artisan make:test PostTest --unit", "desc": "Unit test" }
+      ]
+    },
+    {
+      "name": "Base de Datos",
+      "items": [
+        { "cmd": "php artisan migrate", "desc": "Ejecutar migraciones" },
+        { "cmd": "php artisan migrate:fresh", "desc": "Drop + migrate" },
+        { "cmd": "php artisan migrate:fresh --seed", "desc": "Fresh + seed" },
+        { "cmd": "php artisan migrate:rollback", "desc": "Revertir última" },
+        { "cmd": "php artisan migrate:rollback --step=5", "desc": "Revertir N" },
+        { "cmd": "php artisan migrate:reset", "desc": "Revertir todas" },
+        { "cmd": "php artisan migrate:status", "desc": "Estado" },
+        { "cmd": "php artisan db:seed", "desc": "Ejecutar seeders" },
+        { "cmd": "php artisan db:seed --class=UserSeeder", "desc": "Seeder específico" },
+        { "cmd": "php artisan db:wipe", "desc": "Drop todas las tablas" },
+        { "cmd": "php artisan schema:dump", "desc": "Dump del schema" }
+      ]
+    },
+    {
+      "name": "Caché",
+      "items": [
+        { "cmd": "php artisan cache:clear", "desc": "Limpiar caché" },
+        { "cmd": "php artisan config:clear", "desc": "Limpiar config" },
+        { "cmd": "php artisan config:cache", "desc": "Cachear config" },
+        { "cmd": "php artisan route:clear", "desc": "Limpiar rutas" },
+        { "cmd": "php artisan route:cache", "desc": "Cachear rutas" },
+        { "cmd": "php artisan view:clear", "desc": "Limpiar vistas" },
+        { "cmd": "php artisan view:cache", "desc": "Cachear vistas" },
+        { "cmd": "php artisan event:clear", "desc": "Limpiar eventos" },
+        { "cmd": "php artisan event:cache", "desc": "Cachear eventos" },
+        { "cmd": "php artisan optimize", "desc": "Cachear todo" },
+        { "cmd": "php artisan optimize:clear", "desc": "Limpiar todo" }
+      ]
+    },
+    {
+      "name": "Rutas",
+      "items": [
+        { "cmd": "php artisan route:list", "desc": "Listar rutas" },
+        { "cmd": "php artisan route:list --path=api", "desc": "Filtrar por path" },
+        { "cmd": "php artisan route:list --method=GET", "desc": "Filtrar por método" },
+        { "cmd": "php artisan route:list --name=user", "desc": "Filtrar por nombre" },
+        { "cmd": "php artisan route:list --except-vendor", "desc": "Sin vendor" }
+      ]
+    },
+    {
+      "name": "Colas",
+      "items": [
+        { "cmd": "php artisan queue:work", "desc": "Procesar jobs" },
+        { "cmd": "php artisan queue:work --queue=high,low", "desc": "Colas específicas" },
+        { "cmd": "php artisan queue:work --once", "desc": "Procesar uno" },
+        { "cmd": "php artisan queue:work --tries=3", "desc": "Máx intentos" },
+        { "cmd": "php artisan queue:work --timeout=60", "desc": "Timeout" },
+        { "cmd": "php artisan queue:listen", "desc": "Escuchar (reload)" },
+        { "cmd": "php artisan queue:restart", "desc": "Reiniciar workers" },
+        { "cmd": "php artisan queue:failed", "desc": "Listar fallidos" },
+        { "cmd": "php artisan queue:retry all", "desc": "Reintentar fallidos" },
+        { "cmd": "php artisan queue:retry <id>", "desc": "Reintentar uno" },
+        { "cmd": "php artisan queue:forget <id>", "desc": "Eliminar fallido" },
+        { "cmd": "php artisan queue:flush", "desc": "Eliminar todos fallidos" }
+      ]
+    },
+    {
+      "name": "Scheduler",
+      "items": [
+        { "cmd": "php artisan schedule:run", "desc": "Ejecutar scheduler" },
+        { "cmd": "php artisan schedule:list", "desc": "Listar tareas" },
+        { "cmd": "php artisan schedule:work", "desc": "Scheduler local" },
+        { "cmd": "php artisan schedule:test", "desc": "Probar tarea" }
+      ]
+    },
+    {
+      "name": "Storage",
+      "items": [
+        { "cmd": "php artisan storage:link", "desc": "Crear symlink público" },
+        { "cmd": "php artisan storage:unlink", "desc": "Eliminar symlink" }
+      ]
+    },
+    {
+      "name": "Otros",
+      "items": [
+        { "cmd": "php artisan key:generate", "desc": "Generar APP_KEY" },
+        { "cmd": "php artisan vendor:publish", "desc": "Publicar assets" },
+        { "cmd": "php artisan vendor:publish --tag=config", "desc": "Publicar configs" },
+        { "cmd": "php artisan stub:publish", "desc": "Publicar stubs" },
+        { "cmd": "php artisan down", "desc": "Modo mantenimiento" },
+        { "cmd": "php artisan down --secret=token", "desc": "Con bypass" },
+        { "cmd": "php artisan up", "desc": "Salir de mantenimiento" },
+        { "cmd": "composer dump-autoload", "desc": "Regenerar autoload" }
+      ]
+    },
+    {
+      "name": "Helpers Comunes",
+      "items": [
+        { "cmd": "route('name')", "desc": "URL de ruta nombrada" },
+        { "cmd": "url('/path')", "desc": "URL absoluta" },
+        { "cmd": "asset('css/app.css')", "desc": "URL de asset" },
+        { "cmd": "config('app.name')", "desc": "Valor de config" },
+        { "cmd": "env('APP_DEBUG', false)", "desc": "Variable de entorno" },
+        { "cmd": "auth()->user()", "desc": "Usuario actual" },
+        { "cmd": "request()->input('key')", "desc": "Input del request" },
+        { "cmd": "session('key')", "desc": "Valor de session" },
+        { "cmd": "cache('key')", "desc": "Valor de cache" },
+        { "cmd": "now()", "desc": "Carbon actual" },
+        { "cmd": "dd($var)", "desc": "Dump and die" },
+        { "cmd": "dump($var)", "desc": "Dump sin die" },
+        { "cmd": "logger('message')", "desc": "Log message" },
+        { "cmd": "abort(404)", "desc": "Lanzar HTTP error" },
+        { "cmd": "redirect()->route('home')", "desc": "Redirect" },
+        { "cmd": "back()->withInput()", "desc": "Volver con input" },
+        { "cmd": "response()->json($data)", "desc": "Respuesta JSON" }
+      ]
+    },
+    {
+      "name": "Eloquent",
+      "items": [
+        { "cmd": "Model::all()", "desc": "Obtener todos" },
+        { "cmd": "Model::find(1)", "desc": "Buscar por ID" },
+        { "cmd": "Model::findOrFail(1)", "desc": "Buscar o 404" },
+        { "cmd": "Model::first()", "desc": "Primer registro" },
+        { "cmd": "Model::where('col', 'val')->get()", "desc": "Where query" },
+        { "cmd": "Model::create([...])", "desc": "Crear registro" },
+        { "cmd": "$model->update([...])", "desc": "Actualizar" },
+        { "cmd": "$model->delete()", "desc": "Eliminar" },
+        { "cmd": "Model::with('relation')->get()", "desc": "Eager loading" },
+        { "cmd": "Model::paginate(15)", "desc": "Paginación" },
+        { "cmd": "Model::orderBy('created_at', 'desc')", "desc": "Ordenar" },
+        { "cmd": "Model::count()", "desc": "Contar" }
+      ]
+    }
+  ]
+}

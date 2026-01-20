@@ -1,0 +1,212 @@
+{
+  "title": "MySQL Commands",
+  "description": "Comandos y sintaxis SQL para MySQL",
+  "sections": [
+    {
+      "name": "Base de Datos",
+      "items": [
+        { "cmd": "CREATE DATABASE name;", "desc": "Crear base de datos" },
+        { "cmd": "CREATE DATABASE IF NOT EXISTS name;", "desc": "Crear si no existe" },
+        { "cmd": "DROP DATABASE name;", "desc": "Eliminar base de datos" },
+        { "cmd": "SHOW DATABASES;", "desc": "Listar bases de datos" },
+        { "cmd": "USE database;", "desc": "Seleccionar base de datos" },
+        { "cmd": "SELECT DATABASE();", "desc": "DB actual" },
+        { "cmd": "SHOW CREATE DATABASE name;", "desc": "Ver DDL" }
+      ]
+    },
+    {
+      "name": "Tablas",
+      "items": [
+        { "cmd": "SHOW TABLES;", "desc": "Listar tablas" },
+        { "cmd": "DESCRIBE table;", "desc": "Estructura de tabla" },
+        { "cmd": "SHOW COLUMNS FROM table;", "desc": "Columnas detalladas" },
+        { "cmd": "SHOW CREATE TABLE name;", "desc": "Ver DDL de tabla" },
+        { "cmd": "CREATE TABLE name (...)", "desc": "Crear tabla" },
+        { "cmd": "CREATE TABLE ... AS SELECT", "desc": "Crear desde query" },
+        { "cmd": "CREATE TABLE ... LIKE other", "desc": "Copiar estructura" },
+        { "cmd": "DROP TABLE name;", "desc": "Eliminar tabla" },
+        { "cmd": "DROP TABLE IF EXISTS name;", "desc": "Eliminar si existe" },
+        { "cmd": "TRUNCATE TABLE name;", "desc": "Vaciar tabla" },
+        { "cmd": "RENAME TABLE old TO new;", "desc": "Renombrar tabla" }
+      ]
+    },
+    {
+      "name": "Columnas y Alter",
+      "items": [
+        { "cmd": "ALTER TABLE ADD col type", "desc": "Añadir columna" },
+        { "cmd": "ALTER TABLE ADD col AFTER other", "desc": "Añadir después de" },
+        { "cmd": "ALTER TABLE DROP col", "desc": "Eliminar columna" },
+        { "cmd": "ALTER TABLE MODIFY col type", "desc": "Cambiar tipo" },
+        { "cmd": "ALTER TABLE CHANGE old new type", "desc": "Renombrar columna" },
+        { "cmd": "ALTER TABLE ADD INDEX (col)", "desc": "Añadir índice" },
+        { "cmd": "ALTER TABLE DROP INDEX name", "desc": "Eliminar índice" },
+        { "cmd": "ALTER TABLE ADD PRIMARY KEY (col)", "desc": "Añadir PK" },
+        { "cmd": "ALTER TABLE ADD FOREIGN KEY", "desc": "Añadir FK" },
+        { "cmd": "ALTER TABLE ENGINE=InnoDB", "desc": "Cambiar engine" }
+      ]
+    },
+    {
+      "name": "SELECT",
+      "items": [
+        { "cmd": "SELECT * FROM table;", "desc": "Seleccionar todo" },
+        { "cmd": "SELECT col1, col2 FROM table", "desc": "Columnas específicas" },
+        { "cmd": "SELECT DISTINCT col FROM table", "desc": "Valores únicos" },
+        { "cmd": "SELECT ... WHERE condition", "desc": "Con filtro" },
+        { "cmd": "SELECT ... WHERE col LIKE \"%pat%\"", "desc": "Búsqueda patrón" },
+        { "cmd": "SELECT ... WHERE col IN (1,2,3)", "desc": "En lista" },
+        { "cmd": "SELECT ... WHERE col BETWEEN a AND b", "desc": "En rango" },
+        { "cmd": "SELECT ... WHERE col IS NULL", "desc": "Valores nulos" },
+        { "cmd": "SELECT ... WHERE col IS NOT NULL", "desc": "No nulos" },
+        { "cmd": "SELECT col AS alias FROM table", "desc": "Alias de columna" },
+        { "cmd": "SELECT ... ORDER BY col ASC|DESC", "desc": "Ordenar" },
+        { "cmd": "SELECT ... LIMIT n OFFSET m", "desc": "Paginación" }
+      ]
+    },
+    {
+      "name": "INSERT / UPDATE / DELETE",
+      "items": [
+        { "cmd": "INSERT INTO table VALUES (...)", "desc": "Insertar fila" },
+        { "cmd": "INSERT INTO table (cols) VALUES (...)", "desc": "Columnas específicas" },
+        { "cmd": "INSERT INTO table VALUES (...), (...)", "desc": "Múltiples filas" },
+        { "cmd": "INSERT IGNORE INTO ...", "desc": "Ignorar duplicados" },
+        { "cmd": "INSERT ... ON DUPLICATE KEY UPDATE", "desc": "Upsert" },
+        { "cmd": "REPLACE INTO table VALUES (...)", "desc": "Reemplazar" },
+        { "cmd": "UPDATE table SET col=val WHERE ...", "desc": "Actualizar filas" },
+        { "cmd": "UPDATE table SET col=col+1", "desc": "Incrementar valor" },
+        { "cmd": "DELETE FROM table WHERE ...", "desc": "Eliminar filas" },
+        { "cmd": "DELETE FROM table LIMIT n", "desc": "Eliminar limitado" }
+      ]
+    },
+    {
+      "name": "Joins",
+      "items": [
+        { "cmd": "SELECT ... FROM a INNER JOIN b ON ...", "desc": "Solo coincidentes" },
+        { "cmd": "SELECT ... FROM a LEFT JOIN b ON ...", "desc": "Todas de izquierda" },
+        { "cmd": "SELECT ... FROM a RIGHT JOIN b ON ...", "desc": "Todas de derecha" },
+        { "cmd": "SELECT ... FROM a CROSS JOIN b", "desc": "Producto cartesiano" },
+        { "cmd": "SELECT ... FROM a NATURAL JOIN b", "desc": "Join automático" },
+        { "cmd": "SELECT ... FROM a JOIN b USING (col)", "desc": "Con USING" },
+        { "cmd": "SELECT ... FROM a, b WHERE a.id=b.id", "desc": "Join implícito" },
+        { "cmd": "SELECT ... FROM a LEFT JOIN b ... LEFT JOIN c", "desc": "Múltiples joins" }
+      ]
+    },
+    {
+      "name": "Agregados",
+      "items": [
+        { "cmd": "COUNT(*)", "desc": "Contar filas" },
+        { "cmd": "COUNT(DISTINCT col)", "desc": "Contar únicos" },
+        { "cmd": "SUM(col)", "desc": "Suma" },
+        { "cmd": "AVG(col)", "desc": "Promedio" },
+        { "cmd": "MAX(col) / MIN(col)", "desc": "Máximo / Mínimo" },
+        { "cmd": "GROUP_CONCAT(col)", "desc": "Concatenar valores" },
+        { "cmd": "GROUP BY col", "desc": "Agrupar" },
+        { "cmd": "GROUP BY col WITH ROLLUP", "desc": "Con subtotales" },
+        { "cmd": "HAVING condition", "desc": "Filtrar grupos" }
+      ]
+    },
+    {
+      "name": "Subconsultas",
+      "items": [
+        { "cmd": "SELECT ... WHERE col IN (SELECT ...)", "desc": "Subconsulta IN" },
+        { "cmd": "SELECT ... WHERE EXISTS (SELECT ...)", "desc": "Subconsulta EXISTS" },
+        { "cmd": "SELECT ... WHERE col = (SELECT ...)", "desc": "Subconsulta escalar" },
+        { "cmd": "SELECT (SELECT ...) AS alias", "desc": "En SELECT" },
+        { "cmd": "SELECT ... FROM (SELECT ...) AS t", "desc": "Tabla derivada" },
+        { "cmd": "WITH cte AS (SELECT ...) SELECT ...", "desc": "CTE" }
+      ]
+    },
+    {
+      "name": "Tipos de Datos",
+      "items": [
+        { "cmd": "INT / BIGINT / TINYINT", "desc": "Enteros" },
+        { "cmd": "DECIMAL(p,s) / FLOAT / DOUBLE", "desc": "Decimales" },
+        { "cmd": "VARCHAR(n) / CHAR(n)", "desc": "Cadenas" },
+        { "cmd": "TEXT / MEDIUMTEXT / LONGTEXT", "desc": "Texto largo" },
+        { "cmd": "DATE / DATETIME / TIMESTAMP", "desc": "Fechas" },
+        { "cmd": "TIME / YEAR", "desc": "Tiempo" },
+        { "cmd": "BOOLEAN / BOOL", "desc": "Booleano" },
+        { "cmd": "ENUM(\"a\",\"b\",\"c\")", "desc": "Enumeración" },
+        { "cmd": "JSON", "desc": "JSON nativo" },
+        { "cmd": "BLOB / MEDIUMBLOB", "desc": "Binarios" }
+      ]
+    },
+    {
+      "name": "Funciones de Fecha",
+      "items": [
+        { "cmd": "NOW()", "desc": "Fecha/hora actual" },
+        { "cmd": "CURDATE() / CURTIME()", "desc": "Fecha/hora por separado" },
+        { "cmd": "DATE(datetime)", "desc": "Extraer fecha" },
+        { "cmd": "YEAR() / MONTH() / DAY()", "desc": "Partes de fecha" },
+        { "cmd": "DATE_FORMAT(date, \"%Y-%m-%d\")", "desc": "Formatear fecha" },
+        { "cmd": "DATE_ADD(date, INTERVAL 1 DAY)", "desc": "Sumar intervalo" },
+        { "cmd": "DATEDIFF(date1, date2)", "desc": "Diferencia en días" },
+        { "cmd": "TIMESTAMPDIFF(HOUR, d1, d2)", "desc": "Diferencia en unidad" }
+      ]
+    },
+    {
+      "name": "Funciones de String",
+      "items": [
+        { "cmd": "CONCAT(str1, str2)", "desc": "Concatenar" },
+        { "cmd": "CONCAT_WS(\"-\", a, b, c)", "desc": "Concatenar con separador" },
+        { "cmd": "LENGTH(str) / CHAR_LENGTH(str)", "desc": "Longitud" },
+        { "cmd": "UPPER(str) / LOWER(str)", "desc": "Mayús / Minús" },
+        { "cmd": "TRIM(str)", "desc": "Quitar espacios" },
+        { "cmd": "SUBSTRING(str, start, len)", "desc": "Subcadena" },
+        { "cmd": "REPLACE(str, old, new)", "desc": "Reemplazar" },
+        { "cmd": "LOCATE(substr, str)", "desc": "Posición" },
+        { "cmd": "LEFT(str, n) / RIGHT(str, n)", "desc": "N caracteres" }
+      ]
+    },
+    {
+      "name": "Índices",
+      "items": [
+        { "cmd": "CREATE INDEX name ON table(col)", "desc": "Crear índice" },
+        { "cmd": "CREATE UNIQUE INDEX ...", "desc": "Índice único" },
+        { "cmd": "CREATE FULLTEXT INDEX ...", "desc": "Índice fulltext" },
+        { "cmd": "DROP INDEX name ON table", "desc": "Eliminar índice" },
+        { "cmd": "SHOW INDEX FROM table", "desc": "Ver índices" },
+        { "cmd": "EXPLAIN SELECT ...", "desc": "Plan de ejecución" },
+        { "cmd": "ANALYZE TABLE name", "desc": "Actualizar estadísticas" },
+        { "cmd": "OPTIMIZE TABLE name", "desc": "Optimizar tabla" }
+      ]
+    },
+    {
+      "name": "Usuarios y Privilegios",
+      "items": [
+        { "cmd": "CREATE USER 'user'@'host' IDENTIFIED BY 'pass'", "desc": "Crear usuario" },
+        { "cmd": "DROP USER user@host", "desc": "Eliminar usuario" },
+        { "cmd": "ALTER USER 'user'@'host' IDENTIFIED BY 'new'", "desc": "Cambiar password" },
+        { "cmd": "GRANT ALL ON db.* TO user", "desc": "Otorgar todo" },
+        { "cmd": "GRANT SELECT, INSERT ON db.table TO user", "desc": "Permisos específicos" },
+        { "cmd": "REVOKE ALL ON db.* FROM user", "desc": "Revocar" },
+        { "cmd": "SHOW GRANTS FOR user;", "desc": "Ver privilegios" },
+        { "cmd": "FLUSH PRIVILEGES;", "desc": "Aplicar cambios" }
+      ]
+    },
+    {
+      "name": "Transacciones",
+      "items": [
+        { "cmd": "START TRANSACTION;", "desc": "Iniciar transacción" },
+        { "cmd": "COMMIT;", "desc": "Confirmar cambios" },
+        { "cmd": "ROLLBACK;", "desc": "Revertir cambios" },
+        { "cmd": "SAVEPOINT name;", "desc": "Punto de guardado" },
+        { "cmd": "ROLLBACK TO name;", "desc": "Volver a savepoint" },
+        { "cmd": "SET autocommit = 0;", "desc": "Desactivar autocommit" },
+        { "cmd": "LOCK TABLES table WRITE;", "desc": "Bloquear tabla" },
+        { "cmd": "UNLOCK TABLES;", "desc": "Desbloquear" }
+      ]
+    },
+    {
+      "name": "Backup y Admin",
+      "items": [
+        { "cmd": "mysqldump -u user -p db > file.sql", "desc": "Exportar DB" },
+        { "cmd": "mysql -u user -p db < file.sql", "desc": "Importar DB" },
+        { "cmd": "SHOW PROCESSLIST;", "desc": "Procesos activos" },
+        { "cmd": "KILL process_id;", "desc": "Matar proceso" },
+        { "cmd": "SHOW STATUS;", "desc": "Estado del servidor" },
+        { "cmd": "SHOW VARIABLES;", "desc": "Variables de config" },
+        { "cmd": "SHOW TABLE STATUS;", "desc": "Info de tablas" }
+      ]
+    }
+  ]
+}

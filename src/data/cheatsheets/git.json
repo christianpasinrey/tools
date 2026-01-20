@@ -1,0 +1,170 @@
+{
+  "title": "Git Commands",
+  "description": "Comandos esenciales de Git",
+  "sections": [
+    {
+      "name": "Configuración",
+      "items": [
+        { "cmd": "git init", "desc": "Inicializar repositorio" },
+        { "cmd": "git clone <url>", "desc": "Clonar repositorio" },
+        { "cmd": "git clone --depth 1 <url>", "desc": "Clone superficial" },
+        { "cmd": "git config --global user.name \"Name\"", "desc": "Establecer nombre" },
+        { "cmd": "git config --global user.email \"email\"", "desc": "Establecer email" },
+        { "cmd": "git config --global core.editor \"vim\"", "desc": "Editor por defecto" },
+        { "cmd": "git config --list", "desc": "Ver configuración" },
+        { "cmd": "git config --global alias.co checkout", "desc": "Crear alias" },
+        { "cmd": "git config --global credential.helper cache", "desc": "Cachear credenciales" }
+      ]
+    },
+    {
+      "name": "Comandos Básicos",
+      "items": [
+        { "cmd": "git status", "desc": "Ver estado" },
+        { "cmd": "git status -s", "desc": "Estado corto" },
+        { "cmd": "git add .", "desc": "Añadir todo" },
+        { "cmd": "git add -p", "desc": "Añadir interactivamente" },
+        { "cmd": "git add -u", "desc": "Añadir modificados" },
+        { "cmd": "git commit -m \"msg\"", "desc": "Commit con mensaje" },
+        { "cmd": "git commit -am \"msg\"", "desc": "Add + commit" },
+        { "cmd": "git commit --amend", "desc": "Modificar último commit" },
+        { "cmd": "git commit --amend --no-edit", "desc": "Amend sin editar msg" },
+        { "cmd": "git push", "desc": "Subir a remoto" },
+        { "cmd": "git push -u origin <branch>", "desc": "Push + set upstream" },
+        { "cmd": "git push --force-with-lease", "desc": "Force push seguro" },
+        { "cmd": "git pull", "desc": "Descargar y merge" },
+        { "cmd": "git pull --rebase", "desc": "Pull con rebase" },
+        { "cmd": "git fetch", "desc": "Obtener sin merge" },
+        { "cmd": "git fetch --all", "desc": "Fetch todos los remotos" }
+      ]
+    },
+    {
+      "name": "Ramas",
+      "items": [
+        { "cmd": "git branch", "desc": "Listar ramas locales" },
+        { "cmd": "git branch -a", "desc": "Listar todas" },
+        { "cmd": "git branch -r", "desc": "Listar remotas" },
+        { "cmd": "git branch <name>", "desc": "Crear rama" },
+        { "cmd": "git branch -d <name>", "desc": "Eliminar rama" },
+        { "cmd": "git branch -D <name>", "desc": "Forzar eliminación" },
+        { "cmd": "git branch -m <new>", "desc": "Renombrar actual" },
+        { "cmd": "git checkout <branch>", "desc": "Cambiar de rama" },
+        { "cmd": "git checkout -b <name>", "desc": "Crear y cambiar" },
+        { "cmd": "git switch <branch>", "desc": "Cambiar (nuevo)" },
+        { "cmd": "git switch -c <name>", "desc": "Crear y cambiar (nuevo)" },
+        { "cmd": "git merge <branch>", "desc": "Fusionar rama" },
+        { "cmd": "git merge --no-ff <branch>", "desc": "Merge sin fast-forward" },
+        { "cmd": "git merge --squash <branch>", "desc": "Squash merge" },
+        { "cmd": "git rebase <branch>", "desc": "Rebase sobre rama" },
+        { "cmd": "git rebase -i HEAD~3", "desc": "Rebase interactivo" },
+        { "cmd": "git cherry-pick <commit>", "desc": "Aplicar commit específico" }
+      ]
+    },
+    {
+      "name": "Historial",
+      "items": [
+        { "cmd": "git log", "desc": "Ver historial" },
+        { "cmd": "git log --oneline", "desc": "Historial compacto" },
+        { "cmd": "git log --graph --oneline", "desc": "Grafo visual" },
+        { "cmd": "git log -n 5", "desc": "Últimos N commits" },
+        { "cmd": "git log --author=\"name\"", "desc": "Filtrar por autor" },
+        { "cmd": "git log --since=\"2 weeks ago\"", "desc": "Desde fecha" },
+        { "cmd": "git log --grep=\"pattern\"", "desc": "Buscar en mensajes" },
+        { "cmd": "git log -S \"code\"", "desc": "Buscar en cambios" },
+        { "cmd": "git log -- <file>", "desc": "Historial de archivo" },
+        { "cmd": "git log -p", "desc": "Con diffs" },
+        { "cmd": "git shortlog -sn", "desc": "Commits por autor" },
+        { "cmd": "git reflog", "desc": "Historial de refs" }
+      ]
+    },
+    {
+      "name": "Diferencias",
+      "items": [
+        { "cmd": "git diff", "desc": "Cambios no staged" },
+        { "cmd": "git diff --staged", "desc": "Cambios en staging" },
+        { "cmd": "git diff HEAD", "desc": "Todos los cambios" },
+        { "cmd": "git diff <branch1>..<branch2>", "desc": "Entre ramas" },
+        { "cmd": "git diff <commit1>..<commit2>", "desc": "Entre commits" },
+        { "cmd": "git diff --stat", "desc": "Resumen de cambios" },
+        { "cmd": "git diff --name-only", "desc": "Solo nombres" },
+        { "cmd": "git diff -- <file>", "desc": "Archivo específico" },
+        { "cmd": "git show <commit>", "desc": "Mostrar commit" },
+        { "cmd": "git show <commit>:<file>", "desc": "Archivo en commit" },
+        { "cmd": "git blame <file>", "desc": "Autor por línea" }
+      ]
+    },
+    {
+      "name": "Deshacer",
+      "items": [
+        { "cmd": "git restore <file>", "desc": "Descartar cambios" },
+        { "cmd": "git restore --staged <file>", "desc": "Quitar de staging" },
+        { "cmd": "git checkout -- <file>", "desc": "Descartar (viejo)" },
+        { "cmd": "git reset HEAD <file>", "desc": "Unstage (viejo)" },
+        { "cmd": "git reset HEAD~1", "desc": "Deshacer último commit" },
+        { "cmd": "git reset --soft HEAD~1", "desc": "Mantener cambios staged" },
+        { "cmd": "git reset --hard HEAD", "desc": "Resetear todo" },
+        { "cmd": "git reset --hard <commit>", "desc": "Volver a commit" },
+        { "cmd": "git revert <commit>", "desc": "Revertir commit" },
+        { "cmd": "git revert HEAD", "desc": "Revertir último" },
+        { "cmd": "git clean -fd", "desc": "Eliminar no tracked" },
+        { "cmd": "git clean -n", "desc": "Dry run de clean" }
+      ]
+    },
+    {
+      "name": "Stash",
+      "items": [
+        { "cmd": "git stash", "desc": "Guardar cambios" },
+        { "cmd": "git stash push -m \"msg\"", "desc": "Stash con mensaje" },
+        { "cmd": "git stash -u", "desc": "Incluir no tracked" },
+        { "cmd": "git stash list", "desc": "Listar stashes" },
+        { "cmd": "git stash show", "desc": "Mostrar cambios" },
+        { "cmd": "git stash show -p", "desc": "Mostrar diff" },
+        { "cmd": "git stash pop", "desc": "Aplicar y eliminar" },
+        { "cmd": "git stash apply", "desc": "Aplicar sin eliminar" },
+        { "cmd": "git stash drop", "desc": "Eliminar último" },
+        { "cmd": "git stash clear", "desc": "Eliminar todos" },
+        { "cmd": "git stash branch <name>", "desc": "Crear rama de stash" }
+      ]
+    },
+    {
+      "name": "Remotos",
+      "items": [
+        { "cmd": "git remote", "desc": "Listar remotos" },
+        { "cmd": "git remote -v", "desc": "Con URLs" },
+        { "cmd": "git remote add <name> <url>", "desc": "Añadir remoto" },
+        { "cmd": "git remote remove <name>", "desc": "Eliminar remoto" },
+        { "cmd": "git remote rename <old> <new>", "desc": "Renombrar" },
+        { "cmd": "git remote set-url origin <url>", "desc": "Cambiar URL" },
+        { "cmd": "git push origin --delete <branch>", "desc": "Eliminar rama remota" },
+        { "cmd": "git fetch --prune", "desc": "Limpiar refs eliminadas" }
+      ]
+    },
+    {
+      "name": "Tags",
+      "items": [
+        { "cmd": "git tag", "desc": "Listar tags" },
+        { "cmd": "git tag <name>", "desc": "Crear tag ligero" },
+        { "cmd": "git tag -a v1.0 -m \"msg\"", "desc": "Tag anotado" },
+        { "cmd": "git tag -a v1.0 <commit>", "desc": "Tag en commit" },
+        { "cmd": "git tag -d <name>", "desc": "Eliminar tag local" },
+        { "cmd": "git push origin <tag>", "desc": "Push tag" },
+        { "cmd": "git push origin --tags", "desc": "Push todos los tags" },
+        { "cmd": "git push origin --delete <tag>", "desc": "Eliminar tag remoto" },
+        { "cmd": "git checkout <tag>", "desc": "Ir a tag" }
+      ]
+    },
+    {
+      "name": "Avanzado",
+      "items": [
+        { "cmd": "git bisect start", "desc": "Inicio búsqueda binaria" },
+        { "cmd": "git bisect good/bad", "desc": "Marcar commit" },
+        { "cmd": "git bisect reset", "desc": "Finalizar bisect" },
+        { "cmd": "git worktree add <path> <branch>", "desc": "Worktree adicional" },
+        { "cmd": "git submodule add <url>", "desc": "Añadir submódulo" },
+        { "cmd": "git submodule update --init", "desc": "Iniciar submódulos" },
+        { "cmd": "git archive -o file.zip HEAD", "desc": "Exportar a zip" },
+        { "cmd": "git gc", "desc": "Garbage collection" },
+        { "cmd": "git fsck", "desc": "Verificar integridad" }
+      ]
+    }
+  ]
+}

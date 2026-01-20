@@ -1,0 +1,174 @@
+{
+  "title": "Linux Terminal Commands",
+  "description": "Comandos esenciales de terminal para Linux",
+  "sections": [
+    {
+      "name": "Operaciones de Archivos",
+      "items": [
+        { "cmd": "ls", "desc": "Listar contenido" },
+        { "cmd": "ls -la", "desc": "Listar todo con detalles" },
+        { "cmd": "ls -lh", "desc": "Listar con tamaños legibles" },
+        { "cmd": "ls -lt", "desc": "Ordenar por fecha" },
+        { "cmd": "cd <path>", "desc": "Cambiar directorio" },
+        { "cmd": "cd -", "desc": "Volver al anterior" },
+        { "cmd": "cd ~", "desc": "Ir a home" },
+        { "cmd": "pwd", "desc": "Directorio actual" },
+        { "cmd": "mkdir -p a/b/c", "desc": "Crear directorios anidados" },
+        { "cmd": "rm <file>", "desc": "Eliminar archivo" },
+        { "cmd": "rm -rf <dir>", "desc": "Eliminar recursivo" },
+        { "cmd": "cp -r <src> <dest>", "desc": "Copiar recursivo" },
+        { "cmd": "mv <src> <dest>", "desc": "Mover/renombrar" },
+        { "cmd": "touch <file>", "desc": "Crear archivo vacío" },
+        { "cmd": "ln -s <target> <link>", "desc": "Crear enlace simbólico" }
+      ]
+    },
+    {
+      "name": "Lectura de Archivos",
+      "items": [
+        { "cmd": "cat <file>", "desc": "Mostrar contenido" },
+        { "cmd": "less <file>", "desc": "Ver con paginación" },
+        { "cmd": "head -n 20 <file>", "desc": "Primeras N líneas" },
+        { "cmd": "tail -n 20 <file>", "desc": "Últimas N líneas" },
+        { "cmd": "tail -f <file>", "desc": "Seguir cambios" },
+        { "cmd": "wc -l <file>", "desc": "Contar líneas" },
+        { "cmd": "diff file1 file2", "desc": "Comparar archivos" },
+        { "cmd": "sort <file>", "desc": "Ordenar líneas" },
+        { "cmd": "uniq", "desc": "Eliminar duplicados" },
+        { "cmd": "cut -d: -f1", "desc": "Cortar columnas" }
+      ]
+    },
+    {
+      "name": "Permisos",
+      "items": [
+        { "cmd": "chmod 755 <file>", "desc": "rwxr-xr-x" },
+        { "cmd": "chmod 644 <file>", "desc": "rw-r--r--" },
+        { "cmd": "chmod +x <file>", "desc": "Hacer ejecutable" },
+        { "cmd": "chmod -R 755 <dir>", "desc": "Recursivo" },
+        { "cmd": "chown user:group <file>", "desc": "Cambiar propietario" },
+        { "cmd": "chown -R user <dir>", "desc": "Propietario recursivo" },
+        { "cmd": "sudo <cmd>", "desc": "Ejecutar como root" },
+        { "cmd": "sudo -i", "desc": "Shell root" },
+        { "cmd": "su - <user>", "desc": "Cambiar usuario" },
+        { "cmd": "visudo", "desc": "Editar sudoers" }
+      ]
+    },
+    {
+      "name": "Búsqueda",
+      "items": [
+        { "cmd": "find . -name \"*.txt\"", "desc": "Buscar por nombre" },
+        { "cmd": "find . -type f -mtime -7", "desc": "Modificados últimos 7 días" },
+        { "cmd": "find . -size +100M", "desc": "Mayores a 100MB" },
+        { "cmd": "find . -exec cmd {} \\;", "desc": "Ejecutar comando" },
+        { "cmd": "grep <pattern> <file>", "desc": "Buscar en archivo" },
+        { "cmd": "grep -r <pattern> .", "desc": "Búsqueda recursiva" },
+        { "cmd": "grep -i <pattern>", "desc": "Ignorar mayúsculas" },
+        { "cmd": "grep -v <pattern>", "desc": "Invertir búsqueda" },
+        { "cmd": "grep -n <pattern>", "desc": "Mostrar nº línea" },
+        { "cmd": "which <cmd>", "desc": "Ubicación comando" },
+        { "cmd": "whereis <cmd>", "desc": "Ubicación + man + src" },
+        { "cmd": "locate <file>", "desc": "Búsqueda indexada" }
+      ]
+    },
+    {
+      "name": "Procesos",
+      "items": [
+        { "cmd": "ps aux", "desc": "Listar todos los procesos" },
+        { "cmd": "ps aux | grep <name>", "desc": "Filtrar procesos" },
+        { "cmd": "top", "desc": "Monitor de procesos" },
+        { "cmd": "htop", "desc": "Monitor mejorado" },
+        { "cmd": "kill <PID>", "desc": "Terminar proceso" },
+        { "cmd": "kill -9 <PID>", "desc": "Forzar terminación" },
+        { "cmd": "killall <name>", "desc": "Matar por nombre" },
+        { "cmd": "pkill -f <pattern>", "desc": "Matar por patrón" },
+        { "cmd": "bg", "desc": "Segundo plano" },
+        { "cmd": "fg", "desc": "Primer plano" },
+        { "cmd": "jobs", "desc": "Listar trabajos" },
+        { "cmd": "nohup cmd &", "desc": "Ejecutar persistente" },
+        { "cmd": "screen", "desc": "Terminal multiplexor" },
+        { "cmd": "tmux", "desc": "Terminal multiplexor" }
+      ]
+    },
+    {
+      "name": "Sistema",
+      "items": [
+        { "cmd": "uname -a", "desc": "Info del kernel" },
+        { "cmd": "lsb_release -a", "desc": "Info de distro" },
+        { "cmd": "df -h", "desc": "Uso de disco" },
+        { "cmd": "du -sh *", "desc": "Tamaño directorios" },
+        { "cmd": "du -sh * | sort -h", "desc": "Ordenado por tamaño" },
+        { "cmd": "free -h", "desc": "Uso de memoria" },
+        { "cmd": "uptime", "desc": "Tiempo activo" },
+        { "cmd": "w", "desc": "Usuarios conectados" },
+        { "cmd": "last", "desc": "Últimos logins" },
+        { "cmd": "dmesg", "desc": "Mensajes del kernel" },
+        { "cmd": "journalctl -xe", "desc": "Logs del sistema" }
+      ]
+    },
+    {
+      "name": "Red",
+      "items": [
+        { "cmd": "ip a", "desc": "Info de interfaces" },
+        { "cmd": "ip r", "desc": "Tabla de rutas" },
+        { "cmd": "ping <host>", "desc": "Probar conectividad" },
+        { "cmd": "curl <url>", "desc": "HTTP request" },
+        { "cmd": "wget <url>", "desc": "Descargar archivo" },
+        { "cmd": "netstat -tulpn", "desc": "Puertos abiertos" },
+        { "cmd": "ss -tulpn", "desc": "Sockets (moderno)" },
+        { "cmd": "nslookup <domain>", "desc": "DNS lookup" },
+        { "cmd": "dig <domain>", "desc": "DNS detallado" },
+        { "cmd": "traceroute <host>", "desc": "Trazar ruta" },
+        { "cmd": "ssh user@host", "desc": "Conexión SSH" },
+        { "cmd": "scp file user@host:path", "desc": "Copiar por SSH" }
+      ]
+    },
+    {
+      "name": "Compresión",
+      "items": [
+        { "cmd": "tar -czvf file.tar.gz dir/", "desc": "Crear tar.gz" },
+        { "cmd": "tar -xzvf file.tar.gz", "desc": "Extraer tar.gz" },
+        { "cmd": "tar -tvf file.tar.gz", "desc": "Listar contenido" },
+        { "cmd": "zip -r file.zip dir/", "desc": "Crear zip" },
+        { "cmd": "unzip file.zip", "desc": "Extraer zip" },
+        { "cmd": "gzip file", "desc": "Comprimir gzip" },
+        { "cmd": "gunzip file.gz", "desc": "Descomprimir gzip" }
+      ]
+    },
+    {
+      "name": "Paquetes (Debian/Ubuntu)",
+      "items": [
+        { "cmd": "apt update", "desc": "Actualizar índice" },
+        { "cmd": "apt upgrade", "desc": "Actualizar paquetes" },
+        { "cmd": "apt install <pkg>", "desc": "Instalar paquete" },
+        { "cmd": "apt remove <pkg>", "desc": "Eliminar paquete" },
+        { "cmd": "apt search <term>", "desc": "Buscar paquete" },
+        { "cmd": "apt autoremove", "desc": "Limpiar huérfanos" },
+        { "cmd": "dpkg -i <file.deb>", "desc": "Instalar .deb" },
+        { "cmd": "dpkg -l", "desc": "Listar instalados" }
+      ]
+    },
+    {
+      "name": "Paquetes (RHEL/CentOS)",
+      "items": [
+        { "cmd": "yum update", "desc": "Actualizar paquetes" },
+        { "cmd": "yum install <pkg>", "desc": "Instalar paquete" },
+        { "cmd": "yum remove <pkg>", "desc": "Eliminar paquete" },
+        { "cmd": "yum search <term>", "desc": "Buscar paquete" },
+        { "cmd": "dnf install <pkg>", "desc": "Instalar (Fedora)" },
+        { "cmd": "rpm -ivh <file.rpm>", "desc": "Instalar .rpm" },
+        { "cmd": "rpm -qa", "desc": "Listar instalados" }
+      ]
+    },
+    {
+      "name": "Servicios (systemd)",
+      "items": [
+        { "cmd": "systemctl start <svc>", "desc": "Iniciar servicio" },
+        { "cmd": "systemctl stop <svc>", "desc": "Detener servicio" },
+        { "cmd": "systemctl restart <svc>", "desc": "Reiniciar servicio" },
+        { "cmd": "systemctl status <svc>", "desc": "Estado del servicio" },
+        { "cmd": "systemctl enable <svc>", "desc": "Habilitar al inicio" },
+        { "cmd": "systemctl disable <svc>", "desc": "Deshabilitar" },
+        { "cmd": "systemctl list-units", "desc": "Listar servicios" }
+      ]
+    }
+  ]
+}

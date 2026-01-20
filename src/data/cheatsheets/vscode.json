@@ -1,0 +1,182 @@
+{
+  "title": "VS Code Shortcuts",
+  "description": "Atajos de teclado para Visual Studio Code",
+  "sections": [
+    {
+      "name": "General",
+      "items": [
+        { "keys": ["Ctrl", "Shift", "P"], "desc": "Paleta de comandos" },
+        { "keys": ["Ctrl", "P"], "desc": "Apertura rápida" },
+        { "keys": ["Ctrl", "Shift", "N"], "desc": "Nueva ventana" },
+        { "keys": ["Ctrl", "Shift", "W"], "desc": "Cerrar ventana" },
+        { "keys": ["Ctrl", ","], "desc": "Configuración" },
+        { "keys": ["Ctrl", "K", "Ctrl", "S"], "desc": "Atajos de teclado" },
+        { "keys": ["Ctrl", "`"], "desc": "Toggle terminal" },
+        { "keys": ["Ctrl", "Shift", "`"], "desc": "Nuevo terminal" },
+        { "keys": ["Ctrl", "B"], "desc": "Toggle sidebar" },
+        { "keys": ["Ctrl", "J"], "desc": "Toggle panel" },
+        { "keys": ["F11"], "desc": "Pantalla completa" },
+        { "keys": ["Ctrl", "="], "desc": "Zoom in" },
+        { "keys": ["Ctrl", "-"], "desc": "Zoom out" },
+        { "keys": ["Ctrl", "Shift", "E"], "desc": "Explorador" },
+        { "keys": ["Ctrl", "Shift", "F"], "desc": "Buscar en archivos" },
+        { "keys": ["Ctrl", "Shift", "G"], "desc": "Control de código" },
+        { "keys": ["Ctrl", "Shift", "D"], "desc": "Debug" },
+        { "keys": ["Ctrl", "Shift", "X"], "desc": "Extensiones" }
+      ]
+    },
+    {
+      "name": "Edición Básica",
+      "items": [
+        { "keys": ["Ctrl", "X"], "desc": "Cortar línea" },
+        { "keys": ["Ctrl", "C"], "desc": "Copiar línea" },
+        { "keys": ["Ctrl", "V"], "desc": "Pegar" },
+        { "keys": ["Ctrl", "Shift", "K"], "desc": "Eliminar línea" },
+        { "keys": ["Ctrl", "Enter"], "desc": "Insertar línea debajo" },
+        { "keys": ["Ctrl", "Shift", "Enter"], "desc": "Insertar línea arriba" },
+        { "keys": ["Alt", "↑"], "desc": "Mover línea arriba" },
+        { "keys": ["Alt", "↓"], "desc": "Mover línea abajo" },
+        { "keys": ["Shift", "Alt", "↑"], "desc": "Copiar línea arriba" },
+        { "keys": ["Shift", "Alt", "↓"], "desc": "Copiar línea abajo" },
+        { "keys": ["Ctrl", "Z"], "desc": "Deshacer" },
+        { "keys": ["Ctrl", "Shift", "Z"], "desc": "Rehacer" },
+        { "keys": ["Ctrl", "/"], "desc": "Toggle comentario" },
+        { "keys": ["Shift", "Alt", "A"], "desc": "Comentario bloque" },
+        { "keys": ["Ctrl", "["], "desc": "Desindentar" },
+        { "keys": ["Ctrl", "]"], "desc": "Indentar" }
+      ]
+    },
+    {
+      "name": "Selección",
+      "items": [
+        { "keys": ["Ctrl", "D"], "desc": "Seleccionar palabra" },
+        { "keys": ["Ctrl", "D"], "desc": "Añadir siguiente ocurrencia" },
+        { "keys": ["Ctrl", "Shift", "L"], "desc": "Seleccionar todas ocurrencias" },
+        { "keys": ["Ctrl", "L"], "desc": "Seleccionar línea" },
+        { "keys": ["Shift", "Alt", "→"], "desc": "Expandir selección" },
+        { "keys": ["Shift", "Alt", "←"], "desc": "Contraer selección" },
+        { "keys": ["Ctrl", "Shift", "K"], "desc": "Eliminar línea" },
+        { "keys": ["Ctrl", "A"], "desc": "Seleccionar todo" },
+        { "keys": ["Shift", "←/→"], "desc": "Seleccionar carácter" },
+        { "keys": ["Ctrl", "Shift", "←/→"], "desc": "Seleccionar palabra" },
+        { "keys": ["Shift", "Home/End"], "desc": "Seleccionar hasta inicio/fin" }
+      ]
+    },
+    {
+      "name": "Multi-cursor",
+      "items": [
+        { "keys": ["Alt", "Click"], "desc": "Añadir cursor" },
+        { "keys": ["Ctrl", "Alt", "↑"], "desc": "Cursor arriba" },
+        { "keys": ["Ctrl", "Alt", "↓"], "desc": "Cursor abajo" },
+        { "keys": ["Ctrl", "U"], "desc": "Deshacer cursor" },
+        { "keys": ["Shift", "Alt", "I"], "desc": "Cursor al final de líneas" },
+        { "keys": ["Ctrl", "Shift", "L"], "desc": "Cursor en todas ocurrencias" },
+        { "keys": ["Esc"], "desc": "Salir de multi-cursor" }
+      ]
+    },
+    {
+      "name": "Navegación",
+      "items": [
+        { "keys": ["Ctrl", "G"], "desc": "Ir a línea" },
+        { "keys": ["Ctrl", "P"], "desc": "Ir a archivo" },
+        { "keys": ["Ctrl", "Shift", "O"], "desc": "Ir a símbolo" },
+        { "keys": ["Ctrl", "T"], "desc": "Ir a símbolo en workspace" },
+        { "keys": ["F12"], "desc": "Ir a definición" },
+        { "keys": ["Alt", "F12"], "desc": "Peek definición" },
+        { "keys": ["Ctrl", "Click"], "desc": "Ir a definición" },
+        { "keys": ["Shift", "F12"], "desc": "Ver referencias" },
+        { "keys": ["Ctrl", "Shift", "\\"], "desc": "Ir a bracket" },
+        { "keys": ["Ctrl", "-"], "desc": "Volver atrás" },
+        { "keys": ["Ctrl", "Shift", "-"], "desc": "Ir adelante" },
+        { "keys": ["Ctrl", "Home"], "desc": "Inicio de archivo" },
+        { "keys": ["Ctrl", "End"], "desc": "Fin de archivo" }
+      ]
+    },
+    {
+      "name": "Búsqueda",
+      "items": [
+        { "keys": ["Ctrl", "F"], "desc": "Buscar" },
+        { "keys": ["Ctrl", "H"], "desc": "Buscar y reemplazar" },
+        { "keys": ["F3"], "desc": "Siguiente coincidencia" },
+        { "keys": ["Shift", "F3"], "desc": "Anterior coincidencia" },
+        { "keys": ["Enter"], "desc": "Siguiente (en búsqueda)" },
+        { "keys": ["Shift", "Enter"], "desc": "Anterior (en búsqueda)" },
+        { "keys": ["Ctrl", "Shift", "F"], "desc": "Buscar en archivos" },
+        { "keys": ["Ctrl", "Shift", "H"], "desc": "Reemplazar en archivos" },
+        { "keys": ["Alt", "Enter"], "desc": "Seleccionar todas coincidencias" },
+        { "keys": ["Alt", "C"], "desc": "Toggle case sensitive" },
+        { "keys": ["Alt", "R"], "desc": "Toggle regex" },
+        { "keys": ["Alt", "W"], "desc": "Toggle palabra completa" }
+      ]
+    },
+    {
+      "name": "Editores",
+      "items": [
+        { "keys": ["Ctrl", "\\"], "desc": "Dividir editor" },
+        { "keys": ["Ctrl", "1/2/3"], "desc": "Enfocar grupo" },
+        { "keys": ["Ctrl", "W"], "desc": "Cerrar editor" },
+        { "keys": ["Ctrl", "K", "W"], "desc": "Cerrar todos" },
+        { "keys": ["Ctrl", "K", "Ctrl", "W"], "desc": "Cerrar todos grupos" },
+        { "keys": ["Ctrl", "Tab"], "desc": "Cambiar editor" },
+        { "keys": ["Ctrl", "Shift", "Tab"], "desc": "Editor anterior" },
+        { "keys": ["Ctrl", "Shift", "T"], "desc": "Reabrir cerrado" },
+        { "keys": ["Ctrl", "K", "Enter"], "desc": "Mantener preview" },
+        { "keys": ["Ctrl", "K", "←/→"], "desc": "Mover editor a grupo" },
+        { "keys": ["Ctrl", "K", "Ctrl", "←/→"], "desc": "Mover grupo" }
+      ]
+    },
+    {
+      "name": "Código",
+      "items": [
+        { "keys": ["Ctrl", "Space"], "desc": "Sugerencias" },
+        { "keys": ["Ctrl", "Shift", "Space"], "desc": "Parámetros" },
+        { "keys": ["Ctrl", "."], "desc": "Quick fix" },
+        { "keys": ["F2"], "desc": "Renombrar símbolo" },
+        { "keys": ["Shift", "Alt", "F"], "desc": "Formatear documento" },
+        { "keys": ["Ctrl", "K", "Ctrl", "F"], "desc": "Formatear selección" },
+        { "keys": ["F8"], "desc": "Siguiente error" },
+        { "keys": ["Shift", "F8"], "desc": "Error anterior" },
+        { "keys": ["Ctrl", "K", "Ctrl", "I"], "desc": "Mostrar hover" },
+        { "keys": ["Ctrl", "K", "Ctrl", "X"], "desc": "Trim whitespace" }
+      ]
+    },
+    {
+      "name": "Plegado",
+      "items": [
+        { "keys": ["Ctrl", "Shift", "["], "desc": "Plegar región" },
+        { "keys": ["Ctrl", "Shift", "]"], "desc": "Desplegar región" },
+        { "keys": ["Ctrl", "K", "Ctrl", "0"], "desc": "Plegar todo" },
+        { "keys": ["Ctrl", "K", "Ctrl", "J"], "desc": "Desplegar todo" },
+        { "keys": ["Ctrl", "K", "Ctrl", "["], "desc": "Plegar recursivo" },
+        { "keys": ["Ctrl", "K", "Ctrl", "]"], "desc": "Desplegar recursivo" },
+        { "keys": ["Ctrl", "K", "Ctrl", "1-9"], "desc": "Plegar nivel N" }
+      ]
+    },
+    {
+      "name": "Debug",
+      "items": [
+        { "keys": ["F5"], "desc": "Iniciar debug" },
+        { "keys": ["Shift", "F5"], "desc": "Detener" },
+        { "keys": ["Ctrl", "Shift", "F5"], "desc": "Reiniciar" },
+        { "keys": ["F9"], "desc": "Toggle breakpoint" },
+        { "keys": ["F10"], "desc": "Step over" },
+        { "keys": ["F11"], "desc": "Step into" },
+        { "keys": ["Shift", "F11"], "desc": "Step out" },
+        { "keys": ["Ctrl", "K", "Ctrl", "I"], "desc": "Inspeccionar variable" }
+      ]
+    },
+    {
+      "name": "Terminal",
+      "items": [
+        { "keys": ["Ctrl", "`"], "desc": "Toggle terminal" },
+        { "keys": ["Ctrl", "Shift", "`"], "desc": "Nuevo terminal" },
+        { "keys": ["Ctrl", "Shift", "5"], "desc": "Dividir terminal" },
+        { "keys": ["Ctrl", "↑/↓"], "desc": "Scroll" },
+        { "keys": ["Ctrl", "Home/End"], "desc": "Scroll al inicio/fin" },
+        { "keys": ["Ctrl", "C"], "desc": "Cancelar comando" },
+        { "keys": ["Ctrl", "Shift", "C"], "desc": "Copiar selección" },
+        { "keys": ["Ctrl", "Shift", "V"], "desc": "Pegar" }
+      ]
+    }
+  ]
+}

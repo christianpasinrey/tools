@@ -1,0 +1,167 @@
+{
+  "title": "Contabilidad",
+  "description": "Términos, fórmulas y conceptos contables",
+  "sections": [
+    {
+      "name": "Ecuación Contable",
+      "items": [
+        { "cmd": "Activo = Pasivo + Patrimonio", "desc": "Ecuación fundamental" },
+        { "cmd": "Patrimonio = Activo - Pasivo", "desc": "Despeje patrimonio" },
+        { "cmd": "Pasivo = Activo - Patrimonio", "desc": "Despeje pasivo" },
+        { "cmd": "Activo = Lo que posee la empresa", "desc": "Bienes y derechos" },
+        { "cmd": "Pasivo = Lo que debe la empresa", "desc": "Obligaciones" },
+        { "cmd": "Patrimonio = Capital de los socios", "desc": "Recursos propios" }
+      ]
+    },
+    {
+      "name": "Ratios de Liquidez",
+      "items": [
+        { "cmd": "Razón Corriente = AC / PC", "desc": "Activo Corriente / Pasivo Corriente" },
+        { "cmd": "Prueba Ácida = (AC - Inv) / PC", "desc": "Liquidez sin inventario" },
+        { "cmd": "Razón de Efectivo = Efectivo / PC", "desc": "Liquidez inmediata" },
+        { "cmd": "Capital de Trabajo = AC - PC", "desc": "Recursos operativos" },
+        { "cmd": "Intervalo Defensivo = (Efectivo + CxC) / Gastos diarios", "desc": "Días de operación" },
+        { "cmd": "Ideal Razón Corriente > 1.5", "desc": "Referencia saludable" },
+        { "cmd": "Ideal Prueba Ácida > 1", "desc": "Referencia saludable" }
+      ]
+    },
+    {
+      "name": "Ratios de Rentabilidad",
+      "items": [
+        { "cmd": "ROA = Utilidad Neta / Activo Total", "desc": "Retorno sobre activos" },
+        { "cmd": "ROE = Utilidad Neta / Patrimonio", "desc": "Retorno sobre patrimonio" },
+        { "cmd": "ROI = (Ganancia - Inversión) / Inversión", "desc": "Retorno de inversión" },
+        { "cmd": "Margen Bruto = (Ventas - Costo) / Ventas", "desc": "Rentabilidad bruta" },
+        { "cmd": "Margen Operativo = EBIT / Ventas", "desc": "Rentabilidad operativa" },
+        { "cmd": "Margen Neto = Utilidad Neta / Ventas", "desc": "Rentabilidad neta" },
+        { "cmd": "EBIT = Ventas - Costos - Gastos Op.", "desc": "Beneficio operativo" },
+        { "cmd": "EBITDA = EBIT + Depreciación + Amortización", "desc": "Flujo operativo" }
+      ]
+    },
+    {
+      "name": "Ratios de Endeudamiento",
+      "items": [
+        { "cmd": "Razón de Deuda = Pasivo / Activo", "desc": "Nivel de endeudamiento" },
+        { "cmd": "Deuda/Patrimonio = Pasivo / Patrimonio", "desc": "Apalancamiento" },
+        { "cmd": "Cobertura de Intereses = EBIT / Intereses", "desc": "Capacidad de pago" },
+        { "cmd": "Autonomía = Patrimonio / Activo", "desc": "Independencia financiera" },
+        { "cmd": "Endeudamiento CP = PC / Pasivo Total", "desc": "Deuda a corto plazo" },
+        { "cmd": "Endeudamiento LP = PNC / Pasivo Total", "desc": "Deuda a largo plazo" }
+      ]
+    },
+    {
+      "name": "Ratios de Actividad",
+      "items": [
+        { "cmd": "Rotación de Inventario = Costo / Inv. Promedio", "desc": "Veces al año" },
+        { "cmd": "Días de Inventario = 365 / Rotación Inv.", "desc": "Días en stock" },
+        { "cmd": "Rotación de CxC = Ventas / CxC Promedio", "desc": "Cobro de clientes" },
+        { "cmd": "Días de CxC = 365 / Rotación CxC", "desc": "Período de cobro" },
+        { "cmd": "Rotación de CxP = Compras / CxP Promedio", "desc": "Pago a proveedores" },
+        { "cmd": "Días de CxP = 365 / Rotación CxP", "desc": "Período de pago" },
+        { "cmd": "Ciclo de Conversión = Días Inv + Días CxC - Días CxP", "desc": "Ciclo de efectivo" },
+        { "cmd": "Rotación de Activos = Ventas / Activo Total", "desc": "Eficiencia de activos" }
+      ]
+    },
+    {
+      "name": "Estados Financieros",
+      "items": [
+        { "cmd": "Balance General", "desc": "Foto de la situación financiera" },
+        { "cmd": "Estado de Resultados", "desc": "Utilidad en un período" },
+        { "cmd": "Estado de Flujo de Efectivo", "desc": "Movimientos de caja" },
+        { "cmd": "Estado de Cambios en Patrimonio", "desc": "Variación del capital" },
+        { "cmd": "Notas a los Estados Financieros", "desc": "Explicaciones detalladas" }
+      ]
+    },
+    {
+      "name": "Cuentas de Balance",
+      "items": [
+        { "cmd": "Activo Corriente", "desc": "Efectivo, CxC, Inventario" },
+        { "cmd": "Activo No Corriente", "desc": "PPE, Intangibles, Inversiones LP" },
+        { "cmd": "Pasivo Corriente", "desc": "CxP, Préstamos CP, Impuestos" },
+        { "cmd": "Pasivo No Corriente", "desc": "Deuda LP, Provisiones" },
+        { "cmd": "Capital Social", "desc": "Aporte de socios" },
+        { "cmd": "Utilidades Retenidas", "desc": "Ganancias acumuladas" },
+        { "cmd": "Reservas", "desc": "Fondos obligatorios" }
+      ]
+    },
+    {
+      "name": "Cuentas de Resultados",
+      "items": [
+        { "cmd": "Ventas / Ingresos", "desc": "Ingreso por actividad principal" },
+        { "cmd": "Costo de Ventas", "desc": "Costo de producir lo vendido" },
+        { "cmd": "Utilidad Bruta", "desc": "Ventas - Costo de Ventas" },
+        { "cmd": "Gastos de Operación", "desc": "Admin, Ventas, Generales" },
+        { "cmd": "Utilidad Operativa", "desc": "Utilidad Bruta - Gastos Op." },
+        { "cmd": "Gastos Financieros", "desc": "Intereses, comisiones" },
+        { "cmd": "Utilidad antes de Impuestos", "desc": "UAI" },
+        { "cmd": "Impuesto a la Renta", "desc": "Tributo sobre utilidad" },
+        { "cmd": "Utilidad Neta", "desc": "Beneficio final" }
+      ]
+    },
+    {
+      "name": "Partida Doble",
+      "items": [
+        { "cmd": "Debe = Haber", "desc": "Principio fundamental" },
+        { "cmd": "Debe (Débito)", "desc": "Lado izquierdo del asiento" },
+        { "cmd": "Haber (Crédito)", "desc": "Lado derecho del asiento" },
+        { "cmd": "Activo aumenta = Débito", "desc": "Regla de movimiento" },
+        { "cmd": "Activo disminuye = Crédito", "desc": "Regla de movimiento" },
+        { "cmd": "Pasivo aumenta = Crédito", "desc": "Regla de movimiento" },
+        { "cmd": "Pasivo disminuye = Débito", "desc": "Regla de movimiento" },
+        { "cmd": "Ingreso = Crédito", "desc": "Regla de movimiento" },
+        { "cmd": "Gasto = Débito", "desc": "Regla de movimiento" }
+      ]
+    },
+    {
+      "name": "Depreciación",
+      "items": [
+        { "cmd": "Línea Recta = (Costo - VR) / Vida útil", "desc": "Método más común" },
+        { "cmd": "Suma de Dígitos", "desc": "Depreciación acelerada" },
+        { "cmd": "Unidades Producidas", "desc": "Por uso real" },
+        { "cmd": "Saldo Decreciente", "desc": "Porcentaje sobre valor en libros" },
+        { "cmd": "Valor Residual (VR)", "desc": "Valor al final de vida útil" },
+        { "cmd": "Depreciación Acumulada", "desc": "Total depreciado a la fecha" },
+        { "cmd": "Valor en Libros = Costo - Dep. Acum.", "desc": "Valor contable actual" }
+      ]
+    },
+    {
+      "name": "Impuestos",
+      "items": [
+        { "cmd": "IVA", "desc": "Impuesto al Valor Agregado" },
+        { "cmd": "IRPF", "desc": "Impuesto sobre la Renta de Personas" },
+        { "cmd": "IS", "desc": "Impuesto de Sociedades" },
+        { "cmd": "Base Imponible", "desc": "Monto sobre el que se calcula" },
+        { "cmd": "Tipo Impositivo", "desc": "Porcentaje a aplicar" },
+        { "cmd": "Cuota Tributaria = BI × Tipo", "desc": "Impuesto a pagar" },
+        { "cmd": "IVA Repercutido", "desc": "IVA cobrado en ventas" },
+        { "cmd": "IVA Soportado", "desc": "IVA pagado en compras" },
+        { "cmd": "IVA a Pagar = Repercutido - Soportado", "desc": "Liquidación de IVA" },
+        { "cmd": "Retención en la Fuente", "desc": "Anticipo de impuesto" }
+      ]
+    },
+    {
+      "name": "Análisis de Costos",
+      "items": [
+        { "cmd": "Costos Fijos (CF)", "desc": "No varían con producción" },
+        { "cmd": "Costos Variables (CV)", "desc": "Varían con producción" },
+        { "cmd": "Costo Total = CF + CV", "desc": "Suma de costos" },
+        { "cmd": "Costo Unitario = CT / Unidades", "desc": "Costo por unidad" },
+        { "cmd": "Punto de Equilibrio = CF / (PV - CVu)", "desc": "Unidades para no perder" },
+        { "cmd": "Margen de Contribución = PV - CVu", "desc": "Contribución por unidad" },
+        { "cmd": "Apalancamiento Operativo", "desc": "Sensibilidad a ventas" }
+      ]
+    },
+    {
+      "name": "Valor del Dinero",
+      "items": [
+        { "cmd": "VF = VP × (1 + i)^n", "desc": "Valor futuro" },
+        { "cmd": "VP = VF / (1 + i)^n", "desc": "Valor presente" },
+        { "cmd": "VAN = Σ FC / (1+r)^t - Inversión", "desc": "Valor Actual Neto" },
+        { "cmd": "TIR", "desc": "Tasa que hace VAN = 0" },
+        { "cmd": "Payback", "desc": "Tiempo de recuperación" },
+        { "cmd": "i = Tasa de interés", "desc": "Costo del dinero" },
+        { "cmd": "n = Número de períodos", "desc": "Tiempo de inversión" }
+      ]
+    }
+  ]
+}

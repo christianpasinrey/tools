@@ -1,0 +1,96 @@
+{
+  "title": "Windows Keyboard Shortcuts",
+  "description": "Atajos de teclado esenciales para Windows",
+  "sections": [
+    {
+      "name": "General",
+      "items": [
+        { "keys": ["Ctrl", "C"], "desc": "Copiar" },
+        { "keys": ["Ctrl", "V"], "desc": "Pegar" },
+        { "keys": ["Ctrl", "X"], "desc": "Cortar" },
+        { "keys": ["Ctrl", "Z"], "desc": "Deshacer" },
+        { "keys": ["Ctrl", "Y"], "desc": "Rehacer" },
+        { "keys": ["Ctrl", "A"], "desc": "Seleccionar todo" },
+        { "keys": ["Ctrl", "S"], "desc": "Guardar" },
+        { "keys": ["Ctrl", "Shift", "S"], "desc": "Guardar como" },
+        { "keys": ["Ctrl", "P"], "desc": "Imprimir" },
+        { "keys": ["Ctrl", "F"], "desc": "Buscar" },
+        { "keys": ["Ctrl", "H"], "desc": "Reemplazar" },
+        { "keys": ["F5"], "desc": "Actualizar" },
+        { "keys": ["Alt", "F4"], "desc": "Cerrar ventana" },
+        { "keys": ["Alt", "Tab"], "desc": "Cambiar aplicación" },
+        { "keys": ["Alt", "Shift", "Tab"], "desc": "Cambiar app (reversa)" },
+        { "keys": ["Win", "Tab"], "desc": "Vista de tareas" },
+        { "keys": ["Ctrl", "Shift", "Esc"], "desc": "Administrador tareas" }
+      ]
+    },
+    {
+      "name": "Tecla Windows",
+      "items": [
+        { "keys": ["Win"], "desc": "Abrir menú inicio" },
+        { "keys": ["Win", "A"], "desc": "Centro de acciones" },
+        { "keys": ["Win", "E"], "desc": "Abrir explorador" },
+        { "keys": ["Win", "I"], "desc": "Abrir configuración" },
+        { "keys": ["Win", "L"], "desc": "Bloquear PC" },
+        { "keys": ["Win", "D"], "desc": "Mostrar/ocultar escritorio" },
+        { "keys": ["Win", "R"], "desc": "Ejecutar" },
+        { "keys": ["Win", "S"], "desc": "Buscar" },
+        { "keys": ["Win", "V"], "desc": "Historial portapapeles" },
+        { "keys": ["Win", "."], "desc": "Panel de emojis" },
+        { "keys": ["Win", "Shift", "S"], "desc": "Captura de pantalla" },
+        { "keys": ["Win", "P"], "desc": "Proyectar pantalla" },
+        { "keys": ["Win", "K"], "desc": "Conectar dispositivo" },
+        { "keys": ["Win", "X"], "desc": "Menú de acceso rápido" },
+        { "keys": ["Win", "G"], "desc": "Xbox Game Bar" },
+        { "keys": ["Win", "Pause"], "desc": "Info del sistema" }
+      ]
+    },
+    {
+      "name": "Gestión de Ventanas",
+      "items": [
+        { "keys": ["Win", "←"], "desc": "Ajustar ventana izquierda" },
+        { "keys": ["Win", "→"], "desc": "Ajustar ventana derecha" },
+        { "keys": ["Win", "↑"], "desc": "Maximizar ventana" },
+        { "keys": ["Win", "↓"], "desc": "Minimizar/restaurar" },
+        { "keys": ["Win", "Shift", "↑"], "desc": "Estirar verticalmente" },
+        { "keys": ["Win", "Shift", "←/→"], "desc": "Mover a otro monitor" },
+        { "keys": ["Win", "M"], "desc": "Minimizar todo" },
+        { "keys": ["Win", "Home"], "desc": "Minimizar excepto activa" },
+        { "keys": ["Win", "Ctrl", "D"], "desc": "Nuevo escritorio virtual" },
+        { "keys": ["Win", "Ctrl", "F4"], "desc": "Cerrar escritorio virtual" },
+        { "keys": ["Win", "Ctrl", "←/→"], "desc": "Cambiar escritorio" },
+        { "keys": ["Alt", "Space"], "desc": "Menú de ventana" }
+      ]
+    },
+    {
+      "name": "Explorador de Archivos",
+      "items": [
+        { "keys": ["Ctrl", "N"], "desc": "Nueva ventana" },
+        { "keys": ["Ctrl", "W"], "desc": "Cerrar ventana" },
+        { "keys": ["Ctrl", "Shift", "N"], "desc": "Nueva carpeta" },
+        { "keys": ["Delete"], "desc": "Eliminar" },
+        { "keys": ["Shift", "Delete"], "desc": "Eliminar permanente" },
+        { "keys": ["F2"], "desc": "Renombrar" },
+        { "keys": ["Alt", "Enter"], "desc": "Propiedades" },
+        { "keys": ["Ctrl", "Shift", "E"], "desc": "Expandir navegación" },
+        { "keys": ["Alt", "←"], "desc": "Carpeta anterior" },
+        { "keys": ["Alt", "→"], "desc": "Carpeta siguiente" },
+        { "keys": ["Alt", "↑"], "desc": "Carpeta padre" },
+        { "keys": ["Ctrl", "L"], "desc": "Barra de direcciones" },
+        { "keys": ["Ctrl", "F"], "desc": "Buscar" },
+        { "keys": ["F11"], "desc": "Pantalla completa" }
+      ]
+    },
+    {
+      "name": "Accesibilidad",
+      "items": [
+        { "keys": ["Win", "+"], "desc": "Abrir lupa / Zoom in" },
+        { "keys": ["Win", "-"], "desc": "Zoom out" },
+        { "keys": ["Win", "Esc"], "desc": "Cerrar lupa" },
+        { "keys": ["Win", "Enter"], "desc": "Abrir Narrator" },
+        { "keys": ["Win", "Ctrl", "C"], "desc": "Filtros de color" },
+        { "keys": ["Win", "U"], "desc": "Accesibilidad" }
+      ]
+    }
+  ]
+}

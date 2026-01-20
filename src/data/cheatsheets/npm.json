@@ -1,0 +1,138 @@
+{
+  "title": "NPM Commands",
+  "description": "Comandos esenciales de NPM",
+  "sections": [
+    {
+      "name": "Instalación",
+      "items": [
+        { "cmd": "npm install", "desc": "Instalar dependencias" },
+        { "cmd": "npm i", "desc": "Alias de install" },
+        { "cmd": "npm install <pkg>", "desc": "Instalar paquete" },
+        { "cmd": "npm install <pkg>@version", "desc": "Versión específica" },
+        { "cmd": "npm install <pkg>@latest", "desc": "Última versión" },
+        { "cmd": "npm install -D <pkg>", "desc": "Como devDependency" },
+        { "cmd": "npm install --save-dev <pkg>", "desc": "Alias de -D" },
+        { "cmd": "npm install -g <pkg>", "desc": "Global" },
+        { "cmd": "npm install --legacy-peer-deps", "desc": "Ignorar peer deps" },
+        { "cmd": "npm install --force", "desc": "Forzar instalación" },
+        { "cmd": "npm ci", "desc": "Clean install (CI)" },
+        { "cmd": "npm uninstall <pkg>", "desc": "Desinstalar" },
+        { "cmd": "npm uninstall -g <pkg>", "desc": "Desinstalar global" }
+      ]
+    },
+    {
+      "name": "Scripts",
+      "items": [
+        { "cmd": "npm run <script>", "desc": "Ejecutar script" },
+        { "cmd": "npm start", "desc": "Run start script" },
+        { "cmd": "npm test", "desc": "Run test script" },
+        { "cmd": "npm run build", "desc": "Run build script" },
+        { "cmd": "npm run dev", "desc": "Run dev script" },
+        { "cmd": "npm run <script> -- --flag", "desc": "Pasar argumentos" },
+        { "cmd": "npx <pkg>", "desc": "Ejecutar paquete" },
+        { "cmd": "npx <pkg>@version", "desc": "Ejecutar versión específica" }
+      ]
+    },
+    {
+      "name": "Información",
+      "items": [
+        { "cmd": "npm list", "desc": "Listar instalados" },
+        { "cmd": "npm list --depth=0", "desc": "Solo nivel superior" },
+        { "cmd": "npm list -g --depth=0", "desc": "Globales" },
+        { "cmd": "npm outdated", "desc": "Ver desactualizados" },
+        { "cmd": "npm outdated -g", "desc": "Globales desactualizados" },
+        { "cmd": "npm info <pkg>", "desc": "Info de paquete" },
+        { "cmd": "npm view <pkg> versions", "desc": "Versiones disponibles" },
+        { "cmd": "npm search <term>", "desc": "Buscar paquetes" },
+        { "cmd": "npm docs <pkg>", "desc": "Abrir documentación" },
+        { "cmd": "npm repo <pkg>", "desc": "Abrir repositorio" },
+        { "cmd": "npm bugs <pkg>", "desc": "Abrir issue tracker" },
+        { "cmd": "npm why <pkg>", "desc": "Por qué está instalado" }
+      ]
+    },
+    {
+      "name": "Actualización",
+      "items": [
+        { "cmd": "npm update", "desc": "Actualizar todo" },
+        { "cmd": "npm update <pkg>", "desc": "Actualizar paquete" },
+        { "cmd": "npm update -g", "desc": "Actualizar globales" },
+        { "cmd": "npx npm-check-updates", "desc": "Ver actualizaciones mayores" },
+        { "cmd": "npx npm-check-updates -u", "desc": "Actualizar package.json" }
+      ]
+    },
+    {
+      "name": "Proyecto",
+      "items": [
+        { "cmd": "npm init", "desc": "Crear package.json" },
+        { "cmd": "npm init -y", "desc": "Con valores por defecto" },
+        { "cmd": "npm init <initializer>", "desc": "Usar initializer" },
+        { "cmd": "npm create vite@latest", "desc": "Alias de npm init" },
+        { "cmd": "npm pkg get name", "desc": "Leer propiedad" },
+        { "cmd": "npm pkg set name=value", "desc": "Establecer propiedad" },
+        { "cmd": "npm version patch", "desc": "Bump patch (0.0.X)" },
+        { "cmd": "npm version minor", "desc": "Bump minor (0.X.0)" },
+        { "cmd": "npm version major", "desc": "Bump major (X.0.0)" },
+        { "cmd": "npm version prerelease", "desc": "Prerelease" }
+      ]
+    },
+    {
+      "name": "Publicación",
+      "items": [
+        { "cmd": "npm login", "desc": "Iniciar sesión" },
+        { "cmd": "npm logout", "desc": "Cerrar sesión" },
+        { "cmd": "npm whoami", "desc": "Usuario actual" },
+        { "cmd": "npm publish", "desc": "Publicar paquete" },
+        { "cmd": "npm publish --access public", "desc": "Publicar público" },
+        { "cmd": "npm publish --tag beta", "desc": "Publicar con tag" },
+        { "cmd": "npm unpublish <pkg>@version", "desc": "Despublicar versión" },
+        { "cmd": "npm deprecate <pkg> \"message\"", "desc": "Marcar deprecado" },
+        { "cmd": "npm pack", "desc": "Crear tarball" },
+        { "cmd": "npm link", "desc": "Enlazar paquete local" },
+        { "cmd": "npm link <pkg>", "desc": "Usar paquete enlazado" },
+        { "cmd": "npm unlink", "desc": "Desenlazar" }
+      ]
+    },
+    {
+      "name": "Caché y Limpieza",
+      "items": [
+        { "cmd": "npm cache clean --force", "desc": "Limpiar caché" },
+        { "cmd": "npm cache verify", "desc": "Verificar caché" },
+        { "cmd": "npm prune", "desc": "Eliminar no usados" },
+        { "cmd": "npm dedupe", "desc": "Deduplicar" },
+        { "cmd": "rm -rf node_modules", "desc": "Eliminar node_modules" },
+        { "cmd": "rm package-lock.json", "desc": "Eliminar lockfile" }
+      ]
+    },
+    {
+      "name": "Seguridad",
+      "items": [
+        { "cmd": "npm audit", "desc": "Verificar vulnerabilidades" },
+        { "cmd": "npm audit fix", "desc": "Corregir automáticamente" },
+        { "cmd": "npm audit fix --force", "desc": "Forzar corrección" },
+        { "cmd": "npm audit --json", "desc": "Salida JSON" },
+        { "cmd": "npm audit --production", "desc": "Solo producción" }
+      ]
+    },
+    {
+      "name": "Configuración",
+      "items": [
+        { "cmd": "npm config list", "desc": "Ver configuración" },
+        { "cmd": "npm config get registry", "desc": "Ver registry" },
+        { "cmd": "npm config set registry <url>", "desc": "Cambiar registry" },
+        { "cmd": "npm config delete <key>", "desc": "Eliminar config" },
+        { "cmd": "npm config edit", "desc": "Editar .npmrc" },
+        { "cmd": "npm set init-author-name \"Name\"", "desc": "Autor por defecto" }
+      ]
+    },
+    {
+      "name": "Workspaces",
+      "items": [
+        { "cmd": "npm init -w packages/a", "desc": "Crear workspace" },
+        { "cmd": "npm install -w packages/a <pkg>", "desc": "Instalar en workspace" },
+        { "cmd": "npm run test -w packages/a", "desc": "Ejecutar en workspace" },
+        { "cmd": "npm run test --workspaces", "desc": "Ejecutar en todos" },
+        { "cmd": "npm run test -ws", "desc": "Alias de --workspaces" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "title": "Bash Scripting",
+  "description": "Referencia de scripting en Bash",
+  "sections": [
+    {
+      "name": "Variables",
+      "items": [
+        { "cmd": "VAR=\"value\"", "desc": "Definir variable" },
+        { "cmd": "$VAR", "desc": "Usar variable" },
+        { "cmd": "${VAR}", "desc": "Variable (explícita)" },
+        { "cmd": "${VAR:-default}", "desc": "Valor por defecto si vacía" },
+        { "cmd": "${VAR:=default}", "desc": "Asignar si vacía" },
+        { "cmd": "${VAR:+alt}", "desc": "Valor alternativo si existe" },
+        { "cmd": "${VAR:?error}", "desc": "Error si vacía" },
+        { "cmd": "${#VAR}", "desc": "Longitud de cadena" },
+        { "cmd": "${VAR:0:5}", "desc": "Substring (pos:len)" },
+        { "cmd": "${VAR#pattern}", "desc": "Eliminar prefijo corto" },
+        { "cmd": "${VAR##pattern}", "desc": "Eliminar prefijo largo" },
+        { "cmd": "${VAR%pattern}", "desc": "Eliminar sufijo corto" },
+        { "cmd": "${VAR%%pattern}", "desc": "Eliminar sufijo largo" },
+        { "cmd": "${VAR/old/new}", "desc": "Reemplazar primera" },
+        { "cmd": "${VAR//old/new}", "desc": "Reemplazar todas" },
+        { "cmd": "${VAR^^}", "desc": "Mayúsculas" },
+        { "cmd": "${VAR,,}", "desc": "Minúsculas" },
+        { "cmd": "export VAR", "desc": "Exportar a entorno" },
+        { "cmd": "readonly VAR", "desc": "Hacer solo lectura" },
+        { "cmd": "unset VAR", "desc": "Eliminar variable" }
+      ]
+    },
+    {
+      "name": "Variables Especiales",
+      "items": [
+        { "cmd": "$0", "desc": "Nombre del script" },
+        { "cmd": "$1, $2, ...", "desc": "Argumentos posicionales" },
+        { "cmd": "$#", "desc": "Número de argumentos" },
+        { "cmd": "$@", "desc": "Todos los argumentos (array)" },
+        { "cmd": "$*", "desc": "Todos los argumentos (string)" },
+        { "cmd": "$?", "desc": "Código de salida anterior" },
+        { "cmd": "$$", "desc": "PID actual" },
+        { "cmd": "$!", "desc": "PID del último proceso en bg" },
+        { "cmd": "$_", "desc": "Último argumento del cmd anterior" },
+        { "cmd": "$RANDOM", "desc": "Número aleatorio 0-32767" },
+        { "cmd": "$LINENO", "desc": "Línea actual del script" },
+        { "cmd": "$SECONDS", "desc": "Segundos desde inicio" },
+        { "cmd": "$BASH_VERSION", "desc": "Versión de Bash" },
+        { "cmd": "$PWD", "desc": "Directorio actual" },
+        { "cmd": "$HOME", "desc": "Directorio home" },
+        { "cmd": "$PATH", "desc": "Rutas de ejecutables" }
+      ]
+    },
+    {
+      "name": "Condicionales",
+      "items": [
+        { "cmd": "if [ cond ]; then ... fi", "desc": "Estructura if" },
+        { "cmd": "if [[ cond ]]; then", "desc": "Test extendido (bash)" },
+        { "cmd": "-eq -ne -lt -le -gt -ge", "desc": "Comparación numérica" },
+        { "cmd": "= != < >", "desc": "Comparación de strings" },
+        { "cmd": "=~", "desc": "Coincide regex" },
+        { "cmd": "-z \"$str\"", "desc": "String está vacío" },
+        { "cmd": "-n \"$str\"", "desc": "String no está vacío" },
+        { "cmd": "-e <path>", "desc": "Existe (archivo o dir)" },
+        { "cmd": "-f <file>", "desc": "Es archivo regular" },
+        { "cmd": "-d <dir>", "desc": "Es directorio" },
+        { "cmd": "-L <file>", "desc": "Es enlace simbólico" },
+        { "cmd": "-s <file>", "desc": "Archivo no vacío" },
+        { "cmd": "-r -w -x", "desc": "Permisos r/w/x" },
+        { "cmd": "file1 -nt file2", "desc": "Más reciente que" },
+        { "cmd": "file1 -ot file2", "desc": "Más antiguo que" },
+        { "cmd": "&& ||", "desc": "AND / OR lógico" },
+        { "cmd": "!", "desc": "Negación" },
+        { "cmd": "case $var in ... esac", "desc": "Switch/case" }
+      ]
+    },
+    {
+      "name": "Bucles",
+      "items": [
+        { "cmd": "for i in list; do ... done", "desc": "Bucle for" },
+        { "cmd": "for i in {1..10}", "desc": "Rango de números" },
+        { "cmd": "for i in {1..10..2}", "desc": "Rango con paso" },
+        { "cmd": "for i in *.txt", "desc": "Iterar archivos" },
+        { "cmd": "for ((i=0;i<10;i++))", "desc": "For estilo C" },
+        { "cmd": "while [ cond ]; do ... done", "desc": "Bucle while" },
+        { "cmd": "while read line; do", "desc": "Leer líneas" },
+        { "cmd": "while IFS= read -r line", "desc": "Leer preservando espacios" },
+        { "cmd": "until [ cond ]; do ... done", "desc": "Bucle until" },
+        { "cmd": "select opt in opts; do", "desc": "Menú interactivo" },
+        { "cmd": "break", "desc": "Salir del bucle" },
+        { "cmd": "continue", "desc": "Siguiente iteración" }
+      ]
+    },
+    {
+      "name": "Funciones",
+      "items": [
+        { "cmd": "func() { ... }", "desc": "Definir función" },
+        { "cmd": "function func { ... }", "desc": "Sintaxis alternativa" },
+        { "cmd": "local VAR", "desc": "Variable local" },
+        { "cmd": "return N", "desc": "Retornar código de salida" },
+        { "cmd": "echo \"result\"", "desc": "Retornar valor (stdout)" },
+        { "cmd": "result=$(func arg)", "desc": "Capturar resultado" },
+        { "cmd": "declare -f func", "desc": "Ver definición" },
+        { "cmd": "type func", "desc": "Tipo de comando" }
+      ]
+    },
+    {
+      "name": "Arrays",
+      "items": [
+        { "cmd": "arr=(a b c)", "desc": "Crear array" },
+        { "cmd": "${arr[0]}", "desc": "Acceder elemento" },
+        { "cmd": "${arr[@]}", "desc": "Todos los elementos" },
+        { "cmd": "${#arr[@]}", "desc": "Longitud del array" },
+        { "cmd": "arr+=(d e)", "desc": "Añadir elementos" },
+        { "cmd": "unset arr[1]", "desc": "Eliminar elemento" },
+        { "cmd": "${!arr[@]}", "desc": "Índices del array" },
+        { "cmd": "${arr[@]:1:2}", "desc": "Slice del array" },
+        { "cmd": "declare -A hash", "desc": "Array asociativo" },
+        { "cmd": "hash[key]=val", "desc": "Asignar a hash" }
+      ]
+    },
+    {
+      "name": "Redirección",
+      "items": [
+        { "cmd": "> file", "desc": "Stdout sobrescribir" },
+        { "cmd": ">> file", "desc": "Stdout añadir" },
+        { "cmd": "2> file", "desc": "Stderr a archivo" },
+        { "cmd": "2>&1", "desc": "Stderr a stdout" },
+        { "cmd": "&> file", "desc": "Ambos a archivo" },
+        { "cmd": "< file", "desc": "Entrada desde archivo" },
+        { "cmd": "|", "desc": "Pipe al siguiente" },
+        { "cmd": "|&", "desc": "Pipe stdout+stderr" },
+        { "cmd": "tee file", "desc": "Duplicar salida" },
+        { "cmd": "<<EOF", "desc": "Here document" },
+        { "cmd": "<<<string", "desc": "Here string" },
+        { "cmd": "exec 3>file", "desc": "File descriptor" },
+        { "cmd": "/dev/null", "desc": "Descartar salida" }
+      ]
+    },
+    {
+      "name": "Sustitución de Comandos",
+      "items": [
+        { "cmd": "$(command)", "desc": "Capturar salida" },
+        { "cmd": "`command`", "desc": "Sintaxis antigua" },
+        { "cmd": "$((expr))", "desc": "Aritmética" },
+        { "cmd": "$(( a + b ))", "desc": "Suma" },
+        { "cmd": "$(( a++ ))", "desc": "Incremento" },
+        { "cmd": "$(( a ** b ))", "desc": "Potencia" },
+        { "cmd": "$(( a % b ))", "desc": "Módulo" },
+        { "cmd": "${!var}", "desc": "Variable indirecta" }
+      ]
+    },
+    {
+      "name": "Señales y Traps",
+      "items": [
+        { "cmd": "trap \"cmd\" SIGNAL", "desc": "Capturar señal" },
+        { "cmd": "trap \"cleanup\" EXIT", "desc": "Al salir" },
+        { "cmd": "trap \"handler\" ERR", "desc": "En error" },
+        { "cmd": "trap - SIGNAL", "desc": "Resetear trap" },
+        { "cmd": "kill -SIGTERM $$", "desc": "Enviar señal" },
+        { "cmd": "set -e", "desc": "Salir en error" },
+        { "cmd": "set -u", "desc": "Error en var no definida" },
+        { "cmd": "set -x", "desc": "Debug mode" },
+        { "cmd": "set -o pipefail", "desc": "Error en pipe" }
+      ]
+    },
+    {
+      "name": "Utilidades",
+      "items": [
+        { "cmd": "xargs", "desc": "Ejecutar con args de stdin" },
+        { "cmd": "seq 1 10", "desc": "Secuencia de números" },
+        { "cmd": "printf \"%s\\n\" \"$var\"", "desc": "Formato de salida" },
+        { "cmd": "read -p \"msg\" var", "desc": "Leer input" },
+        { "cmd": "read -s var", "desc": "Leer silencioso (password)" },
+        { "cmd": "read -t 5 var", "desc": "Leer con timeout" },
+        { "cmd": "getopts \"ab:\" opt", "desc": "Parsear opciones" },
+        { "cmd": "shift", "desc": "Desplazar argumentos" },
+        { "cmd": "source file.sh", "desc": "Ejecutar en contexto actual" },
+        { "cmd": ". file.sh", "desc": "Alias de source" },
+        { "cmd": "eval \"$cmd\"", "desc": "Evaluar string como código" }
+      ]
+    }
+  ]
+}

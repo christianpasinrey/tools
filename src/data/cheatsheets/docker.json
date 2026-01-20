@@ -1,0 +1,152 @@
+{
+  "title": "Docker Commands",
+  "description": "Comandos esenciales de Docker",
+  "sections": [
+    {
+      "name": "Imágenes",
+      "items": [
+        { "cmd": "docker images", "desc": "Listar imágenes" },
+        { "cmd": "docker images -a", "desc": "Incluir intermedias" },
+        { "cmd": "docker pull <image>", "desc": "Descargar imagen" },
+        { "cmd": "docker pull <image>:<tag>", "desc": "Versión específica" },
+        { "cmd": "docker build -t <name> .", "desc": "Construir imagen" },
+        { "cmd": "docker build -f Dockerfile.dev .", "desc": "Dockerfile específico" },
+        { "cmd": "docker build --no-cache .", "desc": "Sin caché" },
+        { "cmd": "docker rmi <image>", "desc": "Eliminar imagen" },
+        { "cmd": "docker rmi $(docker images -q)", "desc": "Eliminar todas" },
+        { "cmd": "docker tag <src> <dest>", "desc": "Etiquetar imagen" },
+        { "cmd": "docker push <image>", "desc": "Subir a registro" },
+        { "cmd": "docker save -o file.tar <image>", "desc": "Exportar imagen" },
+        { "cmd": "docker load -i file.tar", "desc": "Importar imagen" },
+        { "cmd": "docker history <image>", "desc": "Historial de capas" },
+        { "cmd": "docker image prune", "desc": "Limpiar sin uso" }
+      ]
+    },
+    {
+      "name": "Contenedores",
+      "items": [
+        { "cmd": "docker ps", "desc": "Listar activos" },
+        { "cmd": "docker ps -a", "desc": "Listar todos" },
+        { "cmd": "docker run <image>", "desc": "Ejecutar contenedor" },
+        { "cmd": "docker run -d <image>", "desc": "En background" },
+        { "cmd": "docker run -it <image> bash", "desc": "Shell interactivo" },
+        { "cmd": "docker run --name <n> <image>", "desc": "Con nombre" },
+        { "cmd": "docker run -p 8080:80 <image>", "desc": "Mapear puerto" },
+        { "cmd": "docker run -P <image>", "desc": "Puertos aleatorios" },
+        { "cmd": "docker run -e VAR=val <image>", "desc": "Variable de entorno" },
+        { "cmd": "docker run --env-file .env <image>", "desc": "Archivo de env" },
+        { "cmd": "docker run --rm <image>", "desc": "Eliminar al salir" },
+        { "cmd": "docker run --restart=always <image>", "desc": "Reinicio automático" },
+        { "cmd": "docker start <container>", "desc": "Iniciar" },
+        { "cmd": "docker stop <container>", "desc": "Detener" },
+        { "cmd": "docker restart <container>", "desc": "Reiniciar" },
+        { "cmd": "docker rm <container>", "desc": "Eliminar" },
+        { "cmd": "docker rm $(docker ps -aq)", "desc": "Eliminar todos" },
+        { "cmd": "docker container prune", "desc": "Limpiar parados" }
+      ]
+    },
+    {
+      "name": "Logs y Ejecución",
+      "items": [
+        { "cmd": "docker logs <container>", "desc": "Ver logs" },
+        { "cmd": "docker logs -f <container>", "desc": "Seguir logs" },
+        { "cmd": "docker logs --tail 100 <container>", "desc": "Últimas N líneas" },
+        { "cmd": "docker logs --since 1h <container>", "desc": "Desde hace 1h" },
+        { "cmd": "docker exec -it <container> bash", "desc": "Shell en contenedor" },
+        { "cmd": "docker exec <container> <cmd>", "desc": "Ejecutar comando" },
+        { "cmd": "docker attach <container>", "desc": "Conectar a proceso" },
+        { "cmd": "docker top <container>", "desc": "Procesos en contenedor" },
+        { "cmd": "docker inspect <container>", "desc": "Info detallada" },
+        { "cmd": "docker stats", "desc": "Uso de recursos" },
+        { "cmd": "docker stats <container>", "desc": "Stats de uno" },
+        { "cmd": "docker diff <container>", "desc": "Cambios en filesystem" }
+      ]
+    },
+    {
+      "name": "Volúmenes",
+      "items": [
+        { "cmd": "docker volume ls", "desc": "Listar volúmenes" },
+        { "cmd": "docker volume create <name>", "desc": "Crear volumen" },
+        { "cmd": "docker volume inspect <name>", "desc": "Info de volumen" },
+        { "cmd": "docker volume rm <name>", "desc": "Eliminar volumen" },
+        { "cmd": "docker volume prune", "desc": "Limpiar sin uso" },
+        { "cmd": "-v <vol>:<path>", "desc": "Montar volumen" },
+        { "cmd": "-v $(pwd):/app", "desc": "Montar directorio" },
+        { "cmd": "-v /app/node_modules", "desc": "Volumen anónimo" },
+        { "cmd": "--mount type=bind,src=...,dst=...", "desc": "Mount explícito" }
+      ]
+    },
+    {
+      "name": "Redes",
+      "items": [
+        { "cmd": "docker network ls", "desc": "Listar redes" },
+        { "cmd": "docker network create <name>", "desc": "Crear red" },
+        { "cmd": "docker network create --driver bridge <n>", "desc": "Red bridge" },
+        { "cmd": "docker network inspect <name>", "desc": "Info de red" },
+        { "cmd": "docker network rm <name>", "desc": "Eliminar red" },
+        { "cmd": "docker network connect <net> <cont>", "desc": "Conectar contenedor" },
+        { "cmd": "docker network disconnect <net> <cont>", "desc": "Desconectar" },
+        { "cmd": "--network <name>", "desc": "Usar red específica" },
+        { "cmd": "--network host", "desc": "Red del host" },
+        { "cmd": "--network none", "desc": "Sin red" }
+      ]
+    },
+    {
+      "name": "Docker Compose",
+      "items": [
+        { "cmd": "docker-compose up", "desc": "Iniciar servicios" },
+        { "cmd": "docker-compose up -d", "desc": "En background" },
+        { "cmd": "docker-compose up --build", "desc": "Rebuild images" },
+        { "cmd": "docker-compose up <service>", "desc": "Servicio específico" },
+        { "cmd": "docker-compose down", "desc": "Detener y eliminar" },
+        { "cmd": "docker-compose down -v", "desc": "Incluir volúmenes" },
+        { "cmd": "docker-compose stop", "desc": "Solo detener" },
+        { "cmd": "docker-compose start", "desc": "Reiniciar parados" },
+        { "cmd": "docker-compose restart", "desc": "Reiniciar todos" },
+        { "cmd": "docker-compose logs", "desc": "Ver logs" },
+        { "cmd": "docker-compose logs -f <service>", "desc": "Seguir logs" },
+        { "cmd": "docker-compose ps", "desc": "Listar servicios" },
+        { "cmd": "docker-compose exec <svc> bash", "desc": "Shell en servicio" },
+        { "cmd": "docker-compose run <svc> <cmd>", "desc": "Ejecutar comando" },
+        { "cmd": "docker-compose build", "desc": "Construir imágenes" },
+        { "cmd": "docker-compose pull", "desc": "Descargar imágenes" },
+        { "cmd": "docker-compose config", "desc": "Validar compose" }
+      ]
+    },
+    {
+      "name": "Dockerfile",
+      "items": [
+        { "cmd": "FROM <image>", "desc": "Imagen base" },
+        { "cmd": "FROM <image> AS builder", "desc": "Multi-stage build" },
+        { "cmd": "WORKDIR /app", "desc": "Directorio de trabajo" },
+        { "cmd": "COPY . .", "desc": "Copiar archivos" },
+        { "cmd": "COPY --from=builder /app .", "desc": "Desde otra stage" },
+        { "cmd": "ADD <url> .", "desc": "Añadir desde URL" },
+        { "cmd": "RUN npm install", "desc": "Ejecutar comando" },
+        { "cmd": "RUN apt-get update && apt-get install", "desc": "Instalar paquetes" },
+        { "cmd": "ENV NODE_ENV=production", "desc": "Variable de entorno" },
+        { "cmd": "ARG VERSION=1.0", "desc": "Argumento de build" },
+        { "cmd": "EXPOSE 3000", "desc": "Documentar puerto" },
+        { "cmd": "VOLUME /data", "desc": "Definir volumen" },
+        { "cmd": "USER node", "desc": "Cambiar usuario" },
+        { "cmd": "CMD [\"node\", \"app.js\"]", "desc": "Comando por defecto" },
+        { "cmd": "ENTRYPOINT [\"docker-entrypoint.sh\"]", "desc": "Punto de entrada" },
+        { "cmd": "HEALTHCHECK CMD curl -f http://localhost/", "desc": "Health check" }
+      ]
+    },
+    {
+      "name": "Sistema",
+      "items": [
+        { "cmd": "docker info", "desc": "Info del sistema" },
+        { "cmd": "docker version", "desc": "Versión de Docker" },
+        { "cmd": "docker system df", "desc": "Uso de disco" },
+        { "cmd": "docker system prune", "desc": "Limpiar todo sin uso" },
+        { "cmd": "docker system prune -a", "desc": "Incluir imágenes" },
+        { "cmd": "docker login", "desc": "Login a registro" },
+        { "cmd": "docker logout", "desc": "Logout de registro" },
+        { "cmd": "docker search <term>", "desc": "Buscar en Docker Hub" },
+        { "cmd": "docker events", "desc": "Eventos en tiempo real" }
+      ]
+    }
+  ]
+}

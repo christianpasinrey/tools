@@ -1,0 +1,162 @@
+{
+  "title": "React Reference",
+  "description": "Hooks y patrones de React",
+  "sections": [
+    {
+      "name": "Hooks de Estado",
+      "items": [
+        { "cmd": "useState(initialValue)", "desc": "Estado local" },
+        { "cmd": "const [state, setState] = useState(0)", "desc": "Desestructurar" },
+        { "cmd": "setState(newValue)", "desc": "Actualizar estado" },
+        { "cmd": "setState(prev => prev + 1)", "desc": "Actualización funcional" },
+        { "cmd": "useState(() => expensive())", "desc": "Inicialización lazy" },
+        { "cmd": "useReducer(reducer, initialState)", "desc": "Estado complejo" },
+        { "cmd": "useReducer(reducer, init, initFn)", "desc": "Con inicializador" },
+        { "cmd": "dispatch({ type: 'ACTION' })", "desc": "Despachar acción" }
+      ]
+    },
+    {
+      "name": "Hooks de Efectos",
+      "items": [
+        { "cmd": "useEffect(() => {})", "desc": "Efecto cada render" },
+        { "cmd": "useEffect(() => {}, [])", "desc": "Solo al montar" },
+        { "cmd": "useEffect(() => {}, [dep])", "desc": "Cuando cambia dep" },
+        { "cmd": "useEffect(() => { return () => {} })", "desc": "Cleanup function" },
+        { "cmd": "useLayoutEffect(() => {})", "desc": "Antes del paint" },
+        { "cmd": "useInsertionEffect(() => {})", "desc": "Antes de layout (CSS-in-JS)" }
+      ]
+    },
+    {
+      "name": "Hooks de Contexto",
+      "items": [
+        { "cmd": "createContext(defaultValue)", "desc": "Crear contexto" },
+        { "cmd": "<Context.Provider value={...}>", "desc": "Proveer valor" },
+        { "cmd": "useContext(Context)", "desc": "Consumir contexto" },
+        { "cmd": "use(Context)", "desc": "Consumir (React 19)" }
+      ]
+    },
+    {
+      "name": "Hooks de Referencia",
+      "items": [
+        { "cmd": "useRef(initialValue)", "desc": "Referencia mutable" },
+        { "cmd": "ref.current", "desc": "Acceder al valor" },
+        { "cmd": "useRef<HTMLElement>(null)", "desc": "Ref de DOM (TS)" },
+        { "cmd": "ref={elementRef}", "desc": "Asignar a elemento" },
+        { "cmd": "useImperativeHandle(ref, () => ({}))", "desc": "Personalizar ref expuesta" },
+        { "cmd": "forwardRef((props, ref) => ...)", "desc": "Pasar ref a hijo" }
+      ]
+    },
+    {
+      "name": "Hooks de Memoización",
+      "items": [
+        { "cmd": "useMemo(() => value, [deps])", "desc": "Memoizar valor" },
+        { "cmd": "useCallback(fn, [deps])", "desc": "Memoizar función" },
+        { "cmd": "React.memo(Component)", "desc": "Memoizar componente" },
+        { "cmd": "React.memo(Comp, areEqual)", "desc": "Con comparador custom" }
+      ]
+    },
+    {
+      "name": "Hooks de Transición",
+      "items": [
+        { "cmd": "useTransition()", "desc": "Transiciones no urgentes" },
+        { "cmd": "const [isPending, startTransition] = useTransition()", "desc": "Desestructurar" },
+        { "cmd": "startTransition(() => setState(...))", "desc": "Marcar como transición" },
+        { "cmd": "useDeferredValue(value)", "desc": "Valor diferido" }
+      ]
+    },
+    {
+      "name": "Hooks Nuevos (React 19)",
+      "items": [
+        { "cmd": "useId()", "desc": "ID único estable" },
+        { "cmd": "useOptimistic(state, updateFn)", "desc": "Actualización optimista" },
+        { "cmd": "useFormStatus()", "desc": "Estado del form padre" },
+        { "cmd": "useFormState(action, initialState)", "desc": "Estado de action" },
+        { "cmd": "use(promise)", "desc": "Resolver promesa" },
+        { "cmd": "use(context)", "desc": "Leer contexto" }
+      ]
+    },
+    {
+      "name": "Hooks de Debug",
+      "items": [
+        { "cmd": "useDebugValue(value)", "desc": "Label en DevTools" },
+        { "cmd": "useDebugValue(date, d => d.toDateString())", "desc": "Con formateador" },
+        { "cmd": "useSyncExternalStore(subscribe, getSnapshot)", "desc": "Suscribirse a store externo" }
+      ]
+    },
+    {
+      "name": "Patrones JSX",
+      "items": [
+        { "cmd": "{condition && <Comp />}", "desc": "Renderizado condicional" },
+        { "cmd": "{condition ? <A /> : <B />}", "desc": "Ternario" },
+        { "cmd": "{items.map(i => <Item key={i.id} />)}", "desc": "Renderizar lista" },
+        { "cmd": "<>{children}</>", "desc": "Fragment" },
+        { "cmd": "<React.Fragment key={id}>", "desc": "Fragment con key" },
+        { "cmd": "props.children", "desc": "Contenido hijo" },
+        { "cmd": "className=\"...\"", "desc": "Clases CSS" },
+        { "cmd": "htmlFor=\"...\"", "desc": "Label for" },
+        { "cmd": "style={{ color: 'red' }}", "desc": "Estilos inline" },
+        { "cmd": "dangerouslySetInnerHTML={{ __html: html }}", "desc": "HTML raw" }
+      ]
+    },
+    {
+      "name": "Eventos",
+      "items": [
+        { "cmd": "onClick={handleClick}", "desc": "Click" },
+        { "cmd": "onClick={(e) => handleClick(e, id)}", "desc": "Con argumentos" },
+        { "cmd": "onChange={handleChange}", "desc": "Cambio de input" },
+        { "cmd": "onSubmit={handleSubmit}", "desc": "Submit de form" },
+        { "cmd": "onKeyDown={handleKey}", "desc": "Tecla presionada" },
+        { "cmd": "onFocus / onBlur", "desc": "Focus/blur" },
+        { "cmd": "onMouseEnter / onMouseLeave", "desc": "Mouse enter/leave" },
+        { "cmd": "e.preventDefault()", "desc": "Prevenir default" },
+        { "cmd": "e.stopPropagation()", "desc": "Detener propagación" },
+        { "cmd": "e.target.value", "desc": "Valor del target" },
+        { "cmd": "e.currentTarget", "desc": "Elemento con handler" }
+      ]
+    },
+    {
+      "name": "Forms",
+      "items": [
+        { "cmd": "value={state}", "desc": "Controlled input" },
+        { "cmd": "onChange={(e) => setState(e.target.value)}", "desc": "Handler de cambio" },
+        { "cmd": "defaultValue=\"...\"", "desc": "Uncontrolled input" },
+        { "cmd": "ref={inputRef}", "desc": "Acceso con ref" },
+        { "cmd": "<input type=\"checkbox\" checked={bool} />", "desc": "Checkbox" },
+        { "cmd": "<select value={selected}>", "desc": "Select controlado" },
+        { "cmd": "<textarea value={text} />", "desc": "Textarea" },
+        { "cmd": "<form action={serverAction}>", "desc": "Server action (React 19)" }
+      ]
+    },
+    {
+      "name": "Componentes Especiales",
+      "items": [
+        { "cmd": "<Suspense fallback={<Loading />}>", "desc": "Loading boundary" },
+        { "cmd": "React.lazy(() => import('...'))", "desc": "Code splitting" },
+        { "cmd": "<ErrorBoundary>", "desc": "Error boundary (class)" },
+        { "cmd": "createPortal(child, container)", "desc": "Renderizar en otro nodo" },
+        { "cmd": "<StrictMode>", "desc": "Modo estricto" },
+        { "cmd": "<Profiler id=\"...\" onRender={...}>", "desc": "Medir rendimiento" }
+      ]
+    },
+    {
+      "name": "Custom Hooks",
+      "items": [
+        { "cmd": "function useCustom() { ... }", "desc": "Definir hook" },
+        { "cmd": "const value = useCustom()", "desc": "Usar hook" },
+        { "cmd": "return { state, actions }", "desc": "Retornar objeto" },
+        { "cmd": "return [state, setState]", "desc": "Retornar tuple" }
+      ]
+    },
+    {
+      "name": "Performance",
+      "items": [
+        { "cmd": "React.memo(Component)", "desc": "Evitar re-renders" },
+        { "cmd": "useMemo(() => expensive, [deps])", "desc": "Cachear cálculos" },
+        { "cmd": "useCallback(fn, [deps])", "desc": "Cachear funciones" },
+        { "cmd": "key={item.id}", "desc": "Keys estables" },
+        { "cmd": "React.lazy()", "desc": "Lazy loading" },
+        { "cmd": "startTransition(() => ...)", "desc": "Updates no urgentes" }
+      ]
+    }
+  ]
+}
