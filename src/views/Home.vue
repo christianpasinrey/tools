@@ -327,6 +327,14 @@ const packages = [
     language: 'TypeScript',
     languageColor: '#3178c6',
     stars: '70.5k'
+  },
+  {
+    name: 'nicolo-ribaudo/pdfjs-dist',
+    description: 'PDF.js distribution for usage with bundlers and Node.js.',
+    url: 'https://github.com/nicolo-ribaudo/pdfjs-dist',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: '2.8k'
   }
 ]
 </script>
@@ -539,52 +547,69 @@ const packages = [
         </h2>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- SVG Filter for Liquid Glass -->
+      <svg class="absolute w-0 h-0" aria-hidden="true">
+        <defs>
+          <filter id="lensFilter" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+            <feDisplacementMap in="SourceGraphic" in2="blur" scale="8" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         <a
           v-for="(pkg, index) in packages"
           :key="pkg.name"
           :href="pkg.url"
           target="_blank"
           rel="noopener noreferrer"
+          class="glass-container group"
           :class="[
-            'group block p-4 rounded-lg border transition-all duration-300',
-            'bg-[#0d1117] border-[#30363d] hover:border-[#8b949e]',
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           ]"
-          :style="{ transitionDelay: `${900 + index * 75}ms` }"
+          :style="{ transitionDelay: `${900 + index * 75}ms`, '--index': index }"
         >
-          <!-- Repo Header -->
-          <div class="flex items-start gap-3 mb-3">
-            <svg class="w-4 h-4 text-[#8b949e] mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
-            </svg>
-            <span class="text-[#58a6ff] text-sm font-semibold group-hover:underline truncate">
-              {{ pkg.name }}
-            </span>
-          </div>
+          <!-- Liquid Glass Layers -->
+          <div class="glass-filter"></div>
+          <div class="glass-overlay"></div>
+          <div class="glass-specular"></div>
 
-          <!-- Description -->
-          <p class="text-[#8b949e] text-xs leading-relaxed mb-4 line-clamp-2">
-            {{ pkg.description }}
-          </p>
-
-          <!-- Footer -->
-          <div class="flex items-center gap-4 text-xs text-[#8b949e]">
-            <!-- Language -->
-            <div class="flex items-center gap-1.5">
-              <span
-                class="w-3 h-3 rounded-full"
-                :style="{ backgroundColor: pkg.languageColor }"
-              ></span>
-              <span>{{ pkg.language }}</span>
+          <!-- Glass content -->
+          <div class="glass-content">
+            <!-- Repo Header -->
+            <div class="flex items-start gap-3 mb-3">
+              <svg class="w-4 h-4 text-white/60 mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
+              </svg>
+              <span class="text-white/90 text-sm font-semibold group-hover:text-white truncate transition-colors">
+                {{ pkg.name }}
+              </span>
             </div>
 
-            <!-- Stars -->
-            <div class="flex items-center gap-1">
-              <svg class="w-4 h-4" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
-              </svg>
-              <span>{{ pkg.stars }}</span>
+            <!-- Description -->
+            <p class="text-white/50 text-xs leading-relaxed mb-4 line-clamp-2 group-hover:text-white/70 transition-colors">
+              {{ pkg.description }}
+            </p>
+
+            <!-- Footer -->
+            <div class="flex items-center gap-4 text-xs text-white/40">
+              <!-- Language -->
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-2.5 h-2.5 rounded-full ring-2 ring-white/20"
+                  :style="{ backgroundColor: pkg.languageColor }"
+                ></span>
+                <span>{{ pkg.language }}</span>
+              </div>
+
+              <!-- Stars -->
+              <div class="flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
+                </svg>
+                <span>{{ pkg.stars }}</span>
+              </div>
             </div>
           </div>
         </a>
@@ -631,5 +656,126 @@ const packages = [
 
 .animate-float {
   animation: float 12s ease-in-out infinite;
+}
+
+/* Liquid Glass Effect */
+.glass-container {
+  --lg-bg-color: rgba(255, 255, 255, 0.03);
+  --lg-highlight: rgba(255, 255, 255, 0.4);
+  --lg-highlight-soft: rgba(255, 255, 255, 0.15);
+  --lg-border: rgba(255, 255, 255, 0.08);
+  position: relative;
+  border-radius: 24px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  animation: glass-appear 0.6s ease-out backwards;
+  animation-delay: calc(var(--index, 0) * 0.1s + 0.5s);
+}
+
+.glass-container:hover {
+  --lg-bg-color: rgba(255, 255, 255, 0.05);
+  --lg-highlight: rgba(255, 255, 255, 0.6);
+  --lg-highlight-soft: rgba(255, 255, 255, 0.25);
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Background blur + lens distortion filter */
+.glass-filter {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  filter: url(#lensFilter);
+  z-index: 1;
+}
+
+/* Semi-transparent overlay */
+.glass-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: var(--lg-bg-color);
+  border: 1px solid var(--lg-border);
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+
+.glass-container:hover .glass-overlay {
+  border-color: rgba(34, 197, 94, 0.25);
+  box-shadow:
+    0 8px 32px rgba(34, 197, 94, 0.12),
+    0 0 0 1px rgba(34, 197, 94, 0.08);
+}
+
+/* Specular highlights - the "liquid bubble" shine */
+.glass-specular {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    var(--lg-highlight-soft) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  box-shadow:
+    inset 1px 1px 1px var(--lg-highlight),
+    inset 2px 2px 4px var(--lg-highlight-soft),
+    inset -1px -1px 2px rgba(0, 0, 0, 0.15),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  transition: all 0.4s ease;
+  z-index: 3;
+}
+
+.glass-specular::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 50%;
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  filter: blur(4px);
+  opacity: 0.8;
+  transition: opacity 0.4s ease;
+}
+
+.glass-container:hover .glass-specular::before {
+  opacity: 1;
+}
+
+.glass-container:hover .glass-specular {
+  box-shadow:
+    inset 2px 2px 2px var(--lg-highlight),
+    inset 3px 3px 8px var(--lg-highlight-soft),
+    inset -1px -1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 -3px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Content layer */
+.glass-content {
+  position: relative;
+  padding: 1.25rem;
+  z-index: 4;
+}
+
+@keyframes glass-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 </style>

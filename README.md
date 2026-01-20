@@ -5,6 +5,7 @@
   <img src="https://img.shields.io/badge/Vite-7.2-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind">
   <img src="https://img.shields.io/badge/Three.js-0.182-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js">
+  <img src="https://img.shields.io/badge/CodeMirror-6-D30707?style=for-the-badge&logoColor=white" alt="CodeMirror">
 </p>
 
 <p align="center">
@@ -35,6 +36,10 @@
 | **Image Editor** | Edita im&aacute;genes con filtros, recortes, ajustes de color y herramientas de dibujo | Canvas API |
 | **PDF Editor** | Combina, divide, rota y reorganiza documentos PDF | pdf-lib, PDF.js |
 | **3D Playground** | Experimenta con gr&aacute;ficos 3D, shaders y visualizaciones interactivas | Three.js |
+| **Dev Tools** | Formatea JSON/YAML, playground HTML/CSS/JS con preview en vivo | CodeMirror 6, js-yaml |
+| **SVG Editor** | Crea y edita gr&aacute;ficos vectoriales con herramientas de dibujo profesionales | SVG API |
+| **Unit Converter** | Convierte unidades de longitud, peso, temperatura, moneda y m&aacute;s | Frankfurter API |
+| **Color Picker** | Rueda de colores con armon&iacute;as crom&aacute;ticas y exportaci&oacute;n en m&uacute;ltiples formatos | Canvas API |
 
 ## Requisitos previos
 
@@ -127,6 +132,8 @@ web-tools/
 - **WaveSurfer.js** - Visualizaci&oacute;n y manipulaci&oacute;n de audio
 - **pdf-lib** - Manipulaci&oacute;n de PDFs
 - **PDF.js** - Renderizado de PDFs
+- **CodeMirror 6** - Editor de c&oacute;digo con syntax highlighting
+- **js-yaml** - Parser y serializador YAML
 
 ## Despliegue
 
@@ -179,6 +186,10 @@ MIT
 | **Image Editor** | Edit images with filters, cropping, color adjustments and drawing tools | Canvas API |
 | **PDF Editor** | Merge, split, rotate and reorganize PDF documents | pdf-lib, PDF.js |
 | **3D Playground** | Experiment with 3D graphics, shaders and interactive visualizations | Three.js |
+| **Dev Tools** | Format JSON/YAML, HTML/CSS/JS playground with live preview | CodeMirror 6, js-yaml |
+| **SVG Editor** | Create and edit vector graphics with professional drawing tools | SVG API |
+| **Unit Converter** | Convert units of length, weight, temperature, currency and more | Frankfurter API |
+| **Color Picker** | Color wheel with chromatic harmonies and multi-format export | Canvas API |
 
 ## Prerequisites
 
@@ -271,6 +282,8 @@ web-tools/
 - **WaveSurfer.js** - Audio visualization and manipulation
 - **pdf-lib** - PDF manipulation
 - **PDF.js** - PDF rendering
+- **CodeMirror 6** - Code editor with syntax highlighting
+- **js-yaml** - YAML parser and serializer
 
 ## Deployment
 
