@@ -593,8 +593,9 @@ const fetchGitHubCommits = async () => {
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           ]"
         >
-          Herramientas profesionales de edición que funcionan completamente en tu navegador.
-          <span class="text-neutral-300">Sin subir archivos, sin registro, sin límites.</span>
+          Herramientas open source que funcionan completamente en tu navegador.
+          <br />
+          <span class="text-neutral-300 text-sm">Sin servidores, sin tracking, privacidad total.</span>
         </p>
 
         <!-- Features -->
