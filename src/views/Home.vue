@@ -281,6 +281,7 @@ onMounted(() => {
     isVisible.value = true
   }, 100)
   initThree()
+  fetchGitHubCommits()
 
   // Scroll tracking setup
   windowHeight.value = window.innerHeight
@@ -498,23 +499,51 @@ const packages = [
   }
 ]
 
-const recentCommits = [
+const recentCommits = ref([
   {
-    message: 'feat: add liquid glass effect to package cards',
-    hash: '58c5a4a',
-    time: 'hace 2 horas'
-  },
-  {
-    message: 'feat: add Dev Tools for JSON/YAML and HTML playground',
-    hash: '33d1db5',
-    time: 'hace 5 horas'
-  },
-  {
-    message: 'feat: improve Color Picker with Adobe Color behavior',
-    hash: '73de8cb',
-    time: 'hace 1 día'
+    message: 'Cargando commits...',
+    hash: '',
+    time: ''
   }
-]
+])
+
+// Función para formatear tiempo relativo
+const getRelativeTime = (date) => {
+  const now = new Date()
+  const diff = now - new Date(date)
+  const minutes = Math.floor(diff / 60000)
+  const hours = Math.floor(diff / 3600000)
+  const days = Math.floor(diff / 86400000)
+
+  if (minutes < 1) return 'hace unos segundos'
+  if (minutes < 60) return `hace ${minutes}m`
+  if (hours < 24) return `hace ${hours}h`
+  if (days < 7) return `hace ${days}d`
+  if (days < 30) return `hace ${Math.floor(days / 7)}w`
+  return `hace ${Math.floor(days / 30)}mo`
+}
+
+// Fetch commits desde GitHub API
+const fetchGitHubCommits = async () => {
+  try {
+    const response = await fetch('https://api.github.com/repos/christianpasinrey/tools/commits?per_page=10')
+    const commits = await response.json()
+
+    if (!Array.isArray(commits)) {
+      console.error('Error fetching commits:', commits)
+      return
+    }
+
+    recentCommits.value = commits.slice(0, 5).map(commit => ({
+      message: commit.commit.message.split('\n')[0],
+      hash: commit.sha.substring(0, 7),
+      time: getRelativeTime(commit.commit.author.date),
+      url: commit.html_url
+    }))
+  } catch (error) {
+    console.error('Error fetching GitHub commits:', error)
+  }
+}
 </script>
 
 <template>
@@ -771,6 +800,26 @@ const recentCommits = [
                   </svg>
                   Open source
                 </span>
+              </div>
+
+              <!-- Repository Stats -->
+              <div class="grid grid-cols-2 gap-4 py-6 border-y border-white/5 my-6">
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-green-400">{{ tools.length }}</div>
+                  <div class="text-xs text-neutral-600 mt-1">Herramientas</div>
+                </div>
+                <a
+                  href="https://github.com/christianpasinrey/tools"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 hover:bg-green-500/20 hover:border-green-500/50 transition-all group"
+                  @click.stop
+                >
+                  <svg class="w-4 h-4 text-green-400 group-hover:text-green-300 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <span class="text-sm font-medium text-green-400 group-hover:text-green-300 transition-colors">Star</span>
+                </a>
               </div>
 
               <!-- Tech stack - aligned bottom -->
