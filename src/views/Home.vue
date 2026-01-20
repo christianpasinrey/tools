@@ -337,6 +337,24 @@ const packages = [
     stars: '2.8k'
   }
 ]
+
+const recentCommits = [
+  {
+    message: 'feat: add liquid glass effect to package cards',
+    hash: '58c5a4a',
+    time: 'hace 2 horas'
+  },
+  {
+    message: 'feat: add Dev Tools for JSON/YAML and HTML playground',
+    hash: '33d1db5',
+    time: 'hace 5 horas'
+  },
+  {
+    message: 'feat: improve Color Picker with Adobe Color behavior',
+    hash: '73de8cb',
+    time: 'hace 1 día'
+  }
+]
 </script>
 
 <template>
@@ -534,6 +552,159 @@ const packages = [
           </div>
         </router-link>
       </div>
+    </div>
+
+    <!-- Repository Section -->
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16" style="z-index: 1;">
+      <a
+        href="https://github.com/christianpasinrey/tools"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="glass-container group block"
+        :class="[
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        ]"
+        style="transition-delay: 800ms;"
+      >
+        <div class="glass-filter"></div>
+        <div class="glass-overlay"></div>
+        <div class="glass-specular"></div>
+
+        <div class="glass-content p-0">
+          <div class="flex flex-col md:flex-row">
+            <!-- Left: Repository Info -->
+            <div class="flex-1 p-6 md:border-r border-white/5 flex flex-col">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/20">
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="text-white font-semibold group-hover:text-green-400 transition-colors">Web Tools</h3>
+                    <p class="text-neutral-500 text-xs">christianpasinrey/tools</p>
+                  </div>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
+                  <svg class="w-4 h-4 text-neutral-500 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <p class="text-neutral-400 text-sm leading-relaxed mb-5">
+                Herramientas de edición profesionales que funcionan
+                <span class="text-green-400 font-medium">100% en tu navegador</span>.
+                Sin servidores, sin uploads, privacidad total.
+              </p>
+
+              <!-- Features -->
+              <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs text-neutral-500">
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Client-side only
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  No registration
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Open source
+                </span>
+              </div>
+
+              <!-- Tech stack - aligned bottom -->
+              <div class="mt-auto pt-5 border-t border-white/5">
+                <div class="flex items-center gap-4">
+                  <!-- Vue -->
+                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#42b883] transition-colors" title="Vue.js">
+                    <svg class="w-4 h-4" viewBox="0 0 256 221" fill="currentColor">
+                      <path d="M204.8 0H256L128 220.8L0 0h97.92L128 51.2L157.44 0h47.36Z" fill-opacity="0.5"/>
+                      <path d="M0 0l128 220.8L256 0h-51.2L128 132.48L50.56 0H0Z" fill-opacity="0.8"/>
+                    </svg>
+                  </div>
+                  <!-- Vite -->
+                  <div class="flex items-center gap-1.5 group/vite" title="Vite">
+                    <svg class="w-4 h-4" viewBox="0 0 256 257" fill="none">
+                      <path d="M255 38L135 256c-3 5-10 5-13 0L1 38c-3-6 1-13 8-12l120 22c1 0 3 0 4 0l114-22c7-1 11 6 8 12Z" class="fill-neutral-500 group-hover/vite:fill-[#646CFF] transition-colors"/>
+                      <path d="M185 0L96 17c-2 0-3 2-3 4l-9 117c0 2 2 4 4 4l29-6c3-1 5 2 5 4l-9 45c0 3 2 5 5 4l18-5c3-1 5 2 5 4l-14 71c-1 4 5 6 7 2l1-2L227 63c1-3-1-6-4-5l-30 6c-3 0-5-2-4-5l17-55c1-3-1-5-4-5l-17 1Z" class="fill-neutral-500 group-hover/vite:fill-[#FFBD4F] transition-colors"/>
+                    </svg>
+                  </div>
+                  <!-- Tailwind -->
+                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#38bdf8] transition-colors" title="Tailwind CSS">
+                    <svg class="w-4 h-4" viewBox="0 0 256 154" fill="currentColor">
+                      <path d="M128 0Q85 0 64 43q32-22 64 0 16 11 24 33 19-43 64-43 43 0 64 43-32-22-64 0-16 11-24 33-19-43-64-43ZM64 77Q21 77 0 120q32-22 64 0 16 11 24 33 19-43 64-43 43 0 64 43-32-22-64 0-16 11-24 33-19-43-64-43Z"/>
+                    </svg>
+                  </div>
+                  <!-- Three.js -->
+                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-white transition-colors" title="Three.js">
+                    <svg class="w-4 h-4" viewBox="0 0 256 256" fill="currentColor">
+                      <path d="M32 224L224 224L128 32L32 224ZM80 192L128 96L176 192L80 192Z" fill-opacity="0.7"/>
+                    </svg>
+                  </div>
+                  <!-- CodeMirror -->
+                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#d30707] transition-colors" title="CodeMirror">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill-opacity="0.7"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Recent Commits -->
+            <div class="flex-1 p-6 bg-white/[0.01]">
+              <div class="flex items-center gap-2 mb-4">
+                <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span class="text-xs font-medium text-neutral-500 uppercase tracking-wider">Recent Activity</span>
+              </div>
+
+              <!-- Commit Timeline -->
+              <div class="space-y-3">
+                <div v-for="(commit, i) in recentCommits" :key="i" class="relative pl-6 group/commit">
+                  <!-- Timeline line -->
+                  <div class="absolute left-[7px] top-6 bottom-0 w-px bg-gradient-to-b from-green-500/30 to-transparent" v-if="i < recentCommits.length - 1"></div>
+                  <!-- Dot -->
+                  <div class="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-green-500/50 bg-neutral-950 group-hover/commit:border-green-400 group-hover/commit:bg-green-500/20 transition-all">
+                    <div class="absolute inset-1 rounded-full bg-green-500/50"></div>
+                  </div>
+                  <!-- Content -->
+                  <div class="pb-3">
+                    <p class="text-white/80 text-sm leading-snug mb-1 group-hover/commit:text-white transition-colors">{{ commit.message }}</p>
+                    <div class="flex items-center gap-2 text-[10px] text-neutral-600">
+                      <span class="font-mono text-green-500/70">{{ commit.hash }}</span>
+                      <span>·</span>
+                      <span>{{ commit.time }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- View all link -->
+              <div class="mt-3 pt-3 border-t border-white/5">
+                <span class="text-xs text-neutral-500 group-hover:text-green-400 transition-colors flex items-center gap-1">
+                  View all commits
+                  <svg class="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
     </div>
 
     <!-- Open Source Section -->
@@ -766,6 +937,10 @@ const packages = [
   position: relative;
   padding: 1.25rem;
   z-index: 4;
+}
+
+.glass-content.p-0 {
+  padding: 0;
 }
 
 @keyframes glass-appear {
