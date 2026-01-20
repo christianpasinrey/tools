@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   htmlCode: String,
@@ -24,8 +24,9 @@ const emit = defineEmits([
 ])
 
 const showTemplates = ref(false)
-const srcdocContent = ref('')
+const iframeSrc = ref('about:blank')
 let debounceTimer = null
+let currentBlobUrl = null
 
 const templates = [
   { id: 'basic', name: 'Basic', icon: 'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z' },
@@ -34,7 +35,15 @@ const templates = [
 ]
 
 const updatePreview = () => {
-  srcdocContent.value = generateHtml()
+  // Limpiar blob URL anterior para evitar memory leaks
+  if (currentBlobUrl) {
+    URL.revokeObjectURL(currentBlobUrl)
+  }
+
+  const html = generateHtml()
+  const blob = new Blob([html], { type: 'text/html' })
+  currentBlobUrl = URL.createObjectURL(blob)
+  iframeSrc.value = currentBlobUrl
 }
 
 const generateHtml = () => {
@@ -101,6 +110,10 @@ const generateHtml = () => {
 }
 
 const handleMessage = (event) => {
+  // Validar que el mensaje viene del iframe (mismo origen o null para srcdoc)
+  if (event.origin !== 'null' && event.origin !== window.location.origin) {
+    return
+  }
   if (event.data && event.data.type === 'console') {
     emit('console-message', event.data.method, event.data.args)
   }
@@ -131,6 +144,9 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('message', handleMessage)
   clearTimeout(debounceTimer)
+  if (currentBlobUrl) {
+    URL.revokeObjectURL(currentBlobUrl)
+  }
 })
 
 const consoleTypeStyles = {
@@ -255,9 +271,9 @@ const consoleTypeStyles = {
     <div class="flex-1 min-h-0 grid grid-rows-[1fr,auto] gap-3">
       <div class="bg-white rounded-lg overflow-hidden">
         <iframe
-          :srcdoc="srcdocContent"
+          :src="iframeSrc"
           class="w-full h-full border-0"
-          sandbox="allow-scripts allow-modals allow-same-origin"
+          sandbox="allow-scripts allow-modals"
           title="Preview"
         ></iframe>
       </div>
