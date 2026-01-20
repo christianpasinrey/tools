@@ -5,26 +5,27 @@ import { cheatsheetData, sheets, categories } from '@/data/cheatsheets'
 import * as THREE from 'three'
 
 const activeSheet = ref('macos')
-const activeCategory = ref(null)
+const expandedCategories = ref({})
 const threeCanvas = ref(null)
 
 // Get sheet data by id
 const getSheetById = (id) => sheets.find(s => s.id === id)
 
+// Get category sheets with full data
+const getCategorySheets = (categoryId) => {
+  const category = categories.find(c => c.id === categoryId)
+  if (!category) return []
+  return category.sheets.map(sheetId => sheets.find(s => s.id === sheetId)).filter(Boolean)
+}
+
 // Toggle category dropdown
 const toggleCategory = (categoryId) => {
-  activeCategory.value = activeCategory.value === categoryId ? null : categoryId
+  expandedCategories.value[categoryId] = !expandedCategories.value[categoryId]
 }
 
-// Select sheet and close dropdown
+// Select sheet
 const selectSheet = (sheetId) => {
   activeSheet.value = sheetId
-  activeCategory.value = null
-}
-
-// Close dropdown when clicking outside
-const closeDropdown = () => {
-  activeCategory.value = null
 }
 
 // Three.js variables
@@ -389,23 +390,59 @@ async function exportToPDF() {
       </defs>
     </svg>
 
-    <!-- Top Navigation Dock -->
-    <div class="sheet-dock-wrapper">
-      <div class="sheet-dock">
-        <div class="sheet-dock-glass"></div>
-        <div class="sheet-dock-content">
-          <button
-            v-for="sheet in sheets"
-            :key="sheet.id"
-            @click="activeSheet = sheet.id"
-            class="sheet-dock-btn"
-            :class="{ 'is-active': activeSheet === sheet.id }"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path :d="sheet.icon" />
-            </svg>
-            <span class="sheet-dock-label">{{ sheet.name }}</span>
-          </button>
+    <!-- Top Navigation Menu with Categories -->
+    <div class="sheet-menu-wrapper">
+      <div class="sheet-menu">
+        <div class="sheet-menu-glass"></div>
+        <div class="sheet-menu-content">
+          <!-- Category Dropdowns -->
+          <div class="categories-container">
+            <div
+              v-for="category in categories"
+              :key="category.id"
+              class="category-dropdown"
+            >
+              <button
+                @click="toggleCategory(category.id)"
+                class="category-btn"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path :d="category.icon" />
+                </svg>
+                <span class="category-label">{{ category.name }}</span>
+                <svg
+                  class="w-4 h-4 transition-transform"
+                  :class="{ 'rotate-180': expandedCategories[category.id] }"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <transition name="dropdown">
+                <div
+                  v-show="expandedCategories[category.id]"
+                  class="category-menu"
+                >
+                  <button
+                    v-for="sheet in getCategorySheets(category.id)"
+                    :key="sheet.id"
+                    @click="selectSheet(sheet.id)"
+                    class="category-menu-item"
+                    :class="{ 'is-active': activeSheet === sheet.id }"
+                  >
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path :d="sheet.icon" />
+                    </svg>
+                    <span>{{ sheet.name }}</span>
+                  </button>
+                </div>
+              </transition>
+            </div>
+          </div>
         </div>
       </div>
     </div>
