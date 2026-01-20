@@ -1,9 +1,87 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import * as THREE from 'three'
 
 const isVisible = ref(false)
 const threeCanvas = ref(null)
+
+// Scroll tracking
+const scrollY = ref(0)
+const windowHeight = ref(0)
+
+// Section refs
+const heroSection = ref(null)
+const toolsSection = ref(null)
+const repoSection = ref(null)
+const packagesSection = ref(null)
+
+const onScroll = () => {
+  scrollY.value = window.scrollY
+}
+
+// Get scroll progress for an element (0 = not visible, 1 = fully scrolled past)
+const getScrollProgress = (el) => {
+  if (!el || !windowHeight.value) return 0
+  const rect = el.getBoundingClientRect()
+  // Start when element enters viewport from bottom
+  // End when element is at top of viewport
+  const start = windowHeight.value
+  const end = -rect.height * 0.3
+  const progress = (start - rect.top) / (start - end)
+  return Math.max(0, Math.min(1, progress))
+}
+
+// Hero parallax style
+const heroStyle = computed(() => ({
+  transform: `translateY(${scrollY.value * 0.4}px)`,
+  opacity: Math.max(0, 1 - scrollY.value / 600)
+}))
+
+// Tool card style - enters from sides
+const getToolCardStyle = (index) => {
+  const progress = getScrollProgress(toolsSection.value)
+  const row = Math.floor(index / 2)
+  const isLeftCard = index % 2 === 0
+
+  // Stagger by row
+  const rowDelay = row * 0.12
+  const cardProgress = Math.max(0, Math.min(1, (progress - rowDelay) * 1.8))
+
+  // Direction: left cards from -80px, right cards from +80px
+  const direction = isLeftCard ? -1 : 1
+  const translateX = (1 - cardProgress) * 80 * direction
+
+  return {
+    opacity: cardProgress,
+    transform: `translateX(${translateX}px)`
+  }
+}
+
+// Repo card style - with scroll-linked flip
+const repoStyle = computed(() => {
+  const progress = getScrollProgress(repoSection.value)
+  // Flip: starts at 360deg (1 full rotation) and goes to 0
+  // Using cubic easing for smooth deceleration
+  const eased = 1 - Math.pow(1 - progress, 4)
+  const rotation = (1 - eased) * 360
+
+  return {
+    opacity: Math.min(1, eased * 1.5),
+    transform: `perspective(1200px) rotateX(${rotation}deg) scale(${0.9 + eased * 0.1})`
+  }
+})
+
+// Package card style - staggered
+const getPackageStyle = (index) => {
+  const progress = getScrollProgress(packagesSection.value)
+  const row = Math.floor(index / 3)
+  const stagger = row * 0.1
+  const itemProgress = Math.max(0, Math.min(1, (progress - stagger) * 1.5))
+  return {
+    opacity: itemProgress,
+    transform: `translateY(${(1 - itemProgress) * 30}px)`
+  }
+}
 
 let scene, camera, renderer, particles, animationId
 
@@ -129,11 +207,19 @@ onMounted(() => {
     isVisible.value = true
   }, 100)
   initThree()
+
+  // Scroll tracking setup
+  windowHeight.value = window.innerHeight
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', () => {
+    windowHeight.value = window.innerHeight
+  })
 })
 
 onUnmounted(() => {
   if (animationId) cancelAnimationFrame(animationId)
   window.removeEventListener('resize', onResize)
+  window.removeEventListener('scroll', onScroll)
   if (renderer) renderer.dispose()
 })
 
@@ -363,13 +449,13 @@ const recentCommits = [
     <canvas ref="threeCanvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0;"></canvas>
 
     <!-- Hero Section -->
-    <div class="relative overflow-hidden" style="z-index: 1;">
-      <!-- Gradient Orbs -->
-      <div class="absolute top-20 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow"></div>
-      <div class="absolute top-40 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-[100px] animate-float"></div>
-      <div class="absolute -bottom-20 left-1/2 w-72 h-72 bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow" style="animation-delay: 1s;"></div>
+    <div ref="heroSection" class="relative overflow-hidden" style="z-index: 1;">
+      <!-- Gradient Orbs with parallax -->
+      <div class="absolute top-20 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow scroll-animated" :style="{ transform: `translateY(${scrollY * 0.2}px)` }"></div>
+      <div class="absolute top-40 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-[100px] animate-float scroll-animated" :style="{ transform: `translateY(${scrollY * 0.35}px)` }"></div>
+      <div class="absolute -bottom-20 left-1/2 w-72 h-72 bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow scroll-animated" style="animation-delay: 1s;" :style="{ transform: `translateY(${scrollY * 0.5}px)` }"></div>
 
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40 text-center scroll-animated" :style="heroStyle">
         <!-- Badge -->
         <div
           :class="[
@@ -444,30 +530,25 @@ const recentCommits = [
     </div>
 
     <!-- Tools Grid -->
-    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 pt-8" style="z-index: 1;">
-      <h2
-        :class="[
-          'text-xs font-semibold text-neutral-500 uppercase tracking-widest mb-8 transition-all duration-700 delay-400',
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        ]"
-      >
+    <div ref="toolsSection" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40" style="z-index: 1;">
+      <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-widest mb-8">
         Herramientas disponibles
       </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 overflow-hidden">
         <router-link
           v-for="(tool, index) in tools"
           :key="tool.path"
           :to="tool.status === 'active' ? tool.path : '#'"
           :class="[
-            'group relative overflow-hidden rounded-2xl p-6 transition-all duration-500',
+            'group relative overflow-hidden rounded-2xl p-6 transition-shadow duration-300',
             'bg-neutral-900/50 backdrop-blur-sm border border-neutral-800/50',
-            'hover:border-neutral-700/50 hover:shadow-2xl hover:-translate-y-1',
+            'hover:border-neutral-700/50 hover:shadow-2xl',
             colorClasses[tool.color].glow,
-            tool.status === 'active' ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+            tool.status === 'active' ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'
           ]"
-          :style="{ transitionDelay: `${500 + index * 100}ms` }"
+          class="scroll-animated"
+          :style="getToolCardStyle(index)"
         >
           <!-- Hover gradient overlay -->
           <div
@@ -555,16 +636,13 @@ const recentCommits = [
     </div>
 
     <!-- Repository Section -->
-    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-16" style="z-index: 1;">
+    <div ref="repoSection" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32" style="z-index: 1;">
       <a
         href="https://github.com/christianpasinrey/tools"
         target="_blank"
         rel="noopener noreferrer"
-        class="glass-container group block"
-        :class="[
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        ]"
-        style="transition-delay: 800ms;"
+        class="glass-container group block scroll-animated"
+        :style="repoStyle"
       >
         <div class="glass-filter"></div>
         <div class="glass-overlay"></div>
@@ -673,7 +751,15 @@ const recentCommits = [
 
               <!-- Commit Timeline -->
               <div class="space-y-3">
-                <div v-for="(commit, i) in recentCommits" :key="i" class="relative pl-6 group/commit">
+                <a
+                  v-for="(commit, i) in recentCommits"
+                  :key="i"
+                  :href="`https://github.com/christianpasinrey/tools/commit/${commit.hash}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="relative pl-6 group/commit block"
+                  @click.stop
+                >
                   <!-- Timeline line -->
                   <div class="absolute left-[7px] top-6 bottom-0 w-px bg-gradient-to-b from-green-500/30 to-transparent" v-if="i < recentCommits.length - 1"></div>
                   <!-- Dot -->
@@ -684,23 +770,29 @@ const recentCommits = [
                   <div class="pb-3">
                     <p class="text-white/80 text-sm leading-snug mb-1 group-hover/commit:text-white transition-colors">{{ commit.message }}</p>
                     <div class="flex items-center gap-2 text-[10px] text-neutral-600">
-                      <span class="font-mono text-green-500/70">{{ commit.hash }}</span>
+                      <span class="font-mono text-green-500/70 group-hover/commit:text-green-400 transition-colors">{{ commit.hash }}</span>
                       <span>·</span>
                       <span>{{ commit.time }}</span>
                     </div>
                   </div>
-                </div>
+                </a>
               </div>
 
               <!-- View all link -->
-              <div class="mt-3 pt-3 border-t border-white/5">
-                <span class="text-xs text-neutral-500 group-hover:text-green-400 transition-colors flex items-center gap-1">
+              <a
+                href="https://github.com/christianpasinrey/tools/commits/main"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-3 pt-3 border-t border-white/5 block group/all"
+                @click.stop
+              >
+                <span class="text-xs text-neutral-500 group-hover/all:text-green-400 transition-colors flex items-center gap-1">
                   View all commits
-                  <svg class="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-3 h-3 group-hover/all:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                   </svg>
                 </span>
-              </div>
+              </a>
             </div>
           </div>
         </div>
@@ -708,7 +800,7 @@ const recentCommits = [
     </div>
 
     <!-- Open Source Section -->
-    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-24" style="z-index: 1;">
+    <div ref="packagesSection" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40" style="z-index: 1;">
       <div class="flex items-center gap-3 mb-8">
         <svg class="w-6 h-6 text-neutral-400" viewBox="0 0 16 16" fill="currentColor">
           <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
@@ -735,11 +827,8 @@ const recentCommits = [
           :href="pkg.url"
           target="_blank"
           rel="noopener noreferrer"
-          class="glass-container group"
-          :class="[
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          ]"
-          :style="{ transitionDelay: `${900 + index * 75}ms`, '--index': index }"
+          class="glass-container group scroll-animated"
+          :style="getPackageStyle(index)"
         >
           <!-- Liquid Glass Layers -->
           <div class="glass-filter"></div>
@@ -829,25 +918,31 @@ const recentCommits = [
   animation: float 12s ease-in-out infinite;
 }
 
+/* Scroll-linked animations */
+.scroll-animated {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 /* Liquid Glass Effect */
 .glass-container {
-  --lg-bg-color: rgba(255, 255, 255, 0.03);
-  --lg-highlight: rgba(255, 255, 255, 0.4);
-  --lg-highlight-soft: rgba(255, 255, 255, 0.15);
-  --lg-border: rgba(255, 255, 255, 0.08);
+  --lg-bg-color: rgba(30, 30, 30, 0.85);
+  --lg-highlight: rgba(255, 255, 255, 0.35);
+  --lg-highlight-soft: rgba(255, 255, 255, 0.12);
+  --lg-border: rgba(255, 255, 255, 0.12);
   position: relative;
   border-radius: 24px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease;
   transform-style: preserve-3d;
-  animation: glass-appear 0.6s ease-out backwards;
-  animation-delay: calc(var(--index, 0) * 0.1s + 0.5s);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .glass-container:hover {
-  --lg-bg-color: rgba(255, 255, 255, 0.05);
-  --lg-highlight: rgba(255, 255, 255, 0.6);
-  --lg-highlight-soft: rgba(255, 255, 255, 0.25);
-  transform: translateY(-4px) scale(1.02);
+  --lg-bg-color: rgba(35, 35, 35, 0.9);
+  --lg-highlight: rgba(255, 255, 255, 0.5);
+  --lg-highlight-soft: rgba(255, 255, 255, 0.2);
 }
 
 /* Background blur + lens distortion filter */
