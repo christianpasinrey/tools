@@ -3,7 +3,8 @@
     "allow": [
       "Bash(dir /s /b \"C:\\laragon\\www\\tools\")",
       "Bash(test:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(dir /s /b \"C:\\laragon\\www\\tools\\src\")"
     ],
     "deny": [],
     "ask": []

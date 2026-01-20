@@ -31,6 +31,11 @@ const routes = [
     path: '/dev-tools',
     name: 'DevTools',
     component: () => import('../views/DevTools.vue')
+  },
+  {
+    path: '/svg-editor',
+    name: 'SvgEditor',
+    component: () => import('../views/SvgEditor.vue')
   }
 ]
 
