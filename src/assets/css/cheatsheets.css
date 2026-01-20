@@ -1,0 +1,423 @@
+/* ===== CHEATSHEETS PAGE STYLES ===== */
+
+/* Page Layout */
+.cheatsheet-page {
+  @apply min-h-screen relative overflow-x-hidden;
+  background: #0a0a0a;
+  padding: 0 0 80px 0;
+}
+
+/* Three.js Canvas */
+.particles-canvas {
+  @apply fixed inset-0 pointer-events-none;
+  z-index: 0;
+}
+
+/* Background Glows */
+.bg-glow {
+  @apply fixed rounded-full pointer-events-none;
+  filter: blur(120px);
+  opacity: 0.25;
+  z-index: 0;
+}
+
+.bg-glow-1 {
+  @apply w-[500px] h-[500px];
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.3), transparent 70%);
+  top: -200px;
+  left: -200px;
+}
+
+.bg-glow-2 {
+  @apply w-[400px] h-[400px];
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.25), transparent 70%);
+  bottom: -150px;
+  right: -150px;
+}
+
+/* ===== TOP DOCK ===== */
+.sheet-dock-wrapper {
+  @apply sticky flex justify-center;
+  top: 8px;
+  z-index: 100;
+  padding: 4px 8px;
+  margin-bottom: 12px;
+}
+
+.sheet-dock {
+  @apply relative rounded-xl max-w-full overflow-hidden;
+}
+
+.sheet-dock-glass {
+  @apply absolute inset-0 rounded-xl;
+  background: rgba(15, 15, 15, 0.9);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.sheet-dock-glass::before {
+  @apply absolute top-0 left-0 right-0 pointer-events-none;
+  content: '';
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+.sheet-dock-content {
+  @apply relative flex gap-0.5;
+  padding: 6px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.sheet-dock-content::-webkit-scrollbar {
+  display: none;
+}
+
+.sheet-dock-btn {
+  @apply flex flex-col items-center gap-0.5 rounded-lg bg-transparent border border-transparent cursor-pointer whitespace-nowrap flex-shrink-0;
+  padding: 6px 10px;
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.15s ease;
+}
+
+.sheet-dock-btn svg {
+  @apply w-4 h-4;
+}
+
+.sheet-dock-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sheet-dock-btn.is-active {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.sheet-dock-label {
+  @apply text-[9px] font-medium;
+}
+
+/* ===== CONTENT ===== */
+.sheet-content {
+  @apply relative max-w-[1600px] mx-auto;
+  padding: 0 12px;
+  z-index: 1;
+}
+
+.sheet-header {
+  @apply text-center mb-4;
+}
+
+.header-top {
+  @apply flex items-center justify-center gap-4 mb-1;
+}
+
+.sheet-title {
+  @apply text-2xl font-bold text-white m-0;
+}
+
+.sheet-description {
+  @apply text-sm;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Export Button */
+.export-btn {
+  @apply flex items-center gap-1.5 rounded-lg cursor-pointer;
+  padding: 6px 12px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.export-btn:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.5);
+  transform: translateY(-1px);
+}
+
+.export-btn:disabled {
+  @apply opacity-60 cursor-not-allowed;
+}
+
+.export-btn svg {
+  @apply w-4 h-4;
+}
+
+/* ===== MASONRY LAYOUT ===== */
+.sheet-grid {
+  column-count: 4;
+  column-gap: 10px;
+}
+
+/* ===== LIQUID GLASS CARDS ===== */
+.sheet-card {
+  @apply relative rounded-xl overflow-hidden;
+  break-inside: avoid;
+  margin-bottom: 10px;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sheet-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow:
+    0 20px 50px -15px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 0 30px rgba(34, 197, 94, 0.03);
+}
+
+/* Liquid Glass - Base blur layer */
+.card-glass-filter {
+  @apply absolute inset-0 rounded-xl;
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  z-index: 1;
+}
+
+/* Liquid Glass - Main surface with subtle gradient */
+.card-glass-overlay {
+  @apply absolute inset-0 rounded-xl;
+  background: linear-gradient(
+    165deg,
+    rgba(20, 20, 22, 0.92) 0%,
+    rgba(16, 16, 18, 0.95) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 2;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.sheet-card:hover .card-glass-overlay {
+  border-color: rgba(34, 197, 94, 0.15);
+  background: linear-gradient(
+    165deg,
+    rgba(22, 22, 24, 0.92) 0%,
+    rgba(18, 18, 20, 0.95) 100%
+  );
+}
+
+/* Liquid Glass - Top edge highlight (like light hitting glass) */
+.card-glass-specular {
+  @apply absolute inset-0 rounded-xl pointer-events-none;
+  background: transparent;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  z-index: 3;
+  transition: box-shadow 0.3s ease;
+}
+
+.sheet-card:hover .card-glass-specular {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 20px rgba(34, 197, 94, 0.02);
+}
+
+/* Liquid Glass - Inner glow on hover */
+.card-glass-specular::before {
+  @apply absolute rounded-xl pointer-events-none;
+  content: '';
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(34, 197, 94, 0.08) 0%,
+    transparent 60%
+  );
+  transition: opacity 0.4s ease;
+}
+
+.sheet-card:hover .card-glass-specular::before {
+  opacity: 1;
+}
+
+.card-content {
+  @apply relative;
+  padding: 10px 12px;
+  z-index: 4;
+}
+
+.card-title {
+  @apply flex items-center gap-1.5 uppercase tracking-wide;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #22c55e;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(34, 197, 94, 0.2);
+  letter-spacing: 0.05em;
+}
+
+.card-title::before {
+  @apply rounded-sm;
+  content: '';
+  width: 3px;
+  height: 12px;
+  background: #22c55e;
+}
+
+/* ===== ITEMS ===== */
+.card-items {
+  @apply flex flex-col gap-0;
+}
+
+.sheet-item {
+  @apply flex justify-between items-center gap-2;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.sheet-item:last-child {
+  @apply border-b-0 pb-0;
+}
+
+/* ===== KEYBOARD KEYS ===== */
+.item-keys {
+  @apply flex flex-wrap gap-0.5 flex-shrink-0;
+}
+
+.key-cap {
+  @apply relative inline-flex items-center justify-center border-none;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+  border-radius: 3px;
+  font-family: ui-monospace, 'SF Mono', Monaco, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: #e5e5e5;
+  box-shadow:
+    0 1px 0 0 #1a1a1a,
+    0 2px 0 0 #1a1a1a,
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: background 0.15s ease;
+}
+
+.key-cap:hover {
+  background: linear-gradient(180deg, #454545 0%, #353535 100%);
+}
+
+.key-surface {
+  @apply relative z-10;
+}
+
+/* ===== CODE COMMANDS ===== */
+.item-cmd {
+  @apply flex-shrink min-w-0;
+}
+
+.cmd-code {
+  @apply inline rounded;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: ui-monospace, 'SF Mono', Monaco, monospace;
+  font-size: 10px;
+  color: #7dd3fc;
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* ===== DESCRIPTION ===== */
+.item-desc {
+  @apply text-right flex-shrink min-w-0;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.3;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1400px) {
+  .sheet-grid {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 1000px) {
+  .sheet-grid {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .sheet-dock-wrapper {
+    top: 4px;
+    padding: 2px 6px;
+  }
+
+  .sheet-dock-content {
+    padding: 4px 6px;
+  }
+
+  .sheet-dock-btn {
+    padding: 4px 6px;
+  }
+
+  .sheet-dock-btn svg {
+    @apply w-3.5 h-3.5;
+  }
+
+  .sheet-dock-label {
+    @apply text-[8px];
+  }
+
+  .sheet-title {
+    @apply text-xl;
+  }
+
+  .card-content {
+    padding: 8px 10px;
+  }
+
+  .item-desc {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 540px) {
+  .sheet-grid {
+    column-count: 1;
+  }
+
+  .sheet-dock-label {
+    @apply hidden;
+  }
+
+  .sheet-dock-btn {
+    padding: 6px 8px;
+  }
+
+  .sheet-dock-btn svg {
+    @apply w-4 h-4;
+  }
+}
+
+@media (min-width: 1800px) {
+  .sheet-grid {
+    column-count: 5;
+  }
+}
