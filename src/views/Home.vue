@@ -169,6 +169,14 @@ const tools = [
     icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
     color: 'green',
     status: 'active'
+  },
+  {
+    path: '/dev-tools',
+    name: 'Dev Tools',
+    description: 'Formatea, valida y convierte JSON/YAML. Playground HTML/CSS/JS con preview en vivo.',
+    icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
+    color: 'cyan',
+    status: 'active'
   }
 ]
 
@@ -200,6 +208,13 @@ const colorClasses = {
     text: 'text-green-400',
     glow: 'group-hover:shadow-green-500/20',
     icon: 'group-hover:text-green-400'
+  },
+  cyan: {
+    bg: 'bg-cyan-500/10',
+    border: 'border-cyan-500/20',
+    text: 'text-cyan-400',
+    glow: 'group-hover:shadow-cyan-500/20',
+    icon: 'group-hover:text-cyan-400'
   }
 }
 

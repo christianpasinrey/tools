@@ -8,6 +8,7 @@ const tools = [
   { path: '/image-editor', name: 'Imagen', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
   { path: '/pdf-editor', name: 'PDF', icon: 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z' },
   { path: '/3d-playground', name: '3D', icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9' },
+  { path: '/dev-tools', name: 'Dev', icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4' },
 ]
 </script>
 

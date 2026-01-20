@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "js-yaml": "^4.1.1",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.530",
     "three": "^0.182.0",

@@ -26,6 +26,11 @@ const routes = [
     path: '/3d-playground',
     name: '3DPlayground',
     component: () => import('../views/3DPlayground.vue')
+  },
+  {
+    path: '/dev-tools',
+    name: 'DevTools',
+    component: () => import('../views/DevTools.vue')
   }
 ]
 
