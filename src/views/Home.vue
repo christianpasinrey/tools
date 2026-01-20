@@ -31,9 +31,9 @@ const getScrollProgress = (el) => {
   return Math.max(0, Math.min(1, progress))
 }
 
-// Hero parallax style
+// Hero parallax style - subtle movement
 const heroStyle = computed(() => ({
-  transform: `translateY(${scrollY.value * 0.4}px)`,
+  transform: `translateY(${scrollY.value * 0.1}px)`,
   opacity: Math.max(0, 1 - scrollY.value / 600)
 }))
 
@@ -205,7 +205,7 @@ const initThree = () => {
   const circleTexture = createCircleTexture()
 
   // Particles
-  const particleCount = 150
+  const particleCount = 300
   const positions = new Float32Array(particleCount * 3)
   const colors = new Float32Array(particleCount * 3)
   const sizes = new Float32Array(particleCount)
@@ -218,9 +218,9 @@ const initThree = () => {
   ]
 
   for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 100
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 100
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 50
+    positions[i * 3] = (Math.random() - 0.5) * 200
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 150
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 100
 
     const color = colorPalette[Math.floor(Math.random() * colorPalette.length)]
     colors[i * 3] = color.r
@@ -253,14 +253,22 @@ const initThree = () => {
   const animate = () => {
     animationId = requestAnimationFrame(animate)
 
+    // Particles animate smoothly
     particles.rotation.y += 0.0003
     particles.rotation.x += 0.0001
 
+    // Move camera based on scroll for parallax effect
+    camera.position.y = -scrollY.value * 0.01
+    camera.position.z = 30 + scrollY.value * 0.005
+
+    // Subtle vertical bob animation
     const positions = particles.geometry.attributes.position.array
+    const positionAttribute = particles.geometry.attributes.position
+    
     for (let i = 0; i < positions.length; i += 3) {
       positions[i + 1] += Math.sin(Date.now() * 0.001 + i) * 0.002
     }
-    particles.geometry.attributes.position.needsUpdate = true
+    positionAttribute.needsUpdate = true
 
     renderer.render(scene, camera)
   }
@@ -585,10 +593,10 @@ const fetchGitHubCommits = async () => {
     <!-- Three.js Canvas Background -->
     <canvas ref="threeCanvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0;"></canvas>
 
-    <!-- Gradient Orbs with parallax - fixed position so they don't get clipped -->
-    <div class="fixed top-20 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.2}px)` }"></div>
-    <div class="fixed top-40 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-[100px] animate-float pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.35}px)` }"></div>
-    <div class="fixed top-1/2 left-1/2 w-72 h-72 bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" style="z-index: 0; animation-delay: 1s;" :style="{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.5}px)` }"></div>
+    <!-- Gradient Orbs with subtle parallax - fixed position so they don't get clipped -->
+    <div class="fixed top-20 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.08}px)` }"></div>
+    <div class="fixed top-40 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-[100px] animate-float pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.12}px)` }"></div>
+    <div class="fixed top-1/2 left-1/2 w-72 h-72 bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" style="z-index: 0; animation-delay: 1s;" :style="{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.15}px)` }"></div>
 
     <!-- Hero Section -->
     <div ref="heroSection" class="relative" style="z-index: 1;">
