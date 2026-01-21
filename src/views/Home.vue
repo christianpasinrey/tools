@@ -563,6 +563,22 @@ const packages = ref([
     language: 'TypeScript',
     languageColor: '#3178c6',
     stars: null
+  },
+  {
+    name: 'exceljs/exceljs',
+    description: 'Excel Workbook Manager. Read, manipulate and write XLSX and JSON.',
+    url: 'https://github.com/exceljs/exceljs',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'vueuse/vueuse',
+    description: 'Collection of essential Vue Composition Utilities.',
+    url: 'https://github.com/vueuse/vueuse',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
   }
 ])
 
