@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 const props = defineProps({
   visible: {
@@ -23,6 +24,9 @@ const props = defineProps({
 
 const emit = defineEmits(['mouseenter', 'mouseleave', 'item-click'])
 
+const router = useRouter()
+const route = useRoute()
+
 const handleMouseEnter = () => {
   emit('mouseenter')
 }
@@ -31,7 +35,20 @@ const handleMouseLeave = () => {
   emit('mouseleave')
 }
 
-const handleItemClick = (item) => {
+const handleItemClick = (e, item) => {
+  // Check if this is a hash navigation on the same base path
+  if (item.path.includes('#')) {
+    const [basePath, hash] = item.path.split('#')
+
+    // If we're on the same base path, manually update the hash
+    if (route.path === basePath || route.path === basePath + '/') {
+      e.preventDefault()
+      window.location.hash = hash
+      // Dispatch hashchange event manually since assignment doesn't always trigger it
+      window.dispatchEvent(new HashChangeEvent('hashchange'))
+    }
+  }
+
   emit('item-click', item)
 }
 </script>
@@ -66,7 +83,7 @@ const handleItemClick = (item) => {
               :to="item.path"
               class="submenu-item"
               :style="{ '--item-color': item.color || color }"
-              @click="handleItemClick(item)"
+              @click="handleItemClick($event, item)"
             >
               <div class="submenu-item-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

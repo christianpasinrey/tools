@@ -121,7 +121,7 @@ const handleMouseLeave = () => {
   align-items: center;
   transform: scale(var(--scale, 1));
   transform-origin: bottom center;
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), z-index 0s;
   z-index: 1;
   will-change: transform;
 }

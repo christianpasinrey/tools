@@ -62,8 +62,8 @@ const activeSubmenuIndex = ref(-1)
 const submenuHovered = ref(false)
 let submenuTimeout = null
 
-const MAX_SCALE = 1.6
-const EFFECT_DISTANCE = 80
+const MAX_SCALE = 1.25
+const EFFECT_DISTANCE = 60
 
 const onDockMouseMove = (e) => {
   if (!dockRef.value) return
