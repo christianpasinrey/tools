@@ -327,11 +327,19 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/pdf-editor',
+    path: '/documents#pdf',
     name: 'PDF Editor',
     description: 'Combina, divide, rota y anota documentos PDF directamente en el navegador.',
-    icon: 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z',
+    icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9.5 8.5c0 .83-.67 1.5-1.5 1.5H7v2H5.5V9H8c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V9H13c.83 0 1.5.67 1.5 1.5v3zm4-3H17v1h1.5V13H17v2h-1.5V9h3v1.5zM7 10.5h1v1H7v-1zm4 0h1v3h-1v-3z',
     color: 'red',
+    status: 'active'
+  },
+  {
+    path: '/documents#spreadsheet',
+    name: 'Spreadsheet Editor',
+    description: 'Editor de hojas de cálculo con estilos, fórmulas y exportación a Excel.',
+    icon: 'M3 3h18v18H3V3zm16 4H5v12h14V7zM7 9h2v2H7V9zm0 4h2v2H7v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2z',
+    color: 'green',
     status: 'active'
   },
   {
@@ -383,10 +391,10 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/markdown-editor',
+    path: '/documents#markdown',
     name: 'Markdown Editor',
     description: 'Editor de Markdown con preview en vivo. Exporta a HTML o descarga como .md',
-    icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
+    icon: 'M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41zM6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38h1.92zm8.56-1.98V8.81h-1.93v6.38h4.55v-1.98h-2.62z',
     color: 'blue',
     status: 'active'
   },
