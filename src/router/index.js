@@ -61,6 +61,11 @@ const routes = [
     path: '/phone-tester',
     name: 'PhoneTester',
     component: () => import('../views/PhoneTester.vue')
+  },
+  {
+    path: '/cyber-security',
+    name: 'CyberSecurity',
+    component: () => import('../views/CyberSecurity.vue')
   }
 ]
 
