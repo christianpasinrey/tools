@@ -7,7 +7,13 @@ const props = defineProps({
   allSelected: Boolean,
   selectedCount: Number,
   pageCount: Number,
-  themeColor: String
+  themeColor: String,
+  canUndo: Boolean,
+  canRedo: Boolean,
+  undoActionName: String,
+  redoActionName: String,
+  showAnnotations: Boolean,
+  annotationCount: Number
 })
 
 const emit = defineEmits([
@@ -15,7 +21,8 @@ const emit = defineEmits([
   'select-all', 'deselect-all',
   'rotate-left', 'rotate-right',
   'delete', 'extract', 'split-all',
-  'color-change'
+  'color-change', 'undo', 'redo',
+  'toggle-annotations'
 ])
 
 const showColors = ref(false)
@@ -64,6 +71,32 @@ const colors = [
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
         </svg>
         <span>Exportar</span>
+      </button>
+    </div>
+
+    <!-- Undo/Redo -->
+    <div v-if="hasFile" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
+      <button
+        @click="emit('undo')"
+        :disabled="!canUndo"
+        class="p-1.5 rounded transition-colors"
+        :class="canUndo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed'"
+        :title="canUndo ? `Deshacer: ${undoActionName}` : 'Nada que deshacer'"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+        </svg>
+      </button>
+      <button
+        @click="emit('redo')"
+        :disabled="!canRedo"
+        class="p-1.5 rounded transition-colors"
+        :class="canRedo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed'"
+        :title="canRedo ? `Rehacer: ${redoActionName}` : 'Nada que rehacer'"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"/>
+        </svg>
       </button>
     </div>
 
@@ -136,6 +169,29 @@ const colors = [
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
         </svg>
         Dividir
+      </button>
+    </div>
+
+    <!-- Annotations -->
+    <div v-if="hasFile" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
+      <button
+        @click="emit('toggle-annotations')"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
+        :class="showAnnotations ? 'text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'"
+        :style="showAnnotations ? { backgroundColor: themeColor + '20', color: themeColor } : {}"
+        title="Panel de anotaciones"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+        </svg>
+        <span>Notas</span>
+        <span
+          v-if="annotationCount > 0"
+          class="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded-full"
+          :style="{ backgroundColor: themeColor, color: 'white' }"
+        >
+          {{ annotationCount }}
+        </span>
       </button>
     </div>
 
