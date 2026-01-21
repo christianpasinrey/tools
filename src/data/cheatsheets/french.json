@@ -1,0 +1,164 @@
+{
+  "title": "Francés",
+  "description": "Gramática esencial, verbos y frases útiles del francés",
+  "sections": [
+    {
+      "name": "Saludos",
+      "items": [
+        { "keys": ["Bonjour"], "desc": "Buenos días / Hola" },
+        { "keys": ["Bonsoir"], "desc": "Buenas tardes/noches" },
+        { "keys": ["Bonne nuit"], "desc": "Buenas noches (despedida)" },
+        { "keys": ["Salut"], "desc": "Hola / Adiós (informal)" },
+        { "keys": ["Au revoir"], "desc": "Adiós" },
+        { "keys": ["À bientôt"], "desc": "Hasta pronto" },
+        { "keys": ["À demain"], "desc": "Hasta mañana" }
+      ]
+    },
+    {
+      "name": "Expresiones Básicas",
+      "items": [
+        { "keys": ["Merci (beaucoup)"], "desc": "Gracias (muchas)" },
+        { "keys": ["De rien"], "desc": "De nada" },
+        { "keys": ["S'il vous plaît"], "desc": "Por favor (formal)" },
+        { "keys": ["S'il te plaît"], "desc": "Por favor (informal)" },
+        { "keys": ["Excusez-moi"], "desc": "Disculpe" },
+        { "keys": ["Pardon"], "desc": "Perdón" },
+        { "keys": ["Oui"], "desc": "Sí" },
+        { "keys": ["Non"], "desc": "No" },
+        { "keys": ["D'accord"], "desc": "De acuerdo" }
+      ]
+    },
+    {
+      "name": "Presentación",
+      "items": [
+        { "keys": ["Je m'appelle..."], "desc": "Me llamo..." },
+        { "keys": ["Comment vous appelez-vous?"], "desc": "¿Cómo se llama? (formal)" },
+        { "keys": ["Comment tu t'appelles?"], "desc": "¿Cómo te llamas?" },
+        { "keys": ["Enchanté(e)"], "desc": "Encantado/a" },
+        { "keys": ["Je suis espagnol(e)"], "desc": "Soy español(a)" },
+        { "keys": ["J'ai ... ans"], "desc": "Tengo ... años" }
+      ]
+    },
+    {
+      "name": "Pronombres Personales",
+      "items": [
+        { "keys": ["Je"], "desc": "Yo" },
+        { "keys": ["Tu"], "desc": "Tú" },
+        { "keys": ["Il / Elle"], "desc": "Él / Ella" },
+        { "keys": ["Nous"], "desc": "Nosotros" },
+        { "keys": ["Vous"], "desc": "Vosotros / Usted" },
+        { "keys": ["Ils / Elles"], "desc": "Ellos / Ellas" }
+      ]
+    },
+    {
+      "name": "Verbo Être (Ser/Estar)",
+      "items": [
+        { "keys": ["Je suis"], "desc": "Yo soy/estoy" },
+        { "keys": ["Tu es"], "desc": "Tú eres/estás" },
+        { "keys": ["Il/Elle est"], "desc": "Él/Ella es/está" },
+        { "keys": ["Nous sommes"], "desc": "Nosotros somos/estamos" },
+        { "keys": ["Vous êtes"], "desc": "Vosotros sois/estáis" },
+        { "keys": ["Ils/Elles sont"], "desc": "Ellos/Ellas son/están" }
+      ]
+    },
+    {
+      "name": "Verbo Avoir (Tener)",
+      "items": [
+        { "keys": ["J'ai"], "desc": "Yo tengo" },
+        { "keys": ["Tu as"], "desc": "Tú tienes" },
+        { "keys": ["Il/Elle a"], "desc": "Él/Ella tiene" },
+        { "keys": ["Nous avons"], "desc": "Nosotros tenemos" },
+        { "keys": ["Vous avez"], "desc": "Vosotros tenéis" },
+        { "keys": ["Ils/Elles ont"], "desc": "Ellos/Ellas tienen" }
+      ]
+    },
+    {
+      "name": "Números 1-10",
+      "items": [
+        { "keys": ["un"], "desc": "1" },
+        { "keys": ["deux"], "desc": "2" },
+        { "keys": ["trois"], "desc": "3" },
+        { "keys": ["quatre"], "desc": "4" },
+        { "keys": ["cinq"], "desc": "5" },
+        { "keys": ["six"], "desc": "6" },
+        { "keys": ["sept"], "desc": "7" },
+        { "keys": ["huit"], "desc": "8" },
+        { "keys": ["neuf"], "desc": "9" },
+        { "keys": ["dix"], "desc": "10" }
+      ]
+    },
+    {
+      "name": "Números 11-20",
+      "items": [
+        { "keys": ["onze"], "desc": "11" },
+        { "keys": ["douze"], "desc": "12" },
+        { "keys": ["treize"], "desc": "13" },
+        { "keys": ["quatorze"], "desc": "14" },
+        { "keys": ["quinze"], "desc": "15" },
+        { "keys": ["seize"], "desc": "16" },
+        { "keys": ["dix-sept"], "desc": "17" },
+        { "keys": ["dix-huit"], "desc": "18" },
+        { "keys": ["dix-neuf"], "desc": "19" },
+        { "keys": ["vingt"], "desc": "20" }
+      ]
+    },
+    {
+      "name": "Preguntas Útiles",
+      "items": [
+        { "keys": ["Qu'est-ce que c'est?"], "desc": "¿Qué es esto?" },
+        { "keys": ["Combien ça coûte?"], "desc": "¿Cuánto cuesta?" },
+        { "keys": ["Où est...?"], "desc": "¿Dónde está...?" },
+        { "keys": ["Où sont les toilettes?"], "desc": "¿Dónde está el baño?" },
+        { "keys": ["Parlez-vous anglais?"], "desc": "¿Habla inglés?" },
+        { "keys": ["Quelle heure est-il?"], "desc": "¿Qué hora es?" },
+        { "keys": ["Comment?"], "desc": "¿Cómo?" },
+        { "keys": ["Pourquoi?"], "desc": "¿Por qué?" }
+      ]
+    },
+    {
+      "name": "Restaurante",
+      "items": [
+        { "keys": ["La carte, s'il vous plaît"], "desc": "La carta, por favor" },
+        { "keys": ["Je voudrais..."], "desc": "Quisiera..." },
+        { "keys": ["L'addition, s'il vous plaît"], "desc": "La cuenta, por favor" },
+        { "keys": ["C'est délicieux"], "desc": "Está delicioso" },
+        { "keys": ["De l'eau"], "desc": "Agua" },
+        { "keys": ["Du vin"], "desc": "Vino" },
+        { "keys": ["Du pain"], "desc": "Pan" }
+      ]
+    },
+    {
+      "name": "Días de la Semana",
+      "items": [
+        { "keys": ["lundi"], "desc": "Lunes" },
+        { "keys": ["mardi"], "desc": "Martes" },
+        { "keys": ["mercredi"], "desc": "Miércoles" },
+        { "keys": ["jeudi"], "desc": "Jueves" },
+        { "keys": ["vendredi"], "desc": "Viernes" },
+        { "keys": ["samedi"], "desc": "Sábado" },
+        { "keys": ["dimanche"], "desc": "Domingo" }
+      ]
+    },
+    {
+      "name": "Artículos",
+      "items": [
+        { "keys": ["le / la / les"], "desc": "el / la / los, las (definidos)" },
+        { "keys": ["un / une / des"], "desc": "un / una / unos (indefinidos)" },
+        { "keys": ["du / de la / des"], "desc": "Partitivos (algo de)" },
+        { "keys": ["au / à la / aux"], "desc": "al / a la / a los" }
+      ]
+    },
+    {
+      "name": "Conectores",
+      "items": [
+        { "keys": ["et"], "desc": "y" },
+        { "keys": ["ou"], "desc": "o" },
+        { "keys": ["mais"], "desc": "pero" },
+        { "keys": ["parce que"], "desc": "porque" },
+        { "keys": ["donc"], "desc": "entonces, por lo tanto" },
+        { "keys": ["cependant"], "desc": "sin embargo" },
+        { "keys": ["aussi"], "desc": "también" }
+      ]
+    }
+  ]
+}

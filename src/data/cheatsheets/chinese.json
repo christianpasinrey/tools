@@ -1,0 +1,148 @@
+{
+  "title": "Chino Mandarín",
+  "description": "Pinyin, caracteres básicos y frases esenciales del chino mandarín",
+  "sections": [
+    {
+      "name": "Tonos del Mandarín",
+      "items": [
+        { "keys": ["ā (1º tono)"], "desc": "Alto y sostenido ―" },
+        { "keys": ["á (2º tono)"], "desc": "Ascendente /" },
+        { "keys": ["ǎ (3º tono)"], "desc": "Baja y sube ∨" },
+        { "keys": ["à (4º tono)"], "desc": "Descendente \\" },
+        { "keys": ["a (neutro)"], "desc": "Ligero, sin énfasis" }
+      ]
+    },
+    {
+      "name": "Saludos",
+      "items": [
+        { "keys": ["你好 (nǐ hǎo)"], "desc": "Hola" },
+        { "keys": ["您好 (nín hǎo)"], "desc": "Hola (formal)" },
+        { "keys": ["早上好 (zǎo shang hǎo)"], "desc": "Buenos días" },
+        { "keys": ["晚上好 (wǎn shang hǎo)"], "desc": "Buenas noches" },
+        { "keys": ["再见 (zài jiàn)"], "desc": "Adiós" },
+        { "keys": ["明天见 (míng tiān jiàn)"], "desc": "Hasta mañana" },
+        { "keys": ["晚安 (wǎn ān)"], "desc": "Buenas noches (despedida)" }
+      ]
+    },
+    {
+      "name": "Expresiones Básicas",
+      "items": [
+        { "keys": ["谢谢 (xiè xie)"], "desc": "Gracias" },
+        { "keys": ["不客气 (bú kè qi)"], "desc": "De nada" },
+        { "keys": ["对不起 (duì bu qǐ)"], "desc": "Lo siento" },
+        { "keys": ["没关系 (méi guān xi)"], "desc": "No pasa nada" },
+        { "keys": ["请 (qǐng)"], "desc": "Por favor" },
+        { "keys": ["是 (shì)"], "desc": "Sí" },
+        { "keys": ["不是 (bú shì)"], "desc": "No" },
+        { "keys": ["好 (hǎo)"], "desc": "Bien / OK" }
+      ]
+    },
+    {
+      "name": "Presentación",
+      "items": [
+        { "keys": ["我叫... (wǒ jiào...)"], "desc": "Me llamo..." },
+        { "keys": ["你叫什么名字?"], "desc": "¿Cómo te llamas?" },
+        { "keys": ["很高兴认识你"], "desc": "Encantado de conocerte" },
+        { "keys": ["我是西班牙人"], "desc": "Soy español" },
+        { "keys": ["你是哪国人?"], "desc": "¿De qué país eres?" }
+      ]
+    },
+    {
+      "name": "Números 1-10",
+      "items": [
+        { "keys": ["一 (yī)"], "desc": "1 - uno" },
+        { "keys": ["二 (èr)"], "desc": "2 - dos" },
+        { "keys": ["三 (sān)"], "desc": "3 - tres" },
+        { "keys": ["四 (sì)"], "desc": "4 - cuatro" },
+        { "keys": ["五 (wǔ)"], "desc": "5 - cinco" },
+        { "keys": ["六 (liù)"], "desc": "6 - seis" },
+        { "keys": ["七 (qī)"], "desc": "7 - siete" },
+        { "keys": ["八 (bā)"], "desc": "8 - ocho" },
+        { "keys": ["九 (jiǔ)"], "desc": "9 - nueve" },
+        { "keys": ["十 (shí)"], "desc": "10 - diez" }
+      ]
+    },
+    {
+      "name": "Números Mayores",
+      "items": [
+        { "keys": ["百 (bǎi)"], "desc": "100 - cien" },
+        { "keys": ["千 (qiān)"], "desc": "1,000 - mil" },
+        { "keys": ["万 (wàn)"], "desc": "10,000 - diez mil" },
+        { "keys": ["零 (líng)"], "desc": "0 - cero" }
+      ]
+    },
+    {
+      "name": "Pronombres",
+      "items": [
+        { "keys": ["我 (wǒ)"], "desc": "Yo" },
+        { "keys": ["你 (nǐ)"], "desc": "Tú" },
+        { "keys": ["他 (tā)"], "desc": "Él" },
+        { "keys": ["她 (tā)"], "desc": "Ella" },
+        { "keys": ["我们 (wǒ men)"], "desc": "Nosotros" },
+        { "keys": ["你们 (nǐ men)"], "desc": "Vosotros" },
+        { "keys": ["他们 (tā men)"], "desc": "Ellos/Ellas" }
+      ]
+    },
+    {
+      "name": "Preguntas Útiles",
+      "items": [
+        { "keys": ["这是什么? (zhè shì shén me)"], "desc": "¿Qué es esto?" },
+        { "keys": ["多少钱? (duō shǎo qián)"], "desc": "¿Cuánto cuesta?" },
+        { "keys": ["在哪里? (zài nǎ lǐ)"], "desc": "¿Dónde está?" },
+        { "keys": ["厕所在哪里?"], "desc": "¿Dónde está el baño?" },
+        { "keys": ["你会说英语吗?"], "desc": "¿Hablas inglés?" },
+        { "keys": ["什么时候? (shén me shí hou)"], "desc": "¿Cuándo?" },
+        { "keys": ["为什么? (wèi shén me)"], "desc": "¿Por qué?" }
+      ]
+    },
+    {
+      "name": "Restaurante",
+      "items": [
+        { "keys": ["菜单 (cài dān)"], "desc": "Menú" },
+        { "keys": ["我要这个 (wǒ yào zhè ge)"], "desc": "Quiero esto" },
+        { "keys": ["好吃 (hǎo chī)"], "desc": "Delicioso" },
+        { "keys": ["买单 (mǎi dān)"], "desc": "La cuenta" },
+        { "keys": ["水 (shuǐ)"], "desc": "Agua" },
+        { "keys": ["米饭 (mǐ fàn)"], "desc": "Arroz" },
+        { "keys": ["茶 (chá)"], "desc": "Té" }
+      ]
+    },
+    {
+      "name": "Tiempo",
+      "items": [
+        { "keys": ["今天 (jīn tiān)"], "desc": "Hoy" },
+        { "keys": ["明天 (míng tiān)"], "desc": "Mañana" },
+        { "keys": ["昨天 (zuó tiān)"], "desc": "Ayer" },
+        { "keys": ["现在 (xiàn zài)"], "desc": "Ahora" },
+        { "keys": ["几点? (jǐ diǎn)"], "desc": "¿Qué hora es?" }
+      ]
+    },
+    {
+      "name": "Días de la Semana",
+      "items": [
+        { "keys": ["星期一 (xīng qī yī)"], "desc": "Lunes" },
+        { "keys": ["星期二 (xīng qī èr)"], "desc": "Martes" },
+        { "keys": ["星期三 (xīng qī sān)"], "desc": "Miércoles" },
+        { "keys": ["星期四 (xīng qī sì)"], "desc": "Jueves" },
+        { "keys": ["星期五 (xīng qī wǔ)"], "desc": "Viernes" },
+        { "keys": ["星期六 (xīng qī liù)"], "desc": "Sábado" },
+        { "keys": ["星期日 (xīng qī rì)"], "desc": "Domingo" }
+      ]
+    },
+    {
+      "name": "Verbos Comunes",
+      "items": [
+        { "keys": ["是 (shì)"], "desc": "Ser/Estar" },
+        { "keys": ["有 (yǒu)"], "desc": "Tener/Haber" },
+        { "keys": ["要 (yào)"], "desc": "Querer/Necesitar" },
+        { "keys": ["去 (qù)"], "desc": "Ir" },
+        { "keys": ["来 (lái)"], "desc": "Venir" },
+        { "keys": ["吃 (chī)"], "desc": "Comer" },
+        { "keys": ["喝 (hē)"], "desc": "Beber" },
+        { "keys": ["看 (kàn)"], "desc": "Ver/Mirar" },
+        { "keys": ["说 (shuō)"], "desc": "Hablar/Decir" },
+        { "keys": ["买 (mǎi)"], "desc": "Comprar" }
+      ]
+    }
+  ]
+}
