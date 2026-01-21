@@ -548,12 +548,49 @@ export function useThreeLights(core, objectsManager) {
   // Apply lighting preset
   const currentPreset = ref('default')
 
+  // Calculate scene bounding box (excluding lights)
+  const getSceneBounds = () => {
+    const box = new THREE.Box3()
+    let hasObjects = false
+
+    objectsManager.objects.value.forEach(obj => {
+      // Skip lights
+      if (lightTypes.includes(obj.userData?.type)) return
+
+      const objBox = new THREE.Box3().setFromObject(obj)
+      if (!objBox.isEmpty()) {
+        box.union(objBox)
+        hasObjects = true
+      }
+    })
+
+    if (!hasObjects) {
+      // Default bounds for empty scene
+      return { center: new THREE.Vector3(0, 1, 0), size: new THREE.Vector3(2, 2, 2), scale: 1 }
+    }
+
+    const center = new THREE.Vector3()
+    const size = new THREE.Vector3()
+    box.getCenter(center)
+    box.getSize(size)
+
+    // Scale factor based on the largest dimension (base presets are designed for ~2 unit objects)
+    const maxDim = Math.max(size.x, size.y, size.z)
+    const scale = Math.max(1, maxDim / 2)
+
+    return { center, size, scale }
+  }
+
   const applyLightingPreset = (presetKey) => {
     const preset = LIGHTING_PRESETS[presetKey]
     if (!preset) return false
 
     // Clear existing user lights
     clearUserLights()
+
+    // Get scene bounds for scaling light positions
+    const bounds = getSceneBounds()
+    const { center, scale } = bounds
 
     // Set ambient intensity
     if (preset.ambient) {
@@ -573,49 +610,67 @@ export function useThreeLights(core, objectsManager) {
           directional.color.setHex(preset.directional.color)
         }
         if (preset.directional.position) {
-          directional.position.set(...preset.directional.position)
+          // Scale directional light position
+          directional.position.set(
+            preset.directional.position[0] * scale + center.x,
+            preset.directional.position[1] * scale,
+            preset.directional.position[2] * scale + center.z
+          )
         }
       }
     }
 
-    // Add preset lights
+    // Add preset lights with scaled positions
     if (preset.lights) {
       preset.lights.forEach(lightConfig => {
+        // Scale positions relative to scene center
+        const scaledPos = lightConfig.position ? [
+          lightConfig.position[0] * scale + center.x,
+          lightConfig.position[1] * scale + center.y,
+          lightConfig.position[2] * scale + center.z
+        ] : undefined
+
+        // Scale distance for spotlights and point lights
+        const scaledDistance = (lightConfig.distance || 30) * scale
+
         switch (lightConfig.type) {
           case 'spotlight':
             addSpotlight({
-              x: lightConfig.position?.[0],
-              y: lightConfig.position?.[1],
-              z: lightConfig.position?.[2],
-              intensity: lightConfig.intensity,
+              x: scaledPos?.[0],
+              y: scaledPos?.[1],
+              z: scaledPos?.[2],
+              intensity: lightConfig.intensity * scale, // Scale intensity for larger scenes
               color: lightConfig.color,
               angle: lightConfig.angle,
+              distance: scaledDistance,
               name: lightConfig.name
             })
             break
           case 'pointlight':
             addPointLight({
-              x: lightConfig.position?.[0],
-              y: lightConfig.position?.[1],
-              z: lightConfig.position?.[2],
-              intensity: lightConfig.intensity,
+              x: scaledPos?.[0],
+              y: scaledPos?.[1],
+              z: scaledPos?.[2],
+              intensity: lightConfig.intensity * scale,
               color: lightConfig.color,
+              distance: scaledDistance,
               name: lightConfig.name
             })
             break
           case 'arealight':
             addAreaLight({
-              position: lightConfig.position,
-              intensity: lightConfig.intensity,
+              position: scaledPos,
+              intensity: lightConfig.intensity * scale,
               color: lightConfig.color,
-              width: lightConfig.width,
-              height: lightConfig.height,
+              width: (lightConfig.width || 2) * scale,
+              height: (lightConfig.height || 2) * scale,
               rotationY: lightConfig.rotationY,
               name: lightConfig.name
             })
             break
           case 'hemisphere':
             addHemisphereLight({
+              y: (lightConfig.y || 10) * scale + center.y,
               skyColor: lightConfig.skyColor,
               groundColor: lightConfig.groundColor,
               intensity: lightConfig.intensity,
@@ -624,7 +679,7 @@ export function useThreeLights(core, objectsManager) {
             break
           case 'directional':
             addDirectionalLight({
-              position: lightConfig.position,
+              position: scaledPos,
               intensity: lightConfig.intensity,
               color: lightConfig.color,
               name: lightConfig.name
