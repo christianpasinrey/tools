@@ -1,0 +1,133 @@
+{
+  "title": "Lenguaje de Internet",
+  "description": "Guia para entender a tu sobrino cuando escribe",
+  "sections": [
+    {
+      "name": "Clasicos Inmortales",
+      "items": [
+        { "keys": ["xD"], "desc": "Risa generica (nadie se rie realmente)" },
+        { "keys": ["lol"], "desc": "Risa en ingles (tampoco te ries)" },
+        { "keys": ["jajaja"], "desc": "Mas jajas = mas gracia (teoria)" },
+        { "keys": ["xDDD"], "desc": "Mas Ds = mas gracioso" },
+        { "keys": ["jeje"], "desc": "Risa sospechosa o incomoda" },
+        { "keys": ["jsjs"], "desc": "Risa latinoamericana" },
+        { "keys": ["sksksk"], "desc": "Risa de Stan Twitter" },
+        { "keys": ["asdfgh"], "desc": "Tecleo aleatorio = mucha emocion" }
+      ]
+    },
+    {
+      "name": "Abreviaturas Esenciales",
+      "items": [
+        { "keys": ["omg"], "desc": "Oh my god (sorpresa maxima)" },
+        { "keys": ["wtf"], "desc": "What the f*** (confusion total)" },
+        { "keys": ["idk"], "desc": "I don't know (no se)" },
+        { "keys": ["tbh"], "desc": "To be honest (siendo sincero)" },
+        { "keys": ["ngl"], "desc": "Not gonna lie (no voy a mentir)" },
+        { "keys": ["imo"], "desc": "In my opinion (en mi opinion)" },
+        { "keys": ["irl"], "desc": "In real life (en la vida real)" },
+        { "keys": ["afk"], "desc": "Away from keyboard (no estoy)" },
+        { "keys": ["brb"], "desc": "Be right back (vuelvo enseguida)" },
+        { "keys": ["gtg"], "desc": "Got to go (me tengo que ir)" }
+      ]
+    },
+    {
+      "name": "Expresiones de Memes",
+      "items": [
+        { "keys": ["F"], "desc": "Respeto por algo que murio (o tu dignidad)" },
+        { "keys": ["gg"], "desc": "Good game (bien jugado, aunque perdiste)" },
+        { "keys": ["pov"], "desc": "Point of view (imagina que eres tu)" },
+        { "keys": ["ratio"], "desc": "Cuando te responden con mas likes" },
+        { "keys": ["cope"], "desc": "Acepta la realidad" },
+        { "keys": ["seethe"], "desc": "Enfadate mas (me divierte)" },
+        { "keys": ["based"], "desc": "Opinion valiente aunque polemica" },
+        { "keys": ["chad"], "desc": "El tipo ideal (ironia o no)" },
+        { "keys": ["karen"], "desc": "Senora que pide hablar con el gerente" }
+      ]
+    },
+    {
+      "name": "Gaming",
+      "items": [
+        { "keys": ["gg"], "desc": "Buen juego (aunque hayas perdido)" },
+        { "keys": ["ez"], "desc": "Facil (normalmente toxico)" },
+        { "keys": ["noob"], "desc": "Novato, principiante malo" },
+        { "keys": ["pro"], "desc": "Profesional o muy bueno" },
+        { "keys": ["nerf"], "desc": "Debilitar algo en un juego" },
+        { "keys": ["buff"], "desc": "Fortalecer algo en un juego" },
+        { "keys": ["op"], "desc": "Overpowered, demasiado fuerte" },
+        { "keys": ["rng"], "desc": "Suerte aleatoria (y normalmente mala)" },
+        { "keys": ["glhf"], "desc": "Buena suerte, pasalo bien" },
+        { "keys": ["wp"], "desc": "Well played, bien jugado" }
+      ]
+    },
+    {
+      "name": "Emojis y su Verdadero Significado",
+      "items": [
+        { "keys": ["💀"], "desc": "Me muero de risa (no literalmente)" },
+        { "keys": ["😭"], "desc": "Risa extrema (no tristeza)" },
+        { "keys": ["🗿"], "desc": "Cara de poker, sin comentarios" },
+        { "keys": ["🤡"], "desc": "Eres/Soy un payaso" },
+        { "keys": ["💅"], "desc": "Actitud de diva, superioridad" },
+        { "keys": ["👁👄👁"], "desc": "Mirando fijamente con incomodidad" },
+        { "keys": ["🙃"], "desc": "Estoy bien pero no estoy bien" },
+        { "keys": ["😏"], "desc": "Insinuacion o doble sentido" },
+        { "keys": ["🥺"], "desc": "Ojos de cachorrito, porfiii" },
+        { "keys": ["💀💀💀"], "desc": "Muerto de risa nivel extremo" }
+      ]
+    },
+    {
+      "name": "Puntuacion Emocional",
+      "items": [
+        { "keys": ["..."], "desc": "Pausa dramatica o decepcion" },
+        { "keys": ["???"], "desc": "Confusion total" },
+        { "keys": ["!!!"], "desc": "Emocion o enfado extremo" },
+        { "keys": ["."], "desc": "Estoy enfadado contigo" },
+        { "keys": [",,,,"], "desc": "Escribiendo rapido sin revisar" },
+        { "keys": ["MAYUSCULAS"], "desc": "ESTOY GRITANDO" },
+        { "keys": ["minusculas"], "desc": "desgana total o ironia" },
+        { "keys": ["~"], "desc": "Tono cantarin o sarcastico~" }
+      ]
+    },
+    {
+      "name": "Reacciones en Chats",
+      "items": [
+        { "keys": ["a"], "desc": "Grito existencial" },
+        { "keys": ["aaaaa"], "desc": "Mas emocion o panico" },
+        { "keys": ["que"], "desc": "Confusion pero sin interrogacion" },
+        { "keys": ["no"], "desc": "Negacion con incredulidad" },
+        { "keys": ["bueno"], "desc": "Aceptacion resignada" },
+        { "keys": ["ya"], "desc": "Entendido (con desgana)" },
+        { "keys": ["k"], "desc": "Ok pero con menos esfuerzo" },
+        { "keys": ["xd"], "desc": "xD pero con mas desgana" },
+        { "keys": [":v"], "desc": "Risa/ironia de la vieja escuela" }
+      ]
+    },
+    {
+      "name": "Cultura de Twitter/X",
+      "items": [
+        { "keys": ["rt"], "desc": "Retweet, comparto esto" },
+        { "keys": ["fav"], "desc": "Favorito, me gusta esto" },
+        { "keys": ["thread"], "desc": "Hilo de tweets conectados" },
+        { "keys": ["ratio"], "desc": "Te superaron en likes" },
+        { "keys": ["main"], "desc": "Tu cuenta principal" },
+        { "keys": ["alt"], "desc": "Tu cuenta secundaria secreta" },
+        { "keys": ["mutuals"], "desc": "Gente que se sigue mutuamente" },
+        { "keys": ["stan"], "desc": "Fan obsesivo de algo/alguien" },
+        { "keys": ["cancel"], "desc": "Funado, cancelado socialmente" },
+        { "keys": ["tea"], "desc": "Chisme, drama jugoso" }
+      ]
+    },
+    {
+      "name": "TikTok/Reels",
+      "items": [
+        { "keys": ["fyp"], "desc": "For You Page, tu feed personalizado" },
+        { "keys": ["pov"], "desc": "Point of view, ponte en situacion" },
+        { "keys": ["duet"], "desc": "Responder video con tu video" },
+        { "keys": ["stitch"], "desc": "Usar parte de otro video" },
+        { "keys": ["trend"], "desc": "Tendencia que todos copian" },
+        { "keys": ["sound"], "desc": "Audio viral que todos usan" },
+        { "keys": ["cheugy"], "desc": "Pasado de moda, de millennials" },
+        { "keys": ["ate"], "desc": "Lo hizo increible, se lo comio" }
+      ]
+    }
+  ]
+}
