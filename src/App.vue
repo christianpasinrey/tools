@@ -1,13 +1,13 @@
 <script setup>
 import { useRoute } from 'vue-router'
-import Navbar from './components/Navbar.vue'
+import Dock from './components/Dock.vue'
 
 const route = useRoute()
 </script>
 
 <template>
   <div class="min-h-screen bg-neutral-950">
-    <Navbar />
+    <Dock />
     <router-view />
   </div>
 </template>

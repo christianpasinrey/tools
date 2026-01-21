@@ -11,7 +11,8 @@
       "WebFetch(domain:registry.npmjs.org)",
       "mcp__plugin_context7_context7__resolve-library-id",
       "mcp__plugin_context7_context7__query-docs",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(del \"C:\\laragon\\www\\tools\\src\\components\\Navbar.vue\")"
     ],
     "deny": [],
     "ask": []

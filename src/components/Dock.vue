@@ -73,6 +73,21 @@ const onIconMouseEnter = (index) => {
 const onIconMouseLeave = () => {
   hoveredIndex.value = -1
 }
+
+// Check if tool is active (handles hash routes)
+const isToolActive = (toolPath) => {
+  // For hash routes like /documents#pdf
+  if (toolPath.includes('#')) {
+    const [path, hash] = toolPath.split('#')
+    return route.path === path && route.hash === `#${hash}`
+  }
+  // For regular routes, check if current path starts with tool path
+  // but only mark as active if it's exact match or /documents without specific hash
+  if (toolPath === '/documents') {
+    return route.path === '/documents'
+  }
+  return route.path === toolPath
+}
 </script>
 
 <template>
@@ -126,7 +141,7 @@ const onIconMouseLeave = () => {
           :ref="el => iconRefs[index] = el"
           :to="tool.path"
           class="dock-item"
-          :class="{ 'is-active': route.path === tool.path }"
+          :class="{ 'is-active': isToolActive(tool.path) }"
           :style="{
             '--scale': scales[index],
             '--tool-color': tool.color
@@ -148,7 +163,7 @@ const onIconMouseLeave = () => {
           </Transition>
 
           <!-- Active indicator -->
-          <div v-if="route.path === tool.path" class="dock-active-dot"></div>
+          <div v-if="isToolActive(tool.path)" class="dock-active-dot"></div>
         </router-link>
       </div>
     </div>
