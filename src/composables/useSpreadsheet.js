@@ -1,6 +1,6 @@
 import { ref, computed, reactive } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
-import XLSX from 'xlsx-js-style'
+import ExcelJS from 'exceljs'
 
 // Global dark mode (persists to localStorage)
 export const isDark = useDark()
@@ -50,6 +50,20 @@ export const BORDER_PRESETS = [
   { id: 'left-right', name: 'Izquierda y derecha', icon: 'left-right' }
 ]
 
+// Font sizes
+export const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 72]
+
+// Number formats
+export const NUMBER_FORMATS = [
+  { id: 'general', name: 'General', format: 'General' },
+  { id: 'number', name: 'Número', format: '#,##0.00' },
+  { id: 'currency', name: 'Moneda', format: '"$"#,##0.00' },
+  { id: 'percentage', name: 'Porcentaje', format: '0.00%' },
+  { id: 'date', name: 'Fecha', format: 'DD/MM/YYYY' },
+  { id: 'time', name: 'Hora', format: 'HH:MM:SS' },
+  { id: 'text', name: 'Texto', format: '@' }
+]
+
 export function useSpreadsheet() {
   // State
   const fileInput = ref(null)
@@ -58,6 +72,7 @@ export function useSpreadsheet() {
   const activeSheetIndex = ref(0)
   const data = ref([])
   const cellStyles = ref({})
+  const cellFormulas = ref({}) // Store formulas separately
   const columnWidths = ref({}) // Store column widths in pixels
   const rowHeights = ref({}) // Store row heights in pixels
 
@@ -256,9 +271,10 @@ export function useSpreadsheet() {
   function initEmptySheet() {
     data.value = createEmptyData()
     cellStyles.value = {}
+    cellFormulas.value = {}
     columnWidths.value = {}
     rowHeights.value = {}
-    sheets.value = [{ name: 'Hoja 1', data: data.value, styles: {}, colWidths: {}, rowHeights: {} }]
+    sheets.value = [{ name: 'Hoja 1', data: data.value, styles: {}, formulas: {}, colWidths: {}, rowHeights: {} }]
     activeSheetIndex.value = 0
     fileName.value = ''
     selectedCell.value = null
@@ -285,98 +301,100 @@ export function useSpreadsheet() {
       await new Promise(resolve => setTimeout(resolve, 0))
 
       loadingMessage.value = 'Procesando hojas...'
-      // Read with all style-related options
-      const workbook = XLSX.read(arrayBuffer, {
-        type: 'array',
-        cellStyles: true,
-        cellFormula: true,
-        cellNF: true,
-        cellDates: true
-      })
 
-      sheets.value = workbook.SheetNames.map((name, sheetIndex) => {
-        loadingMessage.value = `Procesando hoja ${sheetIndex + 1} de ${workbook.SheetNames.length}...`
+      const workbook = new ExcelJS.Workbook()
+      await workbook.xlsx.load(arrayBuffer)
 
-        const sheet = workbook.Sheets[name]
-        const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' })
+      sheets.value = []
 
-        // Limit columns to prevent browser crash
-        const maxColsFromData = Math.max(...jsonData.map(r => r?.length || 0))
-        const rows = Math.max(DEFAULT_ROWS, Math.min(jsonData.length, 10000)) // Max 10k rows
-        const cols = Math.max(DEFAULT_COLS, Math.min(maxColsFromData, 702)) // Max ZZ columns initially
+      workbook.eachSheet((worksheet, sheetIndex) => {
+        loadingMessage.value = `Procesando hoja ${sheetIndex} de ${workbook.worksheets.length}...`
 
-        const normalizedData = Array.from({ length: rows }, (_, rowIndex) => {
-          const row = jsonData[rowIndex] || []
-          return Array.from({ length: cols }, (_, colIndex) => {
-            const val = row[colIndex]
-            return val !== undefined ? String(val) : ''
-          })
-        })
+        const rows = Math.max(DEFAULT_ROWS, Math.min(worksheet.rowCount, 10000))
+        const cols = Math.max(DEFAULT_COLS, Math.min(worksheet.columnCount, 702))
 
-        // Extract styles from cells
+        const normalizedData = []
         const importedStyles = {}
-        const range = XLSX.utils.decode_range(sheet['!ref'] || 'A1')
+        const importedFormulas = {}
+        const colWidths = {}
+        const rowHeightsData = {}
 
-        // Debug: log first few cells to see structure
-        let debugCount = 0
-        for (let row = range.s.r; row <= Math.min(range.e.r, rows - 1); row++) {
-          for (let col = range.s.c; col <= Math.min(range.e.c, cols - 1); col++) {
-            const cellRef = XLSX.utils.encode_cell({ r: row, c: col })
-            const cell = sheet[cellRef]
-
-            // Debug log for first cells with any style-like properties
-            if (cell && debugCount < 5) {
-              console.log(`Cell ${cellRef}:`, JSON.stringify(cell, null, 2))
-              debugCount++
-            }
-
-            if (cell && cell.s) {
-              const style = convertFromXlsxStyle(cell.s)
-              if (style && Object.keys(style).length > 0) {
-                importedStyles[`${row}-${col}`] = style
-              }
-            }
+        // Extract column widths
+        for (let col = 1; col <= cols; col++) {
+          const column = worksheet.getColumn(col)
+          if (column.width) {
+            // ExcelJS width is in characters, convert to pixels (approx 7px per char)
+            colWidths[col - 1] = Math.round(column.width * 7)
           }
         }
 
-        console.log('Imported styles:', importedStyles)
-        console.log('Sheet cols:', sheet['!cols'])
-        console.log('Sheet rows:', sheet['!rows'])
+        // Process rows
+        for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+          const row = worksheet.getRow(rowIndex + 1) // ExcelJS is 1-indexed
+          const rowData = []
 
-        // Extract column widths (xlsx uses character width, we convert to pixels)
-        const colWidths = {}
-        if (sheet['!cols']) {
-          sheet['!cols'].forEach((col, index) => {
-            if (col && col.wpx) {
-              colWidths[index] = col.wpx
-            } else if (col && col.wch) {
-              // Convert character width to pixels (approx 7px per character)
-              colWidths[index] = Math.round(col.wch * 7)
-            } else if (col && col.width) {
-              colWidths[index] = Math.round(col.width * 7)
+          // Row height
+          if (row.height) {
+            rowHeightsData[rowIndex] = Math.round(row.height * 1.333) // points to pixels
+          }
+
+          for (let colIndex = 0; colIndex < cols; colIndex++) {
+            const cell = row.getCell(colIndex + 1) // ExcelJS is 1-indexed
+
+            // Get cell value and formula
+            let value = ''
+            let formula = null
+
+            if (cell.formula) {
+              // Cell has a formula
+              formula = cell.formula
+              // Use the calculated result as display value
+              value = cell.result !== undefined ? String(cell.result) : ''
+            } else if (cell.value !== null && cell.value !== undefined) {
+              if (typeof cell.value === 'object') {
+                // Handle rich text, formula results, etc.
+                if (cell.value.formula) {
+                  formula = cell.value.formula
+                  value = cell.value.result !== undefined ? String(cell.value.result) : ''
+                } else {
+                  value = cell.text || cell.value.result || cell.value.toString() || ''
+                }
+              } else {
+                value = String(cell.value)
+              }
             }
-          })
+
+            rowData.push(value)
+
+            // Store formula if exists
+            if (formula) {
+              importedFormulas[`${rowIndex}-${colIndex}`] = formula
+            }
+
+            // Extract styles
+            const style = convertFromExcelJSStyle(cell)
+            if (style && Object.keys(style).length > 0) {
+              importedStyles[`${rowIndex}-${colIndex}`] = style
+            }
+          }
+
+          normalizedData.push(rowData)
         }
 
-        // Extract row heights
-        const rowHeightsData = {}
-        if (sheet['!rows']) {
-          sheet['!rows'].forEach((row, index) => {
-            if (row && row.hpx) {
-              rowHeightsData[index] = row.hpx
-            } else if (row && row.hpt) {
-              // Convert points to pixels (1pt = 1.333px)
-              rowHeightsData[index] = Math.round(row.hpt * 1.333)
-            }
-          })
-        }
-
-        return { name, data: normalizedData, styles: importedStyles, colWidths, rowHeights: rowHeightsData }
+        sheets.value.push({
+          name: worksheet.name,
+          data: normalizedData,
+          styles: importedStyles,
+          formulas: importedFormulas,
+          colWidths,
+          rowHeights: rowHeightsData
+        })
       })
 
       activeSheetIndex.value = 0
       data.value = sheets.value[0].data
       cellStyles.value = sheets.value[0].styles || {}
+      cellFormulas.value = sheets.value[0].formulas || {}
       columnWidths.value = sheets.value[0].colWidths || {}
       rowHeights.value = sheets.value[0].rowHeights || {}
       fileName.value = file.name
@@ -391,10 +409,11 @@ export function useSpreadsheet() {
     }
   }
 
-  // Convert hex color to ARGB format for xlsx (without #)
+  // Convert hex color to ARGB format (with FF prefix for full opacity)
   function hexToArgb(hex) {
     if (!hex) return null
-    return hex.replace('#', '').toUpperCase()
+    const clean = hex.replace('#', '').toUpperCase()
+    return clean.length === 6 ? 'FF' + clean : clean
   }
 
   // Convert ARGB to hex color (with #)
@@ -405,93 +424,63 @@ export function useSpreadsheet() {
     return '#' + rgb.toLowerCase()
   }
 
-  // Convert xlsx-js-style format to our cell style
-  function convertFromXlsxStyle(xlsxStyle) {
-    if (!xlsxStyle) return null
+  // Convert ExcelJS cell style to our format
+  function convertFromExcelJSStyle(cell) {
+    if (!cell) return null
 
     const style = {}
 
-    // Font styles - check multiple possible structures
-    const font = xlsxStyle.font || xlsxStyle.Font
-    if (font) {
-      if (font.bold || font.Bold) style.bold = true
-      if (font.italic || font.Italic) style.italic = true
-
-      // Text color - various possible structures
-      const fontColor = font.color || font.Color
-      if (fontColor) {
-        if (fontColor.rgb) {
-          style.textColor = argbToHex(fontColor.rgb)
-        } else if (fontColor.argb) {
-          style.textColor = argbToHex(fontColor.argb)
-        }
+    // Font styles
+    if (cell.font) {
+      if (cell.font.bold) style.bold = true
+      if (cell.font.italic) style.italic = true
+      if (cell.font.underline) style.underline = true
+      if (cell.font.strike) style.strikethrough = true
+      if (cell.font.size) style.fontSize = cell.font.size
+      if (cell.font.color?.argb) {
+        style.textColor = argbToHex(cell.font.color.argb)
       }
     }
 
-    // Background fill - check multiple possible structures
-    const fill = xlsxStyle.fill || xlsxStyle.Fill || xlsxStyle.patternFill
-    if (fill) {
-      // Try different color properties
-      const fgColor = fill.fgColor || fill.FgColor || fill.bgColor || fill.BgColor
+    // Alignment
+    if (cell.alignment) {
+      if (cell.alignment.horizontal) style.alignH = cell.alignment.horizontal
+      if (cell.alignment.vertical) style.alignV = cell.alignment.vertical
+      if (cell.alignment.wrapText) style.wrapText = true
+    }
+
+    // Number format
+    if (cell.numFmt && cell.numFmt !== 'General') {
+      style.numFmt = cell.numFmt
+    }
+
+    // Background fill
+    if (cell.fill && cell.fill.type === 'pattern' && cell.fill.pattern !== 'none') {
+      const fgColor = cell.fill.fgColor
       if (fgColor) {
-        const colorValue = fgColor.rgb || fgColor.argb || fgColor.indexed
-        if (colorValue && typeof colorValue === 'string' && colorValue !== '000000' && colorValue !== 'FF000000') {
-          style.bgColor = argbToHex(colorValue)
-        }
-      }
-
-      // Also check patternFill structure
-      if (fill.patternFill?.fgColor?.rgb) {
-        style.bgColor = argbToHex(fill.patternFill.fgColor.rgb)
-      }
-
-      // Theme colors
-      if (fgColor?.theme !== undefined) {
-        const themeColors = {
-          0: '#ffffff', 1: '#000000', 2: '#e7e6e6', 3: '#44546a',
-          4: '#4472c4', 5: '#ed7d31', 6: '#a5a5a5', 7: '#ffc000',
-          8: '#5b9bd5', 9: '#70ad47'
-        }
-        if (themeColors[fgColor.theme]) {
-          style.bgColor = themeColors[fgColor.theme]
-        }
-      }
-    }
-
-    // Borders - check multiple possible structures
-    const border = xlsxStyle.border || xlsxStyle.Border
-    if (border) {
-      const borders = {}
-
-      // Check each border side - be very permissive
-      const checkBorder = (side) => {
-        const variations = [
-          side,
-          side.charAt(0).toUpperCase() + side.slice(1),
-          side.toLowerCase()
-        ]
-        for (const v of variations) {
-          const b = border[v]
-          if (b) {
-            // Any truthy value means border exists
-            if (typeof b === 'object') {
-              return Object.keys(b).length > 0 || b.style || b.color
-            }
-            return true
+        if (fgColor.argb && fgColor.argb !== 'FF000000' && fgColor.argb !== '00000000') {
+          style.bgColor = argbToHex(fgColor.argb)
+        } else if (fgColor.theme !== undefined) {
+          // Theme colors mapping
+          const themeColors = {
+            0: '#ffffff', 1: '#000000', 2: '#e7e6e6', 3: '#44546a',
+            4: '#4472c4', 5: '#ed7d31', 6: '#a5a5a5', 7: '#ffc000',
+            8: '#5b9bd5', 9: '#70ad47'
+          }
+          if (themeColors[fgColor.theme]) {
+            style.bgColor = themeColors[fgColor.theme]
           }
         }
-        return false
       }
+    }
 
-      if (checkBorder('top')) borders.top = true
-      if (checkBorder('right')) borders.right = true
-      if (checkBorder('bottom')) borders.bottom = true
-      if (checkBorder('left')) borders.left = true
-
-      // Debug log
-      if (Object.keys(border).length > 0) {
-        console.log('Border object found:', border, '-> Parsed:', borders)
-      }
+    // Borders
+    if (cell.border) {
+      const borders = {}
+      if (cell.border.top?.style) borders.top = true
+      if (cell.border.right?.style) borders.right = true
+      if (cell.border.bottom?.style) borders.bottom = true
+      if (cell.border.left?.style) borders.left = true
 
       if (Object.keys(borders).length > 0) {
         style.borders = borders
@@ -547,71 +536,128 @@ export function useSpreadsheet() {
 
       await new Promise(resolve => setTimeout(resolve, 0))
 
-      const workbook = XLSX.utils.book_new()
+      const workbook = new ExcelJS.Workbook()
 
-      sheets.value.forEach((sheet, sheetIndex) => {
-        loadingMessage.value = `Procesando hoja ${sheetIndex + 1}...`
+      for (const sheet of sheets.value) {
+        loadingMessage.value = `Procesando hoja ${sheet.name}...`
 
-        // Create worksheet from data
+        const worksheet = workbook.addWorksheet(sheet.name)
         const sheetData = sheet.data
-        const worksheet = XLSX.utils.aoa_to_sheet(sheetData)
-
-        // Apply styles to cells
         const styles = sheet.styles || {}
-        Object.entries(styles).forEach(([key, style]) => {
-          const [row, col] = key.split('-').map(Number)
-          const cellRef = XLSX.utils.encode_cell({ r: row, c: col })
-          const xlsxStyle = convertToXlsxStyle(style)
-
-          if (xlsxStyle) {
-            // Create cell if it doesn't exist (for styled empty cells)
-            if (!worksheet[cellRef]) {
-              worksheet[cellRef] = { t: 's', v: '' }
-            }
-            worksheet[cellRef].s = xlsxStyle
-          }
-        })
-
-        // Apply column widths
         const colWidths = sheet.colWidths || {}
-        if (Object.keys(colWidths).length > 0) {
-          const maxCol = Math.max(...Object.keys(colWidths).map(Number), sheetData[0]?.length || 0)
-          worksheet['!cols'] = []
-          for (let i = 0; i <= maxCol; i++) {
-            if (colWidths[i]) {
-              worksheet['!cols'][i] = { wpx: colWidths[i] }
-            } else {
-              worksheet['!cols'][i] = { wpx: 100 } // default width
-            }
-          }
-        }
-
-        // Apply row heights
         const rowHeightsData = sheet.rowHeights || {}
-        if (Object.keys(rowHeightsData).length > 0) {
-          const maxRow = Math.max(...Object.keys(rowHeightsData).map(Number), sheetData.length)
-          worksheet['!rows'] = []
-          for (let i = 0; i <= maxRow; i++) {
-            if (rowHeightsData[i]) {
-              worksheet['!rows'][i] = { hpx: rowHeightsData[i] }
-            }
-          }
+
+        // Set column widths
+        const maxCols = sheetData[0]?.length || 0
+        for (let col = 0; col < maxCols; col++) {
+          const width = colWidths[col] ? colWidths[col] / 7 : 14 // Convert pixels to characters
+          worksheet.getColumn(col + 1).width = width
         }
 
-        XLSX.utils.book_append_sheet(workbook, worksheet, sheet.name)
-      })
+        // Add rows with data, styles and formulas
+        const formulas = sheet.formulas || {}
+
+        sheetData.forEach((rowData, rowIndex) => {
+          const row = worksheet.addRow(rowData)
+
+          // Set row height
+          if (rowHeightsData[rowIndex]) {
+            row.height = rowHeightsData[rowIndex] / 1.333 // Convert pixels to points
+          }
+
+          // Apply cell styles and formulas
+          rowData.forEach((cellValue, colIndex) => {
+            const key = `${rowIndex}-${colIndex}`
+            const cell = row.getCell(colIndex + 1)
+
+            // Apply formula if exists
+            const formula = formulas[key]
+            if (formula) {
+              cell.value = { formula: formula, result: cellValue }
+            }
+
+            // Apply style
+            const style = styles[key]
+            if (style) {
+              applyStyleToExcelCell(cell, style)
+            }
+          })
+        })
+      }
 
       const exportName = fileName.value
         ? fileName.value.replace(/\.[^.]+$/, '') + '_editado.xlsx'
         : 'documento.xlsx'
 
       loadingMessage.value = 'Descargando...'
-      XLSX.writeFile(workbook, exportName)
+
+      // Generate buffer and download
+      const buffer = await workbook.xlsx.writeBuffer()
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = exportName
+      link.click()
+      URL.revokeObjectURL(link.href)
+
       stopLoading()
     } catch (error) {
       console.error('Export error:', error)
       stopLoading()
       alert('Error al exportar el archivo')
+    }
+  }
+
+  // Apply our cell style to ExcelJS cell
+  function applyStyleToExcelCell(cell, style) {
+    if (!style || Object.keys(style).length === 0) return
+
+    // Font styles
+    if (style.bold || style.italic || style.textColor || style.fontSize || style.underline || style.strikethrough) {
+      cell.font = {
+        bold: style.bold || false,
+        italic: style.italic || false,
+        underline: style.underline || false,
+        strike: style.strikethrough || false
+      }
+      if (style.fontSize) {
+        cell.font.size = style.fontSize
+      }
+      if (style.textColor) {
+        cell.font.color = { argb: hexToArgb(style.textColor) }
+      }
+    }
+
+    // Alignment
+    if (style.alignH || style.alignV || style.wrapText) {
+      cell.alignment = {}
+      if (style.alignH) cell.alignment.horizontal = style.alignH
+      if (style.alignV) cell.alignment.vertical = style.alignV
+      if (style.wrapText) cell.alignment.wrapText = true
+    }
+
+    // Number format
+    if (style.numFmt) {
+      cell.numFmt = style.numFmt
+    }
+
+    // Background fill
+    if (style.bgColor) {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: hexToArgb(style.bgColor) }
+      }
+    }
+
+    // Borders
+    if (style.borders) {
+      const borderStyle = { style: 'thin', color: { argb: 'FF737373' } }
+      cell.border = {}
+      if (style.borders.top) cell.border.top = borderStyle
+      if (style.borders.right) cell.border.right = borderStyle
+      if (style.borders.bottom) cell.border.bottom = borderStyle
+      if (style.borders.left) cell.border.left = borderStyle
     }
   }
 
@@ -621,8 +667,17 @@ export function useSpreadsheet() {
     try {
       await new Promise(resolve => setTimeout(resolve, 0))
 
-      const worksheet = XLSX.utils.aoa_to_sheet(data.value)
-      const csv = XLSX.utils.sheet_to_csv(worksheet)
+      // Generate CSV manually
+      const csv = data.value.map(row =>
+        row.map(cell => {
+          // Escape quotes and wrap in quotes if contains comma, quote or newline
+          const str = String(cell || '')
+          if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+            return '"' + str.replace(/"/g, '""') + '"'
+          }
+          return str
+        }).join(',')
+      ).join('\n')
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
       const link = document.createElement('a')
@@ -644,6 +699,7 @@ export function useSpreadsheet() {
     if (sheets.value[activeSheetIndex.value]) {
       sheets.value[activeSheetIndex.value].data = data.value
       sheets.value[activeSheetIndex.value].styles = cellStyles.value
+      sheets.value[activeSheetIndex.value].formulas = cellFormulas.value
       sheets.value[activeSheetIndex.value].colWidths = columnWidths.value
       sheets.value[activeSheetIndex.value].rowHeights = rowHeights.value
     }
@@ -654,6 +710,7 @@ export function useSpreadsheet() {
     activeSheetIndex.value = index
     data.value = sheets.value[index].data
     cellStyles.value = sheets.value[index].styles || {}
+    cellFormulas.value = sheets.value[index].formulas || {}
     columnWidths.value = sheets.value[index].colWidths || {}
     rowHeights.value = sheets.value[index].rowHeights || {}
     selectedCell.value = null
@@ -679,6 +736,131 @@ export function useSpreadsheet() {
   // Get row height (default 28px)
   function getRowHeight(rowIndex) {
     return rowHeights.value[rowIndex] || 28
+  }
+
+  // Sheet management functions
+  function addSheet(name = null) {
+    saveCurrentSheetState()
+
+    // Generate unique name
+    let sheetName = name
+    if (!sheetName) {
+      let num = sheets.value.length + 1
+      sheetName = `Hoja ${num}`
+      while (sheets.value.some(s => s.name === sheetName)) {
+        num++
+        sheetName = `Hoja ${num}`
+      }
+    }
+
+    const newSheet = {
+      name: sheetName,
+      data: createEmptyData(),
+      styles: {},
+      colWidths: {},
+      rowHeights: {}
+    }
+
+    sheets.value.push(newSheet)
+    switchSheet(sheets.value.length - 1)
+    return sheets.value.length - 1
+  }
+
+  function renameSheet(index, newName) {
+    if (index < 0 || index >= sheets.value.length) return false
+    if (!newName || newName.trim() === '') return false
+
+    // Check if name already exists
+    const trimmedName = newName.trim()
+    if (sheets.value.some((s, i) => i !== index && s.name === trimmedName)) {
+      return false
+    }
+
+    sheets.value[index].name = trimmedName
+    return true
+  }
+
+  function deleteSheet(index) {
+    if (sheets.value.length <= 1) return false // Keep at least one sheet
+    if (index < 0 || index >= sheets.value.length) return false
+
+    sheets.value.splice(index, 1)
+
+    // Adjust active index if needed
+    if (activeSheetIndex.value >= sheets.value.length) {
+      activeSheetIndex.value = sheets.value.length - 1
+    }
+
+    // Load the new active sheet
+    data.value = sheets.value[activeSheetIndex.value].data
+    cellStyles.value = sheets.value[activeSheetIndex.value].styles || {}
+    columnWidths.value = sheets.value[activeSheetIndex.value].colWidths || {}
+    rowHeights.value = sheets.value[activeSheetIndex.value].rowHeights || {}
+    selectedCell.value = null
+    editingCell.value = null
+    resetHistory()
+
+    return true
+  }
+
+  function duplicateSheet(index) {
+    if (index < 0 || index >= sheets.value.length) return false
+
+    saveCurrentSheetState()
+
+    const sourceSheet = sheets.value[index]
+    let copyName = `${sourceSheet.name} (copia)`
+    let num = 1
+    while (sheets.value.some(s => s.name === copyName)) {
+      num++
+      copyName = `${sourceSheet.name} (copia ${num})`
+    }
+
+    const newSheet = {
+      name: copyName,
+      data: JSON.parse(JSON.stringify(sourceSheet.data)),
+      styles: JSON.parse(JSON.stringify(sourceSheet.styles || {})),
+      formulas: JSON.parse(JSON.stringify(sourceSheet.formulas || {})),
+      colWidths: JSON.parse(JSON.stringify(sourceSheet.colWidths || {})),
+      rowHeights: JSON.parse(JSON.stringify(sourceSheet.rowHeights || {}))
+    }
+
+    sheets.value.splice(index + 1, 0, newSheet)
+    switchSheet(index + 1)
+    return true
+  }
+
+  // Formula management
+  function getCellFormula(row, col) {
+    return cellFormulas.value[`${row}-${col}`] || null
+  }
+
+  function setCellFormula(row, col, formula) {
+    const key = `${row}-${col}`
+    if (formula && formula.trim()) {
+      // Store formula (remove leading = if present for storage)
+      let cleanFormula = formula.trim()
+      if (cleanFormula.startsWith('=')) {
+        cleanFormula = cleanFormula.slice(1)
+      }
+      cellFormulas.value[key] = cleanFormula
+    } else {
+      delete cellFormulas.value[key]
+    }
+  }
+
+  function hasFormula(row, col) {
+    return !!cellFormulas.value[`${row}-${col}`]
+  }
+
+  // Get display value for a cell (handles formulas)
+  function getCellDisplayValue(row, col) {
+    const formula = getCellFormula(row, col)
+    if (formula) {
+      // Return formula with = prefix for display in edit mode
+      return '=' + formula
+    }
+    return data.value[row]?.[col] || ''
   }
 
   // Cell selection and editing
@@ -831,6 +1013,70 @@ export function useSpreadsheet() {
     cellStyles.value[key].borders = borderConfigs[preset] || borderConfigs['none']
   }
 
+  function setAlignment(type, value) {
+    const cell = editingCell.value || selectedCell.value
+    if (!cell) return
+
+    saveToHistory()
+    const key = getCellStyleKey(cell.row, cell.col)
+
+    if (!cellStyles.value[key]) {
+      cellStyles.value[key] = {}
+    }
+
+    if (type === 'horizontal') {
+      cellStyles.value[key].alignH = value
+    } else if (type === 'vertical') {
+      cellStyles.value[key].alignV = value
+    }
+  }
+
+  function setFontSize(size) {
+    const cell = editingCell.value || selectedCell.value
+    if (!cell) return
+
+    saveToHistory()
+    const key = getCellStyleKey(cell.row, cell.col)
+
+    if (!cellStyles.value[key]) {
+      cellStyles.value[key] = {}
+    }
+
+    cellStyles.value[key].fontSize = size
+  }
+
+  function setNumberFormat(format) {
+    const cell = editingCell.value || selectedCell.value
+    if (!cell) return
+
+    saveToHistory()
+    const key = getCellStyleKey(cell.row, cell.col)
+
+    if (!cellStyles.value[key]) {
+      cellStyles.value[key] = {}
+    }
+
+    if (format === 'General') {
+      delete cellStyles.value[key].numFmt
+    } else {
+      cellStyles.value[key].numFmt = format
+    }
+  }
+
+  function toggleWrapText() {
+    const cell = editingCell.value || selectedCell.value
+    if (!cell) return
+
+    saveToHistory()
+    const key = getCellStyleKey(cell.row, cell.col)
+
+    if (!cellStyles.value[key]) {
+      cellStyles.value[key] = {}
+    }
+
+    cellStyles.value[key].wrapText = !cellStyles.value[key].wrapText
+  }
+
   // Helper to determine if a color is light
   function isLightColor(hexColor) {
     if (!hexColor) return false
@@ -873,6 +1119,38 @@ export function useSpreadsheet() {
       fontStyle: style.italic ? 'italic' : 'normal',
       color: textColor,
       backgroundColor: style.bgColor || ''
+    }
+
+    // Font size
+    if (style.fontSize) {
+      computed.fontSize = style.fontSize + 'px'
+    }
+
+    // Underline and strikethrough
+    const textDecorations = []
+    if (style.underline) textDecorations.push('underline')
+    if (style.strikethrough) textDecorations.push('line-through')
+    if (textDecorations.length > 0) {
+      computed.textDecoration = textDecorations.join(' ')
+    }
+
+    // Horizontal alignment
+    if (style.alignH) {
+      const alignMap = { left: 'left', center: 'center', right: 'right', justify: 'justify' }
+      computed.textAlign = alignMap[style.alignH] || 'left'
+    }
+
+    // Vertical alignment
+    if (style.alignV) {
+      const vAlignMap = { top: 'flex-start', middle: 'center', bottom: 'flex-end' }
+      computed.alignItems = vAlignMap[style.alignV] || 'center'
+      computed.display = 'flex'
+    }
+
+    // Text wrapping
+    if (style.wrapText) {
+      computed.whiteSpace = 'pre-wrap'
+      computed.wordBreak = 'break-word'
     }
 
     // Apply borders
@@ -1105,6 +1383,10 @@ export function useSpreadsheet() {
     setCellStyle,
     toggleCellStyle,
     setBorders,
+    setAlignment,
+    setFontSize,
+    setNumberFormat,
+    toggleWrapText,
     insertRowAbove,
     insertRowBelow,
     deleteRow,
@@ -1124,6 +1406,19 @@ export function useSpreadsheet() {
     setColumnWidth,
     setRowHeight,
     getColumnWidth,
-    getRowHeight
+    getRowHeight,
+
+    // Sheet management
+    addSheet,
+    renameSheet,
+    deleteSheet,
+    duplicateSheet,
+
+    // Formula management
+    cellFormulas,
+    getCellFormula,
+    setCellFormula,
+    hasFormula,
+    getCellDisplayValue
   }
 }

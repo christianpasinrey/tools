@@ -1,6 +1,23 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { useSpreadsheet, TEXT_COLORS, BG_COLORS, BORDER_PRESETS, isDark, toggleDark } from '../../composables/useSpreadsheet'
+import { useSpreadsheet, TEXT_COLORS, BG_COLORS, BORDER_PRESETS, FONT_SIZES, NUMBER_FORMATS, isDark, toggleDark } from '../../composables/useSpreadsheet'
+
+// Dropdown state for toolbar menus
+const showFontSizeDropdown = ref(false)
+const showNumberFormatDropdown = ref(false)
+const showTextColorDropdown = ref(false)
+const showBgColorDropdown = ref(false)
+const showBorderDropdown = ref(false)
+const showRowColDropdown = ref(false)
+
+const closeAllDropdowns = () => {
+  showFontSizeDropdown.value = false
+  showNumberFormatDropdown.value = false
+  showTextColorDropdown.value = false
+  showBgColorDropdown.value = false
+  showBorderDropdown.value = false
+  showRowColDropdown.value = false
+}
 
 const props = defineProps({
   themeColor: {
@@ -13,20 +30,38 @@ const spreadsheet = useSpreadsheet()
 const fileInputRef = ref(null)
 const editTextareaRef = ref(null)
 const gridContainerRef = ref(null)
+const formulaBarRef = ref(null)
+const formulaBarValue = ref('')
+const isEditingFormulaBar = ref(false)
+
+// Sheet management state
+const renamingSheetIndex = ref(null)
+const renamingSheetName = ref('')
+const sheetNameInputRef = ref(null)
+const sheetContextMenu = ref({ visible: false, x: 0, y: 0, index: null })
 
 // Initialize
 onMounted(() => {
   spreadsheet.initEmptySheet()
   document.addEventListener('keydown', handleGlobalKeydown)
-  document.addEventListener('click', spreadsheet.closeContextMenu)
+  document.addEventListener('click', handleGlobalClick)
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleGlobalKeydown)
-  document.removeEventListener('click', spreadsheet.closeContextMenu)
+  document.removeEventListener('click', handleGlobalClick)
   document.removeEventListener('mousemove', handleColumnResize)
   document.removeEventListener('mouseup', stopColumnResize)
+  document.removeEventListener('mousemove', handleRowResize)
+  document.removeEventListener('mouseup', stopRowResize)
 })
+
+// Global click handler
+const handleGlobalClick = () => {
+  spreadsheet.closeContextMenu()
+  closeSheetContextMenu()
+  closeAllDropdowns()
+}
 
 // File handling
 const openFilePicker = () => fileInputRef.value?.click()
@@ -37,14 +72,6 @@ const handleFileSelect = async (e) => {
     await spreadsheet.loadFile(file)
   }
   e.target.value = ''
-}
-
-const handleDrop = async (e) => {
-  spreadsheet.isDragging.value = false
-  const file = e.dataTransfer?.files?.[0]
-  if (file) {
-    await spreadsheet.loadFile(file)
-  }
 }
 
 // Handle scroll for infinite expansion
@@ -58,6 +85,11 @@ const handleGridScroll = (e) => {
 const resizingColumn = ref(null)
 const resizeStartX = ref(0)
 const resizeStartWidth = ref(0)
+
+// Row resize handling
+const resizingRow = ref(null)
+const resizeStartY = ref(0)
+const resizeRowStartHeight = ref(0)
 
 const startColumnResize = (e, colIndex) => {
   e.preventDefault()
@@ -83,8 +115,160 @@ const stopColumnResize = () => {
   document.removeEventListener('mouseup', stopColumnResize)
 }
 
+// Row resize handling
+const startRowResize = (e, rowIndex) => {
+  e.preventDefault()
+  resizingRow.value = rowIndex
+  resizeStartY.value = e.clientY
+  resizeRowStartHeight.value = spreadsheet.getRowHeight(rowIndex)
+
+  document.addEventListener('mousemove', handleRowResize)
+  document.addEventListener('mouseup', stopRowResize)
+}
+
+const handleRowResize = (e) => {
+  if (resizingRow.value === null) return
+
+  const diff = e.clientY - resizeStartY.value
+  const newHeight = Math.max(20, resizeRowStartHeight.value + diff)
+  spreadsheet.setRowHeight(resizingRow.value, newHeight)
+}
+
+const stopRowResize = () => {
+  resizingRow.value = null
+  document.removeEventListener('mousemove', handleRowResize)
+  document.removeEventListener('mouseup', stopRowResize)
+}
+
+// Formula bar handling
+const updateFormulaBarValue = () => {
+  if (!spreadsheet.selectedCell.value) {
+    formulaBarValue.value = ''
+    return
+  }
+  const { row, col } = spreadsheet.selectedCell.value
+  // Show formula if exists, otherwise show value
+  const formula = spreadsheet.getCellFormula(row, col)
+  formulaBarValue.value = formula ? '=' + formula : (spreadsheet.data.value[row]?.[col] || '')
+}
+
+const startFormulaBarEdit = () => {
+  isEditingFormulaBar.value = true
+  updateFormulaBarValue()
+  nextTick(() => formulaBarRef.value?.focus())
+}
+
+const finishFormulaBarEdit = () => {
+  if (!spreadsheet.selectedCell.value || !isEditingFormulaBar.value) return
+
+  const { row, col } = spreadsheet.selectedCell.value
+  const value = formulaBarValue.value
+
+  spreadsheet.saveToHistory()
+
+  if (value.startsWith('=')) {
+    // It's a formula
+    spreadsheet.setCellFormula(row, col, value)
+    // For now, store the formula text as display (Excel would calculate)
+    spreadsheet.data.value[row][col] = value
+  } else {
+    // Regular value - remove any existing formula
+    spreadsheet.setCellFormula(row, col, null)
+    spreadsheet.data.value[row][col] = value
+  }
+
+  isEditingFormulaBar.value = false
+}
+
+const cancelFormulaBarEdit = () => {
+  isEditingFormulaBar.value = false
+  updateFormulaBarValue()
+}
+
+const handleFormulaBarKeydown = (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault()
+    finishFormulaBarEdit()
+    spreadsheet.moveSelection('down')
+    updateFormulaBarValue()
+  } else if (e.key === 'Escape') {
+    cancelFormulaBarEdit()
+  } else if (e.key === 'Tab') {
+    e.preventDefault()
+    finishFormulaBarEdit()
+    spreadsheet.moveSelection('right')
+    updateFormulaBarValue()
+  }
+}
+
+// Watch for cell selection changes to update formula bar
+const originalSelectCell = spreadsheet.selectCell
+spreadsheet.selectCell = (row, col) => {
+  originalSelectCell(row, col)
+  updateFormulaBarValue()
+}
+
+// Sheet management functions
+const openSheetContextMenu = (e, index) => {
+  sheetContextMenu.value = {
+    visible: true,
+    x: e.clientX,
+    y: e.clientY,
+    index
+  }
+}
+
+const closeSheetContextMenu = () => {
+  sheetContextMenu.value.visible = false
+}
+
+const startRenameSheet = async (index) => {
+  renamingSheetIndex.value = index
+  renamingSheetName.value = spreadsheet.sheets.value[index].name
+  await nextTick()
+  // Focus might need a slight delay
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('input[type="text"]')
+    inputs.forEach(input => {
+      if (input.value === renamingSheetName.value) {
+        input.focus()
+        input.select()
+      }
+    })
+  }, 50)
+}
+
+const finishRenameSheet = () => {
+  if (renamingSheetIndex.value !== null && renamingSheetName.value.trim()) {
+    spreadsheet.renameSheet(renamingSheetIndex.value, renamingSheetName.value.trim())
+  }
+  renamingSheetIndex.value = null
+  renamingSheetName.value = ''
+}
+
+const cancelRenameSheet = () => {
+  renamingSheetIndex.value = null
+  renamingSheetName.value = ''
+}
+
+const confirmDeleteSheet = (index) => {
+  const sheetName = spreadsheet.sheets.value[index].name
+  if (confirm(`¿Eliminar la hoja "${sheetName}"?`)) {
+    spreadsheet.deleteSheet(index)
+  }
+}
+
+const hasContent = () => {
+  // Check if there's any content in the spreadsheet
+  return spreadsheet.data.value.some(row => row.some(cell => cell && cell.trim() !== ''))
+}
+
 const newDocument = () => {
-  if (confirm('¿Crear un nuevo documento? Se perderán los cambios no guardados.')) {
+  if (hasContent()) {
+    if (confirm('¿Crear un nuevo documento? Se perderán los cambios no guardados.')) {
+      spreadsheet.initEmptySheet()
+    }
+  } else {
     spreadsheet.initEmptySheet()
   }
 }
@@ -317,8 +501,39 @@ const handleContextAction = (action) => {
         </button>
       </div>
 
-      <!-- Format -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-1 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <!-- Format - Font Size -->
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-1 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <button
+          @click.stop="showFontSizeDropdown = !showFontSizeDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors min-w-[48px] justify-between"
+          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          title="Tamaño de fuente"
+        >
+          <span>{{ spreadsheet.currentCellStyle.value.fontSize || 12 }}</span>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- Font Size Dropdown -->
+        <div
+          v-if="showFontSizeDropdown"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto border"
+          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          @click.stop
+        >
+          <button
+            v-for="size in FONT_SIZES"
+            :key="size"
+            @click="spreadsheet.setFontSize(size); showFontSizeDropdown = false"
+            class="w-full px-4 py-1 text-xs text-left hover:bg-opacity-10"
+            :class="[
+              isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100',
+              spreadsheet.currentCellStyle.value.fontSize === size ? (isDark ? 'bg-neutral-800' : 'bg-gray-100') : ''
+            ]"
+          >{{ size }}</button>
+        </div>
+      </div>
+
+      <!-- Format - Text Style -->
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
         <button
           @click="spreadsheet.toggleCellStyle('bold')"
           class="p-1.5 rounded transition-colors"
@@ -327,9 +542,7 @@ const handleContextAction = (action) => {
             : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Negrita (Ctrl+B)"
         >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6V4zm0 8h9a4 4 0 014 4 4 4 0 01-4 4H6v-8z"/>
-          </svg>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6V4zm0 8h9a4 4 0 014 4 4 4 0 01-4 4H6v-8z"/></svg>
         </button>
         <button
           @click="spreadsheet.toggleCellStyle('italic')"
@@ -339,10 +552,337 @@ const handleContextAction = (action) => {
             : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Cursiva (Ctrl+I)"
         >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M10 4h4l-2 16h-4l2-16z"/>
-          </svg>
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4h4l-2 16h-4l2-16z"/></svg>
         </button>
+        <button
+          @click="spreadsheet.toggleCellStyle('underline')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.underline
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Subrayado (Ctrl+U)"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 21h12v-2H6v2zM12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6z"/></svg>
+        </button>
+        <button
+          @click="spreadsheet.toggleCellStyle('strikethrough')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.strikethrough
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Tachado"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19h4v-3h-4v3zM5 4v3h5v3h4V7h5V4H5zM3 14h18v-2H3v2z"/></svg>
+        </button>
+      </div>
+
+      <!-- Format - Colors -->
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <!-- Text Color -->
+        <button
+          @click.stop="showTextColorDropdown = !showTextColorDropdown; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
+          class="p-1.5 rounded transition-colors flex flex-col items-center"
+          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          title="Color de texto"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11 2L5.5 16h2.25l1.12-3h6.25l1.12 3h2.25L13 2h-2zm-1.38 9L12 4.67 14.38 11H9.62z"/></svg>
+          <div class="w-4 h-1 rounded-sm mt-0.5" :style="{ backgroundColor: spreadsheet.currentCellStyle.value.textColor || (isDark ? '#d4d4d4' : '#171717') }"></div>
+        </button>
+        <!-- Text Color Dropdown -->
+        <div
+          v-if="showTextColorDropdown"
+          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border"
+          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          @click.stop
+        >
+          <div class="grid grid-cols-6 gap-1">
+            <button
+              v-for="color in TEXT_COLORS"
+              :key="'tc-' + color"
+              @click="spreadsheet.setCellStyle('textColor', color); showTextColorDropdown = false"
+              class="w-6 h-6 rounded border transition-transform hover:scale-110"
+              :class="isDark ? 'border-neutral-600' : 'border-gray-300'"
+              :style="{ backgroundColor: color }"
+            />
+          </div>
+        </div>
+
+        <!-- Background Color -->
+        <button
+          @click.stop="showBgColorDropdown = !showBgColorDropdown; showTextColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
+          class="p-1.5 rounded transition-colors flex flex-col items-center"
+          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          title="Color de fondo"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z"/></svg>
+          <div class="w-4 h-1 rounded-sm mt-0.5" :style="{ backgroundColor: spreadsheet.currentCellStyle.value.bgColor || 'transparent' }" :class="!spreadsheet.currentCellStyle.value.bgColor ? (isDark ? 'border border-neutral-600' : 'border border-gray-300') : ''"></div>
+        </button>
+        <!-- Background Color Dropdown -->
+        <div
+          v-if="showBgColorDropdown"
+          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border"
+          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          @click.stop
+        >
+          <div class="grid grid-cols-5 gap-1">
+            <button
+              v-for="color in BG_COLORS"
+              :key="'bg-' + color"
+              @click="spreadsheet.setCellStyle('bgColor', color); showBgColorDropdown = false"
+              class="w-6 h-6 rounded border transition-transform hover:scale-110"
+              :class="isDark ? 'border-neutral-600' : 'border-gray-300'"
+              :style="{ backgroundColor: color }"
+            />
+            <button
+              @click="spreadsheet.setCellStyle('bgColor', null); showBgColorDropdown = false"
+              class="w-6 h-6 rounded border flex items-center justify-center"
+              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              title="Sin fondo"
+            >
+              <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Format - Alignment -->
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <!-- Horizontal Alignment -->
+        <button
+          @click="spreadsheet.setAlignment('horizontal', 'left')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.alignH === 'left'
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Alinear izquierda"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M15 15H3v2h12v-2zm0-8H3v2h12V7zM3 13h18v-2H3v2zm0 8h18v-2H3v2zM3 3v2h18V3H3z"/></svg>
+        </button>
+        <button
+          @click="spreadsheet.setAlignment('horizontal', 'center')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.alignH === 'center'
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Centrar"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M7 15v2h10v-2H7zm-4 6h18v-2H3v2zm0-8h18v-2H3v2zm4-6v2h10V7H7zM3 3v2h18V3H3z"/></svg>
+        </button>
+        <button
+          @click="spreadsheet.setAlignment('horizontal', 'right')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.alignH === 'right'
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Alinear derecha"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 21h18v-2H3v2zm6-4h12v-2H9v2zm-6-4h18v-2H3v2zm6-4h12V7H9v2zM3 3v2h18V3H3z"/></svg>
+        </button>
+        <div class="w-px h-5 mx-0.5" :class="isDark ? 'bg-neutral-700' : 'bg-gray-200'"></div>
+        <!-- Vertical Alignment -->
+        <button
+          @click="spreadsheet.setAlignment('vertical', 'top')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.alignV === 'top'
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Alinear arriba"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z"/></svg>
+        </button>
+        <button
+          @click="spreadsheet.setAlignment('vertical', 'middle')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.alignV === 'middle'
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Centrar verticalmente"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"/></svg>
+        </button>
+        <button
+          @click="spreadsheet.setAlignment('vertical', 'bottom')"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.alignV === 'bottom'
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Alinear abajo"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z"/></svg>
+        </button>
+      </div>
+
+      <!-- Format - Wrap & Borders -->
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <button
+          @click="spreadsheet.toggleWrapText()"
+          class="p-1.5 rounded transition-colors"
+          :class="spreadsheet.currentCellStyle.value.wrapText
+            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          title="Ajustar texto"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"/></svg>
+        </button>
+        <button
+          @click.stop="showBorderDropdown = !showBorderDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
+          class="p-1.5 rounded transition-colors"
+          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          title="Bordes"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm8 16H5v-6h6v6zm0-8H5V5h6v6zm8 8h-6v-6h6v6zm0-8h-6V5h6v6z"/></svg>
+        </button>
+        <!-- Borders Dropdown -->
+        <div
+          v-if="showBorderDropdown"
+          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border"
+          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          @click.stop
+        >
+          <div class="flex gap-1">
+            <button
+              @click="spreadsheet.setBorders('none'); showBorderDropdown = false"
+              class="w-8 h-8 rounded border flex items-center justify-center"
+              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              title="Sin borde"
+            >
+              <svg class="w-5 h-5" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <button
+              @click="spreadsheet.setBorders('all'); showBorderDropdown = false"
+              class="w-8 h-8 rounded border flex items-center justify-center"
+              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              title="Todos los bordes"
+            >
+              <div class="w-4 h-4 border-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+            </button>
+            <button
+              @click="spreadsheet.setBorders('bottom'); showBorderDropdown = false"
+              class="w-8 h-8 rounded border flex items-center justify-center"
+              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              title="Borde inferior"
+            >
+              <div class="w-4 h-4 border-b-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+            </button>
+            <button
+              @click="spreadsheet.setBorders('top-bottom'); showBorderDropdown = false"
+              class="w-8 h-8 rounded border flex items-center justify-center"
+              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              title="Bordes arriba/abajo"
+            >
+              <div class="w-4 h-4 border-t-2 border-b-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+            </button>
+            <button
+              @click="spreadsheet.setBorders('left-right'); showBorderDropdown = false"
+              class="w-8 h-8 rounded border flex items-center justify-center"
+              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              title="Bordes izq/der"
+            >
+              <div class="w-4 h-4 border-l-2 border-r-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Format - Number Format -->
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <button
+          @click.stop="showNumberFormatDropdown = !showNumberFormatDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showRowColDropdown = false"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
+          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          title="Formato de número"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17h2v-7h-2v7zm12-7v7h2v-4h2v-3h-4zm-6 7h2V7H7v2h2v8zM3 9h4V7H3v2z"/><path d="M17 7v2h2v-2h-2z"/></svg>
+          <span>123</span>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- Number Format Dropdown -->
+        <div
+          v-if="showNumberFormatDropdown"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[140px] border"
+          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          @click.stop
+        >
+          <button
+            v-for="fmt in NUMBER_FORMATS"
+            :key="fmt.id"
+            @click="spreadsheet.setNumberFormat(fmt.format); showNumberFormatDropdown = false"
+            class="w-full px-4 py-1.5 text-xs text-left"
+            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          >{{ fmt.name }}</button>
+        </div>
+      </div>
+
+      <!-- Row/Column Operations -->
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <button
+          @click.stop="showRowColDropdown = !showRowColDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
+          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          title="Insertar/Eliminar filas y columnas"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18M10 3v18M14 3v18"/></svg>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- Row/Column Dropdown -->
+        <div
+          v-if="showRowColDropdown"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[180px] border"
+          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          @click.stop
+        >
+          <div class="px-3 py-1 text-[10px] uppercase font-medium" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Filas</div>
+          <button
+            @click="spreadsheet.insertRowAbove(); showRowColDropdown = false"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
+            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 0l-4 4m4-4l4 4"/></svg>
+            Insertar fila arriba
+          </button>
+          <button
+            @click="spreadsheet.insertRowBelow(); showRowColDropdown = false"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
+            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 5v14m0 0l4-4m-4 4l-4-4"/></svg>
+            Insertar fila abajo
+          </button>
+          <button
+            @click="spreadsheet.deleteRow(); showRowColDropdown = false"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
+            :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"/></svg>
+            Eliminar fila
+          </button>
+          <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
+          <div class="px-3 py-1 text-[10px] uppercase font-medium" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Columnas</div>
+          <button
+            @click="spreadsheet.insertColumnLeft(); showRowColDropdown = false"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
+            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 12H5m0 0l4-4m-4 4l4 4"/></svg>
+            Insertar columna izquierda
+          </button>
+          <button
+            @click="spreadsheet.insertColumnRight(); showRowColDropdown = false"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
+            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14m0 0l-4-4m4 4l-4 4"/></svg>
+            Insertar columna derecha
+          </button>
+          <button
+            @click="spreadsheet.deleteColumn(); showRowColDropdown = false"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
+            :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16"/></svg>
+            Eliminar columna
+          </button>
+        </div>
       </div>
 
       <!-- Export -->
@@ -418,39 +958,166 @@ const handleContextAction = (action) => {
       </button>
     </div>
 
-    <!-- Sheet Tabs -->
-    <div v-if="spreadsheet.sheets.value.length > 1" class="flex border-b overflow-x-auto" :class="isDark ? 'bg-neutral-900/50 border-neutral-800' : 'bg-gray-50 border-gray-200'">
-      <button
-        v-for="(sheet, index) in spreadsheet.sheets.value"
-        :key="index"
-        @click="spreadsheet.switchSheet(index)"
-        class="px-4 py-2 text-xs font-medium transition-colors whitespace-nowrap relative"
-        :class="spreadsheet.activeSheetIndex.value === index
-          ? (isDark ? 'text-white bg-neutral-800' : 'text-gray-900 bg-white')
-          : (isDark ? 'text-neutral-500 hover:text-neutral-300' : 'text-gray-500 hover:text-gray-700')"
+    <!-- Formula Bar -->
+    <div class="h-8 border-b flex items-center px-2 gap-2 shrink-0" :class="isDark ? 'bg-neutral-900/50 border-neutral-800' : 'bg-gray-50 border-gray-200'">
+      <!-- Cell Reference -->
+      <div
+        class="w-16 h-6 flex items-center justify-center text-xs font-mono font-medium rounded border"
+        :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-300' : 'bg-white border-gray-300 text-gray-700'"
       >
-        {{ sheet.name }}
-        <div
-          v-if="spreadsheet.activeSheetIndex.value === index"
-          class="absolute bottom-0 left-0 right-0 h-0.5"
-          :style="{ backgroundColor: themeColor }"
-        />
-      </button>
+        {{ spreadsheet.currentCellRef.value || 'A1' }}
+      </div>
+
+      <!-- Function icon -->
+      <div class="flex items-center justify-center w-6 h-6" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.871 4A17.926 17.926 0 003 12c0 2.874.673 5.59 1.871 8m14.258 0A17.926 17.926 0 0021 12c0-2.874-.673-5.59-1.871-8M9 9h1.246a1 1 0 01.961.725l1.586 5.55a1 1 0 00.961.725H15m-6 4h6"/>
+        </svg>
+      </div>
+
+      <!-- Formula/Value Input -->
+      <input
+        ref="formulaBarRef"
+        v-model="formulaBarValue"
+        type="text"
+        class="flex-1 h-6 px-2 text-sm font-mono rounded border outline-none transition-colors"
+        :class="[
+          isDark
+            ? 'bg-neutral-800 border-neutral-700 text-neutral-200 focus:border-neutral-500 placeholder-neutral-600'
+            : 'bg-white border-gray-300 text-gray-800 focus:border-gray-400 placeholder-gray-400',
+          spreadsheet.hasFormula(spreadsheet.selectedCell.value?.row, spreadsheet.selectedCell.value?.col)
+            ? 'text-blue-500'
+            : ''
+        ]"
+        :placeholder="spreadsheet.selectedCell.value ? 'Introduce valor o fórmula (=SUM, =IF...)' : 'Selecciona una celda'"
+        :disabled="!spreadsheet.selectedCell.value"
+        @focus="startFormulaBarEdit"
+        @blur="finishFormulaBarEdit"
+        @keydown="handleFormulaBarKeydown"
+      />
+
+      <!-- Formula indicator -->
+      <div
+        v-if="spreadsheet.selectedCell.value && spreadsheet.hasFormula(spreadsheet.selectedCell.value.row, spreadsheet.selectedCell.value.col)"
+        class="px-2 py-0.5 text-[10px] font-medium rounded"
+        :class="isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'"
+      >
+        fx
+      </div>
     </div>
+
+    <!-- Sheet Tabs -->
+    <div class="flex items-center border-b shrink-0" :class="isDark ? 'bg-neutral-900/50 border-neutral-800' : 'bg-gray-50 border-gray-200'">
+      <!-- Add Sheet Button -->
+      <button
+        @click="spreadsheet.addSheet()"
+        class="w-8 h-8 flex items-center justify-center transition-colors shrink-0"
+        :class="isDark ? 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+        title="Añadir hoja"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+      </button>
+
+      <!-- Sheet Tabs -->
+      <div class="flex overflow-x-auto">
+        <button
+          v-for="(sheet, index) in spreadsheet.sheets.value"
+          :key="index"
+          @click="spreadsheet.switchSheet(index); updateFormulaBarValue()"
+          @dblclick="startRenameSheet(index)"
+          @contextmenu.prevent="openSheetContextMenu($event, index)"
+          class="px-4 py-2 text-xs font-medium transition-colors whitespace-nowrap relative group"
+          :class="spreadsheet.activeSheetIndex.value === index
+            ? (isDark ? 'text-white bg-neutral-800' : 'text-gray-900 bg-white')
+            : (isDark ? 'text-neutral-500 hover:text-neutral-300' : 'text-gray-500 hover:text-gray-700')"
+        >
+          <!-- Editing mode -->
+          <input
+            v-if="renamingSheetIndex === index"
+            v-model="renamingSheetName"
+            type="text"
+            class="w-20 px-1 text-xs bg-transparent border-b outline-none"
+            :class="isDark ? 'border-neutral-500 text-white' : 'border-gray-400 text-gray-900'"
+            @blur="finishRenameSheet"
+            @keydown.enter="finishRenameSheet"
+            @keydown.escape="cancelRenameSheet"
+            @click.stop
+            ref="sheetNameInputRef"
+          />
+          <span v-else>{{ sheet.name }}</span>
+
+          <!-- Close button (only when multiple sheets) -->
+          <span
+            v-if="spreadsheet.sheets.value.length > 1 && spreadsheet.activeSheetIndex.value === index"
+            @click.stop="confirmDeleteSheet(index)"
+            class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity hover:text-red-400"
+          >×</span>
+
+          <div
+            v-if="spreadsheet.activeSheetIndex.value === index"
+            class="absolute bottom-0 left-0 right-0 h-0.5"
+            :style="{ backgroundColor: themeColor }"
+          />
+        </button>
+      </div>
+    </div>
+
+    <!-- Sheet Context Menu -->
+    <Teleport to="body">
+      <div
+        v-if="sheetContextMenu.visible"
+        class="fixed rounded-lg shadow-xl py-1 z-[100] min-w-[160px] border"
+        :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+        :style="{ left: sheetContextMenu.x + 'px', top: sheetContextMenu.y + 'px' }"
+        @click.stop
+      >
+        <button
+          @click="startRenameSheet(sheetContextMenu.index); closeSheetContextMenu()"
+          class="w-full px-4 py-2 text-xs text-left flex items-center gap-2"
+          :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+          </svg>
+          Renombrar
+        </button>
+        <button
+          @click="spreadsheet.duplicateSheet(sheetContextMenu.index); closeSheetContextMenu()"
+          class="w-full px-4 py-2 text-xs text-left flex items-center gap-2"
+          :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+          Duplicar
+        </button>
+        <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
+        <button
+          v-if="spreadsheet.sheets.value.length > 1"
+          @click="confirmDeleteSheet(sheetContextMenu.index); closeSheetContextMenu()"
+          class="w-full px-4 py-2 text-xs text-left flex items-center gap-2"
+          :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+          Eliminar
+        </button>
+      </div>
+    </Teleport>
 
     <!-- Spreadsheet Grid -->
     <div
       ref="gridContainerRef"
       class="flex-1 overflow-auto relative"
-      @dragover.prevent="spreadsheet.isDragging.value = true"
-      @dragleave="spreadsheet.isDragging.value = false"
-      @drop.prevent="handleDrop"
       @scroll="handleGridScroll"
     >
       <table class="border-collapse min-w-full">
         <thead class="sticky top-0 z-10">
           <tr>
-            <th class="w-12 h-8 border text-xs font-medium" :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-500' : 'bg-gray-100 border-gray-300 text-gray-500'"></th>
+            <th class="h-8 border text-xs font-medium" style="width: 80px; min-width: 80px;" :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-500' : 'bg-gray-100 border-gray-300 text-gray-500'"></th>
             <th
               v-for="(col, colIndex) in spreadsheet.columns.value"
               :key="colIndex"
@@ -471,11 +1138,17 @@ const handleContextAction = (action) => {
         <tbody>
           <tr v-for="(row, rowIndex) in spreadsheet.data.value" :key="rowIndex">
             <td
-              class="w-12 border text-xs text-center font-medium sticky left-0 z-[5]"
+              class="border text-xs text-center font-medium sticky left-0 z-[5] relative group/row select-none"
               :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-500' : 'bg-gray-100 border-gray-300 text-gray-500'"
-              :style="{ height: spreadsheet.getRowHeight(rowIndex) + 'px' }"
+              :style="{ height: spreadsheet.getRowHeight(rowIndex) + 'px', width: '80px', minWidth: '80px' }"
             >
               {{ rowIndex + 1 }}
+              <!-- Row resize handle -->
+              <div
+                class="absolute left-0 right-0 bottom-0 h-1 cursor-row-resize opacity-0 group-hover/row:opacity-100 transition-opacity"
+                :class="isDark ? 'bg-neutral-500 hover:bg-neutral-400' : 'bg-gray-400 hover:bg-gray-500'"
+                @mousedown="startRowResize($event, rowIndex)"
+              ></div>
             </td>
             <td
               v-for="(cell, colIndex) in row"
@@ -726,27 +1399,6 @@ const handleContextAction = (action) => {
         </div>
       </Teleport>
 
-      <!-- Empty State Overlay -->
-      <div
-        v-if="!spreadsheet.fileName.value && spreadsheet.data.value.every(row => row.every(cell => !cell))"
-        class="absolute inset-0 flex items-center justify-center pointer-events-none"
-      >
-        <div
-          @click="openFilePicker"
-          class="flex flex-col items-center cursor-pointer pointer-events-auto p-8 rounded-lg border-2 border-dashed transition-colors"
-          :class="spreadsheet.isDragging.value
-            ? 'border-green-500/50 bg-green-500/5'
-            : (isDark ? 'border-neutral-700 hover:border-neutral-600' : 'border-gray-300 hover:border-gray-400')"
-        >
-          <div class="w-16 h-16 rounded-lg border flex items-center justify-center mb-4" :class="isDark ? 'bg-neutral-800 border-neutral-700' : 'bg-gray-100 border-gray-200'">
-            <svg class="w-7 h-7" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-            </svg>
-          </div>
-          <p class="text-sm mb-1" :class="isDark ? 'text-neutral-400' : 'text-gray-600'">Arrastra un archivo Excel o CSV</p>
-          <p class="text-xs" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">o haz clic para buscar</p>
-        </div>
-      </div>
     </div>
 
     <!-- Hidden File Input -->
