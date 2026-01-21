@@ -108,9 +108,124 @@ const tools = [
       }
     ]
   },
-  { path: '/unit-converter', name: 'Converter', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', color: '#10b981' },
-  { path: '/color-picker', name: 'Color', icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01', color: '#ec4899' },
-  { path: '/cheatsheets', name: 'Cheatsheets', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', color: '#f59e0b' },
+  {
+    path: '/tools',
+    name: 'Tools',
+    icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z',
+    color: '#10b981',
+    hasSubmenu: true,
+    submenuTitle: 'Tools',
+    submenuItems: [
+      {
+        path: '/tools#converter',
+        name: 'Unit Converter',
+        description: 'Convierte unidades y monedas',
+        icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
+        color: '#10b981'
+      },
+      {
+        path: '/tools#color',
+        name: 'Color Picker',
+        description: 'Paletas, gradientes y formatos',
+        icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01',
+        color: '#ec4899'
+      }
+    ]
+  },
+  {
+    path: '/cheatsheets',
+    name: 'Reference',
+    icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
+    color: '#f59e0b',
+    hasSubmenu: true,
+    submenuTitle: 'Cheatsheets',
+    submenuItems: [
+      {
+        path: '/cheatsheets#macos',
+        name: 'Sistemas',
+        description: 'macOS, Windows, Linux',
+        icon: 'M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z',
+        color: '#3b82f6'
+      },
+      {
+        path: '/cheatsheets#bash',
+        name: 'Desarrollo',
+        description: 'Bash, Git, Python, TypeScript',
+        icon: 'M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z',
+        color: '#22c55e'
+      },
+      {
+        path: '/cheatsheets#mysql',
+        name: 'Bases de Datos',
+        description: 'MySQL, SQL, MongoDB',
+        icon: 'M12 2C8.13 2 5 3.79 5 6v12c0 2.21 3.13 4 7 4s7-1.79 7-4V6c0-2.21-3.13-4-7-4z',
+        color: '#06b6d4'
+      },
+      {
+        path: '/cheatsheets#docker',
+        name: 'DevOps',
+        description: 'Docker, Kubernetes, NPM',
+        icon: 'M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z',
+        color: '#a855f7'
+      },
+      {
+        path: '/cheatsheets#laravel',
+        name: 'Frameworks',
+        description: 'Laravel, Vue, React',
+        icon: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
+        color: '#ef4444'
+      },
+      {
+        path: '/cheatsheets#css',
+        name: 'Estilos',
+        description: 'CSS, Tailwind',
+        icon: 'M12 22C6.49 22 2 17.51 2 12S6.49 2 12 2s10 4.04 10 9c0 3.31-2.69 6-6 6h-1.77c-.28 0-.5.22-.5.5 0 .12.05.23.13.33.41.47.64 1.06.64 1.67A2.5 2.5 0 0112 22z',
+        color: '#ec4899'
+      },
+      {
+        path: '/cheatsheets#physics',
+        name: 'Ciencias',
+        description: 'Física, Química, Matemáticas',
+        icon: 'M19.8 18.4L14 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81H9.04c-.42 0-.65.48-.39.81L10 6.5v4.17L4.2 18.4c-.49.66-.02 1.6.8 1.6h14c.82 0 1.29-.94.8-1.6z',
+        color: '#f97316'
+      },
+      {
+        path: '/cheatsheets#excel',
+        name: 'Productividad',
+        description: 'Excel, Notion, Photoshop',
+        icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z',
+        color: '#10b981'
+      },
+      {
+        path: '/cheatsheets#music',
+        name: 'Creativos',
+        description: 'Música, Foto, Video, 3D',
+        icon: 'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z',
+        color: '#8b5cf6'
+      },
+      {
+        path: '/cheatsheets#english',
+        name: 'Idiomas',
+        description: 'Inglés, Japonés, Chino, Coreano',
+        icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04z',
+        color: '#14b8a6'
+      },
+      {
+        path: '/cheatsheets#slang',
+        name: 'Contemporáneo',
+        description: 'Jerga Gen Z, Anglicismos',
+        icon: 'M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z',
+        color: '#f43f5e'
+      },
+      {
+        path: '/cheatsheets#http',
+        name: 'Web',
+        description: 'HTTP, Markdown',
+        icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z',
+        color: '#64748b'
+      }
+    ]
+  },
 ]
 
 // Dock magnetic effect

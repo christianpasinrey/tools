@@ -1,0 +1,25 @@
+<script setup>
+import { useTools } from '../composables/useTools'
+import ToolsTabs from '../components/tools/ToolsTabs.vue'
+
+// Import tools
+import UnitConverter from './UnitConverter.vue'
+import ColorPicker from './ColorPicker.vue'
+
+const tools = useTools()
+</script>
+
+<template>
+  <div class="h-[calc(100vh-4rem)] flex flex-col bg-neutral-950 text-neutral-300">
+    <ToolsTabs
+      :active-tab="tools.activeTab.value"
+      :theme-color="tools.themeColor.value"
+      @change="(tab) => tools.activeTab.value = tab"
+    />
+
+    <div class="flex-1 overflow-hidden">
+      <UnitConverter v-if="tools.activeTab.value === 'converter'" />
+      <ColorPicker v-if="tools.activeTab.value === 'color'" />
+    </div>
+  </div>
+</template>

@@ -43,19 +43,26 @@ const routes = [
     redirect: '/multimedia#svg'
   },
   {
+    path: '/tools',
+    name: 'Tools',
+    component: () => import('../views/Tools.vue')
+  },
+  {
     path: '/unit-converter',
-    name: 'UnitConverter',
-    component: () => import('../views/UnitConverter.vue')
+    redirect: '/tools#converter'
   },
   {
     path: '/color-picker',
-    name: 'ColorPicker',
-    component: () => import('../views/ColorPicker.vue')
+    redirect: '/tools#color'
   },
   {
     path: '/cheatsheets',
     name: 'CheatSheets',
     component: () => import('../views/CheatSheets.vue')
+  },
+  {
+    path: '/reference',
+    redirect: '/cheatsheets'
   },
   {
     path: '/phone-tester',

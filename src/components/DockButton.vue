@@ -92,12 +92,6 @@ const handleMouseLeave = () => {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="icon" />
       </svg>
 
-      <!-- Submenu indicator -->
-      <div v-if="hasSubmenu" class="submenu-indicator">
-        <svg class="w-2 h-2" fill="currentColor" viewBox="0 0 8 8">
-          <circle cx="4" cy="4" r="2" />
-        </svg>
-      </div>
     </div>
 
     <!-- Tooltip (show when hovered and submenu is closed) -->
@@ -182,20 +176,6 @@ const handleMouseLeave = () => {
     0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 40%, transparent),
     inset 0 1px 1px rgba(255, 255, 255, 0.1),
     inset 0 -1px 1px rgba(0, 0, 0, 0.2);
-}
-
-/* Submenu indicator dot */
-.submenu-indicator {
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-  color: rgba(255, 255, 255, 0.4);
-  transition: color 0.2s ease;
-}
-
-.dock-item:hover .submenu-indicator,
-.dock-item.submenu-open .submenu-indicator {
-  color: var(--tool-color, #22c55e);
 }
 
 /* Active dot indicator */

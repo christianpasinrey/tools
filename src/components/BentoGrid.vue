@@ -64,6 +64,11 @@ const getItemLayout = (index) => {
     return 'default'
   }
 
+  // Auto layout pattern for many items (6+) - compact grid
+  if (props.items.length >= 6) {
+    return 'small'
+  }
+
   return 'default'
 }
 
@@ -264,6 +269,51 @@ const gridStyle = computed(() => ({
 /* Layout: Default - standard square */
 .bento-default {
   /* Uses base styles */
+}
+
+/* Layout: Small - compact for many items */
+.bento-small {
+  padding: 10px 12px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.bento-small .bento-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.bento-small .bento-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.bento-small .bento-content {
+  margin-top: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.bento-small .bento-name {
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bento-small .bento-description {
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Grid adjustment for many items */
+.bento-grid:has(.bento-small) {
+  grid-template-columns: repeat(3, 1fr);
+  min-width: 380px;
 }
 
 /* Hover states */

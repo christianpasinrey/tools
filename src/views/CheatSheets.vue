@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import { cheatsheetData, sheets, categories } from '@/data/cheatsheets'
+import { useCheatsheets } from '@/composables/useCheatsheets'
 import * as THREE from 'three'
 
-const activeSheet = ref('macos')
+const { activeSheet } = useCheatsheets()
 const expandedCategories = ref({})
 const threeCanvas = ref(null)
 
