@@ -106,6 +106,12 @@ const harmonyModes = {
     description: 'Diferentes intensidades',
     angles: [0, 0, 0, 0, 0],
     saturationOffsets: [-30, -15, 0, 15, 30]
+  },
+  custom: {
+    name: 'Personalizado',
+    description: 'Colores extraidos de imagen o personalizados',
+    angles: [0, 0, 0, 0, 0],
+    freeMode: true // Don't apply harmony constraints
   }
 }
 
@@ -156,11 +162,22 @@ export function useColorWheel() {
     })
   }
 
-  // Update a color point - ALL points move together maintaining harmony
+  // Update a color point - ALL points move together maintaining harmony (unless freeMode)
   const updateColorPoint = (index, hue, saturation) => {
     const newHue = (hue + 360) % 360
     const newSat = Math.max(10, Math.min(100, saturation))
     const mode = harmonyModes[currentMode.value]
+
+    // In freeMode (custom), only move the dragged point
+    if (mode.freeMode) {
+      colorPoints.value = colorPoints.value.map((point, i) => {
+        if (i === index) {
+          return { hue: newHue, saturation: newSat }
+        }
+        return point
+      })
+      return
+    }
 
     // Calculate the hue offset for this point in the harmony
     const pointAngleOffset = mode.angles[index]
@@ -293,6 +310,120 @@ export function useColorWheel() {
     applyHarmony()
   }
 
+  // Extract colors from image using color quantization
+  const extractColorsFromImage = (imageDataUrl) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = 'Anonymous'
+
+      img.onload = () => {
+        // Create canvas to read pixels
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+
+        // Resize to sample (faster processing)
+        const maxSize = 100
+        const scale = Math.min(maxSize / img.width, maxSize / img.height, 1)
+        canvas.width = img.width * scale
+        canvas.height = img.height * scale
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const pixels = imageData.data
+
+        // Collect all colors with frequency
+        const colorMap = new Map()
+
+        for (let i = 0; i < pixels.length; i += 4) {
+          const r = pixels[i]
+          const g = pixels[i + 1]
+          const b = pixels[i + 2]
+          const a = pixels[i + 3]
+
+          // Skip transparent pixels
+          if (a < 128) continue
+
+          // Quantize colors (group similar colors)
+          const qr = Math.round(r / 32) * 32
+          const qg = Math.round(g / 32) * 32
+          const qb = Math.round(b / 32) * 32
+
+          const key = `${qr},${qg},${qb}`
+
+          if (colorMap.has(key)) {
+            const entry = colorMap.get(key)
+            entry.count++
+            entry.r += r
+            entry.g += g
+            entry.b += b
+          } else {
+            colorMap.set(key, { r, g, b, count: 1 })
+          }
+        }
+
+        // Convert to array and sort by frequency
+        const sortedColors = Array.from(colorMap.values())
+          .filter(c => {
+            // Filter out very dark and very light colors
+            const [h, s, l] = rgbToHsl(c.r / c.count, c.g / c.count, c.b / c.count)
+            return l > 10 && l < 90 && s > 15
+          })
+          .sort((a, b) => b.count - a.count)
+
+        // Get top 5 distinct colors
+        const selectedColors = []
+        const minHueDiff = 25 // Minimum hue difference between colors
+
+        for (const color of sortedColors) {
+          if (selectedColors.length >= 5) break
+
+          const avgR = Math.round(color.r / color.count)
+          const avgG = Math.round(color.g / color.count)
+          const avgB = Math.round(color.b / color.count)
+          const [h, s, l] = rgbToHsl(avgR, avgG, avgB)
+
+          // Check if this hue is distinct enough from already selected
+          const isDistinct = selectedColors.every(sc => {
+            const hueDiff = Math.min(Math.abs(sc.hue - h), 360 - Math.abs(sc.hue - h))
+            return hueDiff > minHueDiff || Math.abs(sc.saturation - s) > 20
+          })
+
+          if (isDistinct || selectedColors.length < 2) {
+            selectedColors.push({ hue: h, saturation: s, lightness: l })
+          }
+        }
+
+        // Fill remaining slots if needed
+        while (selectedColors.length < 5) {
+          const baseColor = selectedColors[0] || { hue: 200, saturation: 70, lightness: 50 }
+          selectedColors.push({
+            hue: (baseColor.hue + selectedColors.length * 30) % 360,
+            saturation: baseColor.saturation,
+            lightness: baseColor.lightness
+          })
+        }
+
+        // Apply extracted colors
+        colorPoints.value = selectedColors.map(c => ({
+          hue: c.hue,
+          saturation: c.saturation
+        }))
+
+        // Set average lightness
+        const avgLightness = selectedColors.reduce((sum, c) => sum + c.lightness, 0) / selectedColors.length
+        baseLightness.value = Math.round(avgLightness)
+
+        // Switch to custom mode (don't apply harmony, keep extracted colors as-is)
+        currentMode.value = 'custom'
+
+        resolve(selectedColors)
+      }
+
+      img.onerror = () => reject(new Error('Error loading image'))
+      img.src = imageDataUrl
+    })
+  }
+
   return {
     // State
     colorPoints,
@@ -316,6 +447,7 @@ export function useColorWheel() {
     applyHarmony,
     updateColorPoint,
     setBaseColor,
+    extractColorsFromImage,
 
     // Utils
     hslToRgb,
