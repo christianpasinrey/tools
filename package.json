@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tbisoftware/phone": "^2.0.6",
+    "@tbisoftware/phone": "github:Tu-buen-camino/phone#feature/multi-framework-support",
     "@codemirror/autocomplete": "^6.20.0",
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.11",
