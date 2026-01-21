@@ -1028,7 +1028,7 @@ const fetchGitHubCommits = async () => {
       </svg>
 
       <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
         @mousemove="onPackagesSectionMouseMove"
         @mouseleave="onPackagesSectionMouseLeave"
       >
@@ -1039,7 +1039,7 @@ const fetchGitHubCommits = async () => {
           :href="pkg.url"
           target="_blank"
           rel="noopener noreferrer"
-          class="glass-container group scroll-animated package-card-3d"
+          class="glass-container group scroll-animated package-card-3d h-full"
           :style="getPackageStyle(index)"
           @mousemove="onPackageMouseMove($event, index)"
           @mouseenter="onPackageMouseEnter(index)"
@@ -1247,6 +1247,7 @@ const fetchGitHubCommits = async () => {
   position: relative;
   padding: 1.25rem;
   z-index: 4;
+  height: 100%;
 }
 
 .glass-content.p-0 {

@@ -5,7 +5,9 @@
       "Bash(test:*)",
       "Bash(npm install:*)",
       "Bash(dir /s /b \"C:\\laragon\\www\\tools\\src\")",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)"
     ],
     "deny": [],
     "ask": []
