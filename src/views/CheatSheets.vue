@@ -48,6 +48,7 @@ const currentSheetLang = computed(() =>
 // Speech rate control
 const speechRate = ref(0.9)
 const availableVoices = ref([])
+const showVoiceHelpModal = ref(false)
 
 // Load voices (async in some browsers)
 const loadVoices = () => {
@@ -529,6 +530,15 @@ async function exportToPDF() {
               class="speed-slider"
             />
             <span class="speed-label">{{ speechRate }}x</span>
+            <button
+              @click="showVoiceHelpModal = true"
+              class="voice-help-btn"
+              title="Ayuda con voces"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
           </div>
 
           <button
@@ -607,5 +617,80 @@ async function exportToPDF() {
         </article>
       </div>
     </div>
+
+    <!-- Voice Help Modal -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="showVoiceHelpModal" class="voice-modal-overlay" @click.self="showVoiceHelpModal = false">
+          <div class="voice-modal">
+            <div class="voice-modal-header">
+              <h3>Instalar voces de idiomas</h3>
+              <button @click="showVoiceHelpModal = false" class="voice-modal-close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="voice-modal-content">
+              <p class="voice-modal-intro">
+                El audio utiliza las voces del sistema. Si un idioma no reproduce audio, necesitas instalar las voces correspondientes.
+              </p>
+
+              <!-- macOS -->
+              <div class="voice-os-section">
+                <div class="voice-os-header">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/>
+                  </svg>
+                  <span>macOS</span>
+                </div>
+                <ol class="voice-os-steps">
+                  <li>Abre <strong>Preferencias del Sistema</strong></li>
+                  <li>Ve a <strong>Accesibilidad</strong> → <strong>Contenido hablado</strong></li>
+                  <li>Haz clic en <strong>Voces del sistema</strong> → <strong>Gestionar voces</strong></li>
+                  <li>Busca el idioma deseado y descarga las voces</li>
+                </ol>
+              </div>
+
+              <!-- Windows -->
+              <div class="voice-os-section">
+                <div class="voice-os-header">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 12V6.75l6-1.32v6.48L3 12zm17-9v8.75l-10 .15V5.21L20 3zM3 13l6 .09v6.81l-6-1.15V13zm7 .25l10 .15V21l-10-1.91V13.25z"/>
+                  </svg>
+                  <span>Windows</span>
+                </div>
+                <ol class="voice-os-steps">
+                  <li>Abre <strong>Configuracion</strong> (Win + I)</li>
+                  <li>Ve a <strong>Hora e idioma</strong> → <strong>Idioma y region</strong></li>
+                  <li>Haz clic en <strong>Agregar un idioma</strong></li>
+                  <li>Busca el idioma y asegurate de marcar <strong>Texto a voz</strong></li>
+                </ol>
+              </div>
+
+              <!-- Linux -->
+              <div class="voice-os-section">
+                <div class="voice-os-header">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.5 2c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2 1 2.5-.5.5-1.5 1-2 2-1 2-1 4 0 5.5.5 1 1.5 1.5 2.5 2 0 .5-.5 1-1 1.5-.5.5-.5 1.5 0 2s1.5.5 2 0c.5-.5 1-1 1-1.5.5.5 1.5 1 2.5 1s2-.5 2.5-1c0 .5.5 1 1 1.5.5.5 1.5.5 2 0s.5-1.5 0-2c-.5-.5-1-1-1-1.5 1-.5 2-1 2.5-2 1-1.5 1-3.5 0-5.5-.5-1-1.5-1.5-2-2 .5-.5 1-1.5 1-2.5 0-2-1-3.5-2.5-3.5s-2.5 1.5-2.5 3c0 0-1 0-1.5.5-.5-.5-1.5-.5-1.5-.5 0-1.5-1-3-2.5-3z"/>
+                  </svg>
+                  <span>Linux</span>
+                </div>
+                <ol class="voice-os-steps">
+                  <li>Instala <strong>espeak-ng</strong> o <strong>festival</strong>:</li>
+                  <li><code>sudo apt install espeak-ng</code></li>
+                  <li>Para mas voces: <code>sudo apt install speech-dispatcher-espeak-ng</code></li>
+                  <li>En Chrome/Chromium las voces del sistema se cargan automaticamente</li>
+                </ol>
+              </div>
+
+              <p class="voice-modal-note">
+                Despues de instalar, recarga la pagina para que las nuevas voces esten disponibles.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
