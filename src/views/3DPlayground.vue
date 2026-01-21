@@ -243,31 +243,57 @@ const loadHumanModel = async () => {
 const clearNonLightObjects = () => {
   const lightTypes = ['spotlight', 'pointlight', 'arealight', 'hemisphere', 'directional']
 
-  const objectsToRemove = playground.objects.value.filter(obj =>
-    !lightTypes.includes(obj.userData?.type)
-  )
+  // First, deselect any object
+  playground.deselectObject()
 
+  // Get all objects to remove (anything that's not a light)
+  const objectsToKeep = []
+  const objectsToRemove = []
+
+  playground.objects.value.forEach(obj => {
+    if (lightTypes.includes(obj.userData?.type)) {
+      objectsToKeep.push(obj)
+    } else {
+      objectsToRemove.push(obj)
+    }
+  })
+
+  // Remove objects from scene and dispose
   objectsToRemove.forEach(obj => {
     playground.scene.value.remove(obj)
-    // Dispose geometry and materials
+    // Dispose geometry and materials recursively
     obj.traverse?.((child) => {
-      if (child.geometry) child.geometry.dispose()
+      if (child.geometry) {
+        child.geometry.dispose()
+      }
       if (child.material) {
         if (Array.isArray(child.material)) {
-          child.material.forEach(m => m.dispose())
+          child.material.forEach(m => {
+            m.map?.dispose()
+            m.dispose()
+          })
         } else {
+          child.material.map?.dispose()
           child.material.dispose()
         }
       }
     })
   })
 
-  // Update the objects array keeping only lights
-  playground.objects.value = playground.objects.value.filter(obj =>
-    lightTypes.includes(obj.userData?.type)
-  )
+  // Also scan scene directly for any orphaned user objects
+  const sceneObjectsToRemove = []
+  playground.scene.value.traverse((child) => {
+    if (child.userData?.isUserObject && !lightTypes.includes(child.userData?.type)) {
+      sceneObjectsToRemove.push(child)
+    }
+  })
 
-  playground.deselectObject()
+  sceneObjectsToRemove.forEach(obj => {
+    playground.scene.value.remove(obj)
+  })
+
+  // Update the objects array
+  playground.objects.value = objectsToKeep
 }
 
 // Load a pre-made scene for lighting testing

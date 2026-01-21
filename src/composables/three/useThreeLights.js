@@ -186,8 +186,8 @@ export const SCENE_PRESETS = {
     icon: '🏙️',
     description: 'Calle japonesa con detalles',
     url: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb',
-    scale: 0.005,
-    position: [0, 0, 0]
+    scale: 0.02,
+    position: [0, 1.5, 0]
   },
   coffeeCart: {
     name: 'Coffee Cart',
