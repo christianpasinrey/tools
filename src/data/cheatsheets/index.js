@@ -31,6 +31,9 @@ import math from './math.json'
 import excel from './excel.json'
 import notion from './notion.json'
 import photoshop from './photoshop.json'
+import lightroom from './lightroom.json'
+import premiere from './premiere.json'
+import aftereffects from './aftereffects.json'
 import music from './music.json'
 import photography from './photography.json'
 
@@ -67,6 +70,9 @@ export const cheatsheetData = {
   excel,
   notion,
   photoshop,
+  lightroom,
+  premiere,
+  aftereffects,
   music,
   photography
 }

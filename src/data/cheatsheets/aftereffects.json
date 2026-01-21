@@ -1,0 +1,206 @@
+{
+  "title": "After Effects",
+  "description": "Atajos de teclado y expresiones para animación en Adobe After Effects",
+  "sections": [
+    {
+      "name": "Archivo y Proyecto",
+      "items": [
+        { "keys": ["Ctrl", "N"], "desc": "Nueva composición" },
+        { "keys": ["Ctrl", "K"], "desc": "Configuración de composición" },
+        { "keys": ["Ctrl", "I"], "desc": "Importar archivo" },
+        { "keys": ["Ctrl", "S"], "desc": "Guardar proyecto" },
+        { "keys": ["Ctrl", "Shift", "S"], "desc": "Guardar como" },
+        { "keys": ["Ctrl", "Alt", "Shift", "S"], "desc": "Incrementar y guardar" },
+        { "keys": ["Ctrl", "M"], "desc": "Añadir a cola de procesamiento" },
+        { "keys": ["Ctrl", "Alt", "M"], "desc": "Añadir a Adobe Media Encoder" }
+      ]
+    },
+    {
+      "name": "Reproducción y Previsualización",
+      "items": [
+        { "keys": ["Espacio"], "desc": "Reproducir/Pausar" },
+        { "keys": ["0 (numpad)"], "desc": "Previsualización RAM" },
+        { "keys": [". (numpad)"], "desc": "Previsualización de audio" },
+        { "keys": ["Inicio"], "desc": "Ir al inicio de composición" },
+        { "keys": ["Fin"], "desc": "Ir al final de composición" },
+        { "keys": ["J"], "desc": "Ir a keyframe anterior" },
+        { "keys": ["K"], "desc": "Ir a keyframe siguiente" },
+        { "keys": ["Page Up"], "desc": "Retroceder 1 fotograma" },
+        { "keys": ["Page Down"], "desc": "Avanzar 1 fotograma" },
+        { "keys": ["Shift", "Page Up"], "desc": "Retroceder 10 fotogramas" },
+        { "keys": ["Shift", "Page Down"], "desc": "Avanzar 10 fotogramas" }
+      ]
+    },
+    {
+      "name": "Propiedades de Capa (Revelar)",
+      "items": [
+        { "keys": ["A"], "desc": "Punto de anclaje" },
+        { "keys": ["P"], "desc": "Posición" },
+        { "keys": ["S"], "desc": "Escala" },
+        { "keys": ["R"], "desc": "Rotación" },
+        { "keys": ["T"], "desc": "Opacidad" },
+        { "keys": ["L"], "desc": "Niveles de audio" },
+        { "keys": ["E"], "desc": "Efectos" },
+        { "keys": ["M"], "desc": "Máscaras" },
+        { "keys": ["F"], "desc": "Calado de máscara" },
+        { "keys": ["TT"], "desc": "Opacidad de máscara" },
+        { "keys": ["U"], "desc": "Propiedades con keyframes" },
+        { "keys": ["UU"], "desc": "Propiedades modificadas" },
+        { "keys": ["EE"], "desc": "Expresiones" },
+        { "keys": ["SS"], "desc": "Estilos de capa" }
+      ]
+    },
+    {
+      "name": "Keyframes",
+      "items": [
+        { "keys": ["Alt", "Shift", "A"], "desc": "Añadir keyframe punto de anclaje" },
+        { "keys": ["Alt", "Shift", "P"], "desc": "Añadir keyframe posición" },
+        { "keys": ["Alt", "Shift", "S"], "desc": "Añadir keyframe escala" },
+        { "keys": ["Alt", "Shift", "R"], "desc": "Añadir keyframe rotación" },
+        { "keys": ["Alt", "Shift", "T"], "desc": "Añadir keyframe opacidad" },
+        { "keys": ["F9"], "desc": "Easy Ease" },
+        { "keys": ["Shift", "F9"], "desc": "Easy Ease In" },
+        { "keys": ["Ctrl", "Shift", "F9"], "desc": "Easy Ease Out" },
+        { "keys": ["Ctrl", "Shift", "K"], "desc": "Velocidad de keyframe" },
+        { "keys": ["Ctrl", "Alt", "K"], "desc": "Interpolación de keyframe" }
+      ]
+    },
+    {
+      "name": "Capas",
+      "items": [
+        { "keys": ["Ctrl", "Y"], "desc": "Nueva capa sólida" },
+        { "keys": ["Ctrl", "Alt", "Y"], "desc": "Nueva capa de ajuste" },
+        { "keys": ["Ctrl", "Shift", "Y"], "desc": "Configuración de sólido" },
+        { "keys": ["Ctrl", "D"], "desc": "Duplicar capa" },
+        { "keys": ["Ctrl", "Shift", "D"], "desc": "Dividir capa" },
+        { "keys": ["Ctrl", "["], "desc": "Mover capa abajo" },
+        { "keys": ["Ctrl", "]"], "desc": "Mover capa arriba" },
+        { "keys": ["Ctrl", "Shift", "["], "desc": "Mover capa al fondo" },
+        { "keys": ["Ctrl", "Shift", "]"], "desc": "Mover capa al frente" },
+        { "keys": ["["], "desc": "Mover entrada de capa a tiempo actual" },
+        { "keys": ["]"], "desc": "Mover salida de capa a tiempo actual" },
+        { "keys": ["Alt", "["], "desc": "Recortar entrada a tiempo actual" },
+        { "keys": ["Alt", "]"], "desc": "Recortar salida a tiempo actual" }
+      ]
+    },
+    {
+      "name": "Herramientas",
+      "items": [
+        { "keys": ["V"], "desc": "Herramienta Selección" },
+        { "keys": ["H"], "desc": "Herramienta Mano" },
+        { "keys": ["Z"], "desc": "Herramienta Zoom" },
+        { "keys": ["W"], "desc": "Herramienta Rotar" },
+        { "keys": ["C"], "desc": "Herramienta Cámara unificada" },
+        { "keys": ["Y"], "desc": "Herramienta Punto de anclaje" },
+        { "keys": ["Q"], "desc": "Herramientas de Forma" },
+        { "keys": ["G"], "desc": "Herramienta Pluma" },
+        { "keys": ["Ctrl", "T"], "desc": "Herramienta Texto" },
+        { "keys": ["Ctrl", "B"], "desc": "Herramienta Pincel" }
+      ]
+    },
+    {
+      "name": "Máscaras y Formas",
+      "items": [
+        { "keys": ["Ctrl", "Shift", "N"], "desc": "Nueva máscara" },
+        { "keys": ["Ctrl", "Shift", "F"], "desc": "Calado de máscara" },
+        { "keys": ["Ctrl", "Shift", "M"], "desc": "Expansión de máscara" },
+        { "keys": ["Alt", "click máscara"], "desc": "Seleccionar todos los puntos" },
+        { "keys": ["MM"], "desc": "Ver trazado de máscara" }
+      ]
+    },
+    {
+      "name": "Vista",
+      "items": [
+        { "keys": [","], "desc": "Zoom out" },
+        { "keys": ["."], "desc": "Zoom in" },
+        { "keys": ["/"], "desc": "Ajustar a ventana" },
+        { "keys": ["Shift", "/"], "desc": "Ajustar a 100%" },
+        { "keys": ["'"], "desc": "Mostrar cuadrícula" },
+        { "keys": [";"], "desc": "Mostrar guías" },
+        { "keys": ["Ctrl", "'"], "desc": "Mostrar cuadrícula proporcional" },
+        { "keys": ["Ctrl", ";"], "desc": "Bloquear guías" },
+        { "keys": ["Ctrl", "R"], "desc": "Mostrar reglas" }
+      ]
+    },
+    {
+      "name": "3D y Cámara",
+      "items": [
+        { "keys": ["Ctrl", "Alt", "Shift", "C"], "desc": "Nueva cámara" },
+        { "keys": ["Ctrl", "Alt", "Shift", "L"], "desc": "Nueva luz" },
+        { "keys": ["Ctrl", "Shift", "H"], "desc": "Alternar 3D en capa" },
+        { "keys": ["F10"], "desc": "Vista frontal" },
+        { "keys": ["F11"], "desc": "Vista personalizada 1" },
+        { "keys": ["F12"], "desc": "Vista personalizada 2" },
+        { "keys": ["Esc"], "desc": "Volver a vista activa" }
+      ]
+    },
+    {
+      "name": "Expresiones Básicas",
+      "items": [
+        { "keys": ["Alt", "click cronómetro"], "desc": "Añadir expresión" },
+        { "keys": ["wiggle(freq, amp)"], "desc": "Vibración aleatoria" },
+        { "keys": ["loopOut()"], "desc": "Repetir animación hacia adelante" },
+        { "keys": ["loopIn()"], "desc": "Repetir animación hacia atrás" },
+        { "keys": ["time"], "desc": "Tiempo actual en segundos" },
+        { "keys": ["value"], "desc": "Valor actual de la propiedad" },
+        { "keys": ["index"], "desc": "Índice de la capa" },
+        { "keys": ["random(min, max)"], "desc": "Valor aleatorio entre min y max" }
+      ]
+    },
+    {
+      "name": "Expresiones de Movimiento",
+      "items": [
+        { "keys": ["linear(t, t1, t2, v1, v2)"], "desc": "Interpolación lineal" },
+        { "keys": ["ease(t, t1, t2, v1, v2)"], "desc": "Interpolación suave" },
+        { "keys": ["easeIn(t, t1, t2, v1, v2)"], "desc": "Suavizado de entrada" },
+        { "keys": ["easeOut(t, t1, t2, v1, v2)"], "desc": "Suavizado de salida" },
+        { "keys": ["valueAtTime(t)"], "desc": "Valor en tiempo específico" },
+        { "keys": ["velocityAtTime(t)"], "desc": "Velocidad en tiempo específico" }
+      ]
+    },
+    {
+      "name": "Expresiones Matemáticas",
+      "items": [
+        { "keys": ["Math.sin(value)"], "desc": "Función seno" },
+        { "keys": ["Math.cos(value)"], "desc": "Función coseno" },
+        { "keys": ["Math.abs(value)"], "desc": "Valor absoluto" },
+        { "keys": ["Math.round(value)"], "desc": "Redondear" },
+        { "keys": ["Math.floor(value)"], "desc": "Redondear hacia abajo" },
+        { "keys": ["Math.ceil(value)"], "desc": "Redondear hacia arriba" },
+        { "keys": ["degreesToRadians(deg)"], "desc": "Grados a radianes" },
+        { "keys": ["radiansToDegrees(rad)"], "desc": "Radianes a grados" }
+      ]
+    },
+    {
+      "name": "Expresiones de Enlace",
+      "items": [
+        { "keys": ["thisComp"], "desc": "Referencia a composición actual" },
+        { "keys": ["thisLayer"], "desc": "Referencia a capa actual" },
+        { "keys": ["thisProperty"], "desc": "Referencia a propiedad actual" },
+        { "keys": ["comp(\"nombre\")"], "desc": "Referencia a otra composición" },
+        { "keys": ["layer(\"nombre\")"], "desc": "Referencia a otra capa" },
+        { "keys": ["effect(\"nombre\")"], "desc": "Referencia a efecto" },
+        { "keys": ["toComp([x,y,z])"], "desc": "Convertir a coordenadas de comp" },
+        { "keys": ["fromComp([x,y,z])"], "desc": "Convertir desde coordenadas de comp" }
+      ]
+    },
+    {
+      "name": "Expresiones de Loop",
+      "items": [
+        { "keys": ["loopOut(\"cycle\")"], "desc": "Loop cíclico hacia adelante" },
+        { "keys": ["loopOut(\"pingpong\")"], "desc": "Loop ida y vuelta" },
+        { "keys": ["loopOut(\"offset\")"], "desc": "Loop con offset progresivo" },
+        { "keys": ["loopOut(\"continue\")"], "desc": "Continuar última velocidad" },
+        { "keys": ["loopOutDuration(\"cycle\", 2)"], "desc": "Loop por duración específica" }
+      ]
+    },
+    {
+      "name": "Precomposición",
+      "items": [
+        { "keys": ["Ctrl", "Shift", "C"], "desc": "Precomponer capas" },
+        { "keys": ["Tab"], "desc": "Entrar en precomposición" },
+        { "keys": ["Shift", "Tab"], "desc": "Salir de precomposición" }
+      ]
+    }
+  ]
+}
