@@ -8,14 +8,17 @@ const routes = [
     component: Home
   },
   {
+    path: '/multimedia',
+    name: 'Multimedia',
+    component: () => import('../views/Multimedia.vue')
+  },
+  {
     path: '/audio-editor',
-    name: 'AudioEditor',
-    component: () => import('../views/AudioEditor.vue')
+    redirect: '/multimedia#audio'
   },
   {
     path: '/image-editor',
-    name: 'ImageEditor',
-    component: () => import('../views/ImageEditor.vue')
+    redirect: '/multimedia#image'
   },
   {
     path: '/documents',
@@ -24,18 +27,20 @@ const routes = [
   },
   {
     path: '/3d-playground',
-    name: '3DPlayground',
-    component: () => import('../views/3DPlayground.vue')
+    redirect: '/multimedia#3d'
+  },
+  {
+    path: '/technology',
+    name: 'Technology',
+    component: () => import('../views/Technology.vue')
   },
   {
     path: '/dev-tools',
-    name: 'DevTools',
-    component: () => import('../views/DevTools.vue')
+    redirect: '/technology#dev'
   },
   {
     path: '/svg-editor',
-    name: 'SvgEditor',
-    component: () => import('../views/SvgEditor.vue')
+    redirect: '/multimedia#svg'
   },
   {
     path: '/unit-converter',
@@ -54,13 +59,11 @@ const routes = [
   },
   {
     path: '/phone-tester',
-    name: 'PhoneTester',
-    component: () => import('../views/PhoneTester.vue')
+    redirect: '/technology#phone'
   },
   {
     path: '/cyber-security',
-    name: 'CyberSecurity',
-    component: () => import('../views/CyberSecurity.vue')
+    redirect: '/technology#security'
   }
 ]
 

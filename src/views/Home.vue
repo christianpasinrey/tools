@@ -311,19 +311,19 @@ onUnmounted(() => {
 
 const tools = [
   {
-    path: '/audio-editor',
-    name: 'Audio Editor',
-    description: 'Corta, une y aplica efectos a archivos de audio. Visualización de ondas en tiempo real.',
-    icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3',
-    color: 'purple',
-    status: 'active'
-  },
-  {
-    path: '/image-editor',
+    path: '/multimedia#image',
     name: 'Image Editor',
     description: 'Edita imágenes con filtros, recortes, ajustes de color y más herramientas profesionales.',
     icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
     color: 'blue',
+    status: 'active'
+  },
+  {
+    path: '/multimedia#audio',
+    name: 'Audio Editor',
+    description: 'Corta, une y aplica efectos a archivos de audio. Visualización de ondas en tiempo real.',
+    icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3',
+    color: 'purple',
     status: 'active'
   },
   {
@@ -343,7 +343,7 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/3d-playground',
+    path: '/multimedia#3d',
     name: '3D Playground',
     description: 'Experimenta con gráficos 3D, shaders y visualizaciones interactivas.',
     icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
@@ -351,7 +351,7 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/dev-tools',
+    path: '/technology#dev',
     name: 'Dev Tools',
     description: 'Formatea, valida y convierte JSON/YAML. Playground HTML/CSS/JS con preview en vivo.',
     icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
@@ -359,7 +359,7 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/svg-editor',
+    path: '/multimedia#svg',
     name: 'SVG Editor',
     description: 'Crea y edita gráficos vectoriales SVG con herramientas profesionales de dibujo.',
     icon: 'M4 5a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 7.414V10a1 1 0 01-2 0V6a1 1 0 011-1zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V7.414l-2.293 2.293a1 1 0 01-1.414-1.414L16.586 6H14a1 1 0 010-2zM5 14a1 1 0 011 1v2.586l2.293-2.293a1 1 0 011.414 1.414L7.414 19H10a1 1 0 010 2H6a1 1 0 01-1-1v-4a1 1 0 011-1zm14 0a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h2.586l-2.293-2.293a1 1 0 011.414-1.414L19 16.586V15a1 1 0 011-1z',
@@ -399,7 +399,7 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/phone-tester',
+    path: '/technology#phone',
     name: 'Phone Tester',
     description: 'Configura y prueba el componente de telefono SIP WebRTC. Genera codigo para Vue y React.',
     icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z',
@@ -407,7 +407,7 @@ const tools = [
     status: 'active'
   },
   {
-    path: '/cyber-security',
+    path: '/technology#security',
     name: 'CyberSecurity',
     description: 'JWT Debugger, Base64 Encoder/Decoder y Hash Generator. Herramientas de seguridad.',
     icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',

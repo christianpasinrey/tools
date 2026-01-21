@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import BentoGrid from './BentoGrid.vue'
 
 const props = defineProps({
   visible: {
@@ -19,13 +19,14 @@ const props = defineProps({
   color: {
     type: String,
     default: '#22c55e'
+  },
+  layout: {
+    type: [String, Array],
+    default: 'auto'
   }
 })
 
 const emit = defineEmits(['mouseenter', 'mouseleave', 'item-click'])
-
-const router = useRouter()
-const route = useRoute()
 
 const handleMouseEnter = () => {
   emit('mouseenter')
@@ -35,20 +36,7 @@ const handleMouseLeave = () => {
   emit('mouseleave')
 }
 
-const handleItemClick = (e, item) => {
-  // Check if this is a hash navigation on the same base path
-  if (item.path.includes('#')) {
-    const [basePath, hash] = item.path.split('#')
-
-    // If we're on the same base path, manually update the hash
-    if (route.path === basePath || route.path === basePath + '/') {
-      e.preventDefault()
-      window.location.hash = hash
-      // Dispatch hashchange event manually since assignment doesn't always trigger it
-      window.dispatchEvent(new HashChangeEvent('hashchange'))
-    }
-  }
-
+const handleItemClick = ({ item }) => {
   emit('item-click', item)
 }
 </script>
@@ -75,30 +63,12 @@ const handleItemClick = (e, item) => {
 
         <!-- Default slot for custom content -->
         <slot>
-          <!-- Default items rendering -->
-          <div class="submenu-items">
-            <router-link
-              v-for="item in items"
-              :key="item.path"
-              :to="item.path"
-              class="submenu-item"
-              :style="{ '--item-color': item.color || color }"
-              @click="handleItemClick($event, item)"
-            >
-              <div class="submenu-item-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="item.icon" />
-                </svg>
-              </div>
-              <div class="submenu-item-info">
-                <span class="submenu-item-name">{{ item.name }}</span>
-                <span v-if="item.description" class="submenu-item-description">{{ item.description }}</span>
-              </div>
-              <svg class="submenu-item-arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </router-link>
-          </div>
+          <BentoGrid
+            :items="items"
+            :color="color"
+            :layout="layout"
+            @item-click="handleItemClick"
+          />
         </slot>
       </div>
 
@@ -114,9 +84,7 @@ const handleItemClick = (e, item) => {
   bottom: calc(100% + 16px);
   left: 50%;
   transform: translateX(-50%);
-  min-width: 100%;
   width: max-content;
-  max-width: 500px;
   border-radius: 20px;
   z-index: 50;
 }
@@ -198,88 +166,6 @@ const handleItemClick = (e, item) => {
   margin-bottom: 12px;
 }
 
-/* Items grid */
-.submenu-items {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* Individual item */
-.submenu-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  transition: all 0.2s ease;
-  background: transparent;
-}
-
-.submenu-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-}
-
-.submenu-item:hover .submenu-item-icon {
-  color: var(--item-color, #22c55e);
-  background: color-mix(in srgb, var(--item-color, #22c55e) 15%, transparent);
-  border-color: color-mix(in srgb, var(--item-color, #22c55e) 30%, transparent);
-}
-
-.submenu-item:hover .submenu-item-arrow {
-  opacity: 1;
-  transform: translateX(2px);
-}
-
-/* Item icon */
-.submenu-item-icon {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-/* Item info */
-.submenu-item-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.submenu-item-name {
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.submenu-item-description {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Arrow */
-.submenu-item-arrow {
-  color: rgba(255, 255, 255, 0.3);
-  opacity: 0;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
 /* Down arrow pointing to dock */
 .submenu-arrow {
   position: absolute;
@@ -321,15 +207,6 @@ const handleItemClick = (e, item) => {
 
   .submenu-content {
     padding: 12px;
-  }
-
-  .submenu-item {
-    padding: 8px 10px;
-  }
-
-  .submenu-item-icon {
-    width: 32px;
-    height: 32px;
   }
 }
 </style>
