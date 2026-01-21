@@ -484,6 +484,23 @@ async function exportToPDF() {
       <header class="sheet-header">
         <div class="header-top">
           <h1 class="sheet-title">{{ currentSheet.title }}</h1>
+
+          <!-- Speed control for language sheets -->
+          <div v-if="currentSheetLang" class="speed-control">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            </svg>
+            <input
+              type="range"
+              v-model="speechRate"
+              min="0.5"
+              max="1.5"
+              step="0.1"
+              class="speed-slider"
+            />
+            <span class="speed-label">{{ speechRate }}x</span>
+          </div>
+
           <button
             @click="exportToPDF"
             :disabled="isExporting"
