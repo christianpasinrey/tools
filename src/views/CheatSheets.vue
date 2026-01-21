@@ -18,14 +18,26 @@ const getCategorySheets = (categoryId) => {
   return category.sheets.map(sheetId => sheets.find(s => s.id === sheetId)).filter(Boolean)
 }
 
-// Toggle category dropdown
+// Toggle category dropdown (only one open at a time)
 const toggleCategory = (categoryId) => {
-  expandedCategories.value[categoryId] = !expandedCategories.value[categoryId]
+  const isCurrentlyOpen = expandedCategories.value[categoryId]
+  // Close all dropdowns
+  Object.keys(expandedCategories.value).forEach(key => {
+    expandedCategories.value[key] = false
+  })
+  // Open the clicked one if it was closed
+  if (!isCurrentlyOpen) {
+    expandedCategories.value[categoryId] = true
+  }
 }
 
-// Select sheet
+// Select sheet and close dropdown
 const selectSheet = (sheetId) => {
   activeSheet.value = sheetId
+  // Close all dropdowns
+  Object.keys(expandedCategories.value).forEach(key => {
+    expandedCategories.value[key] = false
+  })
 }
 
 // Three.js variables
