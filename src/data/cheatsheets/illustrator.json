@@ -1,0 +1,171 @@
+{
+  "title": "Illustrator",
+  "description": "Atajos de teclado esenciales de Adobe Illustrator",
+  "sections": [
+    {
+      "name": "Archivo",
+      "items": [
+        { "keys": ["Ctrl", "N"], "desc": "Nuevo documento" },
+        { "keys": ["Ctrl", "O"], "desc": "Abrir archivo" },
+        { "keys": ["Ctrl", "S"], "desc": "Guardar" },
+        { "keys": ["Ctrl", "Shift", "S"], "desc": "Guardar como" },
+        { "keys": ["Ctrl", "Alt", "S"], "desc": "Guardar copia" },
+        { "keys": ["Ctrl", "Shift", "Alt", "S"], "desc": "Guardar para web" },
+        { "keys": ["Ctrl", "W"], "desc": "Cerrar documento" },
+        { "keys": ["Ctrl", "P"], "desc": "Imprimir" },
+        { "keys": ["Ctrl", "Q"], "desc": "Salir" }
+      ]
+    },
+    {
+      "name": "Edición",
+      "items": [
+        { "keys": ["Ctrl", "Z"], "desc": "Deshacer" },
+        { "keys": ["Ctrl", "Shift", "Z"], "desc": "Rehacer" },
+        { "keys": ["Ctrl", "X"], "desc": "Cortar" },
+        { "keys": ["Ctrl", "C"], "desc": "Copiar" },
+        { "keys": ["Ctrl", "V"], "desc": "Pegar" },
+        { "keys": ["Ctrl", "F"], "desc": "Pegar delante" },
+        { "keys": ["Ctrl", "B"], "desc": "Pegar detrás" },
+        { "keys": ["Ctrl", "Shift", "V"], "desc": "Pegar en lugar" },
+        { "keys": ["Ctrl", "D"], "desc": "Repetir transformación" }
+      ]
+    },
+    {
+      "name": "Herramientas de Selección",
+      "items": [
+        { "keys": ["V"], "desc": "Selección" },
+        { "keys": ["A"], "desc": "Selección directa" },
+        { "keys": ["Y"], "desc": "Varita mágica" },
+        { "keys": ["Q"], "desc": "Lazo" },
+        { "keys": ["Ctrl", "A"], "desc": "Seleccionar todo" },
+        { "keys": ["Ctrl", "Shift", "A"], "desc": "Deseleccionar" },
+        { "keys": ["Ctrl", "6"], "desc": "Reseleccionar" },
+        { "keys": ["Alt", "arrastrar"], "desc": "Duplicar objeto" }
+      ]
+    },
+    {
+      "name": "Herramientas de Dibujo",
+      "items": [
+        { "keys": ["P"], "desc": "Pluma" },
+        { "keys": ["+"], "desc": "Añadir punto de ancla" },
+        { "keys": ["-"], "desc": "Eliminar punto de ancla" },
+        { "keys": ["Shift", "C"], "desc": "Convertir punto de ancla" },
+        { "keys": ["N"], "desc": "Lápiz" },
+        { "keys": ["B"], "desc": "Pincel" },
+        { "keys": ["Shift", "B"], "desc": "Pincel de manchas" },
+        { "keys": ["Shift", "E"], "desc": "Borrador" },
+        { "keys": ["C"], "desc": "Tijeras" },
+        { "keys": ["Shift", "O"], "desc": "Mesa de trabajo" }
+      ]
+    },
+    {
+      "name": "Formas",
+      "items": [
+        { "keys": ["M"], "desc": "Rectángulo" },
+        { "keys": ["L"], "desc": "Elipse" },
+        { "keys": ["Shift", "arrastrar"], "desc": "Forma proporcional" },
+        { "keys": ["Alt", "arrastrar"], "desc": "Dibujar desde centro" },
+        { "keys": ["Espacio", "arrastrar"], "desc": "Mover mientras dibuja" },
+        { "keys": ["\\"], "desc": "Segmento de línea" },
+        { "keys": ["Shift", "~"], "desc": "Creador de formas" }
+      ]
+    },
+    {
+      "name": "Texto",
+      "items": [
+        { "keys": ["T"], "desc": "Texto" },
+        { "keys": ["Shift", "T"], "desc": "Texto en trazado" },
+        { "keys": ["Ctrl", "Shift", ">"], "desc": "Aumentar tamaño" },
+        { "keys": ["Ctrl", "Shift", "<"], "desc": "Reducir tamaño" },
+        { "keys": ["Alt", "Flecha Arriba"], "desc": "Aumentar interlineado" },
+        { "keys": ["Alt", "Flecha Abajo"], "desc": "Reducir interlineado" },
+        { "keys": ["Alt", "Flecha Der"], "desc": "Aumentar tracking" },
+        { "keys": ["Alt", "Flecha Izq"], "desc": "Reducir tracking" },
+        { "keys": ["Ctrl", "Shift", "O"], "desc": "Crear contornos" }
+      ]
+    },
+    {
+      "name": "Transformar",
+      "items": [
+        { "keys": ["E"], "desc": "Transformación libre" },
+        { "keys": ["R"], "desc": "Rotar" },
+        { "keys": ["O"], "desc": "Reflejar" },
+        { "keys": ["S"], "desc": "Escalar" },
+        { "keys": ["Shift", "R"], "desc": "Deformar" },
+        { "keys": ["Shift", "W"], "desc": "Anchura" },
+        { "keys": ["Ctrl", "T"], "desc": "Panel Transformar" },
+        { "keys": ["Enter"], "desc": "Aplicar transformación" },
+        { "keys": ["Esc"], "desc": "Cancelar transformación" }
+      ]
+    },
+    {
+      "name": "Organizar",
+      "items": [
+        { "keys": ["Ctrl", "]"], "desc": "Traer adelante" },
+        { "keys": ["Ctrl", "["], "desc": "Enviar atrás" },
+        { "keys": ["Ctrl", "Shift", "]"], "desc": "Traer al frente" },
+        { "keys": ["Ctrl", "Shift", "["], "desc": "Enviar al fondo" },
+        { "keys": ["Ctrl", "G"], "desc": "Agrupar" },
+        { "keys": ["Ctrl", "Shift", "G"], "desc": "Desagrupar" },
+        { "keys": ["Ctrl", "2"], "desc": "Bloquear selección" },
+        { "keys": ["Ctrl", "Alt", "2"], "desc": "Desbloquear todo" },
+        { "keys": ["Ctrl", "3"], "desc": "Ocultar selección" },
+        { "keys": ["Ctrl", "Alt", "3"], "desc": "Mostrar todo" }
+      ]
+    },
+    {
+      "name": "Vista y Zoom",
+      "items": [
+        { "keys": ["Ctrl", "+"], "desc": "Zoom in" },
+        { "keys": ["Ctrl", "-"], "desc": "Zoom out" },
+        { "keys": ["Ctrl", "0"], "desc": "Ajustar a ventana" },
+        { "keys": ["Ctrl", "1"], "desc": "Zoom 100%" },
+        { "keys": ["Z"], "desc": "Herramienta Zoom" },
+        { "keys": ["H"], "desc": "Herramienta Mano" },
+        { "keys": ["Espacio"], "desc": "Mano temporal" },
+        { "keys": ["Ctrl", "Y"], "desc": "Modo contorno" },
+        { "keys": ["Ctrl", "H"], "desc": "Ocultar bordes" },
+        { "keys": ["Ctrl", "'"], "desc": "Mostrar cuadrícula" },
+        { "keys": ["Ctrl", ";"], "desc": "Mostrar guías" }
+      ]
+    },
+    {
+      "name": "Trazados",
+      "items": [
+        { "keys": ["Ctrl", "J"], "desc": "Unir trazados" },
+        { "keys": ["Ctrl", "Alt", "J"], "desc": "Promediar puntos" },
+        { "keys": ["Ctrl", "8"], "desc": "Crear trazado compuesto" },
+        { "keys": ["Ctrl", "Alt", "8"], "desc": "Soltar trazado compuesto" },
+        { "keys": ["Ctrl", "7"], "desc": "Crear máscara de recorte" },
+        { "keys": ["Ctrl", "Alt", "7"], "desc": "Soltar máscara de recorte" }
+      ]
+    },
+    {
+      "name": "Colores",
+      "items": [
+        { "keys": ["I"], "desc": "Cuentagotas" },
+        { "keys": ["K"], "desc": "Bote de pintura" },
+        { "keys": ["G"], "desc": "Degradado" },
+        { "keys": ["X"], "desc": "Intercambiar relleno/trazo" },
+        { "keys": ["D"], "desc": "Colores por defecto" },
+        { "keys": ["/"], "desc": "Sin color" },
+        { "keys": ["<"], "desc": "Relleno degradado" },
+        { "keys": [">"], "desc": "Relleno color" },
+        { "keys": ["F6"], "desc": "Panel Color" },
+        { "keys": ["F5"], "desc": "Panel Muestras" }
+      ]
+    },
+    {
+      "name": "Paneles",
+      "items": [
+        { "keys": ["Tab"], "desc": "Ocultar/mostrar paneles" },
+        { "keys": ["Shift", "Tab"], "desc": "Ocultar paneles excepto herramientas" },
+        { "keys": ["F7"], "desc": "Panel Capas" },
+        { "keys": ["Ctrl", "F9"], "desc": "Panel Degradado" },
+        { "keys": ["Ctrl", "F10"], "desc": "Panel Trazo" },
+        { "keys": ["Shift", "F7"], "desc": "Panel Alinear" },
+        { "keys": ["Ctrl", "Shift", "F9"], "desc": "Panel Buscatrazos" }
+      ]
+    }
+  ]
+}

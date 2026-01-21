@@ -1,0 +1,167 @@
+{
+  "title": "Tabla Periódica",
+  "description": "Elementos químicos organizados por grupos y propiedades",
+  "sections": [
+    {
+      "name": "Metales Alcalinos (Grupo 1)",
+      "items": [
+        { "keys": ["H", "1"], "desc": "Hidrógeno - 1.008" },
+        { "keys": ["Li", "3"], "desc": "Litio - 6.94" },
+        { "keys": ["Na", "11"], "desc": "Sodio - 22.99" },
+        { "keys": ["K", "19"], "desc": "Potasio - 39.10" },
+        { "keys": ["Rb", "37"], "desc": "Rubidio - 85.47" },
+        { "keys": ["Cs", "55"], "desc": "Cesio - 132.91" },
+        { "keys": ["Fr", "87"], "desc": "Francio - 223" }
+      ]
+    },
+    {
+      "name": "Metales Alcalinotérreos (Grupo 2)",
+      "items": [
+        { "keys": ["Be", "4"], "desc": "Berilio - 9.01" },
+        { "keys": ["Mg", "12"], "desc": "Magnesio - 24.31" },
+        { "keys": ["Ca", "20"], "desc": "Calcio - 40.08" },
+        { "keys": ["Sr", "38"], "desc": "Estroncio - 87.62" },
+        { "keys": ["Ba", "56"], "desc": "Bario - 137.33" },
+        { "keys": ["Ra", "88"], "desc": "Radio - 226" }
+      ]
+    },
+    {
+      "name": "Metales de Transición (Comunes)",
+      "items": [
+        { "keys": ["Ti", "22"], "desc": "Titanio - 47.87" },
+        { "keys": ["Cr", "24"], "desc": "Cromo - 52.00" },
+        { "keys": ["Mn", "25"], "desc": "Manganeso - 54.94" },
+        { "keys": ["Fe", "26"], "desc": "Hierro - 55.85" },
+        { "keys": ["Co", "27"], "desc": "Cobalto - 58.93" },
+        { "keys": ["Ni", "28"], "desc": "Níquel - 58.69" },
+        { "keys": ["Cu", "29"], "desc": "Cobre - 63.55" },
+        { "keys": ["Zn", "30"], "desc": "Zinc - 65.38" }
+      ]
+    },
+    {
+      "name": "Metales de Transición (Preciosos)",
+      "items": [
+        { "keys": ["Ag", "47"], "desc": "Plata - 107.87" },
+        { "keys": ["Au", "79"], "desc": "Oro - 196.97" },
+        { "keys": ["Pt", "78"], "desc": "Platino - 195.08" },
+        { "keys": ["Pd", "46"], "desc": "Paladio - 106.42" },
+        { "keys": ["Rh", "45"], "desc": "Rodio - 102.91" },
+        { "keys": ["Ir", "77"], "desc": "Iridio - 192.22" }
+      ]
+    },
+    {
+      "name": "Grupo del Carbono (Grupo 14)",
+      "items": [
+        { "keys": ["C", "6"], "desc": "Carbono - 12.01" },
+        { "keys": ["Si", "14"], "desc": "Silicio - 28.09" },
+        { "keys": ["Ge", "32"], "desc": "Germanio - 72.63" },
+        { "keys": ["Sn", "50"], "desc": "Estaño - 118.71" },
+        { "keys": ["Pb", "82"], "desc": "Plomo - 207.2" }
+      ]
+    },
+    {
+      "name": "Grupo del Nitrógeno (Grupo 15)",
+      "items": [
+        { "keys": ["N", "7"], "desc": "Nitrógeno - 14.01" },
+        { "keys": ["P", "15"], "desc": "Fósforo - 30.97" },
+        { "keys": ["As", "33"], "desc": "Arsénico - 74.92" },
+        { "keys": ["Sb", "51"], "desc": "Antimonio - 121.76" },
+        { "keys": ["Bi", "83"], "desc": "Bismuto - 208.98" }
+      ]
+    },
+    {
+      "name": "Calcógenos (Grupo 16)",
+      "items": [
+        { "keys": ["O", "8"], "desc": "Oxígeno - 16.00" },
+        { "keys": ["S", "16"], "desc": "Azufre - 32.07" },
+        { "keys": ["Se", "34"], "desc": "Selenio - 78.97" },
+        { "keys": ["Te", "52"], "desc": "Telurio - 127.60" },
+        { "keys": ["Po", "84"], "desc": "Polonio - 209" }
+      ]
+    },
+    {
+      "name": "Halógenos (Grupo 17)",
+      "items": [
+        { "keys": ["F", "9"], "desc": "Flúor - 19.00" },
+        { "keys": ["Cl", "17"], "desc": "Cloro - 35.45" },
+        { "keys": ["Br", "35"], "desc": "Bromo - 79.90" },
+        { "keys": ["I", "53"], "desc": "Yodo - 126.90" },
+        { "keys": ["At", "85"], "desc": "Astato - 210" }
+      ]
+    },
+    {
+      "name": "Gases Nobles (Grupo 18)",
+      "items": [
+        { "keys": ["He", "2"], "desc": "Helio - 4.00" },
+        { "keys": ["Ne", "10"], "desc": "Neón - 20.18" },
+        { "keys": ["Ar", "18"], "desc": "Argón - 39.95" },
+        { "keys": ["Kr", "36"], "desc": "Kriptón - 83.80" },
+        { "keys": ["Xe", "54"], "desc": "Xenón - 131.29" },
+        { "keys": ["Rn", "86"], "desc": "Radón - 222" }
+      ]
+    },
+    {
+      "name": "Lantánidos (Tierras Raras)",
+      "items": [
+        { "keys": ["La", "57"], "desc": "Lantano - 138.91" },
+        { "keys": ["Ce", "58"], "desc": "Cerio - 140.12" },
+        { "keys": ["Nd", "60"], "desc": "Neodimio - 144.24" },
+        { "keys": ["Eu", "63"], "desc": "Europio - 151.96" },
+        { "keys": ["Gd", "64"], "desc": "Gadolinio - 157.25" }
+      ]
+    },
+    {
+      "name": "Actínidos",
+      "items": [
+        { "keys": ["Ac", "89"], "desc": "Actinio - 227" },
+        { "keys": ["Th", "90"], "desc": "Torio - 232.04" },
+        { "keys": ["U", "92"], "desc": "Uranio - 238.03" },
+        { "keys": ["Pu", "94"], "desc": "Plutonio - 244" },
+        { "keys": ["Am", "95"], "desc": "Americio - 243" }
+      ]
+    },
+    {
+      "name": "Estados de Oxidación Comunes",
+      "items": [
+        { "keys": ["+1"], "desc": "H, Li, Na, K, Ag, Cu" },
+        { "keys": ["+2"], "desc": "Mg, Ca, Fe, Cu, Zn, Pb" },
+        { "keys": ["+3"], "desc": "Al, Fe, Cr, Au" },
+        { "keys": ["-1"], "desc": "F, Cl, Br, I" },
+        { "keys": ["-2"], "desc": "O, S" },
+        { "keys": ["Variable"], "desc": "Fe(+2,+3), Cu(+1,+2), Mn(+2,+4,+7)" }
+      ]
+    },
+    {
+      "name": "Electronegatividad (Pauling)",
+      "items": [
+        { "keys": ["F = 3.98"], "desc": "Más electronegativo" },
+        { "keys": ["O = 3.44"], "desc": "Segundo más electroneg." },
+        { "keys": ["N = 3.04"], "desc": "Nitrógeno" },
+        { "keys": ["Cl = 3.16"], "desc": "Cloro" },
+        { "keys": ["C = 2.55"], "desc": "Carbono" },
+        { "keys": ["H = 2.20"], "desc": "Hidrógeno" },
+        { "keys": ["Na = 0.93"], "desc": "Muy bajo (metálico)" }
+      ]
+    },
+    {
+      "name": "Configuración Electrónica",
+      "items": [
+        { "keys": ["1s² 2s² 2p⁶"], "desc": "Ne (10 electrones)" },
+        { "keys": ["[Ne] 3s¹"], "desc": "Na (11 electrones)" },
+        { "keys": ["[Ar] 4s² 3d⁶"], "desc": "Fe (26 electrones)" },
+        { "keys": ["[Kr] 5s¹ 4d¹⁰"], "desc": "Ag (47 electrones)" },
+        { "keys": ["[Xe] 6s¹ 4f¹⁴ 5d¹⁰"], "desc": "Au (79 electrones)" }
+      ]
+    },
+    {
+      "name": "Propiedades Periódicas",
+      "items": [
+        { "keys": ["Radio atómico"], "desc": "↓ aumenta, → disminuye" },
+        { "keys": ["Energía ionización"], "desc": "↓ disminuye, → aumenta" },
+        { "keys": ["Electronegatividad"], "desc": "↓ disminuye, → aumenta" },
+        { "keys": ["Carácter metálico"], "desc": "↓ aumenta, → disminuye" },
+        { "keys": ["Afinidad electrónica"], "desc": "Mayor en halógenos" }
+      ]
+    }
+  ]
+}
