@@ -292,6 +292,7 @@ onMounted(() => {
   }, 100)
   initThree()
   fetchGitHubCommits()
+  fetchPackageStars()
 
   // Scroll tracking setup
   windowHeight.value = window.innerHeight
@@ -458,14 +459,14 @@ const colorClasses = {
   }
 }
 
-const packages = [
+const packages = ref([
   {
     name: 'vuejs/core',
     description: 'The progressive JavaScript framework for building modern web UI.',
     url: 'https://github.com/vuejs/core',
     language: 'TypeScript',
     languageColor: '#3178c6',
-    stars: '48.2k'
+    stars: null
   },
   {
     name: 'mrdoob/three.js',
@@ -473,7 +474,7 @@ const packages = [
     url: 'https://github.com/mrdoob/three.js',
     language: 'JavaScript',
     languageColor: '#f1e05a',
-    stars: '103k'
+    stars: null
   },
   {
     name: 'codemirror/dev',
@@ -481,7 +482,7 @@ const packages = [
     url: 'https://github.com/codemirror/dev',
     language: 'TypeScript',
     languageColor: '#3178c6',
-    stars: '5.5k'
+    stars: null
   },
   {
     name: 'nodeca/js-yaml',
@@ -489,7 +490,7 @@ const packages = [
     url: 'https://github.com/nodeca/js-yaml',
     language: 'JavaScript',
     languageColor: '#f1e05a',
-    stars: '6.3k'
+    stars: null
   },
   {
     name: 'katspaugh/wavesurfer.js',
@@ -497,7 +498,7 @@ const packages = [
     url: 'https://github.com/katspaugh/wavesurfer.js',
     language: 'TypeScript',
     languageColor: '#3178c6',
-    stars: '9.2k'
+    stars: null
   },
   {
     name: 'Hopding/pdf-lib',
@@ -505,7 +506,7 @@ const packages = [
     url: 'https://github.com/Hopding/pdf-lib',
     language: 'TypeScript',
     languageColor: '#3178c6',
-    stars: '7.1k'
+    stars: null
   },
   {
     name: 'tailwindlabs/tailwindcss',
@@ -513,7 +514,7 @@ const packages = [
     url: 'https://github.com/tailwindlabs/tailwindcss',
     language: 'TypeScript',
     languageColor: '#3178c6',
-    stars: '86k'
+    stars: null
   },
   {
     name: 'vitejs/vite',
@@ -521,15 +522,15 @@ const packages = [
     url: 'https://github.com/vitejs/vite',
     language: 'TypeScript',
     languageColor: '#3178c6',
-    stars: '70.5k'
+    stars: null
   },
   {
-    name: 'nicolo-ribaudo/pdfjs-dist',
-    description: 'PDF.js distribution for usage with bundlers and Node.js.',
-    url: 'https://github.com/nicolo-ribaudo/pdfjs-dist',
+    name: 'mozilla/pdf.js',
+    description: 'PDF.js is a PDF viewer built with HTML5.',
+    url: 'https://github.com/mozilla/pdf.js',
     language: 'JavaScript',
     languageColor: '#f1e05a',
-    stars: '2.8k'
+    stars: null
   },
   {
     name: 'markedjs/marked',
@@ -537,7 +538,7 @@ const packages = [
     url: 'https://github.com/markedjs/marked',
     language: 'JavaScript',
     languageColor: '#f1e05a',
-    stars: '33.7k'
+    stars: null
   },
   {
     name: 'cure53/DOMPurify',
@@ -545,17 +546,43 @@ const packages = [
     url: 'https://github.com/cure53/DOMPurify',
     language: 'JavaScript',
     languageColor: '#f1e05a',
-    stars: '10.5k'
+    stars: null
   },
   {
     name: 'Tu-buen-camino/phone',
-    description: 'Multi-framework phone input component with international validation.',
+    description: 'Multi-framework SIP WebRTC phone component.',
     url: 'https://github.com/Tu-buen-camino/phone',
     language: 'TypeScript',
     languageColor: '#3178c6',
-    stars: '1.2k'
+    stars: null
   }
-]
+])
+
+const formatStars = (count) => {
+  if (count >= 1000) {
+    return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
+  }
+  return count?.toString() || ''
+}
+
+const fetchPackageStars = async () => {
+  const results = await Promise.all(
+    packages.value.map(async (pkg) => {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${pkg.name}`)
+        const data = await res.json()
+        return data.stargazers_count
+      } catch {
+        return null
+      }
+    })
+  )
+
+  packages.value = packages.value.map((pkg, i) => ({
+    ...pkg,
+    stars: results[i]
+  }))
+}
 
 const recentCommits = ref([
   {
@@ -1024,7 +1051,7 @@ const fetchGitHubCommits = async () => {
           <div class="glass-specular"></div>
 
           <!-- Glass content -->
-          <div class="glass-content">
+          <div class="glass-content h-full flex flex-col">
             <!-- Repo Header -->
             <div class="flex items-start gap-3 mb-3">
               <svg class="w-4 h-4 text-white/60 mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
@@ -1036,12 +1063,12 @@ const fetchGitHubCommits = async () => {
             </div>
 
             <!-- Description -->
-            <p class="text-white/50 text-xs leading-relaxed mb-4 line-clamp-2 group-hover:text-white/70 transition-colors">
+            <p class="text-white/50 text-xs leading-relaxed mb-4 line-clamp-2 group-hover:text-white/70 transition-colors flex-1">
               {{ pkg.description }}
             </p>
 
             <!-- Footer -->
-            <div class="flex items-center gap-4 text-xs text-white/40">
+            <div class="flex items-center gap-4 text-xs text-white/40 mt-auto">
               <!-- Language -->
               <div class="flex items-center gap-1.5">
                 <span
@@ -1052,11 +1079,11 @@ const fetchGitHubCommits = async () => {
               </div>
 
               <!-- Stars -->
-              <div class="flex items-center gap-1">
+              <div v-if="pkg.stars" class="flex items-center gap-1">
                 <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
                   <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
                 </svg>
-                <span>{{ pkg.stars }}</span>
+                <span>{{ formatStars(pkg.stars) }}</span>
               </div>
             </div>
           </div>
