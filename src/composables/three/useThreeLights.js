@@ -178,14 +178,6 @@ export const SCENE_PRESETS = {
     icon: '🏛️',
     description: 'Atrio clasico para testing de iluminacion',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Sponza/glTF/Sponza.gltf',
-    scale: 0.01,
-    position: [0, 0, 0]
-  },
-  corridor: {
-    name: 'Pasillo Scifi',
-    icon: '🚀',
-    description: 'Corredor de ciencia ficcion',
-    url: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/SheenChair.glb',
     scale: 1,
     position: [0, 0, 0]
   },
@@ -194,16 +186,24 @@ export const SCENE_PRESETS = {
     icon: '🏙️',
     description: 'Calle japonesa con detalles',
     url: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb',
-    scale: 0.01,
-    position: [0, 0, 0]
+    scale: 0.5,
+    position: [0, 1, 0]
   },
   coffeeCart: {
     name: 'Coffee Cart',
     icon: '☕',
     description: 'Carrito de cafe con texturas',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CoffeeCart/glTF/CoffeeCart.gltf',
-    scale: 1,
+    scale: 3,
     position: [0, 0, 0]
+  },
+  damagedHelmet: {
+    name: 'Casco Scifi',
+    icon: '🪖',
+    description: 'Casco con materiales PBR detallados',
+    url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/DamagedHelmet/glTF/DamagedHelmet.gltf',
+    scale: 2,
+    position: [0, 1.5, 0]
   }
 }
 

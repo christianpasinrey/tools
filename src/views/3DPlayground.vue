@@ -239,12 +239,46 @@ const loadHumanModel = async () => {
   }
 }
 
+// Clear all objects except lights
+const clearNonLightObjects = () => {
+  const lightTypes = ['spotlight', 'pointlight', 'arealight', 'hemisphere', 'directional']
+
+  const objectsToRemove = playground.objects.value.filter(obj =>
+    !lightTypes.includes(obj.userData?.type)
+  )
+
+  objectsToRemove.forEach(obj => {
+    playground.scene.value.remove(obj)
+    // Dispose geometry and materials
+    obj.traverse?.((child) => {
+      if (child.geometry) child.geometry.dispose()
+      if (child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach(m => m.dispose())
+        } else {
+          child.material.dispose()
+        }
+      }
+    })
+  })
+
+  // Update the objects array keeping only lights
+  playground.objects.value = playground.objects.value.filter(obj =>
+    lightTypes.includes(obj.userData?.type)
+  )
+
+  playground.deselectObject()
+}
+
 // Load a pre-made scene for lighting testing
 const loadScenePreset = async (presetKey) => {
   const preset = playground.SCENE_PRESETS[presetKey]
   if (!preset) return
 
   isPresetActive.value = false
+
+  // Clear previous objects but keep lights
+  clearNonLightObjects()
 
   const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js')
   const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js')
