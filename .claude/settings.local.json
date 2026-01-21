@@ -4,7 +4,8 @@
       "Bash(dir /s /b \"C:\\laragon\\www\\tools\")",
       "Bash(test:*)",
       "Bash(npm install:*)",
-      "Bash(dir /s /b \"C:\\laragon\\www\\tools\\src\")"
+      "Bash(dir /s /b \"C:\\laragon\\www\\tools\\src\")",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,167 @@
+{
+  "title": "Inglés",
+  "description": "Tiempos verbales, conectores y gramática esencial del inglés",
+  "sections": [
+    {
+      "name": "Present Simple",
+      "items": [
+        { "keys": ["I/You/We/They"], "desc": "work (verbo base)" },
+        { "keys": ["He/She/It"], "desc": "works (+ s/es)" },
+        { "keys": ["Negativo"], "desc": "don't / doesn't + verbo" },
+        { "keys": ["Pregunta"], "desc": "Do/Does + sujeto + verbo?" },
+        { "keys": ["Uso"], "desc": "Hábitos, rutinas, verdades" }
+      ]
+    },
+    {
+      "name": "Present Continuous",
+      "items": [
+        { "keys": ["Estructura"], "desc": "am/is/are + verbo-ing" },
+        { "keys": ["Negativo"], "desc": "am/is/are + not + verbo-ing" },
+        { "keys": ["Pregunta"], "desc": "Am/Is/Are + sujeto + verbo-ing?" },
+        { "keys": ["Uso"], "desc": "Acciones en progreso ahora" },
+        { "keys": ["Palabras clave"], "desc": "now, at the moment, currently" }
+      ]
+    },
+    {
+      "name": "Past Simple",
+      "items": [
+        { "keys": ["Regular"], "desc": "verbo + ed (worked)" },
+        { "keys": ["Irregular"], "desc": "forma única (went, saw, did)" },
+        { "keys": ["Negativo"], "desc": "didn't + verbo base" },
+        { "keys": ["Pregunta"], "desc": "Did + sujeto + verbo base?" },
+        { "keys": ["Uso"], "desc": "Acciones terminadas en el pasado" }
+      ]
+    },
+    {
+      "name": "Past Continuous",
+      "items": [
+        { "keys": ["Estructura"], "desc": "was/were + verbo-ing" },
+        { "keys": ["Negativo"], "desc": "wasn't/weren't + verbo-ing" },
+        { "keys": ["Pregunta"], "desc": "Was/Were + sujeto + verbo-ing?" },
+        { "keys": ["Uso"], "desc": "Acción en progreso en el pasado" },
+        { "keys": ["Ejemplo"], "desc": "I was sleeping when you called" }
+      ]
+    },
+    {
+      "name": "Present Perfect",
+      "items": [
+        { "keys": ["Estructura"], "desc": "have/has + participio pasado" },
+        { "keys": ["Negativo"], "desc": "haven't/hasn't + participio" },
+        { "keys": ["Pregunta"], "desc": "Have/Has + sujeto + participio?" },
+        { "keys": ["Uso"], "desc": "Pasado conectado con presente" },
+        { "keys": ["Palabras clave"], "desc": "ever, never, already, yet, just" }
+      ]
+    },
+    {
+      "name": "Future Simple",
+      "items": [
+        { "keys": ["Will"], "desc": "will + verbo base (decisiones)" },
+        { "keys": ["Going to"], "desc": "am/is/are going to + verbo (planes)" },
+        { "keys": ["Negativo"], "desc": "won't / am not going to" },
+        { "keys": ["Pregunta"], "desc": "Will + sujeto + verbo?" },
+        { "keys": ["Uso"], "desc": "Predicciones, promesas, planes" }
+      ]
+    },
+    {
+      "name": "Condicionales",
+      "items": [
+        { "keys": ["Zero"], "desc": "If + present, present (verdades)" },
+        { "keys": ["First"], "desc": "If + present, will + verbo (probable)" },
+        { "keys": ["Second"], "desc": "If + past, would + verbo (hipotético)" },
+        { "keys": ["Third"], "desc": "If + past perfect, would have + pp" },
+        { "keys": ["Ejemplo 1st"], "desc": "If it rains, I will stay home" },
+        { "keys": ["Ejemplo 2nd"], "desc": "If I won, I would travel" }
+      ]
+    },
+    {
+      "name": "Conectores de Adición",
+      "items": [
+        { "keys": ["and"], "desc": "y" },
+        { "keys": ["also"], "desc": "también" },
+        { "keys": ["moreover"], "desc": "además" },
+        { "keys": ["furthermore"], "desc": "además, es más" },
+        { "keys": ["in addition"], "desc": "adicionalmente" },
+        { "keys": ["as well as"], "desc": "así como" },
+        { "keys": ["not only... but also"], "desc": "no solo... sino también" }
+      ]
+    },
+    {
+      "name": "Conectores de Contraste",
+      "items": [
+        { "keys": ["but"], "desc": "pero" },
+        { "keys": ["however"], "desc": "sin embargo" },
+        { "keys": ["although"], "desc": "aunque" },
+        { "keys": ["even though"], "desc": "a pesar de que" },
+        { "keys": ["nevertheless"], "desc": "no obstante" },
+        { "keys": ["on the other hand"], "desc": "por otro lado" },
+        { "keys": ["whereas"], "desc": "mientras que" },
+        { "keys": ["despite / in spite of"], "desc": "a pesar de" }
+      ]
+    },
+    {
+      "name": "Conectores de Causa/Efecto",
+      "items": [
+        { "keys": ["because"], "desc": "porque" },
+        { "keys": ["because of"], "desc": "debido a" },
+        { "keys": ["since"], "desc": "ya que, puesto que" },
+        { "keys": ["as"], "desc": "como, ya que" },
+        { "keys": ["therefore"], "desc": "por lo tanto" },
+        { "keys": ["consequently"], "desc": "en consecuencia" },
+        { "keys": ["as a result"], "desc": "como resultado" },
+        { "keys": ["so"], "desc": "así que" }
+      ]
+    },
+    {
+      "name": "Conectores de Secuencia",
+      "items": [
+        { "keys": ["first / firstly"], "desc": "primero" },
+        { "keys": ["then / next"], "desc": "luego, después" },
+        { "keys": ["after that"], "desc": "después de eso" },
+        { "keys": ["finally"], "desc": "finalmente" },
+        { "keys": ["meanwhile"], "desc": "mientras tanto" },
+        { "keys": ["eventually"], "desc": "eventualmente" },
+        { "keys": ["in the end"], "desc": "al final" }
+      ]
+    },
+    {
+      "name": "Verbos Irregulares Comunes",
+      "items": [
+        { "keys": ["be → was/were → been"], "desc": "ser/estar" },
+        { "keys": ["have → had → had"], "desc": "tener" },
+        { "keys": ["do → did → done"], "desc": "hacer" },
+        { "keys": ["go → went → gone"], "desc": "ir" },
+        { "keys": ["see → saw → seen"], "desc": "ver" },
+        { "keys": ["take → took → taken"], "desc": "tomar" },
+        { "keys": ["get → got → gotten"], "desc": "obtener" },
+        { "keys": ["make → made → made"], "desc": "hacer/fabricar" },
+        { "keys": ["come → came → come"], "desc": "venir" },
+        { "keys": ["know → knew → known"], "desc": "saber/conocer" }
+      ]
+    },
+    {
+      "name": "Preposiciones de Tiempo",
+      "items": [
+        { "keys": ["at"], "desc": "hora exacta (at 5pm, at night)" },
+        { "keys": ["on"], "desc": "días y fechas (on Monday)" },
+        { "keys": ["in"], "desc": "meses, años, partes del día (in May)" },
+        { "keys": ["for"], "desc": "duración (for 2 hours)" },
+        { "keys": ["since"], "desc": "punto de inicio (since 2020)" },
+        { "keys": ["during"], "desc": "durante (during the movie)" },
+        { "keys": ["by"], "desc": "antes de (by tomorrow)" }
+      ]
+    },
+    {
+      "name": "Preposiciones de Lugar",
+      "items": [
+        { "keys": ["at"], "desc": "punto específico (at the door)" },
+        { "keys": ["in"], "desc": "dentro de (in the box)" },
+        { "keys": ["on"], "desc": "sobre superficie (on the table)" },
+        { "keys": ["under"], "desc": "debajo de" },
+        { "keys": ["between"], "desc": "entre (dos)" },
+        { "keys": ["among"], "desc": "entre (varios)" },
+        { "keys": ["next to / beside"], "desc": "al lado de" },
+        { "keys": ["in front of"], "desc": "enfrente de" }
+      ]
+    }
+  ]
+}

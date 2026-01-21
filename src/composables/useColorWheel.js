@@ -106,6 +106,12 @@ const harmonyModes = {
     description: 'Diferentes intensidades',
     angles: [0, 0, 0, 0, 0],
     saturationOffsets: [-30, -15, 0, 15, 30]
+  },
+  custom: {
+    name: 'Personalizado',
+    description: 'Colores extraidos de imagen o personalizados',
+    angles: [0, 0, 0, 0, 0],
+    freeMode: true // Don't apply harmony constraints
   }
 }
 
@@ -156,11 +162,22 @@ export function useColorWheel() {
     })
   }
 
-  // Update a color point - ALL points move together maintaining harmony
+  // Update a color point - ALL points move together maintaining harmony (unless freeMode)
   const updateColorPoint = (index, hue, saturation) => {
     const newHue = (hue + 360) % 360
     const newSat = Math.max(10, Math.min(100, saturation))
     const mode = harmonyModes[currentMode.value]
+
+    // In freeMode (custom), only move the dragged point
+    if (mode.freeMode) {
+      colorPoints.value = colorPoints.value.map((point, i) => {
+        if (i === index) {
+          return { hue: newHue, saturation: newSat }
+        }
+        return point
+      })
+      return
+    }
 
     // Calculate the hue offset for this point in the harmony
     const pointAngleOffset = mode.angles[index]
@@ -293,6 +310,151 @@ export function useColorWheel() {
     applyHarmony()
   }
 
+  // Extract colors from image using improved color quantization
+  const extractColorsFromImage = (imageDataUrl) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.crossOrigin = 'Anonymous'
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+
+        // Sample at reasonable size
+        const maxSize = 150
+        const scale = Math.min(maxSize / img.width, maxSize / img.height, 1)
+        canvas.width = Math.floor(img.width * scale)
+        canvas.height = Math.floor(img.height * scale)
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+        const pixels = imageData.data
+
+        // Collect pixels as RGB arrays
+        const pixelList = []
+        for (let i = 0; i < pixels.length; i += 4) {
+          const r = pixels[i]
+          const g = pixels[i + 1]
+          const b = pixels[i + 2]
+          const a = pixels[i + 3]
+
+          if (a < 128) continue
+          pixelList.push([r, g, b])
+        }
+
+        // Median cut algorithm for color quantization
+        const medianCut = (pixels, depth, maxDepth = 4) => {
+          if (depth >= maxDepth || pixels.length === 0) {
+            if (pixels.length === 0) return []
+            // Calculate average color
+            const avg = pixels.reduce(
+              (acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]],
+              [0, 0, 0]
+            ).map(v => Math.round(v / pixels.length))
+            return [{ color: avg, count: pixels.length }]
+          }
+
+          // Find channel with greatest range
+          const ranges = [0, 1, 2].map(ch => {
+            const values = pixels.map(p => p[ch])
+            return Math.max(...values) - Math.min(...values)
+          })
+          const maxChannel = ranges.indexOf(Math.max(...ranges))
+
+          // Sort by that channel and split
+          pixels.sort((a, b) => a[maxChannel] - b[maxChannel])
+          const mid = Math.floor(pixels.length / 2)
+
+          return [
+            ...medianCut(pixels.slice(0, mid), depth + 1, maxDepth),
+            ...medianCut(pixels.slice(mid), depth + 1, maxDepth)
+          ]
+        }
+
+        // Get quantized colors (16 buckets)
+        const quantized = medianCut(pixelList, 0, 4)
+          .sort((a, b) => b.count - a.count)
+
+        // Color distance function
+        const colorDistance = (c1, c2) => {
+          const [h1, s1, l1] = c1
+          const [h2, s2, l2] = c2
+          // Weighted distance considering hue wrapping
+          const hueDiff = Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) / 180
+          const satDiff = Math.abs(s1 - s2) / 100
+          const lightDiff = Math.abs(l1 - l2) / 100
+          return hueDiff * 1.5 + satDiff + lightDiff * 0.8
+        }
+
+        // Convert to HSL and filter
+        const hslColors = quantized
+          .map(q => {
+            const [h, s, l] = rgbToHsl(q.color[0], q.color[1], q.color[2])
+            return { hue: h, saturation: s, lightness: l, count: q.count, rgb: q.color }
+          })
+          .filter(c => {
+            // Keep colors that aren't too gray (unless very light/dark which is ok)
+            return c.saturation > 8 || c.lightness < 15 || c.lightness > 85
+          })
+
+        // Select 5 most distinct colors
+        const selectedColors = []
+        const minDistance = 0.25
+
+        for (const color of hslColors) {
+          if (selectedColors.length >= 5) break
+
+          const isDistinct = selectedColors.every(sc =>
+            colorDistance(
+              [color.hue, color.saturation, color.lightness],
+              [sc.hue, sc.saturation, sc.lightness]
+            ) > minDistance
+          )
+
+          if (isDistinct || selectedColors.length === 0) {
+            selectedColors.push(color)
+          }
+        }
+
+        // If we don't have enough distinct colors, add from remaining
+        if (selectedColors.length < 5) {
+          for (const color of hslColors) {
+            if (selectedColors.length >= 5) break
+            if (!selectedColors.includes(color)) {
+              selectedColors.push(color)
+            }
+          }
+        }
+
+        // Fill remaining with variations
+        while (selectedColors.length < 5) {
+          const base = selectedColors[0] || { hue: 200, saturation: 70, lightness: 50 }
+          selectedColors.push({
+            hue: (base.hue + selectedColors.length * 60) % 360,
+            saturation: Math.max(20, base.saturation - 10),
+            lightness: base.lightness
+          })
+        }
+
+        // Apply extracted colors
+        colorPoints.value = selectedColors.slice(0, 5).map(c => ({
+          hue: c.hue,
+          saturation: Math.max(10, c.saturation)
+        }))
+
+        // Set average lightness
+        const avgLightness = selectedColors.slice(0, 5).reduce((sum, c) => sum + c.lightness, 0) / 5
+        baseLightness.value = Math.round(Math.max(20, Math.min(80, avgLightness)))
+
+        currentMode.value = 'custom'
+        resolve(selectedColors)
+      }
+
+      img.onerror = () => reject(new Error('Error loading image'))
+      img.src = imageDataUrl
+    })
+  }
+
   return {
     // State
     colorPoints,
@@ -316,6 +478,7 @@ export function useColorWheel() {
     applyHarmony,
     updateColorPoint,
     setBaseColor,
+    extractColorsFromImage,
 
     // Utils
     hslToRgb,

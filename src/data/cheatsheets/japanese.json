@@ -1,0 +1,173 @@
+{
+  "title": "Japonés",
+  "description": "Hiragana, Katakana y frases básicas del japonés",
+  "sections": [
+    {
+      "name": "Hiragana - Vocales",
+      "items": [
+        { "keys": ["あ"], "desc": "a" },
+        { "keys": ["い"], "desc": "i" },
+        { "keys": ["う"], "desc": "u" },
+        { "keys": ["え"], "desc": "e" },
+        { "keys": ["お"], "desc": "o" }
+      ]
+    },
+    {
+      "name": "Hiragana - K, S, T, N",
+      "items": [
+        { "keys": ["か ki く ke こ"], "desc": "ka ki ku ke ko" },
+        { "keys": ["さ し す せ そ"], "desc": "sa shi su se so" },
+        { "keys": ["た ち つ て と"], "desc": "ta chi tsu te to" },
+        { "keys": ["な に ぬ ね の"], "desc": "na ni nu ne no" }
+      ]
+    },
+    {
+      "name": "Hiragana - H, M, Y, R, W, N",
+      "items": [
+        { "keys": ["は ひ ふ へ ほ"], "desc": "ha hi fu he ho" },
+        { "keys": ["ま み む め も"], "desc": "ma mi mu me mo" },
+        { "keys": ["や ゆ よ"], "desc": "ya yu yo" },
+        { "keys": ["ら り る れ ろ"], "desc": "ra ri ru re ro" },
+        { "keys": ["わ を"], "desc": "wa wo" },
+        { "keys": ["ん"], "desc": "n" }
+      ]
+    },
+    {
+      "name": "Hiragana - Dakuten (G, Z, D, B)",
+      "items": [
+        { "keys": ["が ぎ ぐ げ ご"], "desc": "ga gi gu ge go" },
+        { "keys": ["ざ じ ず ぜ ぞ"], "desc": "za ji zu ze zo" },
+        { "keys": ["だ ぢ づ で ど"], "desc": "da ji zu de do" },
+        { "keys": ["ば び ぶ べ ぼ"], "desc": "ba bi bu be bo" },
+        { "keys": ["ぱ ぴ ぷ ぺ ぽ"], "desc": "pa pi pu pe po" }
+      ]
+    },
+    {
+      "name": "Katakana - Vocales",
+      "items": [
+        { "keys": ["ア"], "desc": "a" },
+        { "keys": ["イ"], "desc": "i" },
+        { "keys": ["ウ"], "desc": "u" },
+        { "keys": ["エ"], "desc": "e" },
+        { "keys": ["オ"], "desc": "o" }
+      ]
+    },
+    {
+      "name": "Katakana - K, S, T, N",
+      "items": [
+        { "keys": ["カ キ ク ケ コ"], "desc": "ka ki ku ke ko" },
+        { "keys": ["サ シ ス セ ソ"], "desc": "sa shi su se so" },
+        { "keys": ["タ チ ツ テ ト"], "desc": "ta chi tsu te to" },
+        { "keys": ["ナ ニ ヌ ネ ノ"], "desc": "na ni nu ne no" }
+      ]
+    },
+    {
+      "name": "Katakana - H, M, Y, R, W, N",
+      "items": [
+        { "keys": ["ハ ヒ フ ヘ ホ"], "desc": "ha hi fu he ho" },
+        { "keys": ["マ ミ ム メ モ"], "desc": "ma mi mu me mo" },
+        { "keys": ["ヤ ユ ヨ"], "desc": "ya yu yo" },
+        { "keys": ["ラ リ ル レ ロ"], "desc": "ra ri ru re ro" },
+        { "keys": ["ワ ヲ"], "desc": "wa wo" },
+        { "keys": ["ン"], "desc": "n" }
+      ]
+    },
+    {
+      "name": "Saludos",
+      "items": [
+        { "keys": ["おはようございます"], "desc": "Buenos días (formal)" },
+        { "keys": ["こんにちは"], "desc": "Buenas tardes / Hola" },
+        { "keys": ["こんばんは"], "desc": "Buenas noches (saludo)" },
+        { "keys": ["おやすみなさい"], "desc": "Buenas noches (despedida)" },
+        { "keys": ["さようなら"], "desc": "Adiós" },
+        { "keys": ["じゃあね"], "desc": "Hasta luego (informal)" },
+        { "keys": ["またね"], "desc": "Nos vemos" }
+      ]
+    },
+    {
+      "name": "Expresiones Básicas",
+      "items": [
+        { "keys": ["ありがとうございます"], "desc": "Muchas gracias (formal)" },
+        { "keys": ["ありがとう"], "desc": "Gracias (informal)" },
+        { "keys": ["すみません"], "desc": "Disculpe / Perdón" },
+        { "keys": ["ごめんなさい"], "desc": "Lo siento" },
+        { "keys": ["はい"], "desc": "Sí" },
+        { "keys": ["いいえ"], "desc": "No" },
+        { "keys": ["お願いします"], "desc": "Por favor" },
+        { "keys": ["どういたしまして"], "desc": "De nada" }
+      ]
+    },
+    {
+      "name": "Presentación",
+      "items": [
+        { "keys": ["はじめまして"], "desc": "Mucho gusto (primera vez)" },
+        { "keys": ["私は...です"], "desc": "Yo soy..." },
+        { "keys": ["お名前は?"], "desc": "¿Cuál es tu nombre?" },
+        { "keys": ["...と申します"], "desc": "Me llamo... (formal)" },
+        { "keys": ["どうぞよろしく"], "desc": "Encantado de conocerte" },
+        { "keys": ["...から来ました"], "desc": "Vengo de..." }
+      ]
+    },
+    {
+      "name": "Números 1-10",
+      "items": [
+        { "keys": ["一 (いち)"], "desc": "1 - ichi" },
+        { "keys": ["二 (に)"], "desc": "2 - ni" },
+        { "keys": ["三 (さん)"], "desc": "3 - san" },
+        { "keys": ["四 (よん/し)"], "desc": "4 - yon/shi" },
+        { "keys": ["五 (ご)"], "desc": "5 - go" },
+        { "keys": ["六 (ろく)"], "desc": "6 - roku" },
+        { "keys": ["七 (なな/しち)"], "desc": "7 - nana/shichi" },
+        { "keys": ["八 (はち)"], "desc": "8 - hachi" },
+        { "keys": ["九 (きゅう/く)"], "desc": "9 - kyuu/ku" },
+        { "keys": ["十 (じゅう)"], "desc": "10 - juu" }
+      ]
+    },
+    {
+      "name": "Números Mayores",
+      "items": [
+        { "keys": ["百 (ひゃく)"], "desc": "100 - hyaku" },
+        { "keys": ["千 (せん)"], "desc": "1,000 - sen" },
+        { "keys": ["万 (まん)"], "desc": "10,000 - man" },
+        { "keys": ["十万"], "desc": "100,000 - juu man" },
+        { "keys": ["百万"], "desc": "1,000,000 - hyaku man" }
+      ]
+    },
+    {
+      "name": "Preguntas Útiles",
+      "items": [
+        { "keys": ["これは何ですか?"], "desc": "¿Qué es esto?" },
+        { "keys": ["いくらですか?"], "desc": "¿Cuánto cuesta?" },
+        { "keys": ["どこですか?"], "desc": "¿Dónde está?" },
+        { "keys": ["トイレはどこですか?"], "desc": "¿Dónde está el baño?" },
+        { "keys": ["何時ですか?"], "desc": "¿Qué hora es?" },
+        { "keys": ["分かりますか?"], "desc": "¿Entiende?" },
+        { "keys": ["英語を話せますか?"], "desc": "¿Habla inglés?" }
+      ]
+    },
+    {
+      "name": "Frases en Restaurante",
+      "items": [
+        { "keys": ["いただきます"], "desc": "Buen provecho (antes de comer)" },
+        { "keys": ["ごちそうさまでした"], "desc": "Gracias por la comida" },
+        { "keys": ["メニューをください"], "desc": "El menú, por favor" },
+        { "keys": ["お会計をお願いします"], "desc": "La cuenta, por favor" },
+        { "keys": ["おいしい!"], "desc": "¡Delicioso!" },
+        { "keys": ["水をください"], "desc": "Agua, por favor" }
+      ]
+    },
+    {
+      "name": "Partículas Básicas",
+      "items": [
+        { "keys": ["は (wa)"], "desc": "Tema de la oración" },
+        { "keys": ["が (ga)"], "desc": "Sujeto" },
+        { "keys": ["を (wo)"], "desc": "Objeto directo" },
+        { "keys": ["に (ni)"], "desc": "Dirección, tiempo, destino" },
+        { "keys": ["で (de)"], "desc": "Lugar de acción, medio" },
+        { "keys": ["の (no)"], "desc": "Posesión (de)" },
+        { "keys": ["と (to)"], "desc": "Y, con" },
+        { "keys": ["か (ka)"], "desc": "Pregunta (¿?)" }
+      ]
+    }
+  ]
+}

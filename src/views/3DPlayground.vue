@@ -192,6 +192,174 @@ const handleFileSelect = async (e) => {
   e.target.value = '' // Reset input
 }
 
+// Load human model for lighting tests
+const loadHumanModel = async () => {
+  isPresetActive.value = false
+
+  // Use the GLTFLoader directly from the importer
+  const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js')
+  const loader = new GLTFLoader()
+
+  try {
+    const gltf = await new Promise((resolve, reject) => {
+      loader.load(
+        playground.HUMAN_MODEL_URL,
+        resolve,
+        (progress) => {
+          console.log('Loading human model:', (progress.loaded / progress.total * 100).toFixed(0) + '%')
+        },
+        reject
+      )
+    })
+
+    const model = gltf.scene
+    model.scale.setScalar(2) // Scale up the model
+    model.position.set(0, 0, 0)
+
+    // Setup materials for better lighting visibility
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true
+        child.receiveShadow = true
+      }
+    })
+
+    model.userData = {
+      type: 'human',
+      id: Date.now(),
+      isUserObject: true,
+      name: 'Modelo Humano'
+    }
+
+    playground.scene.value.add(model)
+    playground.objects.value = [...playground.objects.value, model]
+    playground.selectObject(model)
+  } catch (error) {
+    console.error('Error loading human model:', error)
+  }
+}
+
+// Clear all objects except lights
+const clearNonLightObjects = () => {
+  const lightTypes = ['spotlight', 'pointlight', 'arealight', 'hemisphere', 'directional']
+
+  // First, deselect any object
+  playground.deselectObject()
+
+  // Get all objects to remove (anything that's not a light)
+  const objectsToKeep = []
+  const objectsToRemove = []
+
+  playground.objects.value.forEach(obj => {
+    if (lightTypes.includes(obj.userData?.type)) {
+      objectsToKeep.push(obj)
+    } else {
+      objectsToRemove.push(obj)
+    }
+  })
+
+  // Remove objects from scene and dispose
+  objectsToRemove.forEach(obj => {
+    playground.scene.value.remove(obj)
+    // Dispose geometry and materials recursively
+    obj.traverse?.((child) => {
+      if (child.geometry) {
+        child.geometry.dispose()
+      }
+      if (child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach(m => {
+            m.map?.dispose()
+            m.dispose()
+          })
+        } else {
+          child.material.map?.dispose()
+          child.material.dispose()
+        }
+      }
+    })
+  })
+
+  // Also scan scene directly for any orphaned user objects
+  const sceneObjectsToRemove = []
+  playground.scene.value.traverse((child) => {
+    if (child.userData?.isUserObject && !lightTypes.includes(child.userData?.type)) {
+      sceneObjectsToRemove.push(child)
+    }
+  })
+
+  sceneObjectsToRemove.forEach(obj => {
+    playground.scene.value.remove(obj)
+  })
+
+  // Update the objects array
+  playground.objects.value = objectsToKeep
+}
+
+// Load a pre-made scene for lighting testing
+const loadScenePreset = async (presetKey) => {
+  const preset = playground.SCENE_PRESETS[presetKey]
+  if (!preset) return
+
+  isPresetActive.value = false
+
+  // Clear previous objects but keep lights
+  clearNonLightObjects()
+
+  const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js')
+  const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js')
+
+  const loader = new GLTFLoader()
+
+  // Setup DRACO decoder for compressed meshes
+  const dracoLoader = new DRACOLoader()
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
+  loader.setDRACOLoader(dracoLoader)
+
+  try {
+    const gltf = await new Promise((resolve, reject) => {
+      loader.load(
+        preset.url,
+        resolve,
+        (progress) => {
+          if (progress.total > 0) {
+            console.log(`Loading ${preset.name}:`, (progress.loaded / progress.total * 100).toFixed(0) + '%')
+          }
+        },
+        reject
+      )
+    })
+
+    const model = gltf.scene
+    model.scale.setScalar(preset.scale || 1)
+    model.position.set(...(preset.position || [0, 0, 0]))
+
+    // Setup materials for better lighting visibility
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true
+        child.receiveShadow = true
+      }
+    })
+
+    model.userData = {
+      type: 'scene',
+      id: Date.now(),
+      isUserObject: true,
+      name: preset.name
+    }
+
+    playground.scene.value.add(model)
+    playground.objects.value = [...playground.objects.value, model]
+    playground.selectObject(model)
+
+    // Reset camera to see the whole scene
+    playground.resetCamera()
+  } catch (error) {
+    console.error(`Error loading scene ${preset.name}:`, error)
+  }
+}
+
 // Handle object selection from list
 const handleSelectFromList = (obj) => {
   playground.selectObject(obj)
@@ -387,7 +555,11 @@ onUnmounted(() => {
       :has-selection="!!playground.selectedObject.value"
       :bloom-enabled="playground.bloomEnabled.value"
       :current-environment="playground.currentEnvironment.value"
+      :current-lighting="playground.currentLightingPreset.value"
       :environment-presets="playground.ENVIRONMENT_PRESETS"
+      :lighting-presets="playground.LIGHTING_PRESETS"
+      :light-types="playground.LIGHT_TYPES"
+      :scene-presets="playground.SCENE_PRESETS"
       :material-presets="playground.MATERIAL_PRESETS"
       :is-importing="playground.isImporting.value"
       :is-preset-active="isPresetActive"
@@ -401,6 +573,9 @@ onUnmounted(() => {
       @add-shape="(shape) => { isPresetActive = false; playground.addShape(shape) }"
       @add-spotlight="() => { isPresetActive = false; playground.addSpotlight() }"
       @add-pointlight="() => { isPresetActive = false; playground.addPointLight() }"
+      @add-arealight="() => { isPresetActive = false; playground.addAreaLight() }"
+      @add-hemisphere="() => { isPresetActive = false; playground.addHemisphereLight() }"
+      @add-directional="() => { isPresetActive = false; playground.addDirectionalLight() }"
       @clear="playground.quickActions.clearScene"
       @reset-camera="playground.resetCamera"
       @delete-selected="playground.deleteSelected"
@@ -410,8 +585,11 @@ onUnmounted(() => {
       @export-gltf="playground.quickActions.exportGLTF"
       @export-glb="playground.quickActions.exportGLB"
       @import="() => { isPresetActive = false; triggerImport() }"
+      @import-human="loadHumanModel"
+      @load-scene-preset="loadScenePreset"
       @toggle-bloom="playground.setBloomEnabled(!playground.bloomEnabled.value)"
       @environment-change="playground.loadEnvironment"
+      @lighting-change="playground.applyLightingPreset"
       @material-change="playground.applyMaterialToSelected"
       @load-preset="loadPreset"
     />
@@ -506,9 +684,13 @@ onUnmounted(() => {
           :selected-object="playground.selectedObject.value"
           :material-presets="playground.MATERIAL_PRESETS"
           :material-properties="playground.getSelectedMaterialProperties.value"
+          :has-texture="playground.selectedHasTexture.value"
+          :texture-url="playground.selectedTextureUrl.value"
           @color-change="playground.setSelectedColor"
           @material-change="playground.applyMaterialToSelected"
           @material-property-change="(prop, val) => playground.updateSelectedMaterialProperty(prop, val)"
+          @apply-texture="playground.applyTextureToSelected"
+          @remove-texture="playground.removeTextureFromSelected"
         />
         <div v-else class="p-4 text-xs text-neutral-500 text-center">
           Selecciona un objeto

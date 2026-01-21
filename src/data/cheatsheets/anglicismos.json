@@ -1,0 +1,119 @@
+{
+  "title": "Anglicismos",
+  "description": "Palabras en ingles que usamos porque mola mas",
+  "sections": [
+    {
+      "name": "Trabajo y Productividad",
+      "items": [
+        { "keys": ["meeting"], "desc": "Reunion (pero suena mas importante)" },
+        { "keys": ["deadline"], "desc": "Fecha limite que nunca cumples" },
+        { "keys": ["feedback"], "desc": "Critica disfrazada de ayuda" },
+        { "keys": ["target"], "desc": "Objetivo imposible del trimestre" },
+        { "keys": ["briefing"], "desc": "Reunion antes de la reunion" },
+        { "keys": ["brainstorming"], "desc": "Decir ideas random en grupo" },
+        { "keys": ["call"], "desc": "Llamada pero mas profesional" },
+        { "keys": ["ASAP"], "desc": "Lo necesito ya pero educadamente" },
+        { "keys": ["follow-up"], "desc": "Insistir pero con clase" },
+        { "keys": ["stand-up"], "desc": "Reunion corta de pie (teoria)" }
+      ]
+    },
+    {
+      "name": "Tecnologia",
+      "items": [
+        { "keys": ["app"], "desc": "Aplicacion pero mas rapido" },
+        { "keys": ["update"], "desc": "Actualizacion que rompe todo" },
+        { "keys": ["backup"], "desc": "Copia de seguridad que nunca haces" },
+        { "keys": ["bug"], "desc": "Error que no es tu culpa" },
+        { "keys": ["link"], "desc": "Enlace pero mas corto" },
+        { "keys": ["password"], "desc": "1234 pero en ingles" },
+        { "keys": ["login"], "desc": "Entrar en tu cuenta" },
+        { "keys": ["wifi"], "desc": "Oxigeno del siglo XXI" },
+        { "keys": ["lag"], "desc": "Cuando el internet te odia" },
+        { "keys": ["setup"], "desc": "Tu escritorio gaming" }
+      ]
+    },
+    {
+      "name": "Redes Sociales",
+      "items": [
+        { "keys": ["post"], "desc": "Publicacion para buscar likes" },
+        { "keys": ["story"], "desc": "Contenido que desaparece en 24h" },
+        { "keys": ["feed"], "desc": "Scroll infinito de contenido" },
+        { "keys": ["like"], "desc": "Validacion social en un click" },
+        { "keys": ["follow"], "desc": "Seguir a alguien (esperando follow back)" },
+        { "keys": ["unfollow"], "desc": "Declaracion de guerra pasivo-agresiva" },
+        { "keys": ["dm"], "desc": "Mensaje directo (normalmente incomodo)" },
+        { "keys": ["influencer"], "desc": "Persona que vende cosas sin venderlas" },
+        { "keys": ["content"], "desc": "Todo lo que subes a internet" },
+        { "keys": ["viral"], "desc": "Famoso por 15 minutos" }
+      ]
+    },
+    {
+      "name": "Entretenimiento",
+      "items": [
+        { "keys": ["spoiler"], "desc": "Arruinar finales de series" },
+        { "keys": ["plot twist"], "desc": "Giro inesperado de la trama" },
+        { "keys": ["hype"], "desc": "Emocion exagerada antes de algo" },
+        { "keys": ["binge"], "desc": "Ver temporada entera de una sentada" },
+        { "keys": ["stream"], "desc": "Ver en directo (o emitir)" },
+        { "keys": ["random"], "desc": "Aleatorio, inesperado, raro" },
+        { "keys": ["trending"], "desc": "Lo que esta de moda ahora" },
+        { "keys": ["mainstream"], "desc": "Popular, comercial, de masas" },
+        { "keys": ["underground"], "desc": "Desconocido pero superior (segun fans)" }
+      ]
+    },
+    {
+      "name": "Moda y Lifestyle",
+      "items": [
+        { "keys": ["look"], "desc": "Apariencia, estilo visual" },
+        { "keys": ["outfit"], "desc": "Conjunto de ropa del dia" },
+        { "keys": ["shopping"], "desc": "Comprar cosas innecesarias" },
+        { "keys": ["haul"], "desc": "Mostrar todo lo que compraste" },
+        { "keys": ["skincare"], "desc": "10 cremas para la cara" },
+        { "keys": ["makeup"], "desc": "Maquillaje profesional" },
+        { "keys": ["fitness"], "desc": "Hacer ejercicio pero fancy" },
+        { "keys": ["gym"], "desc": "Gimnasio pero mas corto" },
+        { "keys": ["self-care"], "desc": "Excusa para comprarte algo caro" }
+      ]
+    },
+    {
+      "name": "Comida y Bebida",
+      "items": [
+        { "keys": ["brunch"], "desc": "Desayuno-almuerzo para domingos" },
+        { "keys": ["delivery"], "desc": "Comida a domicilio" },
+        { "keys": ["takeaway"], "desc": "Para llevar pero en pijo" },
+        { "keys": ["foodie"], "desc": "Persona que fotografa comida" },
+        { "keys": ["batch cooking"], "desc": "Cocinar para toda la semana" },
+        { "keys": ["smoothie"], "desc": "Batido pero healthy" },
+        { "keys": ["snack"], "desc": "Picoteo entre horas" },
+        { "keys": ["cheat day"], "desc": "Dia de comer porquerias sin culpa" }
+      ]
+    },
+    {
+      "name": "Relaciones Sociales",
+      "items": [
+        { "keys": ["crush"], "desc": "La persona que te gusta" },
+        { "keys": ["ghosting"], "desc": "Desaparecer sin avisar" },
+        { "keys": ["stalker"], "desc": "Acosador de perfiles de instagram" },
+        { "keys": ["match"], "desc": "Conexion en apps de citas" },
+        { "keys": ["date"], "desc": "Cita romantica" },
+        { "keys": ["ex"], "desc": "Error del pasado" },
+        { "keys": ["friendzone"], "desc": "Zona de solo amigos" },
+        { "keys": ["couple goals"], "desc": "Pareja que te da envidia" }
+      ]
+    },
+    {
+      "name": "Expresiones Comunes",
+      "items": [
+        { "keys": ["ok"], "desc": "La palabra mas universal" },
+        { "keys": ["cool"], "desc": "Guay pero en ingles" },
+        { "keys": ["sorry"], "desc": "Perdon pero sin sentirlo mucho" },
+        { "keys": ["thanks"], "desc": "Gracias pero rapido" },
+        { "keys": ["please"], "desc": "Por favor pero educado" },
+        { "keys": ["whatever"], "desc": "Lo que sea, me da igual" },
+        { "keys": ["btw"], "desc": "Por cierto (by the way)" },
+        { "keys": ["check"], "desc": "Revisar o verificar algo" },
+        { "keys": ["mood"], "desc": "Estado de animo actual" }
+      ]
+    }
+  ]
+}

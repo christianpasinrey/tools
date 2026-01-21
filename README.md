@@ -40,6 +40,7 @@
 | **SVG Editor** | Crea y edita gr&aacute;ficos vectoriales con herramientas de dibujo profesionales | SVG API |
 | **Unit Converter** | Convierte unidades de longitud, peso, temperatura, moneda y m&aacute;s | Frankfurter API |
 | **Color Picker** | Rueda de colores con armon&iacute;as crom&aacute;ticas y exportaci&oacute;n en m&uacute;ltiples formatos | Canvas API |
+| **Phone Tester** | Prueba tu diseño responsive en diferentes dispositivos m&oacute;viles con simulaci&oacute;n en tiempo real | @tbisoftware/phone |
 
 ## Requisitos previos
 
@@ -134,6 +135,7 @@ web-tools/
 - **PDF.js** - Renderizado de PDFs
 - **CodeMirror 6** - Editor de c&oacute;digo con syntax highlighting
 - **js-yaml** - Parser y serializador YAML
+- **@tbisoftware/phone** - Componente de entrada de tel&eacute;fono con validaci&oacute;n internacional
 
 ## Despliegue
 
@@ -190,6 +192,7 @@ MIT
 | **SVG Editor** | Create and edit vector graphics with professional drawing tools | SVG API |
 | **Unit Converter** | Convert units of length, weight, temperature, currency and more | Frankfurter API |
 | **Color Picker** | Color wheel with chromatic harmonies and multi-format export | Canvas API |
+| **Phone Tester** | Test your responsive design on different mobile devices with real-time simulation | @tbisoftware/phone |
 
 ## Prerequisites
 
@@ -284,6 +287,7 @@ web-tools/
 - **PDF.js** - PDF rendering
 - **CodeMirror 6** - Code editor with syntax highlighting
 - **js-yaml** - YAML parser and serializer
+- **@tbisoftware/phone** - Phone input component with international validation
 
 ## Deployment
 

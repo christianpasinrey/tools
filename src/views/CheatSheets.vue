@@ -18,14 +18,76 @@ const getCategorySheets = (categoryId) => {
   return category.sheets.map(sheetId => sheets.find(s => s.id === sheetId)).filter(Boolean)
 }
 
-// Toggle category dropdown
+// Toggle category dropdown (only one open at a time)
 const toggleCategory = (categoryId) => {
-  expandedCategories.value[categoryId] = !expandedCategories.value[categoryId]
+  const isCurrentlyOpen = expandedCategories.value[categoryId]
+  // Close all dropdowns
+  Object.keys(expandedCategories.value).forEach(key => {
+    expandedCategories.value[key] = false
+  })
+  // Open the clicked one if it was closed
+  if (!isCurrentlyOpen) {
+    expandedCategories.value[categoryId] = true
+  }
 }
 
-// Select sheet
+// Select sheet and close dropdown
 const selectSheet = (sheetId) => {
   activeSheet.value = sheetId
+  // Close all dropdowns
+  Object.keys(expandedCategories.value).forEach(key => {
+    expandedCategories.value[key] = false
+  })
+}
+
+// Get current sheet language (for audio)
+const currentSheetLang = computed(() =>
+  sheets.find(s => s.id === activeSheet.value)?.lang || null
+)
+
+// Speech rate control
+const speechRate = ref(0.9)
+const availableVoices = ref([])
+const showVoiceHelpModal = ref(false)
+
+// Load voices (async in some browsers)
+const loadVoices = () => {
+  availableVoices.value = window.speechSynthesis?.getVoices() || []
+}
+
+// Initialize voices
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  loadVoices()
+  window.speechSynthesis.onvoiceschanged = loadVoices
+}
+
+// Text-to-Speech function
+const speakText = (text, lang) => {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.rate = speechRate.value
+
+    // Try to find the best voice for the language
+    const voices = availableVoices.value.length > 0
+      ? availableVoices.value
+      : window.speechSynthesis.getVoices()
+
+    const langCode = lang.split('-')[0] // e.g., 'fr' from 'fr-FR'
+    const voice = voices.find(v => v.lang === lang) ||
+                  voices.find(v => v.lang.startsWith(lang)) ||
+                  voices.find(v => v.lang.startsWith(langCode)) ||
+                  voices.find(v => v.lang.toLowerCase().includes(langCode))
+
+    if (voice) {
+      utterance.voice = voice
+      utterance.lang = voice.lang
+    } else {
+      utterance.lang = lang
+    }
+
+    window.speechSynthesis.speak(utterance)
+  }
 }
 
 // Three.js variables
@@ -453,6 +515,32 @@ async function exportToPDF() {
       <header class="sheet-header">
         <div class="header-top">
           <h1 class="sheet-title">{{ currentSheet.title }}</h1>
+
+          <!-- Speed control for language sheets -->
+          <div v-if="currentSheetLang" class="speed-control">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            </svg>
+            <input
+              type="range"
+              v-model="speechRate"
+              min="0.5"
+              max="1.5"
+              step="0.1"
+              class="speed-slider"
+            />
+            <span class="speed-label">{{ speechRate }}x</span>
+            <button
+              @click="showVoiceHelpModal = true"
+              class="voice-help-btn"
+              title="Ayuda con voces"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </div>
+
           <button
             @click="exportToPDF"
             :disabled="isExporting"
@@ -511,11 +599,98 @@ async function exportToPDF() {
 
                 <!-- Description -->
                 <span class="item-desc">{{ item.desc }}</span>
+
+                <!-- Audio button for language sheets -->
+                <button
+                  v-if="currentSheetLang && item.keys"
+                  @click="speakText(item.keys[0], currentSheetLang)"
+                  class="audio-btn"
+                  title="Escuchar pronunciación"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
         </article>
       </div>
     </div>
+
+    <!-- Voice Help Modal -->
+    <Teleport to="body">
+      <Transition name="modal">
+        <div v-if="showVoiceHelpModal" class="voice-modal-overlay" @click.self="showVoiceHelpModal = false">
+          <div class="voice-modal">
+            <div class="voice-modal-header">
+              <h3>Instalar voces de idiomas</h3>
+              <button @click="showVoiceHelpModal = false" class="voice-modal-close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div class="voice-modal-content">
+              <p class="voice-modal-intro">
+                El audio utiliza las voces del sistema. Si un idioma no reproduce audio, necesitas instalar las voces correspondientes.
+              </p>
+
+              <!-- macOS -->
+              <div class="voice-os-section">
+                <div class="voice-os-header">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z"/>
+                  </svg>
+                  <span>macOS</span>
+                </div>
+                <ol class="voice-os-steps">
+                  <li>Abre <strong>Preferencias del Sistema</strong></li>
+                  <li>Ve a <strong>Accesibilidad</strong> → <strong>Contenido hablado</strong></li>
+                  <li>Haz clic en <strong>Voces del sistema</strong> → <strong>Gestionar voces</strong></li>
+                  <li>Busca el idioma deseado y descarga las voces</li>
+                </ol>
+              </div>
+
+              <!-- Windows -->
+              <div class="voice-os-section">
+                <div class="voice-os-header">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 12V6.75l6-1.32v6.48L3 12zm17-9v8.75l-10 .15V5.21L20 3zM3 13l6 .09v6.81l-6-1.15V13zm7 .25l10 .15V21l-10-1.91V13.25z"/>
+                  </svg>
+                  <span>Windows</span>
+                </div>
+                <ol class="voice-os-steps">
+                  <li>Abre <strong>Configuracion</strong> (Win + I)</li>
+                  <li>Ve a <strong>Hora e idioma</strong> → <strong>Idioma y region</strong></li>
+                  <li>Haz clic en <strong>Agregar un idioma</strong></li>
+                  <li>Busca el idioma y asegurate de marcar <strong>Texto a voz</strong></li>
+                </ol>
+              </div>
+
+              <!-- Linux -->
+              <div class="voice-os-section">
+                <div class="voice-os-header">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.5 2c-1.5 0-2.5 1.5-2.5 3.5 0 1 .5 2 1 2.5-.5.5-1.5 1-2 2-1 2-1 4 0 5.5.5 1 1.5 1.5 2.5 2 0 .5-.5 1-1 1.5-.5.5-.5 1.5 0 2s1.5.5 2 0c.5-.5 1-1 1-1.5.5.5 1.5 1 2.5 1s2-.5 2.5-1c0 .5.5 1 1 1.5.5.5 1.5.5 2 0s.5-1.5 0-2c-.5-.5-1-1-1-1.5 1-.5 2-1 2.5-2 1-1.5 1-3.5 0-5.5-.5-1-1.5-1.5-2-2 .5-.5 1-1.5 1-2.5 0-2-1-3.5-2.5-3.5s-2.5 1.5-2.5 3c0 0-1 0-1.5.5-.5-.5-1.5-.5-1.5-.5 0-1.5-1-3-2.5-3z"/>
+                  </svg>
+                  <span>Linux</span>
+                </div>
+                <ol class="voice-os-steps">
+                  <li>Instala <strong>espeak-ng</strong> o <strong>festival</strong>:</li>
+                  <li><code>sudo apt install espeak-ng</code></li>
+                  <li>Para mas voces: <code>sudo apt install speech-dispatcher-espeak-ng</code></li>
+                  <li>En Chrome/Chromium las voces del sistema se cargan automaticamente</li>
+                </ol>
+              </div>
+
+              <p class="voice-modal-note">
+                Despues de instalar, recarga la pagina para que las nuevas voces esten disponibles.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>

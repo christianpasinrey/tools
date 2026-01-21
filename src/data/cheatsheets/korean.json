@@ -1,0 +1,155 @@
+{
+  "title": "Coreano",
+  "description": "Hangul básico, frases esenciales y gramática del coreano",
+  "sections": [
+    {
+      "name": "Vocales Básicas (모음)",
+      "items": [
+        { "keys": ["ㅏ"], "desc": "a" },
+        { "keys": ["ㅓ"], "desc": "eo (entre o y e)" },
+        { "keys": ["ㅗ"], "desc": "o" },
+        { "keys": ["ㅜ"], "desc": "u" },
+        { "keys": ["ㅡ"], "desc": "eu (u francesa)" },
+        { "keys": ["ㅣ"], "desc": "i" },
+        { "keys": ["ㅐ"], "desc": "ae (e abierta)" },
+        { "keys": ["ㅔ"], "desc": "e" }
+      ]
+    },
+    {
+      "name": "Consonantes Básicas (자음)",
+      "items": [
+        { "keys": ["ㄱ"], "desc": "g/k" },
+        { "keys": ["ㄴ"], "desc": "n" },
+        { "keys": ["ㄷ"], "desc": "d/t" },
+        { "keys": ["ㄹ"], "desc": "r/l" },
+        { "keys": ["ㅁ"], "desc": "m" },
+        { "keys": ["ㅂ"], "desc": "b/p" },
+        { "keys": ["ㅅ"], "desc": "s" },
+        { "keys": ["ㅇ"], "desc": "ng (silencioso al inicio)" },
+        { "keys": ["ㅈ"], "desc": "j" },
+        { "keys": ["ㅎ"], "desc": "h" }
+      ]
+    },
+    {
+      "name": "Saludos",
+      "items": [
+        { "keys": ["안녕하세요 (annyeonghaseyo)"], "desc": "Hola (formal)" },
+        { "keys": ["안녕 (annyeong)"], "desc": "Hola (informal)" },
+        { "keys": ["좋은 아침이에요"], "desc": "Buenos días" },
+        { "keys": ["안녕히 가세요"], "desc": "Adiós (a quien se va)" },
+        { "keys": ["안녕히 계세요"], "desc": "Adiós (a quien se queda)" },
+        { "keys": ["잘 자요 (jal jayo)"], "desc": "Buenas noches" }
+      ]
+    },
+    {
+      "name": "Expresiones Básicas",
+      "items": [
+        { "keys": ["감사합니다 (gamsahamnida)"], "desc": "Gracias (formal)" },
+        { "keys": ["고마워요 (gomawoyo)"], "desc": "Gracias (informal)" },
+        { "keys": ["천만에요 (cheonmaneyo)"], "desc": "De nada" },
+        { "keys": ["죄송합니다 (joesonghamnida)"], "desc": "Lo siento (formal)" },
+        { "keys": ["미안해요 (mianhaeyo)"], "desc": "Perdón (informal)" },
+        { "keys": ["네 (ne)"], "desc": "Sí" },
+        { "keys": ["아니요 (aniyo)"], "desc": "No" },
+        { "keys": ["괜찮아요 (gwaenchanayo)"], "desc": "Está bien / No pasa nada" }
+      ]
+    },
+    {
+      "name": "Presentación",
+      "items": [
+        { "keys": ["저는 ...이에요/예요"], "desc": "Yo soy..." },
+        { "keys": ["이름이 뭐예요?"], "desc": "¿Cómo te llamas?" },
+        { "keys": ["만나서 반갑습니다"], "desc": "Encantado de conocerte" },
+        { "keys": ["저는 스페인 사람이에요"], "desc": "Soy español" },
+        { "keys": ["어느 나라 사람이에요?"], "desc": "¿De qué país eres?" }
+      ]
+    },
+    {
+      "name": "Números Sino-Coreanos",
+      "items": [
+        { "keys": ["일 (il)"], "desc": "1" },
+        { "keys": ["이 (i)"], "desc": "2" },
+        { "keys": ["삼 (sam)"], "desc": "3" },
+        { "keys": ["사 (sa)"], "desc": "4" },
+        { "keys": ["오 (o)"], "desc": "5" },
+        { "keys": ["육 (yuk)"], "desc": "6" },
+        { "keys": ["칠 (chil)"], "desc": "7" },
+        { "keys": ["팔 (pal)"], "desc": "8" },
+        { "keys": ["구 (gu)"], "desc": "9" },
+        { "keys": ["십 (sip)"], "desc": "10" }
+      ]
+    },
+    {
+      "name": "Números Nativos Coreanos",
+      "items": [
+        { "keys": ["하나 (hana)"], "desc": "1" },
+        { "keys": ["둘 (dul)"], "desc": "2" },
+        { "keys": ["셋 (set)"], "desc": "3" },
+        { "keys": ["넷 (net)"], "desc": "4" },
+        { "keys": ["다섯 (daseot)"], "desc": "5" },
+        { "keys": ["여섯 (yeoseot)"], "desc": "6" },
+        { "keys": ["일곱 (ilgop)"], "desc": "7" },
+        { "keys": ["여덟 (yeodeol)"], "desc": "8" },
+        { "keys": ["아홉 (ahop)"], "desc": "9" },
+        { "keys": ["열 (yeol)"], "desc": "10" }
+      ]
+    },
+    {
+      "name": "Preguntas Útiles",
+      "items": [
+        { "keys": ["이게 뭐예요? (ige mwoyeyo)"], "desc": "¿Qué es esto?" },
+        { "keys": ["얼마예요? (eolmayeyo)"], "desc": "¿Cuánto cuesta?" },
+        { "keys": ["어디예요? (eodiyeyo)"], "desc": "¿Dónde está?" },
+        { "keys": ["화장실이 어디예요?"], "desc": "¿Dónde está el baño?" },
+        { "keys": ["영어 할 수 있어요?"], "desc": "¿Hablas inglés?" },
+        { "keys": ["뭐라고요? (mworagoyo)"], "desc": "¿Cómo? / ¿Qué dijiste?" }
+      ]
+    },
+    {
+      "name": "Restaurante",
+      "items": [
+        { "keys": ["메뉴판 주세요"], "desc": "El menú, por favor" },
+        { "keys": ["이거 주세요 (igeo juseyo)"], "desc": "Esto, por favor" },
+        { "keys": ["맛있어요 (masisseoyo)"], "desc": "Está delicioso" },
+        { "keys": ["계산이요 (gyesaniyo)"], "desc": "La cuenta" },
+        { "keys": ["물 (mul)"], "desc": "Agua" },
+        { "keys": ["밥 (bap)"], "desc": "Arroz" },
+        { "keys": ["맥주 (maekju)"], "desc": "Cerveza" }
+      ]
+    },
+    {
+      "name": "Tiempo",
+      "items": [
+        { "keys": ["오늘 (oneul)"], "desc": "Hoy" },
+        { "keys": ["내일 (naeil)"], "desc": "Mañana" },
+        { "keys": ["어제 (eoje)"], "desc": "Ayer" },
+        { "keys": ["지금 (jigeum)"], "desc": "Ahora" },
+        { "keys": ["몇 시예요? (myeot siyeyo)"], "desc": "¿Qué hora es?" }
+      ]
+    },
+    {
+      "name": "Días de la Semana",
+      "items": [
+        { "keys": ["월요일 (woryoil)"], "desc": "Lunes" },
+        { "keys": ["화요일 (hwayoil)"], "desc": "Martes" },
+        { "keys": ["수요일 (suyoil)"], "desc": "Miércoles" },
+        { "keys": ["목요일 (mogyoil)"], "desc": "Jueves" },
+        { "keys": ["금요일 (geumyoil)"], "desc": "Viernes" },
+        { "keys": ["토요일 (toyoil)"], "desc": "Sábado" },
+        { "keys": ["일요일 (iryoil)"], "desc": "Domingo" }
+      ]
+    },
+    {
+      "name": "Partículas Básicas",
+      "items": [
+        { "keys": ["은/는 (eun/neun)"], "desc": "Tema de la oración" },
+        { "keys": ["이/가 (i/ga)"], "desc": "Sujeto" },
+        { "keys": ["을/를 (eul/reul)"], "desc": "Objeto directo" },
+        { "keys": ["에 (e)"], "desc": "Lugar, tiempo, dirección" },
+        { "keys": ["에서 (eseo)"], "desc": "En (lugar de acción)" },
+        { "keys": ["의 (ui)"], "desc": "Posesión (de)" },
+        { "keys": ["와/과 (wa/gwa)"], "desc": "Y, con" }
+      ]
+    }
+  ]
+}

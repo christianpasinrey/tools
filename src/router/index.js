@@ -56,6 +56,11 @@ const routes = [
     path: '/markdown-editor',
     name: 'MarkdownEditor',
     component: () => import('../views/MarkdownEditor.vue')
+  },
+  {
+    path: '/phone-tester',
+    name: 'PhoneTester',
+    component: () => import('../views/PhoneTester.vue')
   }
 ]
 

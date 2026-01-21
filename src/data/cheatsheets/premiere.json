@@ -1,0 +1,166 @@
+{
+  "title": "Premiere Pro",
+  "description": "Atajos de teclado esenciales de Adobe Premiere Pro",
+  "sections": [
+    {
+      "name": "Archivo y Proyecto",
+      "items": [
+        { "keys": ["Ctrl", "N"], "desc": "Nueva secuencia" },
+        { "keys": ["Ctrl", "O"], "desc": "Abrir proyecto" },
+        { "keys": ["Ctrl", "S"], "desc": "Guardar" },
+        { "keys": ["Ctrl", "Shift", "S"], "desc": "Guardar como" },
+        { "keys": ["Ctrl", "I"], "desc": "Importar" },
+        { "keys": ["Ctrl", "M"], "desc": "Exportar medios" },
+        { "keys": ["Ctrl", "W"], "desc": "Cerrar proyecto" },
+        { "keys": ["Ctrl", "Q"], "desc": "Salir" }
+      ]
+    },
+    {
+      "name": "Reproducción",
+      "items": [
+        { "keys": ["Espacio"], "desc": "Reproducir/Pausar" },
+        { "keys": ["J"], "desc": "Rebobinar" },
+        { "keys": ["K"], "desc": "Detener" },
+        { "keys": ["L"], "desc": "Avanzar" },
+        { "keys": ["Flecha Izq"], "desc": "Retroceder 1 fotograma" },
+        { "keys": ["Flecha Der"], "desc": "Avanzar 1 fotograma" },
+        { "keys": ["Shift", "Flecha Izq"], "desc": "Retroceder 5 fotogramas" },
+        { "keys": ["Shift", "Flecha Der"], "desc": "Avanzar 5 fotogramas" },
+        { "keys": ["Inicio"], "desc": "Ir al inicio" },
+        { "keys": ["Fin"], "desc": "Ir al final" },
+        { "keys": ["Shift", "I"], "desc": "Ir al punto de entrada" },
+        { "keys": ["Shift", "O"], "desc": "Ir al punto de salida" }
+      ]
+    },
+    {
+      "name": "Puntos de Edición",
+      "items": [
+        { "keys": ["I"], "desc": "Marcar entrada" },
+        { "keys": ["O"], "desc": "Marcar salida" },
+        { "keys": ["X"], "desc": "Marcar clip" },
+        { "keys": ["Ctrl", "Shift", "X"], "desc": "Borrar entrada y salida" },
+        { "keys": ["M"], "desc": "Añadir marcador" },
+        { "keys": ["Shift", "M"], "desc": "Ir al marcador siguiente" },
+        { "keys": ["Ctrl", "Shift", "M"], "desc": "Ir al marcador anterior" }
+      ]
+    },
+    {
+      "name": "Herramientas de Edición",
+      "items": [
+        { "keys": ["V"], "desc": "Herramienta Selección" },
+        { "keys": ["A"], "desc": "Selección de pista hacia adelante" },
+        { "keys": ["Shift", "A"], "desc": "Selección de pista hacia atrás" },
+        { "keys": ["B"], "desc": "Herramienta Edición de rizo" },
+        { "keys": ["N"], "desc": "Herramienta Desplazar" },
+        { "keys": ["C"], "desc": "Herramienta Cuchilla" },
+        { "keys": ["Y"], "desc": "Herramienta Deslizar" },
+        { "keys": ["U"], "desc": "Herramienta Estirar" },
+        { "keys": ["P"], "desc": "Herramienta Pluma" },
+        { "keys": ["H"], "desc": "Herramienta Mano" },
+        { "keys": ["Z"], "desc": "Herramienta Zoom" },
+        { "keys": ["T"], "desc": "Herramienta Texto" }
+      ]
+    },
+    {
+      "name": "Edición en Timeline",
+      "items": [
+        { "keys": ["Ctrl", "K"], "desc": "Cortar clip en cabezal" },
+        { "keys": ["Q"], "desc": "Edición de rizo al principio" },
+        { "keys": ["W"], "desc": "Edición de rizo al final" },
+        { "keys": [","], "desc": "Insertar" },
+        { "keys": ["."], "desc": "Sobrescribir" },
+        { "keys": ["Ctrl", "Shift", "K"], "desc": "Cortar todos los clips" },
+        { "keys": ["'"], "desc": "Extraer" },
+        { "keys": [";"], "desc": "Levantar" },
+        { "keys": ["Delete"], "desc": "Eliminar y dejar hueco" },
+        { "keys": ["Shift", "Delete"], "desc": "Eliminar y cerrar hueco" }
+      ]
+    },
+    {
+      "name": "Selección de Clips",
+      "items": [
+        { "keys": ["Ctrl", "A"], "desc": "Seleccionar todo" },
+        { "keys": ["Ctrl", "Shift", "A"], "desc": "Deseleccionar todo" },
+        { "keys": ["D"], "desc": "Seleccionar clip en cabezal" },
+        { "keys": ["Ctrl", "Flecha Arriba"], "desc": "Ir a edición anterior" },
+        { "keys": ["Ctrl", "Flecha Abajo"], "desc": "Ir a edición siguiente" }
+      ]
+    },
+    {
+      "name": "Zoom y Navegación",
+      "items": [
+        { "keys": ["="], "desc": "Zoom in en timeline" },
+        { "keys": ["-"], "desc": "Zoom out en timeline" },
+        { "keys": ["\\"], "desc": "Ajustar timeline a ventana" },
+        { "keys": ["Ctrl", "="], "desc": "Aumentar altura de pistas" },
+        { "keys": ["Ctrl", "-"], "desc": "Reducir altura de pistas" },
+        { "keys": ["`"], "desc": "Maximizar panel activo" }
+      ]
+    },
+    {
+      "name": "Audio",
+      "items": [
+        { "keys": ["Shift", "G"], "desc": "Ganancia de audio" },
+        { "keys": ["Shift", "/"], "desc": "Activar/desactivar pista de audio" },
+        { "keys": ["S"], "desc": "Ajustar audio" },
+        { "keys": ["Ctrl", "L"], "desc": "Enlazar/desenlazar audio y video" }
+      ]
+    },
+    {
+      "name": "Efectos y Transiciones",
+      "items": [
+        { "keys": ["Ctrl", "D"], "desc": "Aplicar transición de video predeterminada" },
+        { "keys": ["Ctrl", "Shift", "D"], "desc": "Aplicar transición de audio predeterminada" },
+        { "keys": ["Shift", "E"], "desc": "Abrir panel de efectos de clip" },
+        { "keys": ["Ctrl", "E"], "desc": "Exportar fotograma" },
+        { "keys": ["Shift", "5"], "desc": "Panel de controles de efectos" }
+      ]
+    },
+    {
+      "name": "Velocidad y Duración",
+      "items": [
+        { "keys": ["Ctrl", "R"], "desc": "Velocidad/Duración del clip" },
+        { "keys": ["Shift", "R"], "desc": "Invertir velocidad" }
+      ]
+    },
+    {
+      "name": "Copiar y Pegar",
+      "items": [
+        { "keys": ["Ctrl", "C"], "desc": "Copiar" },
+        { "keys": ["Ctrl", "V"], "desc": "Pegar" },
+        { "keys": ["Ctrl", "Shift", "V"], "desc": "Pegar insertar" },
+        { "keys": ["Ctrl", "Alt", "V"], "desc": "Pegar atributos" },
+        { "keys": ["Ctrl", "X"], "desc": "Cortar" },
+        { "keys": ["Ctrl", "Z"], "desc": "Deshacer" },
+        { "keys": ["Ctrl", "Shift", "Z"], "desc": "Rehacer" }
+      ]
+    },
+    {
+      "name": "Paneles",
+      "items": [
+        { "keys": ["Shift", "1"], "desc": "Panel Proyecto" },
+        { "keys": ["Shift", "2"], "desc": "Panel Origen" },
+        { "keys": ["Shift", "3"], "desc": "Panel Timeline" },
+        { "keys": ["Shift", "4"], "desc": "Panel Programa" },
+        { "keys": ["Shift", "6"], "desc": "Panel Mezclador de audio" },
+        { "keys": ["Shift", "7"], "desc": "Panel Efectos" },
+        { "keys": ["Shift", "9"], "desc": "Panel Medios" }
+      ]
+    },
+    {
+      "name": "Pistas",
+      "items": [
+        { "keys": ["Ctrl", "Alt", "T"], "desc": "Añadir pista de video" },
+        { "keys": ["Ctrl", "Shift", "T"], "desc": "Añadir pista de audio" },
+        { "keys": ["Alt", "click pista"], "desc": "Bloquear/desbloquear pista" }
+      ]
+    },
+    {
+      "name": "Secuencias Anidadas",
+      "items": [
+        { "keys": ["Ctrl", "G"], "desc": "Crear secuencia anidada" },
+        { "keys": ["Ctrl", "Shift", "G"], "desc": "Desanidar" }
+      ]
+    }
+  ]
+}

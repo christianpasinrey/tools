@@ -9,6 +9,9 @@ const wheelContainerRef = ref(null)
 const draggingPointIndex = ref(null)
 const copiedIndex = ref(null)
 const exportFormat = ref('css')
+const imageInputRef = ref(null)
+const extractedImagePreview = ref(null)
+const isExtractingColors = ref(false)
 
 // Wheel dimensions
 const wheelSize = 320
@@ -168,6 +171,34 @@ const exportContent = computed(() => {
 const copyExport = async () => {
   await colorWheel.copyToClipboard(exportContent.value)
 }
+
+// Handle image upload for color extraction
+const handleImageUpload = async (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  isExtractingColors.value = true
+
+  const reader = new FileReader()
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result
+    extractedImagePreview.value = dataUrl
+
+    try {
+      await colorWheel.extractColorsFromImage(dataUrl)
+    } catch (error) {
+      console.error('Error extracting colors:', error)
+    } finally {
+      isExtractingColors.value = false
+    }
+  }
+  reader.readAsDataURL(file)
+  event.target.value = '' // Reset input
+}
+
+const clearExtractedImage = () => {
+  extractedImagePreview.value = null
+}
 </script>
 
 <template>
@@ -322,6 +353,57 @@ const copyExport = async () => {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
                 Aleatorio
+              </button>
+            </div>
+
+            <!-- Extract from image -->
+            <div class="border-t border-neutral-800 pt-4">
+              <input
+                ref="imageInputRef"
+                type="file"
+                accept="image/*"
+                @change="handleImageUpload"
+                class="hidden"
+              />
+
+              <div v-if="extractedImagePreview" class="space-y-2">
+                <div class="relative">
+                  <img
+                    :src="extractedImagePreview"
+                    alt="Imagen fuente"
+                    class="w-full h-24 object-cover rounded-lg border border-neutral-700"
+                  />
+                  <button
+                    @click="clearExtractedImage"
+                    class="absolute top-1 right-1 p-1 bg-black/70 hover:bg-black rounded-full text-neutral-400 hover:text-white transition-colors"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <button
+                  @click="imageInputRef?.click()"
+                  class="w-full py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg text-sm transition-colors"
+                >
+                  Cambiar imagen
+                </button>
+              </div>
+
+              <button
+                v-else
+                @click="imageInputRef?.click()"
+                :disabled="isExtractingColors"
+                class="w-full py-2 bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 rounded-lg text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <svg v-if="!isExtractingColors" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <svg v-else class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {{ isExtractingColors ? 'Extrayendo...' : 'Extraer de imagen' }}
               </button>
             </div>
 

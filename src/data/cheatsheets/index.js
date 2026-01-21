@@ -31,8 +31,23 @@ import math from './math.json'
 import excel from './excel.json'
 import notion from './notion.json'
 import photoshop from './photoshop.json'
+import lightroom from './lightroom.json'
+import premiere from './premiere.json'
+import aftereffects from './aftereffects.json'
+import illustrator from './illustrator.json'
+import blender from './blender.json'
 import music from './music.json'
 import photography from './photography.json'
+import english from './english.json'
+import japanese from './japanese.json'
+import chinese from './chinese.json'
+import korean from './korean.json'
+import french from './french.json'
+import german from './german.json'
+import periodictable from './periodictable.json'
+import slang from './slang.json'
+import anglicismos from './anglicismos.json'
+import internet from './internet.json'
 
 export const cheatsheetData = {
   macos,
@@ -67,8 +82,23 @@ export const cheatsheetData = {
   excel,
   notion,
   photoshop,
+  lightroom,
+  premiere,
+  aftereffects,
+  illustrator,
+  blender,
   music,
-  photography
+  photography,
+  english,
+  japanese,
+  chinese,
+  korean,
+  french,
+  german,
+  periodictable,
+  slang,
+  anglicismos,
+  internet
 }
 
 // Categories with their sheets
@@ -119,19 +149,31 @@ export const categories = [
     id: 'science',
     name: 'Ciencias',
     icon: 'M19.8 18.4L14 10.67V6.5l1.35-1.69c.26-.33.03-.81-.39-.81H9.04c-.42 0-.65.48-.39.81L10 6.5v4.17L4.2 18.4c-.49.66-.02 1.6.8 1.6h14c.82 0 1.29-.94.8-1.6z',
-    sheets: ['physics', 'chemistry', 'statistics', 'electricity', 'math', 'accounting']
+    sheets: ['physics', 'chemistry', 'statistics', 'electricity', 'math', 'accounting', 'periodictable']
   },
   {
     id: 'productivity',
     name: 'Productividad',
     icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z',
-    sheets: ['excel', 'notion', 'photoshop']
+    sheets: ['excel', 'notion', 'photoshop', 'lightroom']
   },
   {
     id: 'creative',
     name: 'Creativos',
     icon: 'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z',
-    sheets: ['music', 'photography']
+    sheets: ['music', 'photography', 'premiere', 'aftereffects', 'illustrator', 'blender']
+  },
+  {
+    id: 'languages',
+    name: 'Idiomas',
+    icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z',
+    sheets: ['english', 'japanese', 'chinese', 'korean', 'french', 'german']
+  },
+  {
+    id: 'contemporary',
+    name: 'Contemporáneo',
+    icon: 'M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7v-2h10v2zm0-3H7V9h10v2zm0-3H7V6h10v2z',
+    sheets: ['slang', 'anglicismos', 'internet']
   }
 ]
 
@@ -187,10 +229,29 @@ export const sheets = [
   // Productivity
   { id: 'notion', name: 'Notion', icon: 'M4 4.5A2.5 2.5 0 016.5 2H18a2.5 2.5 0 012.5 2.5v15a2.5 2.5 0 01-2.5 2.5H6.5A2.5 2.5 0 014 19.5v-15zM7 7v2h2V7H7zm0 4v2h10v-2H7zm0 4v2h10v-2H7zm7-8v2h3V7h-3z', type: 'shortcuts' },
   { id: 'photoshop', name: 'Photoshop', icon: 'M9.8 8.44c-.17-.36-.42-.66-.74-.88-.32-.22-.72-.34-1.19-.34-.24 0-.47.02-.69.07-.21.05-.4.11-.58.2v3.8c.18.08.37.14.59.18.21.04.44.06.68.06.47 0 .87-.11 1.19-.33.32-.22.57-.52.74-.88.18-.37.26-.79.26-1.26 0-.47-.09-.89-.26-1.26V8.44zM19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9.63 13.11c-.53.36-1.21.54-2.03.54-.23 0-.46-.02-.68-.05a3.76 3.76 0 01-.61-.14v2.73H5V6.69c.29-.1.62-.18 1.01-.24.39-.06.79-.09 1.21-.09.76 0 1.4.13 1.93.4.52.26.92.63 1.19 1.1.27.47.4 1.02.4 1.65 0 .67-.15 1.25-.45 1.74-.3.49-.73.87-1.27 1.14l-.39.72zm8.54 3.08h-1.4l-2.27-3.72-.78.88v2.84h-1.31V6.5h1.31v5.15l2.85-3.43h1.48l-2.63 2.98 2.75 4.99z', type: 'shortcuts' },
+  { id: 'lightroom', name: 'Lightroom', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H6V7h3v10zm8 0h-6v-2h6v2zm0-4h-6v-2h6v2zm0-4h-6V7h6v2z', type: 'shortcuts' },
 
   // Creative
   { id: 'music', name: 'Música', icon: 'M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6zm-2 16c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z', type: 'reference' },
-  { id: 'photography', name: 'Fotografía', icon: 'M12 10.8a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z', type: 'reference' }
+  { id: 'photography', name: 'Fotografía', icon: 'M12 10.8a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z', type: 'reference' },
+  { id: 'premiere', name: 'Premiere Pro', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM10.5 13.11c-.53.36-1.21.54-2.03.54-.23 0-.46-.02-.68-.05a3.76 3.76 0 01-.61-.14v2.73H6V6.69c.29-.1.62-.18 1.01-.24.39-.06.79-.09 1.21-.09.76 0 1.4.13 1.93.4.52.26.92.63 1.19 1.1.27.47.4 1.02.4 1.65 0 .67-.15 1.25-.45 1.74-.3.49-.73.87-1.27 1.14l-.52.72zm6.5.08h-.02c-.28.53-.66.73-.99.73-.57 0-.99-.47-.99-1.19V9h-1v3.84c0 1.22.68 2.16 1.82 2.16.66 0 1.28-.32 1.68-.89V15h1V9h-1.5v4.19z', type: 'shortcuts' },
+  { id: 'aftereffects', name: 'After Effects', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9.5 15H8l-.75-2H5l-.75 2H3l2.75-8h1l2.75 8zm-.95-3.5L7.5 8.5l-1.05 3h2.1zm8.45.69c0 1.69-1.03 2.81-2.69 2.81-.74 0-1.38-.21-1.89-.58l.53-.91c.42.29.85.46 1.33.46.89 0 1.5-.58 1.5-1.58v-.28c-.36.44-.87.69-1.5.69-1.17 0-2.06-.87-2.06-2.19s.89-2.19 2.06-2.19c.63 0 1.14.25 1.5.69V8.5h1.22v3.69z', type: 'shortcuts' },
+  { id: 'illustrator', name: 'Illustrator', icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9.5 15H8l-.75-2H5l-.75 2H3l2.75-8h1l2.75 8zm-.95-3.5L7.5 8.5l-1.05 3h2.1zM17 15h-1.5v-4.5h-1V15H13V9h4v6z', type: 'shortcuts' },
+  { id: 'blender', name: 'Blender', icon: 'M12.5 2C9.46 2 7 4.46 7 7.5c0 1.33.47 2.55 1.26 3.5H5.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h3.04A5.49 5.49 0 0012.5 17c3.04 0 5.5-2.46 5.5-5.5 0-1.04-.29-2.02-.8-2.85L20.45 6H18l-1.55 1.55C15.35 6.6 13.99 6 12.5 6c-1.62 0-3.08.7-4.1 1.81C8.15 7.05 8 6.29 8 5.5 8 3.57 9.57 2 11.5 2h1zm0 6c1.93 0 3.5 1.57 3.5 3.5S14.43 15 12.5 15 9 13.43 9 11.5 10.57 8 12.5 8z', type: 'shortcuts' },
+
+  // Languages
+  { id: 'english', name: 'Inglés', icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', type: 'reference', lang: 'en-US' },
+  { id: 'japanese', name: 'Japonés', icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', type: 'reference', lang: 'ja-JP' },
+  { id: 'chinese', name: 'Chino', icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', type: 'reference', lang: 'zh-CN' },
+  { id: 'korean', name: 'Coreano', icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', type: 'reference', lang: 'ko-KR' },
+  { id: 'french', name: 'Francés', icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', type: 'reference', lang: 'fr-FR' },
+  { id: 'german', name: 'Alemán', icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', type: 'reference', lang: 'de-DE' },
+  { id: 'periodictable', name: 'Tabla Periódica', icon: 'M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h2v2H7V7zm4 0h2v2h-2V7zm4 0h2v2h-2V7zM7 11h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM7 15h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z', type: 'reference' },
+
+  // Contemporáneo
+  { id: 'slang', name: 'Jerga Gen Z', icon: 'M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z', type: 'reference' },
+  { id: 'anglicismos', name: 'Anglicismos', icon: 'M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z', type: 'reference' },
+  { id: 'internet', name: 'Lenguaje de Internet', icon: 'M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7v-2h10v2zm0-3H7V9h10v2zm0-3H7V6h10v2z', type: 'reference' }
 ]
 
 export default { cheatsheetData, sheets }

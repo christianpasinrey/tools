@@ -1,0 +1,173 @@
+{
+  "title": "Alemán",
+  "description": "Gramática esencial, verbos y frases útiles del alemán",
+  "sections": [
+    {
+      "name": "Saludos",
+      "items": [
+        { "keys": ["Guten Morgen"], "desc": "Buenos días (mañana)" },
+        { "keys": ["Guten Tag"], "desc": "Buenos días / Hola" },
+        { "keys": ["Guten Abend"], "desc": "Buenas tardes/noches" },
+        { "keys": ["Gute Nacht"], "desc": "Buenas noches (despedida)" },
+        { "keys": ["Hallo"], "desc": "Hola (informal)" },
+        { "keys": ["Tschüss"], "desc": "Adiós (informal)" },
+        { "keys": ["Auf Wiedersehen"], "desc": "Adiós (formal)" },
+        { "keys": ["Bis bald"], "desc": "Hasta pronto" }
+      ]
+    },
+    {
+      "name": "Expresiones Básicas",
+      "items": [
+        { "keys": ["Danke (schön)"], "desc": "Gracias (muchas)" },
+        { "keys": ["Bitte (schön)"], "desc": "De nada / Por favor" },
+        { "keys": ["Entschuldigung"], "desc": "Disculpe / Perdón" },
+        { "keys": ["Es tut mir leid"], "desc": "Lo siento" },
+        { "keys": ["Ja"], "desc": "Sí" },
+        { "keys": ["Nein"], "desc": "No" },
+        { "keys": ["Genau"], "desc": "Exacto" },
+        { "keys": ["In Ordnung"], "desc": "De acuerdo" }
+      ]
+    },
+    {
+      "name": "Presentación",
+      "items": [
+        { "keys": ["Ich heiße..."], "desc": "Me llamo..." },
+        { "keys": ["Wie heißen Sie?"], "desc": "¿Cómo se llama? (formal)" },
+        { "keys": ["Wie heißt du?"], "desc": "¿Cómo te llamas?" },
+        { "keys": ["Freut mich"], "desc": "Encantado/a" },
+        { "keys": ["Ich komme aus Spanien"], "desc": "Vengo de España" },
+        { "keys": ["Ich bin ... Jahre alt"], "desc": "Tengo ... años" }
+      ]
+    },
+    {
+      "name": "Pronombres Personales",
+      "items": [
+        { "keys": ["ich"], "desc": "yo" },
+        { "keys": ["du"], "desc": "tú" },
+        { "keys": ["er / sie / es"], "desc": "él / ella / ello" },
+        { "keys": ["wir"], "desc": "nosotros" },
+        { "keys": ["ihr"], "desc": "vosotros" },
+        { "keys": ["sie / Sie"], "desc": "ellos / usted(es)" }
+      ]
+    },
+    {
+      "name": "Verbo Sein (Ser/Estar)",
+      "items": [
+        { "keys": ["ich bin"], "desc": "yo soy/estoy" },
+        { "keys": ["du bist"], "desc": "tú eres/estás" },
+        { "keys": ["er/sie/es ist"], "desc": "él/ella es/está" },
+        { "keys": ["wir sind"], "desc": "nosotros somos/estamos" },
+        { "keys": ["ihr seid"], "desc": "vosotros sois/estáis" },
+        { "keys": ["sie/Sie sind"], "desc": "ellos son / usted es" }
+      ]
+    },
+    {
+      "name": "Verbo Haben (Tener)",
+      "items": [
+        { "keys": ["ich habe"], "desc": "yo tengo" },
+        { "keys": ["du hast"], "desc": "tú tienes" },
+        { "keys": ["er/sie/es hat"], "desc": "él/ella tiene" },
+        { "keys": ["wir haben"], "desc": "nosotros tenemos" },
+        { "keys": ["ihr habt"], "desc": "vosotros tenéis" },
+        { "keys": ["sie/Sie haben"], "desc": "ellos tienen / usted tiene" }
+      ]
+    },
+    {
+      "name": "Números 1-10",
+      "items": [
+        { "keys": ["eins"], "desc": "1" },
+        { "keys": ["zwei"], "desc": "2" },
+        { "keys": ["drei"], "desc": "3" },
+        { "keys": ["vier"], "desc": "4" },
+        { "keys": ["fünf"], "desc": "5" },
+        { "keys": ["sechs"], "desc": "6" },
+        { "keys": ["sieben"], "desc": "7" },
+        { "keys": ["acht"], "desc": "8" },
+        { "keys": ["neun"], "desc": "9" },
+        { "keys": ["zehn"], "desc": "10" }
+      ]
+    },
+    {
+      "name": "Números 11-20",
+      "items": [
+        { "keys": ["elf"], "desc": "11" },
+        { "keys": ["zwölf"], "desc": "12" },
+        { "keys": ["dreizehn"], "desc": "13" },
+        { "keys": ["vierzehn"], "desc": "14" },
+        { "keys": ["fünfzehn"], "desc": "15" },
+        { "keys": ["sechzehn"], "desc": "16" },
+        { "keys": ["siebzehn"], "desc": "17" },
+        { "keys": ["achtzehn"], "desc": "18" },
+        { "keys": ["neunzehn"], "desc": "19" },
+        { "keys": ["zwanzig"], "desc": "20" }
+      ]
+    },
+    {
+      "name": "Preguntas Útiles",
+      "items": [
+        { "keys": ["Was ist das?"], "desc": "¿Qué es esto?" },
+        { "keys": ["Wie viel kostet das?"], "desc": "¿Cuánto cuesta?" },
+        { "keys": ["Wo ist...?"], "desc": "¿Dónde está...?" },
+        { "keys": ["Wo ist die Toilette?"], "desc": "¿Dónde está el baño?" },
+        { "keys": ["Sprechen Sie Englisch?"], "desc": "¿Habla inglés?" },
+        { "keys": ["Wie spät ist es?"], "desc": "¿Qué hora es?" },
+        { "keys": ["Wie bitte?"], "desc": "¿Cómo dice?" },
+        { "keys": ["Warum?"], "desc": "¿Por qué?" }
+      ]
+    },
+    {
+      "name": "Restaurante",
+      "items": [
+        { "keys": ["Die Speisekarte, bitte"], "desc": "La carta, por favor" },
+        { "keys": ["Ich möchte..."], "desc": "Quisiera..." },
+        { "keys": ["Die Rechnung, bitte"], "desc": "La cuenta, por favor" },
+        { "keys": ["Es schmeckt gut"], "desc": "Está delicioso" },
+        { "keys": ["Wasser"], "desc": "Agua" },
+        { "keys": ["Bier"], "desc": "Cerveza" },
+        { "keys": ["Brot"], "desc": "Pan" }
+      ]
+    },
+    {
+      "name": "Días de la Semana",
+      "items": [
+        { "keys": ["Montag"], "desc": "Lunes" },
+        { "keys": ["Dienstag"], "desc": "Martes" },
+        { "keys": ["Mittwoch"], "desc": "Miércoles" },
+        { "keys": ["Donnerstag"], "desc": "Jueves" },
+        { "keys": ["Freitag"], "desc": "Viernes" },
+        { "keys": ["Samstag"], "desc": "Sábado" },
+        { "keys": ["Sonntag"], "desc": "Domingo" }
+      ]
+    },
+    {
+      "name": "Artículos (Nominativo)",
+      "items": [
+        { "keys": ["der"], "desc": "el (masculino)" },
+        { "keys": ["die"], "desc": "la (femenino) / los, las (plural)" },
+        { "keys": ["das"], "desc": "el/la (neutro)" },
+        { "keys": ["ein"], "desc": "un (masc/neutro)" },
+        { "keys": ["eine"], "desc": "una (femenino)" }
+      ]
+    },
+    {
+      "name": "Casos Gramaticales",
+      "items": [
+        { "keys": ["Nominativ"], "desc": "Sujeto (der/die/das)" },
+        { "keys": ["Akkusativ"], "desc": "Objeto directo (den/die/das)" },
+        { "keys": ["Dativ"], "desc": "Objeto indirecto (dem/der/dem)" },
+        { "keys": ["Genitiv"], "desc": "Posesivo (des/der/des)" }
+      ]
+    },
+    {
+      "name": "Verbos Modales",
+      "items": [
+        { "keys": ["können"], "desc": "poder (habilidad)" },
+        { "keys": ["müssen"], "desc": "deber (obligación)" },
+        { "keys": ["wollen"], "desc": "querer" },
+        { "keys": ["sollen"], "desc": "deber (sugerencia)" },
+        { "keys": ["dürfen"], "desc": "poder (permiso)" },
+        { "keys": ["mögen"], "desc": "gustar" }
+      ]
+    }
+  ]
+}

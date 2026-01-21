@@ -1,0 +1,163 @@
+{
+  "title": "Lightroom",
+  "description": "Atajos de teclado esenciales de Adobe Lightroom Classic",
+  "sections": [
+    {
+      "name": "Módulos",
+      "items": [
+        { "keys": ["G"], "desc": "Ir a Biblioteca (cuadrícula)" },
+        { "keys": ["E"], "desc": "Ir a Biblioteca (lupa)" },
+        { "keys": ["D"], "desc": "Ir a Revelar" },
+        { "keys": ["Ctrl", "Alt", "1"], "desc": "Módulo Biblioteca" },
+        { "keys": ["Ctrl", "Alt", "2"], "desc": "Módulo Revelar" },
+        { "keys": ["Ctrl", "Alt", "3"], "desc": "Módulo Mapa" },
+        { "keys": ["Ctrl", "Alt", "4"], "desc": "Módulo Libro" },
+        { "keys": ["Ctrl", "Alt", "5"], "desc": "Módulo Proyección" },
+        { "keys": ["Ctrl", "Alt", "6"], "desc": "Módulo Imprimir" },
+        { "keys": ["Ctrl", "Alt", "7"], "desc": "Módulo Web" }
+      ]
+    },
+    {
+      "name": "Navegación",
+      "items": [
+        { "keys": ["Flecha Der"], "desc": "Foto siguiente" },
+        { "keys": ["Flecha Izq"], "desc": "Foto anterior" },
+        { "keys": ["Inicio"], "desc": "Primera foto" },
+        { "keys": ["Fin"], "desc": "Última foto" },
+        { "keys": ["Enter"], "desc": "Abrir en Lupa desde cuadrícula" },
+        { "keys": ["Espacio"], "desc": "Alternar entre Lupa y 1:1" },
+        { "keys": ["Z"], "desc": "Alternar zoom" },
+        { "keys": ["+"], "desc": "Aumentar zoom" },
+        { "keys": ["-"], "desc": "Reducir zoom" },
+        { "keys": ["Ctrl", "+"], "desc": "Aumentar tamaño miniatura" },
+        { "keys": ["Ctrl", "-"], "desc": "Reducir tamaño miniatura" }
+      ]
+    },
+    {
+      "name": "Selección y Clasificación",
+      "items": [
+        { "keys": ["P"], "desc": "Marcar como seleccionada" },
+        { "keys": ["X"], "desc": "Marcar como rechazada" },
+        { "keys": ["U"], "desc": "Quitar marca" },
+        { "keys": ["1-5"], "desc": "Asignar estrellas (1-5)" },
+        { "keys": ["0"], "desc": "Quitar estrellas" },
+        { "keys": ["6"], "desc": "Etiqueta roja" },
+        { "keys": ["7"], "desc": "Etiqueta amarilla" },
+        { "keys": ["8"], "desc": "Etiqueta verde" },
+        { "keys": ["9"], "desc": "Etiqueta azul" },
+        { "keys": ["Ctrl", "A"], "desc": "Seleccionar todo" },
+        { "keys": ["Ctrl", "D"], "desc": "Deseleccionar todo" },
+        { "keys": ["Ctrl", "Shift", "D"], "desc": "Seleccionar solo activa" }
+      ]
+    },
+    {
+      "name": "Filtros de Vista",
+      "items": [
+        { "keys": ["\\"], "desc": "Activar/desactivar filtros" },
+        { "keys": ["Ctrl", "L"], "desc": "Habilitar filtros" },
+        { "keys": ["Ctrl", "Alt", "L"], "desc": "Mostrar barra de filtros" }
+      ]
+    },
+    {
+      "name": "Herramientas de Revelado",
+      "items": [
+        { "keys": ["R"], "desc": "Recortar" },
+        { "keys": ["Q"], "desc": "Eliminación de manchas" },
+        { "keys": ["K"], "desc": "Pincel de ajuste" },
+        { "keys": ["M"], "desc": "Filtro graduado" },
+        { "keys": ["Shift", "M"], "desc": "Filtro radial" },
+        { "keys": ["A"], "desc": "Corrección de ojos rojos" },
+        { "keys": ["W"], "desc": "Balance de blancos (selector)" },
+        { "keys": ["T"], "desc": "Mostrar/ocultar barra de herramientas" },
+        { "keys": ["O"], "desc": "Mostrar superposición de máscara" },
+        { "keys": ["Shift", "O"], "desc": "Ciclar colores de máscara" },
+        { "keys": ["H"], "desc": "Ocultar/mostrar chinchetas" }
+      ]
+    },
+    {
+      "name": "Ajustes Básicos",
+      "items": [
+        { "keys": ["Ctrl", "U"], "desc": "Tono automático" },
+        { "keys": ["Ctrl", "Shift", "U"], "desc": "Balance de blancos automático" },
+        { "keys": ["V"], "desc": "Convertir a blanco y negro" },
+        { "keys": ["J"], "desc": "Mostrar recorte de sombras/luces" },
+        { "keys": ["Ctrl", "Shift", "C"], "desc": "Copiar ajustes" },
+        { "keys": ["Ctrl", "Shift", "V"], "desc": "Pegar ajustes" },
+        { "keys": ["Ctrl", "Alt", "V"], "desc": "Pegar ajustes de foto anterior" },
+        { "keys": ["Ctrl", "Shift", "R"], "desc": "Restablecer ajustes" },
+        { "keys": ["Ctrl", "Z"], "desc": "Deshacer" },
+        { "keys": ["Ctrl", "Y"], "desc": "Rehacer" }
+      ]
+    },
+    {
+      "name": "Paneles de Revelado",
+      "items": [
+        { "keys": ["Ctrl", "1"], "desc": "Panel Básico" },
+        { "keys": ["Ctrl", "2"], "desc": "Curva de tonos" },
+        { "keys": ["Ctrl", "3"], "desc": "HSL / Color" },
+        { "keys": ["Ctrl", "4"], "desc": "Dividir tonos" },
+        { "keys": ["Ctrl", "5"], "desc": "Detalle" },
+        { "keys": ["Ctrl", "6"], "desc": "Correcciones de lente" },
+        { "keys": ["Ctrl", "7"], "desc": "Transformar" },
+        { "keys": ["Ctrl", "8"], "desc": "Efectos" },
+        { "keys": ["Ctrl", "9"], "desc": "Calibración de cámara" }
+      ]
+    },
+    {
+      "name": "Comparación",
+      "items": [
+        { "keys": ["Y"], "desc": "Vista Antes/Después (izq-der)" },
+        { "keys": ["Alt", "Y"], "desc": "Vista Antes/Después (arriba-abajo)" },
+        { "keys": ["Shift", "Y"], "desc": "Vista Antes/Después (dividida)" },
+        { "keys": ["\\"], "desc": "Ver solo Antes" },
+        { "keys": ["C"], "desc": "Modo Comparar" },
+        { "keys": ["N"], "desc": "Modo Encuesta" }
+      ]
+    },
+    {
+      "name": "Exportar y Guardar",
+      "items": [
+        { "keys": ["Ctrl", "S"], "desc": "Guardar metadatos en archivo" },
+        { "keys": ["Ctrl", "Shift", "E"], "desc": "Exportar" },
+        { "keys": ["Ctrl", "Alt", "Shift", "E"], "desc": "Exportar con anterior" },
+        { "keys": ["Ctrl", "P"], "desc": "Imprimir" },
+        { "keys": ["Ctrl", "Shift", "I"], "desc": "Importar fotos" },
+        { "keys": ["Ctrl", "E"], "desc": "Editar en Photoshop" },
+        { "keys": ["Ctrl", "Alt", "E"], "desc": "Editar en aplicación externa" }
+      ]
+    },
+    {
+      "name": "Vista e Interfaz",
+      "items": [
+        { "keys": ["F"], "desc": "Pantalla completa" },
+        { "keys": ["L"], "desc": "Atenuar luces (ciclar)" },
+        { "keys": ["Tab"], "desc": "Ocultar paneles laterales" },
+        { "keys": ["Shift", "Tab"], "desc": "Ocultar todos los paneles" },
+        { "keys": ["F5"], "desc": "Mostrar/ocultar panel módulos" },
+        { "keys": ["F6"], "desc": "Mostrar/ocultar tira de película" },
+        { "keys": ["F7"], "desc": "Mostrar/ocultar panel izquierdo" },
+        { "keys": ["F8"], "desc": "Mostrar/ocultar panel derecho" },
+        { "keys": ["I"], "desc": "Ciclar información de foto" },
+        { "keys": ["Ctrl", "I"], "desc": "Mostrar/ocultar info" }
+      ]
+    },
+    {
+      "name": "Colecciones",
+      "items": [
+        { "keys": ["Ctrl", "N"], "desc": "Nueva colección" },
+        { "keys": ["B"], "desc": "Añadir a colección rápida" },
+        { "keys": ["Ctrl", "B"], "desc": "Mostrar colección rápida" },
+        { "keys": ["Ctrl", "Shift", "B"], "desc": "Guardar colección rápida" },
+        { "keys": ["Ctrl", "Alt", "B"], "desc": "Limpiar colección rápida" }
+      ]
+    },
+    {
+      "name": "Ajustes Preestablecidos",
+      "items": [
+        { "keys": ["Ctrl", "Shift", "N"], "desc": "Nuevo ajuste preestablecido" },
+        { "keys": ["Ctrl", "Alt", "N"], "desc": "Nueva carpeta de ajustes" },
+        { "keys": ["Ctrl", "'"], "desc": "Aplicar ajuste anterior a selección" }
+      ]
+    }
+  ]
+}

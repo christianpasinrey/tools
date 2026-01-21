@@ -1,0 +1,206 @@
+{
+  "title": "Jerga Gen Z",
+  "description": "Expresiones que tu primo de 15 usa y no entiendes",
+  "sections": [
+    {
+      "name": "Muletillas Obligatorias",
+      "items": [
+        { "keys": ["literal"], "desc": "Ya no significa literalmente nada" },
+        { "keys": ["o sea"], "desc": "Pausa mental disfrazada de conector" },
+        { "keys": ["en plan"], "desc": "Comodin universal para todo" },
+        { "keys": ["tipo"], "desc": "Cuando no sabes como explicarlo" },
+        { "keys": ["basicamente"], "desc": "Spoiler: no va a ser basico" },
+        { "keys": ["es que"], "desc": "Inicio obligatorio de toda excusa" },
+        { "keys": ["a ver"], "desc": "Preparate que viene critica" },
+        { "keys": ["mazo"], "desc": "Mucho, pero con actitud madrilena" },
+        { "keys": ["pues eso"], "desc": "Conclusion que no concluye nada" },
+        { "keys": ["full"], "desc": "Muy, mucho, totalmente" }
+      ]
+    },
+    {
+      "name": "Sinonimos de Grande/Mucho",
+      "items": [
+        { "keys": ["mastodonte"], "desc": "Algo enorme (persona, cosa, logro)" },
+        { "keys": ["mamut"], "desc": "Igual que mastodonte pero mas prehistorico" },
+        { "keys": ["bestia"], "desc": "Grande o impresionante" },
+        { "keys": ["monstruo"], "desc": "Alguien muy bueno en algo" },
+        { "keys": ["animal"], "desc": "Barbaridad de grande o intenso" },
+        { "keys": ["burrada"], "desc": "Cantidad exagerada de algo" },
+        { "keys": ["pasada"], "desc": "Algo increible o excesivo" },
+        { "keys": ["salvajada"], "desc": "Algo brutal (positivo o negativo)" },
+        { "keys": ["locura"], "desc": "Algo fuera de lo normal" },
+        { "keys": ["barbaridad"], "desc": "Exageracion maxima" },
+        { "keys": ["pepino"], "desc": "Algo grande y potente" },
+        { "keys": ["maquina"], "desc": "Persona o cosa muy competente" }
+      ]
+    },
+    {
+      "name": "Indiferencia Total",
+      "items": [
+        { "keys": ["me la pela"], "desc": "No me importa nada (vulgar clasico)" },
+        { "keys": ["me la suda"], "desc": "Variante sudorosa de indiferencia" },
+        { "keys": ["me la bufa"], "desc": "Indiferencia con aire" },
+        { "keys": ["me resbala"], "desc": "Version mas educada de lo mismo" },
+        { "keys": ["paso olimpicamente"], "desc": "Indiferencia nivel deportivo" },
+        { "keys": ["ni fu ni fa"], "desc": "Ni me va ni me viene" },
+        { "keys": ["cero patatero"], "desc": "Nada de nada, cero absoluto" },
+        { "keys": ["me importa un pimiento"], "desc": "Version apta para abuelas" },
+        { "keys": ["tres pepinos"], "desc": "Me importa tres pepinos = nada" }
+      ]
+    },
+    {
+      "name": "Saludos y Despedidas",
+      "items": [
+        { "keys": ["bro"], "desc": "Cualquier ser vivo, incluidas mascotas" },
+        { "keys": ["tio/tia"], "desc": "Bro pero en castellano" },
+        { "keys": ["wey"], "desc": "Bro pero mexicano" },
+        { "keys": ["crack"], "desc": "Eres bueno en algo (o me caes bien)" },
+        { "keys": ["illo"], "desc": "Bro pero andaluz" },
+        { "keys": ["fiera"], "desc": "Eres buenisimo en algo" },
+        { "keys": ["genio"], "desc": "Halago ironico o sincero, tu decides" },
+        { "keys": ["nos vemos"], "desc": "Probablemente no nos veamos" },
+        { "keys": ["hablamos"], "desc": "No te voy a escribir" }
+      ]
+    },
+    {
+      "name": "Aprobacion",
+      "items": [
+        { "keys": ["slay"], "desc": "Lo petaste, reina" },
+        { "keys": ["based"], "desc": "Opinion polemica pero respetable" },
+        { "keys": ["goat"], "desc": "El mejor de la historia (Greatest Of All Time)" },
+        { "keys": ["no cap"], "desc": "Sin mentir, es verdad" },
+        { "keys": ["fire"], "desc": "Esta muy bueno (musica, ropa, etc)" },
+        { "keys": ["valid"], "desc": "Tu opinion es aceptable" },
+        { "keys": ["W"], "desc": "Victoria, ganaste en la vida" },
+        { "keys": ["es que si"], "desc": "Afirmacion con enfasis innecesario" },
+        { "keys": ["guapo"], "desc": "Bien hecho, correcto" },
+        { "keys": ["flama"], "desc": "Lo mismo que fire pero mas intenso" }
+      ]
+    },
+    {
+      "name": "Desaprobacion",
+      "items": [
+        { "keys": ["cringe"], "desc": "Verguenza ajena nivel maximo" },
+        { "keys": ["L"], "desc": "Perdiste, fracasaste, derrota" },
+        { "keys": ["sus"], "desc": "Sospechoso (gracias Among Us)" },
+        { "keys": ["ick"], "desc": "Algo que te quita las ganas de todo" },
+        { "keys": ["mid"], "desc": "Ni bueno ni malo, mediocre" },
+        { "keys": ["nah"], "desc": "No, pero con desgana existencial" },
+        { "keys": ["paso"], "desc": "No me interesa y no disimulo" },
+        { "keys": ["bua"], "desc": "Expresion de decepcion profunda" },
+        { "keys": ["cutre"], "desc": "De mala calidad" },
+        { "keys": ["rancio"], "desc": "Viejo, pasado, desagradable" },
+        { "keys": ["petardo"], "desc": "Aburrido o pesado" }
+      ]
+    },
+    {
+      "name": "Estados de Animo",
+      "items": [
+        { "keys": ["mood"], "desc": "Eso representa mi estado actual" },
+        { "keys": ["vibe"], "desc": "La energia que transmite algo" },
+        { "keys": ["lowkey"], "desc": "Secretamente, sin querer admitirlo" },
+        { "keys": ["highkey"], "desc": "Abiertamente, sin verguenza" },
+        { "keys": ["me da asco"], "desc": "No me gusta (usado ironicamente)" },
+        { "keys": ["estoy muerto"], "desc": "Agotamiento fisico o emocional" },
+        { "keys": ["no puedo"], "desc": "Esto me supera emocionalmente" },
+        { "keys": ["rayao"], "desc": "Paranoico o preocupado" },
+        { "keys": ["flipao"], "desc": "Fuera de la realidad, ido" },
+        { "keys": ["quemao"], "desc": "Harto, agotado mentalmente" }
+      ]
+    },
+    {
+      "name": "Tipos de Personas",
+      "items": [
+        { "keys": ["main character"], "desc": "Se cree protagonista de pelicula" },
+        { "keys": ["npc"], "desc": "Persona sin personalidad propia" },
+        { "keys": ["pick me"], "desc": "Hace todo para llamar atencion" },
+        { "keys": ["simp"], "desc": "Hace cualquier cosa por su crush" },
+        { "keys": ["boomer"], "desc": "Cualquiera mayor de 30" },
+        { "keys": ["zoomer"], "desc": "Gen Z (nacidos 1997-2012)" },
+        { "keys": ["millennial"], "desc": "Los del 2000 que ya tienen hipoteca" },
+        { "keys": ["normie"], "desc": "Persona sin cultura de internet" },
+        { "keys": ["tryhard"], "desc": "Se esfuerza demasiado (y se nota)" },
+        { "keys": ["sigma"], "desc": "Lobo solitario autoproclamado" },
+        { "keys": ["chad"], "desc": "El tio perfecto (usado ironicamente)" },
+        { "keys": ["virgin"], "desc": "Lo opuesto al chad, perdedor" },
+        { "keys": ["karen"], "desc": "Senora que pide hablar con el gerente" },
+        { "keys": ["hater"], "desc": "Persona que critica todo por sistema" },
+        { "keys": ["pringao"], "desc": "El que siempre cae en todo" },
+        { "keys": ["cunao"], "desc": "El que opina de todo sin saber" },
+        { "keys": ["rata"], "desc": "Persona tacana o tramposa en juegos" },
+        { "keys": ["friki"], "desc": "Apasionado de cosas raras (ya no insulto)" }
+      ]
+    },
+    {
+      "name": "Relaciones",
+      "items": [
+        { "keys": ["crush"], "desc": "Persona que te gusta en secreto" },
+        { "keys": ["red flag"], "desc": "Senal de que debes huir" },
+        { "keys": ["green flag"], "desc": "Senal de que es buena persona" },
+        { "keys": ["beige flag"], "desc": "Raro pero no preocupante" },
+        { "keys": ["situationship"], "desc": "Relacion sin definir (cobardia mutua)" },
+        { "keys": ["ghostear"], "desc": "Desaparecer sin explicacion" },
+        { "keys": ["orbitar"], "desc": "Dar vueltas esperando oportunidad" },
+        { "keys": ["shippear"], "desc": "Querer que dos personas esten juntas" },
+        { "keys": ["stalkear"], "desc": "Revisar obsesivamente redes de alguien" },
+        { "keys": ["liarse"], "desc": "Enrollarse con alguien" }
+      ]
+    },
+    {
+      "name": "Estetica y Estilo",
+      "items": [
+        { "keys": ["aesthetic"], "desc": "Estilo visual bonito de algo" },
+        { "keys": ["era"], "desc": "Fase de tu vida actual" },
+        { "keys": ["outfit"], "desc": "Conjunto de ropa del dia" },
+        { "keys": ["fit"], "desc": "Lo mismo pero mas corto" },
+        { "keys": ["drip"], "desc": "Estilo impecable, swagg" },
+        { "keys": ["clean"], "desc": "Bien hecho, sin errores" },
+        { "keys": ["slaps"], "desc": "Esta muy bueno (musica sobretodo)" },
+        { "keys": ["serve"], "desc": "Dar todo, petarlo visualmente" }
+      ]
+    },
+    {
+      "name": "Expresiones Dramaticas",
+      "items": [
+        { "keys": ["me muero"], "desc": "Algo me hace mucha gracia" },
+        { "keys": ["estoy llorando"], "desc": "No estoy llorando, es hiperbole" },
+        { "keys": ["socorro"], "desc": "Peticion de ayuda ironica" },
+        { "keys": ["ayuda"], "desc": "Igual que socorro pero mas breve" },
+        { "keys": ["no doy mas"], "desc": "He llegado a mi limite" },
+        { "keys": ["se fue de tema"], "desc": "Esto escalo demasiado rapido" },
+        { "keys": ["te pasaste"], "desc": "Cruzaste un limite (positivo o negativo)" },
+        { "keys": ["estoy flipando"], "desc": "No me lo puedo creer" }
+      ]
+    },
+    {
+      "name": "Internet y Gaming",
+      "items": [
+        { "keys": ["rage quit"], "desc": "Dejar algo por frustracion" },
+        { "keys": ["grindear"], "desc": "Trabajar repetitivamente para mejorar" },
+        { "keys": ["farmear"], "desc": "Acumular recursos o experiencia" },
+        { "keys": ["carrear"], "desc": "Llevar al equipo a la victoria" },
+        { "keys": ["trollear"], "desc": "Molestar a alguien por diversion" },
+        { "keys": ["spamear"], "desc": "Repetir algo hasta el hartazgo" },
+        { "keys": ["flex"], "desc": "Presumir de algo" },
+        { "keys": ["campear"], "desc": "Quedarse quieto esperando victimas" },
+        { "keys": ["rushear"], "desc": "Ir muy rapido sin pensar" },
+        { "keys": ["feedear"], "desc": "Morir mucho y dar ventaja al enemigo" },
+        { "keys": ["nerfear"], "desc": "Debilitar algo en un parche" },
+        { "keys": ["bufear"], "desc": "Mejorar algo en un parche" },
+        { "keys": ["smurfear"], "desc": "Jugar con cuenta de nivel bajo" }
+      ]
+    },
+    {
+      "name": "Insultos Espanoles",
+      "items": [
+        { "keys": ["gilipollas"], "desc": "Insulto comodin multiproposito" },
+        { "keys": ["capullo"], "desc": "Idiota pero con carino" },
+        { "keys": ["pardillo"], "desc": "Ingenuo, facil de enganar" },
+        { "keys": ["panoli"], "desc": "Tonto en version suave" },
+        { "keys": ["merluzo"], "desc": "Tonto pero dicho por politicos" },
+        { "keys": ["imbecil"], "desc": "Idiota nivel basico" },
+        { "keys": ["primo"], "desc": "Idiota (o familiar lejano)" }
+      ]
+    }
+  ]
+}

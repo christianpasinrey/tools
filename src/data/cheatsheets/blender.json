@@ -1,0 +1,166 @@
+{
+  "title": "Blender",
+  "description": "Atajos de teclado esenciales de Blender 3D",
+  "sections": [
+    {
+      "name": "General",
+      "items": [
+        { "keys": ["Ctrl", "N"], "desc": "Nuevo archivo" },
+        { "keys": ["Ctrl", "O"], "desc": "Abrir archivo" },
+        { "keys": ["Ctrl", "S"], "desc": "Guardar" },
+        { "keys": ["Ctrl", "Shift", "S"], "desc": "Guardar como" },
+        { "keys": ["Ctrl", "Z"], "desc": "Deshacer" },
+        { "keys": ["Ctrl", "Shift", "Z"], "desc": "Rehacer" },
+        { "keys": ["Ctrl", "Q"], "desc": "Salir" },
+        { "keys": ["F1"], "desc": "Ayuda" },
+        { "keys": ["F3"], "desc": "Buscar comando" }
+      ]
+    },
+    {
+      "name": "Navegación 3D",
+      "items": [
+        { "keys": ["Rueda ratón"], "desc": "Zoom" },
+        { "keys": ["Click medio"], "desc": "Rotar vista" },
+        { "keys": ["Shift", "Click medio"], "desc": "Desplazar vista" },
+        { "keys": ["Numpad 0"], "desc": "Vista de cámara" },
+        { "keys": ["Numpad 1"], "desc": "Vista frontal" },
+        { "keys": ["Numpad 3"], "desc": "Vista lateral" },
+        { "keys": ["Numpad 7"], "desc": "Vista superior" },
+        { "keys": ["Numpad 5"], "desc": "Ortográfica/Perspectiva" },
+        { "keys": ["Numpad ."], "desc": "Centrar en selección" },
+        { "keys": ["Home"], "desc": "Ver todo" },
+        { "keys": ["`"], "desc": "Menú de vistas" }
+      ]
+    },
+    {
+      "name": "Selección",
+      "items": [
+        { "keys": ["Click izq"], "desc": "Seleccionar" },
+        { "keys": ["Shift", "Click"], "desc": "Añadir a selección" },
+        { "keys": ["A"], "desc": "Seleccionar todo" },
+        { "keys": ["Alt", "A"], "desc": "Deseleccionar todo" },
+        { "keys": ["Ctrl", "I"], "desc": "Invertir selección" },
+        { "keys": ["B"], "desc": "Selección rectangular" },
+        { "keys": ["C"], "desc": "Selección circular" },
+        { "keys": ["L"], "desc": "Seleccionar enlazado" },
+        { "keys": ["Ctrl", "L"], "desc": "Seleccionar enlazado (bajo cursor)" },
+        { "keys": ["Ctrl", "Numpad +"], "desc": "Expandir selección" },
+        { "keys": ["Ctrl", "Numpad -"], "desc": "Contraer selección" }
+      ]
+    },
+    {
+      "name": "Modos",
+      "items": [
+        { "keys": ["Tab"], "desc": "Alternar Objeto/Edición" },
+        { "keys": ["Ctrl", "Tab"], "desc": "Menú de modos" },
+        { "keys": ["1"], "desc": "Modo vértices (Edit)" },
+        { "keys": ["2"], "desc": "Modo aristas (Edit)" },
+        { "keys": ["3"], "desc": "Modo caras (Edit)" }
+      ]
+    },
+    {
+      "name": "Transformar",
+      "items": [
+        { "keys": ["G"], "desc": "Mover (Grab)" },
+        { "keys": ["R"], "desc": "Rotar" },
+        { "keys": ["S"], "desc": "Escalar" },
+        { "keys": ["G", "X/Y/Z"], "desc": "Mover en eje" },
+        { "keys": ["R", "X/Y/Z"], "desc": "Rotar en eje" },
+        { "keys": ["S", "X/Y/Z"], "desc": "Escalar en eje" },
+        { "keys": ["Shift", "X/Y/Z"], "desc": "Excluir eje" },
+        { "keys": ["Alt", "G"], "desc": "Restablecer posición" },
+        { "keys": ["Alt", "R"], "desc": "Restablecer rotación" },
+        { "keys": ["Alt", "S"], "desc": "Restablecer escala" },
+        { "keys": ["Ctrl", "A"], "desc": "Aplicar transformaciones" }
+      ]
+    },
+    {
+      "name": "Añadir Objetos",
+      "items": [
+        { "keys": ["Shift", "A"], "desc": "Menú Añadir" },
+        { "keys": ["Shift", "D"], "desc": "Duplicar" },
+        { "keys": ["Alt", "D"], "desc": "Duplicar enlazado" },
+        { "keys": ["X"], "desc": "Eliminar" },
+        { "keys": ["H"], "desc": "Ocultar selección" },
+        { "keys": ["Alt", "H"], "desc": "Mostrar todo" },
+        { "keys": ["Shift", "H"], "desc": "Ocultar no seleccionados" },
+        { "keys": ["M"], "desc": "Mover a colección" }
+      ]
+    },
+    {
+      "name": "Modo Edición",
+      "items": [
+        { "keys": ["E"], "desc": "Extruir" },
+        { "keys": ["I"], "desc": "Insertar caras (Inset)" },
+        { "keys": ["Ctrl", "R"], "desc": "Loop cut" },
+        { "keys": ["K"], "desc": "Cuchillo (Knife)" },
+        { "keys": ["Ctrl", "B"], "desc": "Biselar (Bevel)" },
+        { "keys": ["F"], "desc": "Crear cara/arista" },
+        { "keys": ["J"], "desc": "Conectar vértices" },
+        { "keys": ["V"], "desc": "Separar vértices (Rip)" },
+        { "keys": ["M"], "desc": "Fusionar vértices" },
+        { "keys": ["P"], "desc": "Separar" },
+        { "keys": ["Ctrl", "J"], "desc": "Unir objetos" }
+      ]
+    },
+    {
+      "name": "Escultura",
+      "items": [
+        { "keys": ["F"], "desc": "Tamaño de pincel" },
+        { "keys": ["Shift", "F"], "desc": "Fuerza de pincel" },
+        { "keys": ["Ctrl"], "desc": "Invertir efecto" },
+        { "keys": ["Shift"], "desc": "Suavizar" },
+        { "keys": ["X"], "desc": "Draw" },
+        { "keys": ["G"], "desc": "Grab" },
+        { "keys": ["S"], "desc": "Smooth" },
+        { "keys": ["Shift", "S"], "desc": "Snake Hook" }
+      ]
+    },
+    {
+      "name": "Renderizado",
+      "items": [
+        { "keys": ["Z"], "desc": "Menú de sombreado" },
+        { "keys": ["Shift", "Z"], "desc": "Wireframe" },
+        { "keys": ["F12"], "desc": "Renderizar imagen" },
+        { "keys": ["Ctrl", "F12"], "desc": "Renderizar animación" },
+        { "keys": ["F11"], "desc": "Ver último render" },
+        { "keys": ["Esc"], "desc": "Cancelar render" }
+      ]
+    },
+    {
+      "name": "Animación",
+      "items": [
+        { "keys": ["I"], "desc": "Insertar keyframe" },
+        { "keys": ["Alt", "I"], "desc": "Eliminar keyframe" },
+        { "keys": ["Espacio"], "desc": "Reproducir/Pausar" },
+        { "keys": ["Flecha Izq"], "desc": "Frame anterior" },
+        { "keys": ["Flecha Der"], "desc": "Frame siguiente" },
+        { "keys": ["Shift", "Flecha Izq"], "desc": "Ir al inicio" },
+        { "keys": ["Shift", "Flecha Der"], "desc": "Ir al final" },
+        { "keys": ["Flecha Arriba"], "desc": "Keyframe anterior" },
+        { "keys": ["Flecha Abajo"], "desc": "Keyframe siguiente" }
+      ]
+    },
+    {
+      "name": "UV Editing",
+      "items": [
+        { "keys": ["U"], "desc": "Menú UV Unwrap" },
+        { "keys": ["Ctrl", "E"], "desc": "Marcar costura" },
+        { "keys": ["Alt", "E"], "desc": "Limpiar costura" },
+        { "keys": ["P"], "desc": "Pin UV" },
+        { "keys": ["Alt", "P"], "desc": "Unpin UV" }
+      ]
+    },
+    {
+      "name": "Interfaz",
+      "items": [
+        { "keys": ["T"], "desc": "Panel herramientas" },
+        { "keys": ["N"], "desc": "Panel propiedades" },
+        { "keys": ["Ctrl", "Espacio"], "desc": "Maximizar área" },
+        { "keys": ["Ctrl", "Alt", "Espacio"], "desc": "Pantalla completa" },
+        { "keys": ["Q"], "desc": "Menú favoritos" },
+        { "keys": ["Shift", "Espacio"], "desc": "Menú herramientas" }
+      ]
+    }
+  ]
+}
