@@ -310,112 +310,143 @@ export function useColorWheel() {
     applyHarmony()
   }
 
-  // Extract colors from image using color quantization
+  // Extract colors from image using improved color quantization
   const extractColorsFromImage = (imageDataUrl) => {
     return new Promise((resolve, reject) => {
       const img = new Image()
       img.crossOrigin = 'Anonymous'
 
       img.onload = () => {
-        // Create canvas to read pixels
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
 
-        // Resize to sample (faster processing)
-        const maxSize = 100
+        // Sample at reasonable size
+        const maxSize = 150
         const scale = Math.min(maxSize / img.width, maxSize / img.height, 1)
-        canvas.width = img.width * scale
-        canvas.height = img.height * scale
+        canvas.width = Math.floor(img.width * scale)
+        canvas.height = Math.floor(img.height * scale)
 
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
         const pixels = imageData.data
 
-        // Collect all colors with frequency
-        const colorMap = new Map()
-
+        // Collect pixels as RGB arrays
+        const pixelList = []
         for (let i = 0; i < pixels.length; i += 4) {
           const r = pixels[i]
           const g = pixels[i + 1]
           const b = pixels[i + 2]
           const a = pixels[i + 3]
 
-          // Skip transparent pixels
           if (a < 128) continue
-
-          // Quantize colors (group similar colors)
-          const qr = Math.round(r / 32) * 32
-          const qg = Math.round(g / 32) * 32
-          const qb = Math.round(b / 32) * 32
-
-          const key = `${qr},${qg},${qb}`
-
-          if (colorMap.has(key)) {
-            const entry = colorMap.get(key)
-            entry.count++
-            entry.r += r
-            entry.g += g
-            entry.b += b
-          } else {
-            colorMap.set(key, { r, g, b, count: 1 })
-          }
+          pixelList.push([r, g, b])
         }
 
-        // Convert to array and sort by frequency
-        const sortedColors = Array.from(colorMap.values())
-          .filter(c => {
-            // Filter out very dark and very light colors
-            const [h, s, l] = rgbToHsl(c.r / c.count, c.g / c.count, c.b / c.count)
-            return l > 10 && l < 90 && s > 15
+        // Median cut algorithm for color quantization
+        const medianCut = (pixels, depth, maxDepth = 4) => {
+          if (depth >= maxDepth || pixels.length === 0) {
+            if (pixels.length === 0) return []
+            // Calculate average color
+            const avg = pixels.reduce(
+              (acc, p) => [acc[0] + p[0], acc[1] + p[1], acc[2] + p[2]],
+              [0, 0, 0]
+            ).map(v => Math.round(v / pixels.length))
+            return [{ color: avg, count: pixels.length }]
+          }
+
+          // Find channel with greatest range
+          const ranges = [0, 1, 2].map(ch => {
+            const values = pixels.map(p => p[ch])
+            return Math.max(...values) - Math.min(...values)
           })
+          const maxChannel = ranges.indexOf(Math.max(...ranges))
+
+          // Sort by that channel and split
+          pixels.sort((a, b) => a[maxChannel] - b[maxChannel])
+          const mid = Math.floor(pixels.length / 2)
+
+          return [
+            ...medianCut(pixels.slice(0, mid), depth + 1, maxDepth),
+            ...medianCut(pixels.slice(mid), depth + 1, maxDepth)
+          ]
+        }
+
+        // Get quantized colors (16 buckets)
+        const quantized = medianCut(pixelList, 0, 4)
           .sort((a, b) => b.count - a.count)
 
-        // Get top 5 distinct colors
-        const selectedColors = []
-        const minHueDiff = 25 // Minimum hue difference between colors
+        // Color distance function
+        const colorDistance = (c1, c2) => {
+          const [h1, s1, l1] = c1
+          const [h2, s2, l2] = c2
+          // Weighted distance considering hue wrapping
+          const hueDiff = Math.min(Math.abs(h1 - h2), 360 - Math.abs(h1 - h2)) / 180
+          const satDiff = Math.abs(s1 - s2) / 100
+          const lightDiff = Math.abs(l1 - l2) / 100
+          return hueDiff * 1.5 + satDiff + lightDiff * 0.8
+        }
 
-        for (const color of sortedColors) {
-          if (selectedColors.length >= 5) break
-
-          const avgR = Math.round(color.r / color.count)
-          const avgG = Math.round(color.g / color.count)
-          const avgB = Math.round(color.b / color.count)
-          const [h, s, l] = rgbToHsl(avgR, avgG, avgB)
-
-          // Check if this hue is distinct enough from already selected
-          const isDistinct = selectedColors.every(sc => {
-            const hueDiff = Math.min(Math.abs(sc.hue - h), 360 - Math.abs(sc.hue - h))
-            return hueDiff > minHueDiff || Math.abs(sc.saturation - s) > 20
+        // Convert to HSL and filter
+        const hslColors = quantized
+          .map(q => {
+            const [h, s, l] = rgbToHsl(q.color[0], q.color[1], q.color[2])
+            return { hue: h, saturation: s, lightness: l, count: q.count, rgb: q.color }
+          })
+          .filter(c => {
+            // Keep colors that aren't too gray (unless very light/dark which is ok)
+            return c.saturation > 8 || c.lightness < 15 || c.lightness > 85
           })
 
-          if (isDistinct || selectedColors.length < 2) {
-            selectedColors.push({ hue: h, saturation: s, lightness: l })
+        // Select 5 most distinct colors
+        const selectedColors = []
+        const minDistance = 0.25
+
+        for (const color of hslColors) {
+          if (selectedColors.length >= 5) break
+
+          const isDistinct = selectedColors.every(sc =>
+            colorDistance(
+              [color.hue, color.saturation, color.lightness],
+              [sc.hue, sc.saturation, sc.lightness]
+            ) > minDistance
+          )
+
+          if (isDistinct || selectedColors.length === 0) {
+            selectedColors.push(color)
           }
         }
 
-        // Fill remaining slots if needed
+        // If we don't have enough distinct colors, add from remaining
+        if (selectedColors.length < 5) {
+          for (const color of hslColors) {
+            if (selectedColors.length >= 5) break
+            if (!selectedColors.includes(color)) {
+              selectedColors.push(color)
+            }
+          }
+        }
+
+        // Fill remaining with variations
         while (selectedColors.length < 5) {
-          const baseColor = selectedColors[0] || { hue: 200, saturation: 70, lightness: 50 }
+          const base = selectedColors[0] || { hue: 200, saturation: 70, lightness: 50 }
           selectedColors.push({
-            hue: (baseColor.hue + selectedColors.length * 30) % 360,
-            saturation: baseColor.saturation,
-            lightness: baseColor.lightness
+            hue: (base.hue + selectedColors.length * 60) % 360,
+            saturation: Math.max(20, base.saturation - 10),
+            lightness: base.lightness
           })
         }
 
         // Apply extracted colors
-        colorPoints.value = selectedColors.map(c => ({
+        colorPoints.value = selectedColors.slice(0, 5).map(c => ({
           hue: c.hue,
-          saturation: c.saturation
+          saturation: Math.max(10, c.saturation)
         }))
 
         // Set average lightness
-        const avgLightness = selectedColors.reduce((sum, c) => sum + c.lightness, 0) / selectedColors.length
-        baseLightness.value = Math.round(avgLightness)
+        const avgLightness = selectedColors.slice(0, 5).reduce((sum, c) => sum + c.lightness, 0) / 5
+        baseLightness.value = Math.round(Math.max(20, Math.min(80, avgLightness)))
 
-        // Switch to custom mode (don't apply harmony, keep extracted colors as-is)
         currentMode.value = 'custom'
-
         resolve(selectedColors)
       }
 
