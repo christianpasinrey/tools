@@ -1,13 +1,46 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import DockButton from './DockButton.vue'
+import DockSubmenu from './DockSubmenu.vue'
 
 const route = useRoute()
 
+// Tools configuration
 const tools = [
   { path: '/audio-editor', name: 'Audio', icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3', color: '#a855f7' },
   { path: '/image-editor', name: 'Imagen', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', color: '#3b82f6' },
-  { path: '/documents', name: 'Documentos', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', color: '#ef4444' },
+  {
+    path: '/documents',
+    name: 'Documentos',
+    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    color: '#ef4444',
+    hasSubmenu: true,
+    submenuTitle: 'Documentos',
+    submenuItems: [
+      {
+        path: '/documents#pdf',
+        name: 'PDF Editor',
+        description: 'Combina, divide y anota PDFs',
+        icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9.5 8.5c0 .83-.67 1.5-1.5 1.5H7v2H5.5V9H8c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V9H13c.83 0 1.5.67 1.5 1.5v3zm4-3H17v1h1.5V13H17v2h-1.5V9h3v1.5zM7 10.5h1v1H7v-1zm4 0h1v3h-1v-3z',
+        color: '#ef4444'
+      },
+      {
+        path: '/documents#spreadsheet',
+        name: 'Spreadsheet Editor',
+        description: 'Hojas de cálculo con fórmulas',
+        icon: 'M3 3h18v18H3V3zm16 4H5v12h14V7zM7 9h2v2H7V9zm0 4h2v2H7v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2z',
+        color: '#22c55e'
+      },
+      {
+        path: '/documents#markdown',
+        name: 'Markdown Editor',
+        description: 'Editor MD con preview en vivo',
+        icon: 'M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41zM6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38h1.92zm8.56-1.98V8.81h-1.93v6.38h4.55v-1.98h-2.62z',
+        color: '#3b82f6'
+      }
+    ]
+  },
   { path: '/svg-editor', name: 'SVG', icon: 'M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z', color: '#f97316' },
   { path: '/3d-playground', name: '3D', icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9', color: '#22c55e' },
   { path: '/dev-tools', name: 'Dev', icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4', color: '#06b6d4' },
@@ -22,10 +55,13 @@ const tools = [
 const dockRef = ref(null)
 const iconRefs = ref([])
 const scales = reactive(tools.map(() => 1))
-const isHoveringDock = ref(false)
 const hoveredIndex = ref(-1)
 
-const BASE_SIZE = 40
+// Submenu state
+const activeSubmenuIndex = ref(-1)
+const submenuHovered = ref(false)
+let submenuTimeout = null
+
 const MAX_SCALE = 1.6
 const EFFECT_DISTANCE = 80
 
@@ -37,7 +73,6 @@ const onDockMouseMove = (e) => {
   iconRefs.value.forEach((iconRef, index) => {
     if (!iconRef) return
 
-    // Get DOM element from Vue component ref
     const iconEl = iconRef.$el || iconRef
     if (!iconEl || typeof iconEl.getBoundingClientRect !== 'function') return
 
@@ -55,15 +90,19 @@ const onDockMouseMove = (e) => {
 }
 
 const onDockMouseLeave = () => {
-  isHoveringDock.value = false
   hoveredIndex.value = -1
   scales.forEach((_, index) => {
     scales[index] = 1
   })
-}
 
-const onDockMouseEnter = () => {
-  isHoveringDock.value = true
+  // Delay closing submenu to allow mouse to move to it
+  if (activeSubmenuIndex.value !== -1 && !submenuHovered.value) {
+    submenuTimeout = setTimeout(() => {
+      if (!submenuHovered.value) {
+        activeSubmenuIndex.value = -1
+      }
+    }, 150)
+  }
 }
 
 const onIconMouseEnter = (index) => {
@@ -74,20 +113,43 @@ const onIconMouseLeave = () => {
   hoveredIndex.value = -1
 }
 
-// Check if tool is active (handles hash routes)
-const isToolActive = (toolPath) => {
-  // For hash routes like /documents#pdf
-  if (toolPath.includes('#')) {
-    const [path, hash] = toolPath.split('#')
-    return route.path === path && route.hash === `#${hash}`
-  }
-  // For regular routes, check if current path starts with tool path
-  // but only mark as active if it's exact match or /documents without specific hash
-  if (toolPath === '/documents') {
-    return route.path === '/documents'
-  }
-  return route.path === toolPath
+// Submenu handlers
+const onSubmenuEnter = (index) => {
+  clearTimeout(submenuTimeout)
+  activeSubmenuIndex.value = index
 }
+
+const onSubmenuLeave = (index) => {
+  // Delay to allow transition to submenu
+  submenuTimeout = setTimeout(() => {
+    if (!submenuHovered.value) {
+      activeSubmenuIndex.value = -1
+    }
+  }, 150)
+}
+
+const onSubmenuMouseEnter = () => {
+  clearTimeout(submenuTimeout)
+  submenuHovered.value = true
+}
+
+const onSubmenuMouseLeave = () => {
+  submenuHovered.value = false
+  submenuTimeout = setTimeout(() => {
+    activeSubmenuIndex.value = -1
+  }, 150)
+}
+
+const onSubmenuItemClick = () => {
+  activeSubmenuIndex.value = -1
+  submenuHovered.value = false
+}
+
+// Computed for active submenu
+const activeSubmenu = computed(() => {
+  if (activeSubmenuIndex.value === -1) return null
+  return tools[activeSubmenuIndex.value]
+})
 </script>
 
 <template>
@@ -103,12 +165,23 @@ const isToolActive = (toolPath) => {
       </defs>
     </svg>
 
+    <!-- Submenu Panel -->
+    <DockSubmenu
+      v-if="activeSubmenu?.hasSubmenu"
+      :visible="activeSubmenuIndex !== -1"
+      :title="activeSubmenu?.submenuTitle"
+      :items="activeSubmenu?.submenuItems"
+      :color="activeSubmenu?.color"
+      @mouseenter="onSubmenuMouseEnter"
+      @mouseleave="onSubmenuMouseLeave"
+      @item-click="onSubmenuItemClick"
+    />
+
     <div
       ref="dockRef"
       class="dock-glass"
       @mousemove="onDockMouseMove"
       @mouseleave="onDockMouseLeave"
-      @mouseenter="onDockMouseEnter"
     >
       <!-- Liquid Glass Layers -->
       <div class="dock-glass-filter"></div>
@@ -135,36 +208,23 @@ const isToolActive = (toolPath) => {
         <div class="dock-separator"></div>
 
         <!-- Tool icons -->
-        <router-link
+        <DockButton
           v-for="(tool, index) in tools"
           :key="tool.path"
           :ref="el => iconRefs[index] = el"
-          :to="tool.path"
-          class="dock-item"
-          :class="{ 'is-active': isToolActive(tool.path) }"
-          :style="{
-            '--scale': scales[index],
-            '--tool-color': tool.color
-          }"
+          :path="tool.path"
+          :name="tool.name"
+          :icon="tool.icon"
+          :color="tool.color"
+          :scale="scales[index]"
+          :is-hovered="hoveredIndex === index"
+          :has-submenu="tool.hasSubmenu || false"
+          :submenu-open="activeSubmenuIndex === index"
           @mouseenter="onIconMouseEnter(index)"
           @mouseleave="onIconMouseLeave"
-        >
-          <div class="dock-icon">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="tool.icon" />
-            </svg>
-          </div>
-
-          <!-- Tooltip -->
-          <Transition name="tooltip">
-            <div v-if="hoveredIndex === index" class="dock-tooltip">
-              {{ tool.name }}
-            </div>
-          </Transition>
-
-          <!-- Active indicator -->
-          <div v-if="isToolActive(tool.path)" class="dock-active-dot"></div>
-        </router-link>
+          @submenu-enter="onSubmenuEnter(index)"
+          @submenu-leave="onSubmenuLeave(index)"
+        />
       </div>
     </div>
   </div>
@@ -306,15 +366,14 @@ const isToolActive = (toolPath) => {
   align-self: center;
 }
 
-/* Dock Item */
+/* Home Dock Item */
 .dock-item {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: scale(var(--scale, 1));
   transform-origin: bottom center;
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
 }
 
@@ -351,8 +410,6 @@ const isToolActive = (toolPath) => {
 
 .dock-item.is-active .dock-icon {
   background: color-mix(in srgb, var(--tool-color, #22c55e) 15%, rgba(0, 0, 0, 0.3));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-color: color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent);
   color: var(--tool-color, #22c55e);
   box-shadow:
@@ -377,65 +434,6 @@ const isToolActive = (toolPath) => {
   border-radius: 50%;
   background: var(--tool-color, #22c55e);
   box-shadow: 0 0 8px var(--tool-color, #22c55e);
-}
-
-/* Tooltip with liquid glass effect */
-.dock-tooltip {
-  position: absolute;
-  bottom: calc(100% + 14px);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 14px;
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(16px) saturate(1.5);
-  -webkit-backdrop-filter: blur(16px) saturate(1.5);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  color: white;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  pointer-events: none;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 1px rgba(255, 255, 255, 0.2),
-    inset -1px -1px 1px rgba(0, 0, 0, 0.2);
-}
-
-.dock-tooltip::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    transparent 50%
-  );
-  pointer-events: none;
-}
-
-.dock-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: rgba(20, 20, 20, 0.7);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-/* Tooltip transition */
-.tooltip-enter-active,
-.tooltip-leave-active {
-  transition: all 0.15s ease;
-}
-
-.tooltip-enter-from,
-.tooltip-leave-to {
-  opacity: 0;
-  transform: translateX(-50%) translateY(4px);
 }
 
 /* ===== RESPONSIVE - Tablet ===== */
@@ -475,10 +473,6 @@ const isToolActive = (toolPath) => {
   .dock-separator {
     height: 28px;
     margin: 0 6px;
-  }
-
-  .dock-tooltip {
-    display: none;
   }
 }
 
@@ -532,7 +526,6 @@ const isToolActive = (toolPath) => {
     bottom: -4px;
   }
 
-  /* Disable magnetic effect on mobile - use simple scale on tap */
   .dock-item {
     transform: scale(1) !important;
     transition: transform 0.1s ease;
