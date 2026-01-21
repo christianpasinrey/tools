@@ -47,14 +47,44 @@ const currentSheetLang = computed(() =>
 
 // Speech rate control
 const speechRate = ref(0.9)
+const availableVoices = ref([])
+
+// Load voices (async in some browsers)
+const loadVoices = () => {
+  availableVoices.value = window.speechSynthesis?.getVoices() || []
+}
+
+// Initialize voices
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  loadVoices()
+  window.speechSynthesis.onvoiceschanged = loadVoices
+}
 
 // Text-to-Speech function
 const speakText = (text, lang) => {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = lang
     utterance.rate = speechRate.value
+
+    // Try to find the best voice for the language
+    const voices = availableVoices.value.length > 0
+      ? availableVoices.value
+      : window.speechSynthesis.getVoices()
+
+    const langCode = lang.split('-')[0] // e.g., 'fr' from 'fr-FR'
+    const voice = voices.find(v => v.lang === lang) ||
+                  voices.find(v => v.lang.startsWith(lang)) ||
+                  voices.find(v => v.lang.startsWith(langCode)) ||
+                  voices.find(v => v.lang.toLowerCase().includes(langCode))
+
+    if (voice) {
+      utterance.voice = voice
+      utterance.lang = voice.lang
+    } else {
+      utterance.lang = lang
+    }
+
     window.speechSynthesis.speak(utterance)
   }
 }
