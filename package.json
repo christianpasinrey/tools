@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tbisoftware/phone": "^1.0.0",
+    "@tbisoftware/phone": "^2.0.6",
     "@codemirror/autocomplete": "^6.20.0",
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.11",
