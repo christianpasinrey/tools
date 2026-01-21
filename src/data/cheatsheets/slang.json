@@ -126,13 +126,9 @@
         { "keys": ["karen"], "desc": "Senora que pide hablar con el gerente" },
         { "keys": ["hater"], "desc": "Persona que critica todo por sistema" },
         { "keys": ["pringao"], "desc": "El que siempre cae en todo" },
-        { "keys": ["
-
-cunao"], "desc": "El que opina de todo sin saber" },
+        { "keys": ["cunao"], "desc": "El que opina de todo sin saber" },
         { "keys": ["rata"], "desc": "Persona tacana o tramposa en juegos" },
-        { "keys": ["
-
-friki"], "desc": "Apasionado de cosas raras (ya no insulto)" }
+        { "keys": ["friki"], "desc": "Apasionado de cosas raras (ya no insulto)" }
       ]
     },
     {
@@ -197,23 +193,13 @@ friki"], "desc": "Apasionado de cosas raras (ya no insulto)" }
     {
       "name": "Insultos Espanoles",
       "items": [
-        { "keys": ["
-
-gilipollas"], "desc": "Insulto comodin multiproposito" },
+        { "keys": ["gilipollas"], "desc": "Insulto comodin multiproposito" },
         { "keys": ["capullo"], "desc": "Idiota pero con carino" },
         { "keys": ["pardillo"], "desc": "Ingenuo, facil de enganar" },
-        { "keys": ["
-
-panoli"], "desc": "Tonto en version suave" },
-        { "keys": ["
-
-merluzo"], "desc": "Tonto pero dicho por politicos" },
-        { "keys": ["
-
-imbecil"], "desc": "Idiota nivel basico" },
-        { "keys": ["
-
-primo"], "desc": "Idiota (o familiar lejano)" }
+        { "keys": ["panoli"], "desc": "Tonto en version suave" },
+        { "keys": ["merluzo"], "desc": "Tonto pero dicho por politicos" },
+        { "keys": ["imbecil"], "desc": "Idiota nivel basico" },
+        { "keys": ["primo"], "desc": "Idiota (o familiar lejano)" }
       ]
     }
   ]
