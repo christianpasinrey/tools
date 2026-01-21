@@ -44,8 +44,8 @@ const getToolCardStyle = (index) => {
   const isRowFromRight = row % 2 === 0 // Fila 0, 2, 4... desde derecha; 1, 3... desde izquierda
   
   // Stagger by row - balanced delay
-  const rowDelay = row * 0.18
-  const cardProgress = Math.max(0, Math.min(1, (progress - rowDelay) * 3.5))
+  const rowDelay = row * 0.1
+  const cardProgress = Math.max(0, Math.min(1, (progress - rowDelay) * 5))
 
   // Direction: right rows slide from +500px, left rows slide from -500px (from screen edges)
   // Starts invisible and fades in while sliding
