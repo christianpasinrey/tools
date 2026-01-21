@@ -45,13 +45,16 @@ const currentSheetLang = computed(() =>
   sheets.find(s => s.id === activeSheet.value)?.lang || null
 )
 
+// Speech rate control
+const speechRate = ref(0.9)
+
 // Text-to-Speech function
 const speakText = (text, lang) => {
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = lang
-    utterance.rate = 0.9
+    utterance.rate = speechRate.value
     window.speechSynthesis.speak(utterance)
   }
 }
