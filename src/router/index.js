@@ -18,9 +18,9 @@ const routes = [
     component: () => import('../views/ImageEditor.vue')
   },
   {
-    path: '/pdf-editor',
-    name: 'PdfEditor',
-    component: () => import('../views/PdfEditor.vue')
+    path: '/documents',
+    name: 'Documents',
+    component: () => import('../views/Documents.vue')
   },
   {
     path: '/3d-playground',
@@ -51,11 +51,6 @@ const routes = [
     path: '/cheatsheets',
     name: 'CheatSheets',
     component: () => import('../views/CheatSheets.vue')
-  },
-  {
-    path: '/markdown-editor',
-    name: 'MarkdownEditor',
-    component: () => import('../views/MarkdownEditor.vue')
   },
   {
     path: '/phone-tester',
