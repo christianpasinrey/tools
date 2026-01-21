@@ -388,6 +388,14 @@ const tools = [
     icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z',
     color: 'blue',
     status: 'active'
+  },
+  {
+    path: '/phone-tester',
+    name: 'Phone Tester',
+    description: 'Prueba tu diseño responsive en diferentes dispositivos móviles con simulación en tiempo real.',
+    icon: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
+    color: 'cyan',
+    status: 'active'
   }
 ]
 
@@ -538,6 +546,14 @@ const packages = [
     language: 'JavaScript',
     languageColor: '#f1e05a',
     stars: '10.5k'
+  },
+  {
+    name: 'Tu-buen-camino/phone',
+    description: 'Multi-framework phone input component with international validation.',
+    url: 'https://github.com/Tu-buen-camino/phone',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: '1.2k'
   }
 ]
 
