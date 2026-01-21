@@ -6,7 +6,10 @@ const props = defineProps({
   hasSelection: Boolean,
   bloomEnabled: Boolean,
   currentEnvironment: String,
+  currentLighting: String,
   environmentPresets: Object,
+  lightingPresets: Object,
+  lightTypes: Object,
   materialPresets: Object,
   isImporting: Boolean,
   isPresetActive: Boolean,
@@ -16,10 +19,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'add-shape', 'add-spotlight', 'add-pointlight', 'clear', 'reset-camera',
-  'delete-selected', 'duplicate-selected', 'deselect',
-  'screenshot', 'export-gltf', 'export-glb', 'import',
-  'toggle-bloom', 'environment-change', 'material-change', 'load-preset',
+  'add-shape', 'add-spotlight', 'add-pointlight', 'add-arealight', 'add-hemisphere', 'add-directional',
+  'clear', 'reset-camera', 'delete-selected', 'duplicate-selected', 'deselect',
+  'screenshot', 'export-gltf', 'export-glb', 'import', 'import-human',
+  'toggle-bloom', 'environment-change', 'lighting-change', 'material-change', 'load-preset',
   'toggle-animation', 'toggle-recording', 'load-saved-scene', 'delete-saved-scene'
 ])
 
@@ -29,6 +32,7 @@ const showPresets = ref(false)
 const showShapes = ref(false)
 const showExport = ref(false)
 const showEnvironment = ref(false)
+const showLighting = ref(false)
 const showMaterials = ref(false)
 
 const presets = [
