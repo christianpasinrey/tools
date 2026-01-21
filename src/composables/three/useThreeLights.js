@@ -452,40 +452,60 @@ export function useThreeLights(core, objectsManager) {
   }
 
   // Clear all user-added lights (for preset switching)
+  const lightTypes = ['spotlight', 'pointlight', 'arealight', 'hemisphere', 'directional']
+
   const clearUserLights = () => {
     if (!core.scene.value) return
 
+    // First, find lights in the objects array
     const lightsToRemove = objectsManager.objects.value.filter(obj =>
-      ['spotlight', 'pointlight', 'arealight', 'hemisphere', 'directional'].includes(obj.userData.type)
+      lightTypes.includes(obj.userData?.type)
     )
 
+    // Remove each light and its associated objects
     lightsToRemove.forEach(lightMesh => {
-      // Remove light
-      if (lightMesh.userData.light) {
+      // Remove the actual light from scene
+      if (lightMesh.userData?.light) {
         core.scene.value.remove(lightMesh.userData.light)
-        if (lightMesh.userData.light.dispose) {
-          lightMesh.userData.light.dispose()
-        }
+        lightMesh.userData.light.dispose?.()
       }
       // Remove helper
-      if (lightMesh.userData.helper) {
+      if (lightMesh.userData?.helper) {
         core.scene.value.remove(lightMesh.userData.helper)
-        if (lightMesh.userData.helper.dispose) {
-          lightMesh.userData.helper.dispose()
-        }
+        lightMesh.userData.helper.dispose?.()
       }
       // Remove target (for spotlights)
-      if (lightMesh.userData.target) {
+      if (lightMesh.userData?.target) {
         core.scene.value.remove(lightMesh.userData.target)
       }
-      // Remove mesh
+      // Remove the visual mesh
       core.scene.value.remove(lightMesh)
       lightMesh.geometry?.dispose()
       lightMesh.material?.dispose()
     })
 
+    // Also scan the scene directly for any orphaned lights (belt and suspenders)
+    const toRemoveFromScene = []
+    core.scene.value.traverse((child) => {
+      if (child.isSpotLight || child.isPointLight || child.isRectAreaLight ||
+          child.isHemisphereLight || (child.isDirectionalLight && child.name !== 'directionalLight')) {
+        toRemoveFromScene.push(child)
+      }
+      // Also remove helpers
+      if (child.isSpotLightHelper || child.isPointLightHelper ||
+          child.isHemisphereLightHelper || child.isDirectionalLightHelper) {
+        toRemoveFromScene.push(child)
+      }
+    })
+
+    toRemoveFromScene.forEach(obj => {
+      core.scene.value.remove(obj)
+      obj.dispose?.()
+    })
+
+    // Update the objects array
     objectsManager.objects.value = objectsManager.objects.value.filter(obj =>
-      !['spotlight', 'pointlight', 'arealight', 'hemisphere', 'directional'].includes(obj.userData.type)
+      !lightTypes.includes(obj.userData?.type)
     )
   }
 
