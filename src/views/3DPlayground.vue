@@ -239,6 +239,67 @@ const loadHumanModel = async () => {
   }
 }
 
+// Load a pre-made scene for lighting testing
+const loadScenePreset = async (presetKey) => {
+  const preset = playground.SCENE_PRESETS[presetKey]
+  if (!preset) return
+
+  isPresetActive.value = false
+
+  const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js')
+  const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js')
+
+  const loader = new GLTFLoader()
+
+  // Setup DRACO decoder for compressed meshes
+  const dracoLoader = new DRACOLoader()
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/')
+  loader.setDRACOLoader(dracoLoader)
+
+  try {
+    const gltf = await new Promise((resolve, reject) => {
+      loader.load(
+        preset.url,
+        resolve,
+        (progress) => {
+          if (progress.total > 0) {
+            console.log(`Loading ${preset.name}:`, (progress.loaded / progress.total * 100).toFixed(0) + '%')
+          }
+        },
+        reject
+      )
+    })
+
+    const model = gltf.scene
+    model.scale.setScalar(preset.scale || 1)
+    model.position.set(...(preset.position || [0, 0, 0]))
+
+    // Setup materials for better lighting visibility
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true
+        child.receiveShadow = true
+      }
+    })
+
+    model.userData = {
+      type: 'scene',
+      id: Date.now(),
+      isUserObject: true,
+      name: preset.name
+    }
+
+    playground.scene.value.add(model)
+    playground.objects.value = [...playground.objects.value, model]
+    playground.selectObject(model)
+
+    // Reset camera to see the whole scene
+    playground.resetCamera()
+  } catch (error) {
+    console.error(`Error loading scene ${preset.name}:`, error)
+  }
+}
+
 // Handle object selection from list
 const handleSelectFromList = (obj) => {
   playground.selectObject(obj)
@@ -438,6 +499,7 @@ onUnmounted(() => {
       :environment-presets="playground.ENVIRONMENT_PRESETS"
       :lighting-presets="playground.LIGHTING_PRESETS"
       :light-types="playground.LIGHT_TYPES"
+      :scene-presets="playground.SCENE_PRESETS"
       :material-presets="playground.MATERIAL_PRESETS"
       :is-importing="playground.isImporting.value"
       :is-preset-active="isPresetActive"
@@ -464,6 +526,7 @@ onUnmounted(() => {
       @export-glb="playground.quickActions.exportGLB"
       @import="() => { isPresetActive = false; triggerImport() }"
       @import-human="loadHumanModel"
+      @load-scene-preset="loadScenePreset"
       @toggle-bloom="playground.setBloomEnabled(!playground.bloomEnabled.value)"
       @environment-change="playground.loadEnvironment"
       @lighting-change="playground.applyLightingPreset"

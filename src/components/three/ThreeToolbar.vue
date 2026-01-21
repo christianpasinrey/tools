@@ -10,6 +10,7 @@ const props = defineProps({
   environmentPresets: Object,
   lightingPresets: Object,
   lightTypes: Object,
+  scenePresets: Object,
   materialPresets: Object,
   isImporting: Boolean,
   isPresetActive: Boolean,
@@ -21,7 +22,7 @@ const props = defineProps({
 const emit = defineEmits([
   'add-shape', 'add-spotlight', 'add-pointlight', 'add-arealight', 'add-hemisphere', 'add-directional',
   'clear', 'reset-camera', 'delete-selected', 'duplicate-selected', 'deselect',
-  'screenshot', 'export-gltf', 'export-glb', 'import', 'import-human',
+  'screenshot', 'export-gltf', 'export-glb', 'import', 'import-human', 'load-scene-preset',
   'toggle-bloom', 'environment-change', 'lighting-change', 'material-change', 'load-preset',
   'toggle-animation', 'toggle-recording', 'load-saved-scene', 'delete-saved-scene'
 ])
@@ -34,6 +35,7 @@ const showExport = ref(false)
 const showEnvironment = ref(false)
 const showLighting = ref(false)
 const showMaterials = ref(false)
+const showScenePresets = ref(false)
 
 const presets = [
   { id: 'empty', name: 'Vacio' },
@@ -63,6 +65,7 @@ const closeAllMenus = () => {
   showLighting.value = false
   showMaterials.value = false
   showSavedScenes.value = false
+  showScenePresets.value = false
 }
 
 const toggleMenu = (menu) => {
@@ -72,6 +75,7 @@ const toggleMenu = (menu) => {
                   menu === 'environment' ? showEnvironment.value :
                   menu === 'lighting' ? showLighting.value :
                   menu === 'saved' ? showSavedScenes.value :
+                  menu === 'scenePresets' ? showScenePresets.value :
                   showMaterials.value
   closeAllMenus()
   if (menu === 'presets') showPresets.value = !current
@@ -80,6 +84,7 @@ const toggleMenu = (menu) => {
   else if (menu === 'environment') showEnvironment.value = !current
   else if (menu === 'lighting') showLighting.value = !current
   else if (menu === 'saved') showSavedScenes.value = !current
+  else if (menu === 'scenePresets') showScenePresets.value = !current
   else if (menu === 'materials') showMaterials.value = !current
 }
 </script>
@@ -278,6 +283,21 @@ const toggleMenu = (menu) => {
         >
           <span class="text-sm">🧑</span>
           Modelo Humano
+        </button>
+
+        <div class="h-px bg-neutral-800 my-1"></div>
+        <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Escenas con Textura</div>
+        <button
+          v-for="(scene, key) in scenePresets"
+          :key="key"
+          @click="emit('load-scene-preset', key); closeAllMenus()"
+          class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+        >
+          <span class="text-sm">{{ scene.icon }}</span>
+          <div class="flex-1">
+            <div>{{ scene.name }}</div>
+            <div class="text-[10px] text-neutral-500">{{ scene.description }}</div>
+          </div>
         </button>
       </div>
     </div>

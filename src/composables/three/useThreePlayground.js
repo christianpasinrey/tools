@@ -1,7 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import { useThreeCore } from './useThreeCore.js'
 import { useThreeObjects } from './useThreeObjects.js'
-import { useThreeLights, LIGHTING_PRESETS, LIGHT_TYPES, HUMAN_MODEL_URL } from './useThreeLights.js'
+import { useThreeLights, LIGHTING_PRESETS, LIGHT_TYPES, HUMAN_MODEL_URL, SCENE_PRESETS } from './useThreeLights.js'
 import { useThreeMaterials, MATERIAL_PRESETS } from './useThreeMaterials.js'
 import { useThreePostProcessing } from './useThreePostProcessing.js'
 import { useThreeImporter } from './useThreeImporter.js'
@@ -203,6 +203,7 @@ export function useThreePlayground() {
     LIGHTING_PRESETS,
     LIGHT_TYPES,
     HUMAN_MODEL_URL,
+    SCENE_PRESETS,
 
     // Materials
     MATERIAL_PRESETS,

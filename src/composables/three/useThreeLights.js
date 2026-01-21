@@ -171,6 +171,42 @@ export const LIGHTING_PRESETS = {
 // URL for free human model (CC0 license)
 export const HUMAN_MODEL_URL = 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Michelle.glb'
 
+// Pre-made scenes for lighting testing (all free/CC0)
+export const SCENE_PRESETS = {
+  sponza: {
+    name: 'Sponza (Interior)',
+    icon: '🏛️',
+    description: 'Atrio clasico para testing de iluminacion',
+    url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Sponza/glTF/Sponza.gltf',
+    scale: 0.01,
+    position: [0, 0, 0]
+  },
+  corridor: {
+    name: 'Pasillo Scifi',
+    icon: '🚀',
+    description: 'Corredor de ciencia ficcion',
+    url: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/SheenChair.glb',
+    scale: 1,
+    position: [0, 0, 0]
+  },
+  littlestTokyo: {
+    name: 'Tokyo Street',
+    icon: '🏙️',
+    description: 'Calle japonesa con detalles',
+    url: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb',
+    scale: 0.01,
+    position: [0, 0, 0]
+  },
+  coffeeCart: {
+    name: 'Coffee Cart',
+    icon: '☕',
+    description: 'Carrito de cafe con texturas',
+    url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CoffeeCart/glTF/CoffeeCart.gltf',
+    scale: 1,
+    position: [0, 0, 0]
+  }
+}
+
 export function useThreeLights(core, objectsManager) {
   const ambientIntensity = ref(0.4)
   const directionalIntensity = ref(0.6)
