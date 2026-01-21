@@ -60,6 +60,7 @@ const closeAllMenus = () => {
   showShapes.value = false
   showExport.value = false
   showEnvironment.value = false
+  showLighting.value = false
   showMaterials.value = false
   showSavedScenes.value = false
 }
@@ -69,6 +70,7 @@ const toggleMenu = (menu) => {
                   menu === 'shapes' ? showShapes.value :
                   menu === 'export' ? showExport.value :
                   menu === 'environment' ? showEnvironment.value :
+                  menu === 'lighting' ? showLighting.value :
                   menu === 'saved' ? showSavedScenes.value :
                   showMaterials.value
   closeAllMenus()
@@ -76,6 +78,7 @@ const toggleMenu = (menu) => {
   else if (menu === 'shapes') showShapes.value = !current
   else if (menu === 'export') showExport.value = !current
   else if (menu === 'environment') showEnvironment.value = !current
+  else if (menu === 'lighting') showLighting.value = !current
   else if (menu === 'saved') showSavedScenes.value = !current
   else if (menu === 'materials') showMaterials.value = !current
 }
@@ -235,19 +238,46 @@ const toggleMenu = (menu) => {
           @click="emit('add-spotlight'); closeAllMenus()"
           class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
         >
-          <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2a7 7 0 00-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 001 1h6a1 1 0 001-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 00-7-7z"/>
-          </svg>
+          <span class="text-sm">🔦</span>
           Foco
         </button>
         <button
           @click="emit('add-pointlight'); closeAllMenus()"
           class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
         >
-          <svg class="w-3.5 h-3.5 text-orange-400" fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="5"/>
-          </svg>
-          Luz Puntual
+          <span class="text-sm">💡</span>
+          Punto
+        </button>
+        <button
+          @click="emit('add-arealight'); closeAllMenus()"
+          class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+        >
+          <span class="text-sm">📦</span>
+          Softbox
+        </button>
+        <button
+          @click="emit('add-hemisphere'); closeAllMenus()"
+          class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+        >
+          <span class="text-sm">🌤️</span>
+          Hemisferio
+        </button>
+        <button
+          @click="emit('add-directional'); closeAllMenus()"
+          class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+        >
+          <span class="text-sm">☀️</span>
+          Direccional
+        </button>
+
+        <div class="h-px bg-neutral-800 my-1"></div>
+        <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Modelos</div>
+        <button
+          @click="emit('import-human'); closeAllMenus()"
+          class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
+        >
+          <span class="text-sm">🧑</span>
+          Modelo Humano
         </button>
       </div>
     </div>
@@ -402,6 +432,41 @@ const toggleMenu = (menu) => {
           <span>{{ preset.icon }}</span>
           {{ preset.name }}
           <svg v-if="currentEnvironment === key" class="w-3 h-3 ml-auto" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Lighting Presets -->
+    <div class="relative">
+      <button
+        @click="toggleMenu('lighting')"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+        </svg>
+        Iluminacion
+        <svg class="w-3 h-3 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </button>
+
+      <div v-if="showLighting" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[200px] max-h-[400px] overflow-y-auto">
+        <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Esquemas Cinematograficos</div>
+        <button
+          v-for="(preset, key) in lightingPresets"
+          :key="key"
+          @click="emit('lighting-change', key); closeAllMenus()"
+          :class="['w-full px-3 py-1.5 text-left text-xs hover:bg-neutral-800 transition-colors flex items-center gap-2', currentLighting === key ? 'text-yellow-400' : 'text-neutral-300']"
+        >
+          <span>{{ preset.icon }}</span>
+          <div class="flex-1">
+            <div>{{ preset.name }}</div>
+            <div class="text-[10px] text-neutral-500">{{ preset.description }}</div>
+          </div>
+          <svg v-if="currentLighting === key" class="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 24 24">
             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
           </svg>
         </button>

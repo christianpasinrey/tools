@@ -192,6 +192,53 @@ const handleFileSelect = async (e) => {
   e.target.value = '' // Reset input
 }
 
+// Load human model for lighting tests
+const loadHumanModel = async () => {
+  isPresetActive.value = false
+
+  // Use the GLTFLoader directly from the importer
+  const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js')
+  const loader = new GLTFLoader()
+
+  try {
+    const gltf = await new Promise((resolve, reject) => {
+      loader.load(
+        playground.HUMAN_MODEL_URL,
+        resolve,
+        (progress) => {
+          console.log('Loading human model:', (progress.loaded / progress.total * 100).toFixed(0) + '%')
+        },
+        reject
+      )
+    })
+
+    const model = gltf.scene
+    model.scale.setScalar(2) // Scale up the model
+    model.position.set(0, 0, 0)
+
+    // Setup materials for better lighting visibility
+    model.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true
+        child.receiveShadow = true
+      }
+    })
+
+    model.userData = {
+      type: 'human',
+      id: Date.now(),
+      isUserObject: true,
+      name: 'Modelo Humano'
+    }
+
+    playground.scene.value.add(model)
+    playground.objects.value = [...playground.objects.value, model]
+    playground.selectObject(model)
+  } catch (error) {
+    console.error('Error loading human model:', error)
+  }
+}
+
 // Handle object selection from list
 const handleSelectFromList = (obj) => {
   playground.selectObject(obj)
@@ -387,7 +434,10 @@ onUnmounted(() => {
       :has-selection="!!playground.selectedObject.value"
       :bloom-enabled="playground.bloomEnabled.value"
       :current-environment="playground.currentEnvironment.value"
+      :current-lighting="playground.currentLightingPreset.value"
       :environment-presets="playground.ENVIRONMENT_PRESETS"
+      :lighting-presets="playground.LIGHTING_PRESETS"
+      :light-types="playground.LIGHT_TYPES"
       :material-presets="playground.MATERIAL_PRESETS"
       :is-importing="playground.isImporting.value"
       :is-preset-active="isPresetActive"
@@ -401,6 +451,9 @@ onUnmounted(() => {
       @add-shape="(shape) => { isPresetActive = false; playground.addShape(shape) }"
       @add-spotlight="() => { isPresetActive = false; playground.addSpotlight() }"
       @add-pointlight="() => { isPresetActive = false; playground.addPointLight() }"
+      @add-arealight="() => { isPresetActive = false; playground.addAreaLight() }"
+      @add-hemisphere="() => { isPresetActive = false; playground.addHemisphereLight() }"
+      @add-directional="() => { isPresetActive = false; playground.addDirectionalLight() }"
       @clear="playground.quickActions.clearScene"
       @reset-camera="playground.resetCamera"
       @delete-selected="playground.deleteSelected"
@@ -410,8 +463,10 @@ onUnmounted(() => {
       @export-gltf="playground.quickActions.exportGLTF"
       @export-glb="playground.quickActions.exportGLB"
       @import="() => { isPresetActive = false; triggerImport() }"
+      @import-human="loadHumanModel"
       @toggle-bloom="playground.setBloomEnabled(!playground.bloomEnabled.value)"
       @environment-change="playground.loadEnvironment"
+      @lighting-change="playground.applyLightingPreset"
       @material-change="playground.applyMaterialToSelected"
       @load-preset="loadPreset"
     />
@@ -506,9 +561,13 @@ onUnmounted(() => {
           :selected-object="playground.selectedObject.value"
           :material-presets="playground.MATERIAL_PRESETS"
           :material-properties="playground.getSelectedMaterialProperties.value"
+          :has-texture="playground.selectedHasTexture.value"
+          :texture-url="playground.selectedTextureUrl.value"
           @color-change="playground.setSelectedColor"
           @material-change="playground.applyMaterialToSelected"
           @material-property-change="(prop, val) => playground.updateSelectedMaterialProperty(prop, val)"
+          @apply-texture="playground.applyTextureToSelected"
+          @remove-texture="playground.removeTextureFromSelected"
         />
         <div v-else class="p-4 text-xs text-neutral-500 text-center">
           Selecciona un objeto

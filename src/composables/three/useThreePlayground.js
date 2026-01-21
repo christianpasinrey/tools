@@ -1,7 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import { useThreeCore } from './useThreeCore.js'
 import { useThreeObjects } from './useThreeObjects.js'
-import { useThreeLights } from './useThreeLights.js'
+import { useThreeLights, LIGHTING_PRESETS, LIGHT_TYPES, HUMAN_MODEL_URL } from './useThreeLights.js'
 import { useThreeMaterials, MATERIAL_PRESETS } from './useThreeMaterials.js'
 import { useThreePostProcessing } from './useThreePostProcessing.js'
 import { useThreeImporter } from './useThreeImporter.js'
@@ -190,10 +190,19 @@ export function useThreePlayground() {
     // Lights
     ambientIntensity: lights.ambientIntensity,
     directionalIntensity: lights.directionalIntensity,
+    currentLightingPreset: lights.currentPreset,
     addSpotlight: lights.addSpotlight,
     addPointLight: lights.addPointLight,
+    addAreaLight: lights.addAreaLight,
+    addHemisphereLight: lights.addHemisphereLight,
+    addDirectionalLight: lights.addDirectionalLight,
     setAmbientIntensity: lights.setAmbientIntensity,
     setDirectionalIntensity: lights.setDirectionalIntensity,
+    applyLightingPreset: lights.applyLightingPreset,
+    clearUserLights: lights.clearUserLights,
+    LIGHTING_PRESETS,
+    LIGHT_TYPES,
+    HUMAN_MODEL_URL,
 
     // Materials
     MATERIAL_PRESETS,
@@ -201,6 +210,25 @@ export function useThreePlayground() {
     setSelectedColor,
     getSelectedMaterialProperties,
     updateSelectedMaterialProperty,
+    // Texture functions
+    applyTextureToSelected: (imageUrl) => {
+      if (objects.selectedObject.value) {
+        return materials.applyTexture(objects.selectedObject.value, imageUrl)
+      }
+      return false
+    },
+    removeTextureFromSelected: () => {
+      if (objects.selectedObject.value) {
+        return materials.removeTexture(objects.selectedObject.value)
+      }
+      return false
+    },
+    selectedHasTexture: computed(() => {
+      return materials.hasTexture(objects.selectedObject.value)
+    }),
+    selectedTextureUrl: computed(() => {
+      return materials.getTextureUrl(objects.selectedObject.value)
+    }),
 
     // Post-processing
     bloomEnabled: postProcessing.bloomEnabled,

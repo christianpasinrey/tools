@@ -1,6 +1,9 @@
 import { ref } from 'vue'
 import * as THREE from 'three'
 
+// Texture loader (singleton)
+const textureLoader = new THREE.TextureLoader()
+
 // Material presets
 export const MATERIAL_PRESETS = {
   standard: {
@@ -181,12 +184,67 @@ export function useThreeMaterials() {
     return true
   }
 
+  // Apply texture to object from image URL or data URL
+  const applyTexture = (object, imageUrl) => {
+    if (!object?.material) return false
+
+    const texture = textureLoader.load(imageUrl, (loadedTexture) => {
+      loadedTexture.colorSpace = THREE.SRGBColorSpace
+      object.material.needsUpdate = true
+    })
+
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+
+    // Handle different material types
+    if (object.material.map !== undefined) {
+      object.material.map = texture
+    }
+
+    object.material.needsUpdate = true
+    object.userData.hasTexture = true
+    object.userData.textureUrl = imageUrl
+
+    return true
+  }
+
+  // Remove texture from object
+  const removeTexture = (object) => {
+    if (!object?.material) return false
+
+    if (object.material.map) {
+      object.material.map.dispose()
+      object.material.map = null
+    }
+
+    object.material.needsUpdate = true
+    object.userData.hasTexture = false
+    object.userData.textureUrl = null
+
+    return true
+  }
+
+  // Check if object has texture
+  const hasTexture = (object) => {
+    return object?.userData?.hasTexture || object?.material?.map != null
+  }
+
+  // Get texture URL from object
+  const getTextureUrl = (object) => {
+    return object?.userData?.textureUrl || null
+  }
+
   return {
     currentMaterialType,
     MATERIAL_PRESETS,
     applyMaterialPreset,
     setObjectColor,
     getMaterialProperties,
-    updateMaterialProperty
+    updateMaterialProperty,
+    // Texture functions
+    applyTexture,
+    removeTexture,
+    hasTexture,
+    getTextureUrl
   }
 }

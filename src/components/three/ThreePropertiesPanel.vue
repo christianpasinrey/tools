@@ -1,13 +1,38 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   selectedObject: Object,
   materialPresets: Object,
-  materialProperties: Object
+  materialProperties: Object,
+  hasTexture: Boolean,
+  textureUrl: String
 })
 
-const emit = defineEmits(['color-change', 'material-change', 'material-property-change'])
+const emit = defineEmits(['color-change', 'material-change', 'material-property-change', 'apply-texture', 'remove-texture'])
+
+// Texture handling
+const textureInput = ref(null)
+const texturePreview = ref(null)
+
+const handleTextureUpload = (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const dataUrl = e.target.result
+    texturePreview.value = dataUrl
+    emit('apply-texture', dataUrl)
+  }
+  reader.readAsDataURL(file)
+  event.target.value = '' // Reset input
+}
+
+const removeTexture = () => {
+  texturePreview.value = null
+  emit('remove-texture')
+}
 
 // Check if selected object is a light
 const isLight = computed(() => {
@@ -293,6 +318,53 @@ const radToDeg = (rad) => ((rad ?? 0) * (180 / Math.PI)).toFixed(1)
             @input="emit('material-property-change', 'opacity', parseFloat($event.target.value))"
             class="w-full accent-green-500 h-1.5"
           />
+        </div>
+
+        <!-- Texture -->
+        <div class="border-t border-neutral-800 pt-3">
+          <div class="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Textura</div>
+
+          <!-- Hidden file input -->
+          <input
+            ref="textureInput"
+            type="file"
+            accept="image/*"
+            @change="handleTextureUpload"
+            class="hidden"
+          />
+
+          <!-- Upload button or preview -->
+          <div v-if="hasTexture || texturePreview" class="space-y-2">
+            <img
+              :src="texturePreview || textureUrl"
+              alt="Textura"
+              class="w-full h-20 object-cover rounded border border-neutral-700"
+            />
+            <div class="flex gap-1">
+              <button
+                @click="textureInput?.click()"
+                class="flex-1 px-2 py-1.5 text-[10px] bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded transition-colors"
+              >
+                Cambiar
+              </button>
+              <button
+                @click="removeTexture"
+                class="px-2 py-1.5 text-[10px] bg-red-900/30 hover:bg-red-900/50 border border-red-800 text-red-400 rounded transition-colors"
+              >
+                Quitar
+              </button>
+            </div>
+          </div>
+          <button
+            v-else
+            @click="textureInput?.click()"
+            class="w-full px-3 py-2 flex items-center justify-center gap-2 text-[10px] bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 rounded transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            Subir imagen
+          </button>
         </div>
       </template>
 
