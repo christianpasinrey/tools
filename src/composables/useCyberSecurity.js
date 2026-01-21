@@ -407,6 +407,442 @@ export function useCyberSecurity() {
   }
 
   // ==========================================
+  // URL ENCODER/DECODER
+  // ==========================================
+  const urlInput = ref('')
+  const urlOutput = ref('')
+  const urlMode = ref('encode')
+  const urlError = ref(null)
+
+  const urlProcess = () => {
+    urlError.value = null
+    urlOutput.value = ''
+
+    if (!urlInput.value) {
+      urlError.value = 'Introduce texto para procesar'
+      return
+    }
+
+    try {
+      if (urlMode.value === 'encode') {
+        urlOutput.value = encodeURIComponent(urlInput.value)
+      } else {
+        urlOutput.value = decodeURIComponent(urlInput.value)
+      }
+    } catch (e) {
+      urlError.value = `Error: ${e.message}`
+    }
+  }
+
+  const urlEncodeAll = () => {
+    if (!urlInput.value) return
+    // Encode incluyendo caracteres que encodeURIComponent no codifica
+    urlOutput.value = urlInput.value.split('').map(char => {
+      return '%' + char.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')
+    }).join('')
+  }
+
+  const swapUrl = () => {
+    const temp = urlInput.value
+    urlInput.value = urlOutput.value
+    urlOutput.value = temp
+    urlMode.value = urlMode.value === 'encode' ? 'decode' : 'encode'
+  }
+
+  const clearUrl = () => {
+    urlInput.value = ''
+    urlOutput.value = ''
+    urlError.value = null
+  }
+
+  // ==========================================
+  // PASSWORD GENERATOR
+  // ==========================================
+  const passwordLength = ref(16)
+  const passwordOptions = ref({
+    uppercase: true,
+    lowercase: true,
+    numbers: true,
+    symbols: true,
+    excludeSimilar: false,
+    excludeAmbiguous: false
+  })
+  const generatedPassword = ref('')
+  const passwordStrength = ref(0)
+  const passwordHistory = ref([])
+
+  const generatePassword = () => {
+    let chars = ''
+    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const lowercase = 'abcdefghijklmnopqrstuvwxyz'
+    const numbers = '0123456789'
+    const symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?'
+    const similar = 'il1Lo0O'
+    const ambiguous = '{}[]()/\\\'"`~,;:.<>'
+
+    if (passwordOptions.value.uppercase) chars += uppercase
+    if (passwordOptions.value.lowercase) chars += lowercase
+    if (passwordOptions.value.numbers) chars += numbers
+    if (passwordOptions.value.symbols) chars += symbols
+
+    if (passwordOptions.value.excludeSimilar) {
+      chars = chars.split('').filter(c => !similar.includes(c)).join('')
+    }
+    if (passwordOptions.value.excludeAmbiguous) {
+      chars = chars.split('').filter(c => !ambiguous.includes(c)).join('')
+    }
+
+    if (!chars) {
+      generatedPassword.value = ''
+      return
+    }
+
+    // Usar crypto.getRandomValues para mayor seguridad
+    const array = new Uint32Array(passwordLength.value)
+    crypto.getRandomValues(array)
+
+    let password = ''
+    for (let i = 0; i < passwordLength.value; i++) {
+      password += chars[array[i] % chars.length]
+    }
+
+    generatedPassword.value = password
+    calculatePasswordStrength(password)
+
+    // Añadir al historial
+    if (password && !passwordHistory.value.includes(password)) {
+      passwordHistory.value.unshift(password)
+      if (passwordHistory.value.length > 10) {
+        passwordHistory.value.pop()
+      }
+    }
+  }
+
+  const calculatePasswordStrength = (password) => {
+    let strength = 0
+    if (password.length >= 8) strength += 1
+    if (password.length >= 12) strength += 1
+    if (password.length >= 16) strength += 1
+    if (/[a-z]/.test(password)) strength += 1
+    if (/[A-Z]/.test(password)) strength += 1
+    if (/[0-9]/.test(password)) strength += 1
+    if (/[^a-zA-Z0-9]/.test(password)) strength += 1
+    passwordStrength.value = Math.min(Math.round((strength / 7) * 100), 100)
+  }
+
+  const clearPassword = () => {
+    generatedPassword.value = ''
+    passwordStrength.value = 0
+  }
+
+  // ==========================================
+  // UUID GENERATOR
+  // ==========================================
+  const uuidVersion = ref('v4')
+  const generatedUuids = ref([])
+  const uuidCount = ref(1)
+
+  const generateUuid = () => {
+    const newUuids = []
+    for (let i = 0; i < uuidCount.value; i++) {
+      if (uuidVersion.value === 'v4') {
+        newUuids.push(generateUuidV4())
+      } else if (uuidVersion.value === 'v7') {
+        newUuids.push(generateUuidV7())
+      }
+    }
+    // Acumular nuevos UUIDs al principio de la lista
+    generatedUuids.value = [...newUuids, ...generatedUuids.value]
+  }
+
+  const generateUuidV4 = () => {
+    // RFC 4122 compliant UUID v4
+    const array = new Uint8Array(16)
+    crypto.getRandomValues(array)
+
+    // Set version (4) and variant (RFC 4122)
+    array[6] = (array[6] & 0x0f) | 0x40
+    array[8] = (array[8] & 0x3f) | 0x80
+
+    const hex = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+  }
+
+  const generateUuidV7 = () => {
+    // UUID v7 - Timestamp-based (sortable)
+    const array = new Uint8Array(16)
+    crypto.getRandomValues(array)
+
+    // Get current timestamp in milliseconds
+    const timestamp = Date.now()
+
+    // Set timestamp (first 48 bits)
+    array[0] = (timestamp / 2**40) & 0xff
+    array[1] = (timestamp / 2**32) & 0xff
+    array[2] = (timestamp / 2**24) & 0xff
+    array[3] = (timestamp / 2**16) & 0xff
+    array[4] = (timestamp / 2**8) & 0xff
+    array[5] = timestamp & 0xff
+
+    // Set version (7) and variant
+    array[6] = (array[6] & 0x0f) | 0x70
+    array[8] = (array[8] & 0x3f) | 0x80
+
+    const hex = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('')
+    return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+  }
+
+  const clearUuids = () => {
+    generatedUuids.value = []
+  }
+
+  // ==========================================
+  // TIMESTAMP CONVERTER
+  // ==========================================
+  const timestampInput = ref('')
+  const timestampUnit = ref('seconds')
+  const dateInput = ref('')
+  const timestampResult = ref(null)
+  const currentTimestamp = ref(Math.floor(Date.now() / 1000))
+
+  // Actualizar timestamp actual cada segundo
+  let timestampInterval = null
+  const startTimestampUpdater = () => {
+    if (!timestampInterval) {
+      timestampInterval = setInterval(() => {
+        currentTimestamp.value = Math.floor(Date.now() / 1000)
+      }, 1000)
+    }
+  }
+
+  const stopTimestampUpdater = () => {
+    if (timestampInterval) {
+      clearInterval(timestampInterval)
+      timestampInterval = null
+    }
+  }
+
+  const timestampToDate = () => {
+    if (!timestampInput.value) {
+      timestampResult.value = null
+      return
+    }
+
+    let ts = parseInt(timestampInput.value)
+    if (timestampUnit.value === 'seconds') {
+      ts *= 1000
+    }
+
+    const date = new Date(ts)
+    if (isNaN(date.getTime())) {
+      timestampResult.value = { error: 'Timestamp inválido' }
+      return
+    }
+
+    timestampResult.value = {
+      iso: date.toISOString(),
+      local: date.toLocaleString(),
+      utc: date.toUTCString(),
+      relative: getRelativeTime(date)
+    }
+  }
+
+  const dateToTimestamp = () => {
+    if (!dateInput.value) {
+      timestampResult.value = null
+      return
+    }
+
+    const date = new Date(dateInput.value)
+    if (isNaN(date.getTime())) {
+      timestampResult.value = { error: 'Fecha inválida' }
+      return
+    }
+
+    const seconds = Math.floor(date.getTime() / 1000)
+    const milliseconds = date.getTime()
+
+    timestampResult.value = {
+      seconds,
+      milliseconds,
+      iso: date.toISOString()
+    }
+  }
+
+  const getRelativeTime = (date) => {
+    const now = new Date()
+    const diff = now - date
+    const seconds = Math.floor(Math.abs(diff) / 1000)
+    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
+
+    const prefix = diff < 0 ? 'en ' : 'hace '
+
+    if (days > 0) return prefix + days + ' día' + (days > 1 ? 's' : '')
+    if (hours > 0) return prefix + hours + ' hora' + (hours > 1 ? 's' : '')
+    if (minutes > 0) return prefix + minutes + ' minuto' + (minutes > 1 ? 's' : '')
+    return prefix + seconds + ' segundo' + (seconds > 1 ? 's' : '')
+  }
+
+  const setCurrentTimestamp = () => {
+    timestampInput.value = currentTimestamp.value.toString()
+    timestampToDate()
+  }
+
+  const clearTimestamp = () => {
+    timestampInput.value = ''
+    dateInput.value = ''
+    timestampResult.value = null
+  }
+
+  // ==========================================
+  // HEX/BIN/ASCII CONVERTER
+  // ==========================================
+  const hexInput = ref('')
+  const hexFormat = ref('text')
+  const hexResults = ref({
+    hex: '',
+    binary: '',
+    decimal: '',
+    ascii: '',
+    base64: ''
+  })
+  const hexError = ref(null)
+
+  const convertFromText = () => {
+    hexError.value = null
+    if (!hexInput.value) {
+      hexResults.value = { hex: '', binary: '', decimal: '', ascii: '', base64: '' }
+      return
+    }
+
+    const text = hexInput.value
+
+    // Usar TextEncoder para UTF-8 real
+    const utf8Bytes = new TextEncoder().encode(text)
+
+    // Texto a Hex (UTF-8)
+    const hex = Array.from(utf8Bytes).map(b => b.toString(16).padStart(2, '0')).join(' ')
+
+    // Texto a Binary (UTF-8)
+    const binary = Array.from(utf8Bytes).map(b => b.toString(2).padStart(8, '0')).join(' ')
+
+    // Texto a Decimal (UTF-8)
+    const decimal = Array.from(utf8Bytes).join(' ')
+
+    // Texto a Base64
+    const base64 = btoa(String.fromCharCode(...utf8Bytes))
+
+    hexResults.value = {
+      hex,
+      binary,
+      decimal,
+      ascii: text,
+      base64
+    }
+  }
+
+  const convertFromHex = () => {
+    hexError.value = null
+    if (!hexInput.value) {
+      hexResults.value = { hex: '', binary: '', decimal: '', ascii: '', base64: '' }
+      return
+    }
+
+    try {
+      // Limpiar input (quitar espacios y 0x)
+      const cleanHex = hexInput.value.replace(/\s+/g, '').replace(/0x/gi, '')
+
+      // Convertir hex a bytes
+      const bytes = new Uint8Array(cleanHex.match(/.{1,2}/g)?.map(h => parseInt(h, 16)) || [])
+
+      // Hex a ASCII (UTF-8)
+      const ascii = new TextDecoder('utf-8').decode(bytes)
+
+      // Hex a Binary
+      const binary = Array.from(bytes).map(b => b.toString(2).padStart(8, '0')).join(' ')
+
+      // Hex a Decimal
+      const decimal = Array.from(bytes).join(' ')
+
+      hexResults.value = {
+        hex: cleanHex.match(/.{1,2}/g)?.join(' ') || '',
+        binary,
+        decimal,
+        ascii,
+        base64: btoa(String.fromCharCode(...bytes))
+      }
+    } catch (e) {
+      hexError.value = 'Hex inválido'
+    }
+  }
+
+  const convertFromBinary = () => {
+    hexError.value = null
+    if (!hexInput.value) {
+      hexResults.value = { hex: '', binary: '', decimal: '', ascii: '', base64: '' }
+      return
+    }
+
+    try {
+      // Limpiar input
+      const cleanBinary = hexInput.value.replace(/\s+/g, '')
+
+      // Validar que solo contenga 0s y 1s
+      if (!/^[01]+$/.test(cleanBinary)) {
+        hexError.value = 'Binario inválido'
+        return
+      }
+
+      // Padding a múltiplo de 8
+      const paddedBinary = cleanBinary.padStart(Math.ceil(cleanBinary.length / 8) * 8, '0')
+
+      // Convertir binario a bytes
+      const bytes = new Uint8Array(paddedBinary.match(/.{8}/g)?.map(b => parseInt(b, 2)) || [])
+
+      // Binary a ASCII (UTF-8)
+      const ascii = new TextDecoder('utf-8').decode(bytes)
+
+      // Binary a Hex
+      const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(' ')
+
+      // Binary a Decimal
+      const decimal = Array.from(bytes).join(' ')
+
+      hexResults.value = {
+        hex,
+        binary: paddedBinary.match(/.{8}/g)?.join(' ') || '',
+        decimal,
+        ascii,
+        base64: btoa(String.fromCharCode(...bytes))
+      }
+    } catch (e) {
+      hexError.value = 'Error de conversión'
+    }
+  }
+
+  const hexConvert = () => {
+    switch (hexFormat.value) {
+      case 'text':
+        convertFromText()
+        break
+      case 'hex':
+        convertFromHex()
+        break
+      case 'binary':
+        convertFromBinary()
+        break
+    }
+  }
+
+  const clearHex = () => {
+    hexInput.value = ''
+    hexResults.value = { hex: '', binary: '', decimal: '', ascii: '', base64: '' }
+    hexError.value = null
+  }
+
+  // ==========================================
   // UTILIDADES
   // ==========================================
   const copyToClipboard = async (text) => {
@@ -462,6 +898,53 @@ export function useCyberSecurity() {
     algorithms,
     generateAllHashes,
     generateSingleHash,
-    clearHash
+    clearHash,
+
+    // URL Encoder
+    urlInput,
+    urlOutput,
+    urlMode,
+    urlError,
+    urlProcess,
+    urlEncodeAll,
+    swapUrl,
+    clearUrl,
+
+    // Password Generator
+    passwordLength,
+    passwordOptions,
+    generatedPassword,
+    passwordStrength,
+    passwordHistory,
+    generatePassword,
+    clearPassword,
+
+    // UUID Generator
+    uuidVersion,
+    generatedUuids,
+    uuidCount,
+    generateUuid,
+    clearUuids,
+
+    // Timestamp Converter
+    timestampInput,
+    timestampUnit,
+    dateInput,
+    timestampResult,
+    currentTimestamp,
+    startTimestampUpdater,
+    stopTimestampUpdater,
+    timestampToDate,
+    dateToTimestamp,
+    setCurrentTimestamp,
+    clearTimestamp,
+
+    // Hex Converter
+    hexInput,
+    hexFormat,
+    hexResults,
+    hexError,
+    hexConvert,
+    clearHex
   }
 }
