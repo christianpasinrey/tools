@@ -73,13 +73,17 @@ const routes = [
     redirect: '/technology#security'
   },
   {
+    path: '/apps',
+    name: 'Apps',
+    component: () => import('../views/Apps.vue')
+  },
+  {
     path: '/location',
-    name: 'Location',
-    component: () => import('../views/Location.vue')
+    redirect: '/apps#map'
   },
   {
     path: '/map-editor',
-    redirect: '/location#map'
+    redirect: '/apps#map'
   }
 ]
 

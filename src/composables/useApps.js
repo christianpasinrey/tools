@@ -1,15 +1,19 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 
-const validTabs = ['map']
+const validTabs = ['map', 'todo']
 
 const hashToTab = {
   'map': 'map',
   'maps': 'map',
-  'editor': 'map'
+  'editor': 'map',
+  'todo': 'todo',
+  'kanban': 'todo',
+  'tasks': 'todo'
 }
 
 const tabToHash = {
-  'map': 'map'
+  'map': 'map',
+  'todo': 'todo'
 }
 
 function getTabFromHash() {
@@ -23,12 +27,13 @@ function setHashFromTab(tab) {
   window.history.replaceState(null, '', newUrl)
 }
 
-export function useLocation() {
+export function useApps() {
   const activeTab = ref(getTabFromHash())
   const themeColor = ref('#2563eb')
 
   const tabColors = {
-    'map': '#2563eb'
+    'map': '#2563eb',
+    'todo': '#6366f1'
   }
 
   const setThemeColor = (color) => {

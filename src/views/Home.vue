@@ -413,6 +413,14 @@ const tools = [
     icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
     color: 'red',
     status: 'active'
+  },
+  {
+    path: '/apps#todo',
+    name: 'TODO Kanban',
+    description: 'Tablero de tareas tipo Trello con columnas, drag & drop y persistencia en IndexedDB.',
+    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+    color: 'indigo',
+    status: 'active'
   }
 ]
 
@@ -472,6 +480,13 @@ const colorClasses = {
     text: 'text-pink-400',
     glow: 'group-hover:shadow-pink-500/20',
     icon: 'group-hover:text-pink-400'
+  },
+  indigo: {
+    bg: 'bg-indigo-500/10',
+    border: 'border-indigo-500/20',
+    text: 'text-indigo-400',
+    glow: 'group-hover:shadow-indigo-500/20',
+    icon: 'group-hover:text-indigo-400'
   }
 }
 
