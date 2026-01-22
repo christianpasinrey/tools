@@ -64,7 +64,7 @@ export function useThreeObjects(core) {
 
   // Update movement from keyboard
   const updateKeyboardMovement = () => {
-    if (!selectedObject.value || !core.camera.value) return
+    if (!core.camera.value) return
 
     const keys = keysPressed.value
     if (keys.w || keys.a || keys.s || keys.d || keys.q || keys.e) {
@@ -76,14 +76,34 @@ export function useThreeObjects(core) {
       const right = new THREE.Vector3()
       right.crossVectors(cameraDir, new THREE.Vector3(0, 1, 0))
 
-      if (keys.w) selectedObject.value.position.y += moveSpeed
-      if (keys.s) selectedObject.value.position.y -= moveSpeed
-      if (keys.d) selectedObject.value.position.addScaledVector(right, moveSpeed)
-      if (keys.a) selectedObject.value.position.addScaledVector(right, -moveSpeed)
-      if (keys.e) selectedObject.value.position.addScaledVector(cameraDir, moveSpeed)
-      if (keys.q) selectedObject.value.position.addScaledVector(cameraDir, -moveSpeed)
+      if (selectedObject.value) {
+        // Move selected object
+        if (keys.w) selectedObject.value.position.y += moveSpeed
+        if (keys.s) selectedObject.value.position.y -= moveSpeed
+        if (keys.d) selectedObject.value.position.addScaledVector(right, moveSpeed)
+        if (keys.a) selectedObject.value.position.addScaledVector(right, -moveSpeed)
+        if (keys.e) selectedObject.value.position.addScaledVector(cameraDir, moveSpeed)
+        if (keys.q) selectedObject.value.position.addScaledVector(cameraDir, -moveSpeed)
 
-      syncLightPosition(selectedObject.value)
+        syncLightPosition(selectedObject.value)
+      } else {
+        // Move camera (pan) when no object selected
+        const cameraMoveSpeed = moveSpeed * 2
+        const movement = new THREE.Vector3()
+
+        if (keys.w) movement.addScaledVector(cameraDir, cameraMoveSpeed)
+        if (keys.s) movement.addScaledVector(cameraDir, -cameraMoveSpeed)
+        if (keys.d) movement.addScaledVector(right, cameraMoveSpeed)
+        if (keys.a) movement.addScaledVector(right, -cameraMoveSpeed)
+        if (keys.e) movement.y += cameraMoveSpeed
+        if (keys.q) movement.y -= cameraMoveSpeed
+
+        // Move both camera and orbit controls target
+        core.camera.value.position.add(movement)
+        if (core.orbitControls.value) {
+          core.orbitControls.value.target.add(movement)
+        }
+      }
     }
   }
 
