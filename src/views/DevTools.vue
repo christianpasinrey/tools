@@ -21,7 +21,7 @@ const editor = useDevTools()
       @change="(tab) => editor.activeTab.value = tab"
     />
 
-    <div class="flex-1 overflow-hidden">
+    <div class="flex-1 overflow-auto">
       <JsonTools
         v-if="editor.activeTab.value === 'json'"
         v-model:input="editor.jsonInput.value"

@@ -18,7 +18,7 @@ const tech = useTechnology()
       @change="(tab) => tech.activeTab.value = tab"
     />
 
-    <div class="flex-1 overflow-hidden">
+    <div class="flex-1 overflow-auto">
       <DevTools v-if="tech.activeTab.value === 'dev'" />
       <CyberSecurity v-if="tech.activeTab.value === 'security'" />
       <PhoneTester v-if="tech.activeTab.value === 'phone'" />

@@ -27,7 +27,7 @@ const cs = useCyberSecurity()
       @change="(tab) => cs.activeTab.value = tab"
     />
 
-    <div class="flex-1 overflow-hidden">
+    <div class="flex-1 overflow-auto">
       <JwtDebugger
         v-if="cs.activeTab.value === 'jwt'"
         v-model:input="cs.jwtInput.value"

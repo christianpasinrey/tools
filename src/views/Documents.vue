@@ -18,7 +18,7 @@ const docs = useDocuments()
       @change="(tab) => docs.activeTab.value = tab"
     />
 
-    <div class="flex-1 overflow-hidden">
+    <div class="flex-1 overflow-auto">
       <PdfEditorContent v-if="docs.activeTab.value === 'pdf'" />
       <SpreadsheetEditor v-if="docs.activeTab.value === 'spreadsheet'" :theme-color="docs.themeColor.value" />
       <MarkdownEditorContent v-if="docs.activeTab.value === 'markdown'" :theme-color="docs.themeColor.value" />

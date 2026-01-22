@@ -863,6 +863,210 @@ export function useSpreadsheet() {
     return data.value[row]?.[col] || ''
   }
 
+  // Parse cell reference (e.g., "A1" -> {row: 0, col: 0})
+  function parseCellRef(ref) {
+    const match = ref.match(/^([A-Z]+)(\d+)$/i)
+    if (!match) return null
+
+    const colStr = match[1].toUpperCase()
+    const rowNum = parseInt(match[2], 10) - 1
+
+    let colNum = 0
+    for (let i = 0; i < colStr.length; i++) {
+      colNum = colNum * 26 + (colStr.charCodeAt(i) - 64)
+    }
+    colNum -= 1
+
+    return { row: rowNum, col: colNum }
+  }
+
+  // Get cell value by reference (e.g., "A1")
+  function getCellValueByRef(ref) {
+    const parsed = parseCellRef(ref)
+    if (!parsed) return 0
+    const val = data.value[parsed.row]?.[parsed.col]
+    if (val === '' || val === undefined || val === null) return 0
+    const num = parseFloat(val)
+    return isNaN(num) ? 0 : num
+  }
+
+  // Parse range (e.g., "A1:B3") and return array of values
+  function parseRange(range) {
+    const parts = range.split(':')
+    if (parts.length !== 2) return [getCellValueByRef(range)]
+
+    const start = parseCellRef(parts[0])
+    const end = parseCellRef(parts[1])
+    if (!start || !end) return []
+
+    const values = []
+    for (let r = Math.min(start.row, end.row); r <= Math.max(start.row, end.row); r++) {
+      for (let c = Math.min(start.col, end.col); c <= Math.max(start.col, end.col); c++) {
+        const val = data.value[r]?.[c]
+        if (val !== '' && val !== undefined && val !== null) {
+          const num = parseFloat(val)
+          if (!isNaN(num)) values.push(num)
+        }
+      }
+    }
+    return values
+  }
+
+  // Parse function arguments (handles nested functions and ranges)
+  function parseArgs(argsStr) {
+    const args = []
+    let current = ''
+    let depth = 0
+
+    for (let i = 0; i < argsStr.length; i++) {
+      const char = argsStr[i]
+      if (char === '(') depth++
+      else if (char === ')') depth--
+      else if (char === ',' && depth === 0) {
+        args.push(current.trim())
+        current = ''
+        continue
+      }
+      current += char
+    }
+    if (current.trim()) args.push(current.trim())
+    return args
+  }
+
+  // Evaluate a formula expression
+  function evaluateFormula(formula, visitedCells = new Set()) {
+    if (!formula) return ''
+
+    let expr = formula.trim()
+    if (expr.startsWith('=')) expr = expr.slice(1)
+
+    // Handle functions
+    const funcMatch = expr.match(/^([A-Z]+)\((.*)\)$/i)
+    if (funcMatch) {
+      const funcName = funcMatch[1].toUpperCase()
+      const argsStr = funcMatch[2]
+      const args = parseArgs(argsStr)
+
+      // Get all values from args (handles ranges and single cells)
+      const getAllValues = () => {
+        const values = []
+        for (const arg of args) {
+          if (arg.includes(':')) {
+            values.push(...parseRange(arg))
+          } else if (/^[A-Z]+\d+$/i.test(arg)) {
+            values.push(getCellValueByRef(arg))
+          } else if (/^[A-Z]+\(/i.test(arg)) {
+            const result = evaluateFormula(arg, visitedCells)
+            const num = parseFloat(result)
+            if (!isNaN(num)) values.push(num)
+          } else {
+            const num = parseFloat(arg)
+            if (!isNaN(num)) values.push(num)
+          }
+        }
+        return values
+      }
+
+      switch (funcName) {
+        case 'SUM': {
+          const values = getAllValues()
+          return values.reduce((a, b) => a + b, 0)
+        }
+        case 'AVERAGE':
+        case 'AVG': {
+          const values = getAllValues()
+          return values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
+        }
+        case 'MIN': {
+          const values = getAllValues()
+          return values.length > 0 ? Math.min(...values) : 0
+        }
+        case 'MAX': {
+          const values = getAllValues()
+          return values.length > 0 ? Math.max(...values) : 0
+        }
+        case 'COUNT': {
+          const values = getAllValues()
+          return values.length
+        }
+        case 'ABS': {
+          const values = getAllValues()
+          return values.length > 0 ? Math.abs(values[0]) : 0
+        }
+        case 'ROUND': {
+          const values = getAllValues()
+          const num = values[0] || 0
+          const decimals = values[1] || 0
+          return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals)
+        }
+        case 'SQRT': {
+          const values = getAllValues()
+          return values.length > 0 ? Math.sqrt(values[0]) : 0
+        }
+        case 'POWER':
+        case 'POW': {
+          const values = getAllValues()
+          return values.length >= 2 ? Math.pow(values[0], values[1]) : 0
+        }
+        case 'IF': {
+          // IF(condition, true_value, false_value)
+          if (args.length >= 2) {
+            const condition = evaluateFormula(args[0], visitedCells)
+            const isTrue = condition && condition !== 0 && condition !== '0' && condition !== 'FALSE'
+            if (isTrue) {
+              return evaluateFormula(args[1], visitedCells)
+            } else {
+              return args.length >= 3 ? evaluateFormula(args[2], visitedCells) : 0
+            }
+          }
+          return 0
+        }
+        default:
+          return '#NAME?'
+      }
+    }
+
+    // Handle cell references in expressions
+    expr = expr.replace(/([A-Z]+)(\d+)/gi, (match) => {
+      const cellKey = match.toUpperCase()
+      const parsed = parseCellRef(cellKey)
+      if (!parsed) return '0'
+
+      // Circular reference check
+      if (visitedCells.has(cellKey)) return '#REF!'
+      visitedCells.add(cellKey)
+
+      // Check if referenced cell has a formula
+      const refFormula = getCellFormula(parsed.row, parsed.col)
+      if (refFormula) {
+        return evaluateFormula(refFormula, visitedCells)
+      }
+
+      return getCellValueByRef(match)
+    })
+
+    // Evaluate mathematical expression safely
+    try {
+      // Only allow numbers, operators, parentheses, and spaces
+      if (/^[\d\s+\-*/().]+$/.test(expr)) {
+        const result = Function('"use strict"; return (' + expr + ')')()
+        return isNaN(result) || !isFinite(result) ? '#ERROR!' : result
+      }
+      return expr
+    } catch (e) {
+      return '#ERROR!'
+    }
+  }
+
+  // Recalculate all formulas
+  function recalculateFormulas() {
+    Object.entries(cellFormulas.value).forEach(([key, formula]) => {
+      const [row, col] = key.split('-').map(Number)
+      const result = evaluateFormula(formula)
+      data.value[row][col] = String(result)
+    })
+  }
+
   // Cell selection and editing
   function selectCell(row, col) {
     selectedCell.value = { row, col }
@@ -870,7 +1074,13 @@ export function useSpreadsheet() {
 
   function startEdit(row, col) {
     editingCell.value = { row, col }
-    editValue.value = data.value[row][col]
+    // If cell has formula, show the formula for editing
+    const formula = getCellFormula(row, col)
+    if (formula) {
+      editValue.value = '=' + formula
+    } else {
+      editValue.value = data.value[row][col]
+    }
   }
 
   function finishEdit() {
@@ -878,10 +1088,26 @@ export function useSpreadsheet() {
 
     const { row, col } = editingCell.value
     const oldValue = data.value[row][col]
+    const newValue = editValue.value
 
-    if (oldValue !== editValue.value) {
+    if (oldValue !== newValue || getCellFormula(row, col)) {
       saveToHistory()
-      data.value[row][col] = editValue.value
+
+      // Check if it's a formula
+      if (newValue && newValue.toString().trim().startsWith('=')) {
+        const formula = newValue.trim().slice(1) // Remove leading =
+        setCellFormula(row, col, formula)
+        // Evaluate and store result
+        const result = evaluateFormula(formula)
+        data.value[row][col] = String(result)
+      } else {
+        // Clear any existing formula
+        setCellFormula(row, col, null)
+        data.value[row][col] = newValue
+      }
+
+      // Recalculate dependent formulas
+      recalculateFormulas()
     }
 
     editingCell.value = null
@@ -1419,6 +1645,8 @@ export function useSpreadsheet() {
     getCellFormula,
     setCellFormula,
     hasFormula,
-    getCellDisplayValue
+    getCellDisplayValue,
+    evaluateFormula,
+    recalculateFormulas
   }
 }
