@@ -119,6 +119,8 @@ const gridStyle = computed(() => ({
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="item.icon" />
         </svg>
       </div>
+      <!-- Color dot when no icon -->
+      <div v-else class="bento-dot"></div>
 
       <!-- Slot for custom icon -->
       <slot name="icon" :item="item" :index="index"></slot>
@@ -145,6 +147,11 @@ const gridStyle = computed(() => ({
   grid-template-columns: repeat(var(--bento-columns, 3), 1fr);
   gap: var(--bento-gap, 8px);
   min-width: 320px;
+}
+
+/* Adjust min-width based on columns */
+.bento-grid:has(.bento-large) {
+  min-width: 340px;
 }
 
 /* Bento Item - Base */
@@ -269,6 +276,31 @@ const gridStyle = computed(() => ({
 /* Layout: Default - standard square */
 .bento-default {
   /* Uses base styles */
+}
+
+/* Layout: Large - bigger items for few-item grids */
+.bento-large {
+  padding: 20px;
+  min-height: 120px;
+}
+
+.bento-large .bento-icon {
+  width: 52px;
+  height: 52px;
+}
+
+.bento-large .bento-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.bento-large .bento-name {
+  font-size: 15px;
+}
+
+.bento-large .bento-description {
+  font-size: 12px;
+  margin-top: 2px;
 }
 
 /* Layout: Small - compact for many items */
@@ -398,6 +430,16 @@ const gridStyle = computed(() => ({
   font-size: 11px;
   color: rgba(255, 255, 255, 0.4);
   line-height: 1.3;
+}
+
+/* Color dot for items without icon */
+.bento-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--item-color, #22c55e);
+  box-shadow: 0 0 12px var(--item-color, #22c55e);
+  flex-shrink: 0;
 }
 
 /* Hover glow effect */

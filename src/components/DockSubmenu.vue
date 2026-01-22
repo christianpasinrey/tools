@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import BentoGrid from './BentoGrid.vue'
 
 const props = defineProps({
@@ -14,7 +14,7 @@ const props = defineProps({
   items: {
     type: Array,
     default: () => []
-    // Each item: { path, name, icon, color, description? }
+    // Each item: { path, name, icon, color, description?, children? }
   },
   color: {
     type: String,
@@ -23,10 +23,53 @@ const props = defineProps({
   layout: {
     type: [String, Array],
     default: 'auto'
+  },
+  columns: {
+    type: Number,
+    default: 3
   }
 })
 
 const emit = defineEmits(['mouseenter', 'mouseleave', 'item-click'])
+
+// State for nested navigation
+const selectedCategory = ref(null)
+
+// Reset when submenu closes
+watch(() => props.visible, (visible) => {
+  if (!visible) {
+    selectedCategory.value = null
+  }
+})
+
+// Current items to display
+const currentItems = computed(() => {
+  if (selectedCategory.value) {
+    return selectedCategory.value.children || []
+  }
+  return props.items
+})
+
+// Current title
+const currentTitle = computed(() => {
+  if (selectedCategory.value) {
+    return selectedCategory.value.name
+  }
+  return props.title
+})
+
+// Current color
+const currentColor = computed(() => {
+  if (selectedCategory.value) {
+    return selectedCategory.value.color || props.color
+  }
+  return props.color
+})
+
+// Check if submenu has nested navigation (items with children)
+const hasNestedItems = computed(() => {
+  return props.items.some(item => item.children && item.children.length > 0)
+})
 
 const handleMouseEnter = () => {
   emit('mouseenter')
@@ -37,7 +80,16 @@ const handleMouseLeave = () => {
 }
 
 const handleItemClick = ({ item }) => {
+  // If item has children, show them instead of navigating
+  if (item.children && item.children.length > 0) {
+    selectedCategory.value = item
+    return
+  }
   emit('item-click', item)
+}
+
+const goBack = () => {
+  selectedCategory.value = null
 }
 </script>
 
@@ -55,20 +107,35 @@ const handleItemClick = ({ item }) => {
       <div class="submenu-glass-specular"></div>
 
       <!-- Content -->
-      <div class="submenu-content">
-        <!-- Title if provided -->
-        <div v-if="title" class="submenu-title" :style="{ color: color }">
-          {{ title }}
+      <div class="submenu-content" :class="{ 'has-nested': hasNestedItems }">
+        <!-- Title with back button -->
+        <div v-if="currentTitle" class="submenu-header">
+          <button
+            v-if="selectedCategory"
+            class="submenu-back"
+            @click="goBack"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div class="submenu-title" :style="{ color: currentColor }">
+            {{ currentTitle }}
+          </div>
         </div>
 
         <!-- Default slot for custom content -->
         <slot>
-          <BentoGrid
-            :items="items"
-            :color="color"
-            :layout="layout"
-            @item-click="handleItemClick"
-          />
+          <Transition name="fade" mode="out-in">
+            <BentoGrid
+              :key="selectedCategory?.name || 'root'"
+              :items="currentItems"
+              :color="currentColor"
+              :layout="selectedCategory ? 'auto' : layout"
+              :columns="selectedCategory ? 3 : columns"
+              @item-click="handleItemClick"
+            />
+          </Transition>
         </slot>
       </div>
 
@@ -155,15 +222,64 @@ const handleItemClick = ({ item }) => {
   z-index: 4;
 }
 
+/* Tamaño mínimo solo para submenus con navegación anidada (cheatsheets) */
+/* = tamaño de la vista de categorías (12 items small en 3 cols) */
+/* BentoGrid 380px + padding 32px = 412px */
+/* 4 filas × 52px + 3 gaps × 8px + header 44px + padding 32px = 308px */
+.submenu-content.has-nested {
+  min-width: 412px;
+  min-height: 308px;
+}
+
+/* Header with back button */
+.submenu-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 12px;
+}
+
+/* Back button */
+.submenu-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.submenu-back:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
 /* Title */
 .submenu-title {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  padding: 0 8px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 12px;
+  padding: 0 8px;
+}
+
+/* Fade transition for content */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 /* Down arrow pointing to dock */
@@ -207,6 +323,18 @@ const handleItemClick = ({ item }) => {
 
   .submenu-content {
     padding: 12px;
+  }
+
+  .submenu-content.has-nested {
+    min-width: 304px;
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .submenu-content.has-nested {
+    min-width: 244px;
+    min-height: 320px;
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps({
   path: {
@@ -40,6 +40,7 @@ const props = defineProps({
 const emit = defineEmits(['mouseenter', 'mouseleave', 'submenu-enter', 'submenu-leave'])
 
 const route = useRoute()
+const router = useRouter()
 
 // Check if this button is active (handles hash routes)
 const isActive = computed(() => {
@@ -48,11 +49,9 @@ const isActive = computed(() => {
     const [path, hash] = props.path.split('#')
     return route.path === path && route.hash === `#${hash}`
   }
-  // For /documents without hash, check if we're on any documents route
-  if (props.path === '/documents') {
-    return route.path === '/documents'
-  }
-  return route.path === props.path
+  // For paths without hash, check if we're on that base path (including with hash)
+  // e.g. /cheatsheets is active when on /cheatsheets#macos
+  return route.path === props.path || route.path.startsWith(props.path + '/')
 })
 
 const handleMouseEnter = () => {
@@ -66,6 +65,13 @@ const handleMouseLeave = () => {
   emit('mouseleave')
   if (props.hasSubmenu) {
     emit('submenu-leave')
+  }
+}
+
+// Handle click on submenu button - navigate to path
+const handleClick = () => {
+  if (props.hasSubmenu && props.path) {
+    router.push(props.path)
   }
 }
 </script>
@@ -86,6 +92,7 @@ const handleMouseLeave = () => {
     }"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
+    @click="handleClick"
   >
     <div class="dock-icon">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

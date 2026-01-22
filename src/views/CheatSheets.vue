@@ -469,19 +469,7 @@ async function exportToPDF() {
                 @click="toggleCategory(category.id)"
                 class="category-btn"
               >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path :d="category.icon" />
-                </svg>
                 <span class="category-label">{{ category.name }}</span>
-                <svg
-                  class="w-4 h-4 transition-transform"
-                  :class="{ 'rotate-180': expandedCategories[category.id] }"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
               </button>
 
               <!-- Dropdown Menu -->
@@ -497,10 +485,7 @@ async function exportToPDF() {
                     class="category-menu-item"
                     :class="{ 'is-active': activeSheet === sheet.id }"
                   >
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <path :d="sheet.icon" />
-                    </svg>
-                    <span>{{ sheet.name }}</span>
+                    {{ sheet.name }}
                   </button>
                 </div>
               </transition>
