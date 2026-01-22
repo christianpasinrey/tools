@@ -8,6 +8,12 @@ import ResponsePanel from '../components/apitester/ResponsePanel.vue'
 const api = useApiTester()
 const saveModalOpen = ref(false)
 const saveRequestName = ref('')
+const showStorageWarning = ref(!localStorage.getItem('api-tester-warning-dismissed'))
+
+function dismissWarning() {
+  showStorageWarning.value = false
+  localStorage.setItem('api-tester-warning-dismissed', '1')
+}
 
 function handleSaveToCollection(collectionId) {
   api.saveToCollection(collectionId, saveRequestName.value || undefined)
@@ -113,6 +119,21 @@ function openSaveModal() {
           class="px-5 py-2 text-sm font-medium bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-neutral-900 rounded transition-colors shrink-0"
         >
           {{ api.isLoading.value ? 'Sending...' : 'Send' }}
+        </button>
+      </div>
+
+      <!-- Storage Warning -->
+      <div v-if="showStorageWarning" class="flex items-start gap-2 px-3 py-2 bg-amber-500/5 border-b border-amber-500/20">
+        <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <p class="text-xs text-amber-400/90 flex-1">
+          El historial y las colecciones se almacenan en <span class="font-mono text-amber-300">localStorage</span>. Recomendamos eliminar las keys <span class="font-mono text-amber-300">api-tester-history</span> y <span class="font-mono text-amber-300">api-tester-collections</span> desde la sección <span class="font-medium text-amber-300">Browser Storage</span> cuando ya no las necesites, para evitar exponer tokens u otros datos sensibles.
+        </p>
+        <button @click="dismissWarning" class="text-neutral-500 hover:text-neutral-300 shrink-0 mt-0.5" title="Dismiss">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
         </button>
       </div>
 

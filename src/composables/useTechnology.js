@@ -1,6 +1,6 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 
-const validTabs = ['dev', 'security', 'phone', 'api']
+const validTabs = ['dev', 'security', 'phone', 'api', 'storage']
 
 // Map hash names to internal tab names
 const hashToTab = {
@@ -14,7 +14,11 @@ const hashToTab = {
   'mobile': 'phone',
   'api': 'api',
   'postman': 'api',
-  'apitester': 'api'
+  'apitester': 'api',
+  'storage': 'storage',
+  'browser-storage': 'storage',
+  'localstorage': 'storage',
+  'indexeddb': 'storage'
 }
 
 // Map internal tab names to hash names
@@ -22,7 +26,8 @@ const tabToHash = {
   'dev': 'dev',
   'security': 'security',
   'phone': 'phone',
-  'api': 'api'
+  'api': 'api',
+  'storage': 'browser-storage'
 }
 
 function getTabFromHash() {
@@ -45,7 +50,8 @@ export function useTechnology() {
     'dev': '#06b6d4',
     'security': '#ef4444',
     'phone': '#10b981',
-    'api': '#f59e0b'
+    'api': '#f59e0b',
+    'storage': '#8b5cf6'
   }
 
   const setThemeColor = (color) => {

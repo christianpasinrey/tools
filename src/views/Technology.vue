@@ -7,6 +7,7 @@ import DevTools from './DevTools.vue'
 import CyberSecurity from './CyberSecurity.vue'
 import PhoneTester from './PhoneTester.vue'
 import ApiTester from './ApiTester.vue'
+import StorageEditor from '../components/cybersecurity/StorageEditor.vue'
 
 const tech = useTechnology()
 </script>
@@ -24,6 +25,7 @@ const tech = useTechnology()
       <CyberSecurity v-if="tech.activeTab.value === 'security'" />
       <PhoneTester v-if="tech.activeTab.value === 'phone'" />
       <ApiTester v-if="tech.activeTab.value === 'api'" />
+      <StorageEditor v-if="tech.activeTab.value === 'storage'" :theme-color="tech.themeColor.value" />
     </div>
   </div>
 </template>

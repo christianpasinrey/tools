@@ -26,6 +26,11 @@ const tabs = [
     id: 'api',
     name: 'API Tester',
     icon: 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
+  },
+  {
+    id: 'storage',
+    name: 'Browser Storage',
+    icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4'
   }
 ]
 </script>
