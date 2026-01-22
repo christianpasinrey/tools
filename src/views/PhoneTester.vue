@@ -275,7 +275,10 @@ const activeSection = ref('config')
               : 'bg-neutral-800/50 text-neutral-400 border border-transparent hover:border-neutral-700'"
           >
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 9.861A2.139 2.139 0 1012 14.139 2.139 2.139 0 0012 9.861zM6.008 16.255l-.472-.12C2.018 15.246 0 13.737 0 11.996s2.018-3.25 5.536-4.139l.472-.119.133.468a23.53 23.53 0 001.363 3.578l.101.213-.101.213a23.307 23.307 0 00-1.363 3.578l-.133.467zm11.984 0l-.133-.469a23.357 23.357 0 00-1.364-3.577l-.101-.213.101-.213a23.42 23.42 0 001.364-3.578l.133-.468.473.119c3.517.889 5.535 2.398 5.535 4.14s-2.018 3.25-5.535 4.139l-.473.12zM12 22.408c-1.476 0-3.869-.973-6.36-3.548l-.34-.349.34-.349a23.389 23.389 0 002.42-2.967l.136-.194.234-.02a23.507 23.507 0 003.787-.61l.472-.119.134.468c.987 3.484.687 5.983-.825 6.855a1.852 1.852 0 01-.998.283z"/>
+              <circle cx="12" cy="12" r="2.139"/>
+              <ellipse cx="12" cy="12" rx="11" ry="4.2" fill="none" stroke="currentColor" stroke-width="1"/>
+              <ellipse cx="12" cy="12" rx="11" ry="4.2" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(60 12 12)"/>
+              <ellipse cx="12" cy="12" rx="11" ry="4.2" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(120 12 12)"/>
             </svg>
             React
           </button>
