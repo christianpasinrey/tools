@@ -616,9 +616,58 @@ chore: maintenance tasks
 
 ---
 
-## 📄 License
+## � Open Source Libraries
+
+Este proyecto está construido con las siguientes librerías open source:
+
+### Frontend Framework
+- **[Vue.js](https://github.com/vuejs/core)** - Progressive JavaScript Framework
+- **[Vue Router](https://github.com/vuejs/router)** - Official router for Vue.js
+- **[@vueuse/core](https://github.com/vueuse/vueuse)** - Collection of essential Vue.js composition utilities
+
+### Build Tools & Styling
+- **[Vite](https://github.com/vitejs/vite)** - Next generation frontend tooling
+- **[Tailwind CSS](https://github.com/tailwindlabs/tailwindcss)** - Utility-first CSS framework
+- **[@tailwindcss/vite](https://github.com/tailwindlabs/tailwindcss)** - Vite plugin for Tailwind CSS
+
+### Code Editing
+- **[CodeMirror](https://github.com/codemirror/CodeMirror)** - Versatile text editor
+- **[@codemirror/autocomplete](https://github.com/codemirror/CodeMirror)** - Autocompletion support for CodeMirror
+- **[@codemirror/lang-html](https://github.com/codemirror/CodeMirror)** - HTML language support
+- **[@codemirror/lang-javascript](https://github.com/codemirror/CodeMirror)** - JavaScript language support
+- **[@codemirror/lang-css](https://github.com/codemirror/CodeMirror)** - CSS language support
+- **[@codemirror/theme-one-dark](https://github.com/codemirror/CodeMirror)** - One Dark theme
+
+### Media & Graphics
+- **[Three.js](https://github.com/mrdoob/three.js)** - JavaScript 3D library
+- **[WaveSurfer.js](https://github.com/katspaugh/wavesurfer.js)** - Interactive audio waveform player
+- **[PDF-lib](https://github.com/Hopding/pdf-lib)** - Create and modify PDF documents
+- **[pdfjs-dist](https://github.com/mozilla/pdf.js)** - Mozilla's PDF reader library
+
+### Data Processing
+- **[ExcelJS](https://github.com/exceljs/exceljs)** - Excel workbook/spreadsheet manipulation
+- **[Marked](https://github.com/markedjs/marked)** - Markdown parser and compiler
+- **[js-yaml](https://github.com/nodeca/js-yaml)** - JavaScript YAML parser
+- **[DOMPurify](https://github.com/cure53/DOMPurify)** - XSS sanitizer for HTML, MathML and SVG
+
+### Other
+- **[@tbisoftware/phone](https://github.com/tbisoftware/phone)** - Phone number validation and formatting
+
+---
+
+## �📄 License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Agradecimientos
+
+Agradecemos sinceramente a:
+
+- **[GitHub](https://github.com)** - Por proporcionar un excelente servicio de alojamiento de repositorios y herramientas colaborativas
+- La comunidad open source - Por mantener y contribuir a las librerías que hacen este proyecto posible
+- Todos los [contribuidores](https://github.com/christianpasinrey/tools/graphs/contributors) que han ayudado a mejorar este proyecto
 
 ---
 
