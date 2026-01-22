@@ -6,6 +6,7 @@ import TechnologyTabs from '../components/technology/TechnologyTabs.vue'
 import DevTools from './DevTools.vue'
 import CyberSecurity from './CyberSecurity.vue'
 import PhoneTester from './PhoneTester.vue'
+import ApiTester from './ApiTester.vue'
 
 const tech = useTechnology()
 </script>
@@ -22,6 +23,7 @@ const tech = useTechnology()
       <DevTools v-if="tech.activeTab.value === 'dev'" />
       <CyberSecurity v-if="tech.activeTab.value === 'security'" />
       <PhoneTester v-if="tech.activeTab.value === 'phone'" />
+      <ApiTester v-if="tech.activeTab.value === 'api'" />
     </div>
   </div>
 </template>
