@@ -3,42 +3,102 @@ import * as THREE from 'three'
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
 
 // Preset environments (using free HDRIs from Poly Haven)
+// showSky: true = muestra el HDRI como fondo/cielo
 export const ENVIRONMENT_PRESETS = {
   none: {
-    name: 'Ninguno',
+    name: 'Sin entorno',
     icon: '🌑',
     url: null,
-    background: 0x0a0a0a
+    background: 0x0a0a0a,
+    showSky: false
   },
   studio: {
     name: 'Estudio',
     icon: '📷',
+    description: 'Iluminación de estudio profesional',
     url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_08_1k.hdr',
-    background: null
+    showSky: false
+  },
+  // --- Cielos y exteriores ---
+  blueSky: {
+    name: 'Cielo Azul',
+    icon: '☀️',
+    description: 'Día despejado con cielo azul',
+    url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
+    showSky: true
   },
   sunset: {
     name: 'Atardecer',
     icon: '🌅',
+    description: 'Puesta de sol cálida',
     url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_43d_clear_puresky_1k.hdr',
-    background: null
+    showSky: true
+  },
+  cloudy: {
+    name: 'Nublado',
+    icon: '☁️',
+    description: 'Cielo con nubes dramáticas',
+    url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/kloofendal_overcast_puresky_1k.hdr',
+    showSky: true
   },
   night: {
     name: 'Noche',
     icon: '🌙',
+    description: 'Cielo nocturno estrellado',
     url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/moonless_golf_1k.hdr',
-    background: null
+    showSky: true
   },
+  // --- Naturaleza ---
   forest: {
     name: 'Bosque',
     icon: '🌲',
+    description: 'Claro en un bosque',
     url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/syferfontein_0d_clear_puresky_1k.hdr',
-    background: null
+    showSky: true
   },
+  beach: {
+    name: 'Playa',
+    icon: '🏖️',
+    description: 'Costa con mar y cielo',
+    url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/cape_hill_1k.hdr',
+    showSky: true
+  },
+  field: {
+    name: 'Campo',
+    icon: '🌾',
+    description: 'Pradera abierta',
+    url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/meadow_at_buzludzha_1k.hdr',
+    showSky: true
+  },
+  // --- Urbano ---
   city: {
     name: 'Ciudad',
     icon: '🏙️',
+    description: 'Plaza urbana',
     url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/potsdamer_platz_1k.hdr',
-    background: null
+    showSky: true
+  },
+  parking: {
+    name: 'Parking',
+    icon: '🅿️',
+    description: 'Aparcamiento exterior',
+    url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/evening_road_01_puresky_1k.hdr',
+    showSky: true
+  },
+  // --- Interiores ---
+  warehouse: {
+    name: 'Almacén',
+    icon: '🏭',
+    description: 'Interior industrial',
+    url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/empty_warehouse_01_1k.hdr',
+    showSky: false
+  },
+  hall: {
+    name: 'Salón',
+    icon: '🏛️',
+    description: 'Interior elegante',
+    url: 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/museum_of_ethnography_1k.hdr',
+    showSky: false
   }
 }
 
@@ -76,6 +136,7 @@ export function useThreeEnvironment(core) {
       // No environment - reset to default
       core.scene.value.environment = null
       core.scene.value.background = new THREE.Color(preset.background)
+      showBackground.value = false
       isLoading.value = false
       return true
     }
@@ -93,11 +154,12 @@ export function useThreeEnvironment(core) {
       texture.mapping = THREE.EquirectangularReflectionMapping
       currentEnvMap = texture
 
-      // Apply environment for reflections
+      // Apply environment for reflections/lighting
       core.scene.value.environment = texture
       core.scene.value.environmentIntensity = environmentIntensity.value
 
-      // Apply as background if enabled
+      // Use preset's showSky setting to determine if we show the sky/background
+      showBackground.value = preset.showSky ?? false
       if (showBackground.value) {
         core.scene.value.background = texture
       } else {
