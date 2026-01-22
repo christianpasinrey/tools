@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useMapEditor } from '../composables/useMapEditor'
 import 'leaflet/dist/leaflet.css'
 
@@ -118,12 +118,8 @@ function handleFileImport(e) {
 }
 
 const tools = [
-  { id: 'marker', name: 'Marker', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z' },
-  { id: 'polyline', name: 'Line', icon: 'M4 20h4L20 8 16 4 4 16v4zm14-12l-4-4' },
-  { id: 'polygon', name: 'Polygon', icon: 'M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z' },
-  { id: 'circle', name: 'Circle', icon: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z' },
-  { id: 'rectangle', name: 'Rectangle', icon: 'M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z' },
-  { id: 'measure', name: 'Measure', icon: 'M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6zM3.41 6h17.18M12 10v12' }
+  { id: 'marker', name: 'Place', icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z' },
+  { id: 'route', name: 'Route', icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-.553-.894L15 2m0 13V2m0 0L9 5' }
 ]
 </script>
 
@@ -217,22 +213,33 @@ const tools = [
         </button>
       </div>
 
-      <!-- Finish/Cancel Drawing -->
-      <div v-if="mapEditor.isDrawing.value && ['polygon', 'polyline'].includes(mapEditor.activeTool.value)"
+      <!-- Route Building Controls -->
+      <div v-if="mapEditor.isRoutingMode.value"
            class="bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 p-1.5 flex flex-col gap-1">
         <button
-          @click="mapEditor.finishDrawing()"
+          @click="mapEditor.finishRoute()"
           class="w-9 h-9 rounded-lg flex items-center justify-center text-green-400 hover:text-green-300 hover:bg-neutral-800 transition-all"
-          title="Finish"
+          title="Finish Route (Enter)"
+          :disabled="mapEditor.routeWaypoints.value.length < 2"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         </button>
         <button
-          @click="mapEditor.cancelDrawing()"
+          @click="mapEditor.removeLastWaypoint()"
+          class="w-9 h-9 rounded-lg flex items-center justify-center text-yellow-400 hover:text-yellow-300 hover:bg-neutral-800 transition-all"
+          title="Undo Last Point"
+          :disabled="mapEditor.routeWaypoints.value.length === 0"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+          </svg>
+        </button>
+        <button
+          @click="mapEditor.cancelRoute()"
           class="w-9 h-9 rounded-lg flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-neutral-800 transition-all"
-          title="Cancel"
+          title="Cancel Route (Esc)"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -240,7 +247,7 @@ const tools = [
         </button>
       </div>
 
-      <!-- Color Picker for Marker -->
+      <!-- Color Picker for Place -->
       <div v-if="mapEditor.activeTool.value === 'marker'"
            class="bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 p-2">
         <div class="grid grid-cols-4 gap-1">
@@ -255,34 +262,35 @@ const tools = [
         </div>
       </div>
 
-      <!-- Color Picker for Shapes -->
-      <div v-if="['polygon', 'polyline', 'circle', 'rectangle'].includes(mapEditor.activeTool.value)"
+      <!-- Color Picker for Route -->
+      <div v-if="mapEditor.activeTool.value === 'route'"
            class="bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 p-2">
         <div class="grid grid-cols-4 gap-1">
           <button
             v-for="color in mapEditor.MARKER_COLORS"
             :key="color"
-            @click="mapEditor.selectedShapeColor.value = color"
+            @click="mapEditor.selectedRouteColor.value = color"
             class="w-5 h-5 rounded-full border-2 transition-all"
-            :class="mapEditor.selectedShapeColor.value === color ? 'border-white scale-110' : 'border-transparent'"
+            :class="mapEditor.selectedRouteColor.value === color ? 'border-white scale-110' : 'border-transparent'"
             :style="{ backgroundColor: color }"
           />
         </div>
       </div>
 
-      <!-- Measure Results -->
-      <div v-if="mapEditor.activeTool.value === 'measure' && mapEditor.measurePoints.value.length > 0"
-           class="bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 p-3">
-        <div class="text-xs text-neutral-400 mb-1">Distance</div>
-        <div class="text-lg font-medium text-white">
-          {{ mapEditor.formatDistance(mapEditor.measureDistance.value) }}
+      <!-- Route Waypoints Preview -->
+      <div v-if="mapEditor.isRoutingMode.value && mapEditor.routeWaypoints.value.length > 0"
+           class="bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 p-3 max-w-48">
+        <div class="text-xs text-neutral-400 mb-2">Route waypoints</div>
+        <div class="space-y-1">
+          <div
+            v-for="(wp, idx) in mapEditor.routeWaypoints.value"
+            :key="idx"
+            class="flex items-center gap-2"
+          >
+            <div class="w-2 h-2 rounded-full" :style="{ backgroundColor: mapEditor.selectedRouteColor.value }"></div>
+            <span class="text-xs text-neutral-300 truncate">{{ wp.address }}</span>
+          </div>
         </div>
-        <button
-          @click="mapEditor.clearMeasurement()"
-          class="mt-2 text-xs text-red-400 hover:text-red-300"
-        >
-          Clear
-        </button>
       </div>
     </div>
 
@@ -335,23 +343,31 @@ const tools = [
         </div>
       </div>
 
-      <!-- Markers & Shapes List -->
+      <!-- Places & Routes List -->
       <div class="flex-1 overflow-y-auto">
-        <!-- Markers -->
+        <!-- Places -->
         <div v-if="mapEditor.markers.value.length > 0" class="p-3 border-b border-neutral-800">
-          <div class="text-xs text-neutral-400 mb-2">Markers ({{ mapEditor.markers.value.length }})</div>
-          <div class="space-y-1">
+          <div class="text-xs text-neutral-400 mb-2">Places ({{ mapEditor.markers.value.length }})</div>
+          <div class="space-y-1.5">
             <div
               v-for="marker in mapEditor.markers.value"
               :key="marker.id"
-              class="flex items-center gap-2 p-2 rounded-md bg-neutral-800/50 hover:bg-neutral-800 cursor-pointer group"
+              class="flex items-start gap-2 p-2 rounded-md bg-neutral-800/50 hover:bg-neutral-800 cursor-pointer group"
               @click="mapEditor.focusMarker(marker.id)"
             >
-              <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: marker.color }"></div>
-              <span class="flex-1 text-sm text-neutral-300 truncate">{{ marker.title }}</span>
+              <div class="w-3 h-3 rounded-full mt-1 shrink-0" :style="{ backgroundColor: marker.color }"></div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm text-neutral-300 truncate">{{ marker.title }}</div>
+                <div class="text-xs text-neutral-500 truncate mt-0.5" :title="marker.shortAddress">
+                  {{ marker.shortAddress }}
+                </div>
+                <div class="text-xs text-neutral-600 font-mono mt-0.5">
+                  {{ marker.lat.toFixed(5) }}, {{ marker.lng.toFixed(5) }}
+                </div>
+              </div>
               <button
                 @click.stop="mapEditor.removeMarker(marker.id)"
-                class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity"
+                class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity mt-1"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -361,41 +377,58 @@ const tools = [
           </div>
         </div>
 
-        <!-- Shapes -->
-        <div v-if="mapEditor.shapes.value.length > 0" class="p-3">
-          <div class="text-xs text-neutral-400 mb-2">Shapes ({{ mapEditor.shapes.value.length }})</div>
-          <div class="space-y-1">
+        <!-- Routes -->
+        <div v-if="mapEditor.routes.value.length > 0" class="p-3">
+          <div class="text-xs text-neutral-400 mb-2">Routes ({{ mapEditor.routes.value.length }})</div>
+          <div class="space-y-1.5">
             <div
-              v-for="shape in mapEditor.shapes.value"
-              :key="shape.id"
-              class="flex items-center gap-2 p-2 rounded-md bg-neutral-800/50 hover:bg-neutral-800 cursor-pointer group"
-              @click="mapEditor.focusShape(shape.id)"
+              v-for="route in mapEditor.routes.value"
+              :key="route.id"
+              class="p-2 rounded-md bg-neutral-800/50 hover:bg-neutral-800 cursor-pointer group"
+              @click="mapEditor.focusRoute(route.id)"
             >
-              <div class="w-3 h-3 rounded" :style="{ backgroundColor: shape.color }"></div>
-              <div class="flex-1 min-w-0">
-                <div class="text-sm text-neutral-300 capitalize">{{ shape.type }}</div>
-                <div class="text-xs text-neutral-500">
-                  <template v-if="shape.area">{{ mapEditor.formatArea(shape.area) }}</template>
-                  <template v-else-if="shape.length">{{ mapEditor.formatDistance(shape.length) }}</template>
-                  <template v-else-if="shape.radius">r: {{ mapEditor.formatDistance(shape.radius) }}</template>
+              <div class="flex items-start gap-2">
+                <div class="w-3 h-3 rounded mt-1 shrink-0" :style="{ backgroundColor: route.color }"></div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-neutral-300">Route</span>
+                    <span class="text-xs text-neutral-500">
+                      {{ mapEditor.formatDistance(route.distance) }} · {{ mapEditor.formatDuration(route.duration) }}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  @click.stop="mapEditor.removeRoute(route.id)"
+                  class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+              <!-- Route cities - vertical list -->
+              <div class="mt-2 ml-5 pl-2 border-l-2 border-neutral-700">
+                <div
+                  v-for="(city, idx) in route.cities"
+                  :key="idx"
+                  class="flex items-center gap-2 py-0.5"
+                >
+                  <div
+                    class="shrink-0 rounded-full"
+                    :class="idx === 0 || idx === route.cities.length - 1 ? 'w-2 h-2' : 'w-1.5 h-1.5'"
+                    :style="{ backgroundColor: idx === 0 || idx === route.cities.length - 1 ? route.color : '#525252' }"
+                  ></div>
+                  <span class="text-xs text-neutral-500">{{ city }}</span>
                 </div>
               </div>
-              <button
-                @click.stop="mapEditor.removeShape(shape.id)"
-                class="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-opacity"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
             </div>
           </div>
         </div>
 
         <!-- Empty State -->
-        <div v-if="mapEditor.markers.value.length === 0 && mapEditor.shapes.value.length === 0" class="p-6 text-center">
+        <div v-if="mapEditor.markers.value.length === 0 && mapEditor.routes.value.length === 0" class="p-6 text-center">
           <div class="text-neutral-500 text-sm">No elements yet</div>
-          <div class="text-neutral-600 text-xs mt-1">Use the tools to add markers and shapes</div>
+          <div class="text-neutral-600 text-xs mt-1">Use the tools to add places and routes</div>
         </div>
       </div>
 
@@ -404,7 +437,7 @@ const tools = [
         <button
           @click="mapEditor.downloadGeoJSON()"
           class="flex-1 px-3 py-2 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded-md transition-colors flex items-center justify-center gap-1"
-          :disabled="mapEditor.markers.value.length === 0 && mapEditor.shapes.value.length === 0"
+          :disabled="mapEditor.markers.value.length === 0 && mapEditor.routes.value.length === 0"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -451,16 +484,19 @@ const tools = [
       </button>
     </div>
 
-    <!-- Drawing Instructions -->
-    <div v-if="mapEditor.activeTool.value && !mapEditor.isDrawing.value"
+    <!-- Instructions -->
+    <div v-if="mapEditor.activeTool.value && !mapEditor.isRoutingMode.value"
          class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-4 py-2 z-10">
       <div class="text-xs text-neutral-400">
-        <template v-if="mapEditor.activeTool.value === 'marker'">Click to place a marker</template>
-        <template v-else-if="mapEditor.activeTool.value === 'polyline'">Click to add points, then click Finish</template>
-        <template v-else-if="mapEditor.activeTool.value === 'polygon'">Click to add points, then click Finish</template>
-        <template v-else-if="mapEditor.activeTool.value === 'circle'">Click center, then click to set radius</template>
-        <template v-else-if="mapEditor.activeTool.value === 'rectangle'">Click to start, click again to finish</template>
-        <template v-else-if="mapEditor.activeTool.value === 'measure'">Click to add measurement points</template>
+        <template v-if="mapEditor.activeTool.value === 'marker'">Click to add a place</template>
+        <template v-else-if="mapEditor.activeTool.value === 'route'">Click to add route waypoints</template>
+      </div>
+    </div>
+
+    <div v-if="mapEditor.isRoutingMode.value"
+         class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-4 py-2 z-10">
+      <div class="text-xs text-neutral-400">
+        Click to add waypoints · <span class="text-neutral-500">Enter</span> to finish · <span class="text-neutral-500">Esc</span> to cancel
       </div>
     </div>
   </div>
@@ -540,6 +576,60 @@ const tools = [
 
 .popup-description:focus {
   border-color: #2563eb;
+}
+
+.popup-address,
+.popup-coords {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 6px 0;
+}
+
+.popup-icon {
+  width: 14px;
+  height: 14px;
+  color: #737373;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.popup-address-text {
+  font-size: 12px;
+  color: #a3a3a3;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.popup-coords-text {
+  font-size: 11px;
+  color: #737373;
+  font-family: ui-monospace, monospace;
+  cursor: pointer;
+  padding: 2px 6px;
+  background: rgba(38, 38, 38, 0.6);
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.popup-coords-text:hover {
+  background: rgba(38, 38, 38, 0.9);
+  color: #a3a3a3;
+}
+
+/* Route tooltip */
+.route-tooltip {
+  background: rgba(23, 23, 23, 0.95) !important;
+  border: 1px solid rgba(64, 64, 64, 0.5) !important;
+  border-radius: 6px !important;
+  color: #e5e5e5 !important;
+  font-size: 12px !important;
+  padding: 6px 10px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+.route-tooltip::before {
+  border-top-color: rgba(23, 23, 23, 0.95) !important;
 }
 
 /* Leaflet controls dark theme */
