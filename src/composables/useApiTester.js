@@ -249,7 +249,17 @@ export function useApiTester() {
       status,
       statusText,
       timestamp: new Date().toISOString(),
-      request: getCurrentRequest()
+      request: getCurrentRequest(),
+      response: response.value ? {
+        status: response.value.status,
+        statusText: response.value.statusText,
+        headers: response.value.headers,
+        body: response.value.body,
+        isJson: response.value.isJson,
+        contentType: response.value.contentType
+      } : null,
+      time: responseTime.value,
+      size: responseSize.value
     }
 
     history.value.unshift(entry)
@@ -271,6 +281,18 @@ export function useApiTester() {
     bodyContent.value = req.bodyContent || ''
     authType.value = req.authType || 'none'
     authConfig.value = req.authConfig || authConfig.value
+
+    // Restore response
+    if (entry.response) {
+      response.value = entry.response
+      responseTime.value = entry.time || 0
+      responseSize.value = entry.size || 0
+      responseError.value = null
+    } else {
+      response.value = null
+      responseTime.value = 0
+      responseSize.value = 0
+    }
   }
 
   function clearHistory() {
