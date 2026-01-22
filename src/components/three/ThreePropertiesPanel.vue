@@ -61,7 +61,7 @@ const updatePosition = (axis, value) => {
     // Sync light if needed
     if (light.value) {
       light.value.position[axis] = numValue
-      if (typeof props.selectedObject.userData.helper?.update === 'function') props.selectedObject.userData.helper.update()
+      updateHelper()
     }
   }
 }
@@ -82,21 +82,43 @@ const updateScale = (axis, value) => {
   }
 }
 
+// Helper function to update light helper visuals
+const updateHelper = () => {
+  const helper = props.selectedObject?.userData?.helper
+  if (helper) {
+    // SpotLightHelper and other helpers need to be updated when light properties change
+    if (helper.update) {
+      helper.update()
+    }
+    // Force matrix update
+    if (helper.matrixWorldNeedsUpdate !== undefined) {
+      helper.matrixWorldNeedsUpdate = true
+    }
+  }
+}
+
 const updateLightIntensity = (value) => {
   if (!light.value) return
   light.value.intensity = parseFloat(value) || 0
+  updateHelper()
 }
 
 const updateLightDistance = (value) => {
   if (!light.value) return
   light.value.distance = parseFloat(value) || 0
-  if (typeof props.selectedObject?.userData?.helper?.update === 'function') props.selectedObject.userData.helper.update()
+  updateHelper()
 }
 
 const updateLightAngle = (value) => {
   if (!light.value || lightType.value !== 'spotlight') return
   light.value.angle = (parseFloat(value) || 30) * (Math.PI / 180)
-  if (typeof props.selectedObject?.userData?.helper?.update === 'function') props.selectedObject.userData.helper.update()
+  updateHelper()
+}
+
+const updateLightPenumbra = (value) => {
+  if (!light.value || lightType.value !== 'spotlight') return
+  light.value.penumbra = parseFloat(value) || 0
+  updateHelper()
 }
 
 const updateLightColor = (value) => {
@@ -105,7 +127,15 @@ const updateLightColor = (value) => {
   if (props.selectedObject?.material) {
     props.selectedObject.material.color.set(value)
   }
-  if (typeof props.selectedObject?.userData?.helper?.update === 'function') props.selectedObject.userData.helper.update()
+  // Update helper color too
+  const helper = props.selectedObject?.userData?.helper
+  if (helper?.material) {
+    helper.material.color.set(value)
+  }
+  if (helper?.cone?.material) {
+    helper.cone.material.color.set(value)
+  }
+  updateHelper()
 }
 
 const formatNum = (num) => (num ?? 0).toFixed(2)
