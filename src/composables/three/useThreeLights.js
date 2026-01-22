@@ -193,7 +193,7 @@ export const SCENE_PRESETS = {
     name: 'Coffee Cart',
     icon: '☕',
     description: 'Carrito de cafe con texturas',
-    url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CoffeeCart/glTF/CoffeeCart.gltf',
+    url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CoffeeCart/glTF-Binary/CoffeeCart.glb',
     scale: 3,
     position: [0, 0, 0]
   },

@@ -19,7 +19,7 @@ const media = useMultimedia()
       @change="(tab) => media.activeTab.value = tab"
     />
 
-    <div class="flex-1 overflow-auto">
+    <div class="flex-1 overflow-hidden">
       <ImageEditor v-if="media.activeTab.value === 'image'" />
       <AudioEditor v-if="media.activeTab.value === 'audio'" />
       <ThreeDPlayground v-if="media.activeTab.value === '3d'" />
