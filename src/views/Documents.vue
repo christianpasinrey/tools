@@ -11,7 +11,7 @@ const docs = useDocuments()
 </script>
 
 <template>
-  <div class="h-[calc(100vh-4rem)] flex flex-col bg-neutral-950 text-neutral-300">
+  <div class="h-screen flex flex-col bg-neutral-950 text-neutral-300">
     <DocumentsTabs
       :active-tab="docs.activeTab.value"
       :theme-color="docs.themeColor.value"

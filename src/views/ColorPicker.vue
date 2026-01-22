@@ -202,7 +202,7 @@ const clearExtractedImage = () => {
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-4rem)] bg-neutral-950 p-6">
+  <div class="min-h-screen bg-neutral-950 p-6">
     <div class="max-w-6xl mx-auto">
       <!-- Header -->
       <div class="mb-8">

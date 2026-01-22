@@ -12,7 +12,7 @@ const media = useMultimedia()
 </script>
 
 <template>
-  <div class="h-[calc(100vh-4rem)] flex flex-col bg-neutral-950 text-neutral-300">
+  <div class="h-screen flex flex-col bg-neutral-950 text-neutral-300">
     <MultimediaTabs
       :active-tab="media.activeTab.value"
       :theme-color="media.themeColor.value"
