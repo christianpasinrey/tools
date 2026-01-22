@@ -333,12 +333,6 @@ chore: tareas de mantenimiento
 
 Este proyecto está bajo la licencia **MIT**. Ver el archivo [LICENSE](LICENSE) para más detalles.
 
-```
-MIT License
-
-2026 Christian Pasin Rey
-```
-
 ---
 
 # English
