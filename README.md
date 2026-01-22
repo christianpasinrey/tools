@@ -329,24 +329,6 @@ test: añadir o corregir tests
 chore: tareas de mantenimiento
 ```
 
----
-
-## 🗺️ Roadmap
-
-- [x] Sistema de navegación Dock estilo macOS
-- [x] Agrupación por categorías (Multimedia, Documents, Technology, Tools)
-- [x] CheatSheets con +50 guías organizadas por categorías
-- [x] Submenús interactivos con navegación anidada
-- [x] UI Liquid Glass
-- [ ] PWA Support (instalable)
-- [ ] Modo offline con Service Worker
-- [ ] Más idiomas en CheatSheets
-- [ ] Editor de Video básico
-- [ ] OCR para PDFs
-- [ ] Temas personalizables
-
----
-
 ## 📄 Licencia
 
 Este proyecto está bajo la licencia **MIT**. Ver el archivo [LICENSE](LICENSE) para más detalles.
@@ -354,13 +336,7 @@ Este proyecto está bajo la licencia **MIT**. Ver el archivo [LICENSE](LICENSE) 
 ```
 MIT License
 
-Copyright (c) 2024 Christian Pasin Rey
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software...
+2026 Christian Pasin Rey
 ```
 
 ---
@@ -643,22 +619,6 @@ perf: performance improvements
 test: add or fix tests
 chore: maintenance tasks
 ```
-
----
-
-## 🗺️ Roadmap
-
-- [x] macOS-style Dock navigation system
-- [x] Category grouping (Multimedia, Documents, Technology, Tools)
-- [x] CheatSheets with +50 guides organized by category
-- [x] Interactive submenus with nested navigation
-- [x] Liquid Glass UI
-- [ ] PWA Support (installable)
-- [ ] Offline mode with Service Worker
-- [ ] More languages in CheatSheets
-- [ ] Basic Video Editor
-- [ ] OCR for PDFs
-- [ ] Customizable themes
 
 ---
 
