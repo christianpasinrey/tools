@@ -61,7 +61,7 @@ const updatePosition = (axis, value) => {
     // Sync light if needed
     if (light.value) {
       light.value.position[axis] = numValue
-      props.selectedObject.userData.helper?.update()
+      if (typeof props.selectedObject.userData.helper?.update === 'function') props.selectedObject.userData.helper.update()
     }
   }
 }
@@ -90,13 +90,13 @@ const updateLightIntensity = (value) => {
 const updateLightDistance = (value) => {
   if (!light.value) return
   light.value.distance = parseFloat(value) || 0
-  props.selectedObject?.userData?.helper?.update()
+  if (typeof props.selectedObject?.userData?.helper?.update === 'function') props.selectedObject.userData.helper.update()
 }
 
 const updateLightAngle = (value) => {
   if (!light.value || lightType.value !== 'spotlight') return
   light.value.angle = (parseFloat(value) || 30) * (Math.PI / 180)
-  props.selectedObject?.userData?.helper?.update()
+  if (typeof props.selectedObject?.userData?.helper?.update === 'function') props.selectedObject.userData.helper.update()
 }
 
 const updateLightColor = (value) => {
@@ -105,7 +105,7 @@ const updateLightColor = (value) => {
   if (props.selectedObject?.material) {
     props.selectedObject.material.color.set(value)
   }
-  props.selectedObject?.userData?.helper?.update()
+  if (typeof props.selectedObject?.userData?.helper?.update === 'function') props.selectedObject.userData.helper.update()
 }
 
 const formatNum = (num) => (num ?? 0).toFixed(2)
