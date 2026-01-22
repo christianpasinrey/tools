@@ -87,18 +87,21 @@ export function useThreeObjects(core) {
 
         syncLightPosition(selectedObject.value)
       } else {
-        // Move camera (pan) when no object selected
-        const cameraMoveSpeed = moveSpeed * 2
+        // Move camera (pan/strafe) when no object selected - FPS style
+        const cameraMoveSpeed = 0.3
         const movement = new THREE.Vector3()
 
+        // W/S: forward/backward in camera direction (horizontal plane)
         if (keys.w) movement.addScaledVector(cameraDir, cameraMoveSpeed)
         if (keys.s) movement.addScaledVector(cameraDir, -cameraMoveSpeed)
-        if (keys.d) movement.addScaledVector(right, cameraMoveSpeed)
+        // A/D: strafe left/right
         if (keys.a) movement.addScaledVector(right, -cameraMoveSpeed)
-        if (keys.e) movement.y += cameraMoveSpeed
+        if (keys.d) movement.addScaledVector(right, cameraMoveSpeed)
+        // Q/E: up/down
         if (keys.q) movement.y -= cameraMoveSpeed
+        if (keys.e) movement.y += cameraMoveSpeed
 
-        // Move both camera and orbit controls target
+        // Move both camera and orbit controls target together (pan, not rotate)
         core.camera.value.position.add(movement)
         if (core.orbitControls.value) {
           core.orbitControls.value.target.add(movement)
