@@ -1,331 +1,685 @@
-# Web Tools
+<div align="center">
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Vue-3.5-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue 3">
-  <img src="https://img.shields.io/badge/Vite-7.2-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind">
+# 🛠️ Web Tools
+
+<p>
+  <img src="https://img.shields.io/badge/Vue-3.5-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" alt="Vue 3.5">
+  <img src="https://img.shields.io/badge/Vite-7.2-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 7.2">
+  <img src="https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind 4.1">
   <img src="https://img.shields.io/badge/Three.js-0.182-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js">
-  <img src="https://img.shields.io/badge/CodeMirror-6-D30707?style=for-the-badge&logoColor=white" alt="CodeMirror">
 </p>
 
-<p align="center">
-  <strong>Herramientas profesionales de edici&oacute;n que funcionan 100% en el navegador.</strong><br>
-  Sin subir archivos, sin registro, sin l&iacute;mites.
+<p>
+  <img src="https://img.shields.io/github/license/christianpasinrey/tools?style=flat-square&color=22c55e" alt="License">
+  <img src="https://img.shields.io/github/stars/christianpasinrey/tools?style=flat-square&color=22c55e" alt="Stars">
+  <img src="https://img.shields.io/github/forks/christianpasinrey/tools?style=flat-square&color=22c55e" alt="Forks">
+  <img src="https://img.shields.io/github/issues/christianpasinrey/tools?style=flat-square&color=22c55e" alt="Issues">
+  <img src="https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square" alt="PRs Welcome">
 </p>
+
+**Suite de herramientas profesionales que funcionan 100% en el navegador.**<br>
+Sin servidores • Sin registro • Sin límites • Privacidad total
+
+<p>
+  <a href="#-inicio-rápido"><strong>Inicio Rápido</strong></a> •
+  <a href="#-herramientas"><strong>Herramientas</strong></a> •
+  <a href="#-contribuir"><strong>Contribuir</strong></a> •
+  <a href="#english"><strong>English</strong></a>
+</p>
+
+</div>
 
 ---
 
-## Idioma / Language
+## 🌐 Idioma / Language
 
-- [Espa&ntilde;ol](#español)
-- [English](#english)
+<table>
+<tr>
+<td align="center" width="50%">
+
+### 🇪🇸 [Español](#español)
+
+</td>
+<td align="center" width="50%">
+
+### 🇬🇧 [English](#english)
+
+</td>
+</tr>
+</table>
 
 ---
 
-# Espa&ntilde;ol
+# Español
 
-## Descripci&oacute;n
+## 📖 Descripción
 
-**Web Tools** es una suite de herramientas de edici&oacute;n profesionales que se ejecutan completamente en el navegador del cliente. No se env&iacute;an datos a ning&uacute;n servidor, garantizando total privacidad.
+**Web Tools** es una colección de herramientas de edición y productividad que se ejecutan completamente en tu navegador. Ningún dato sale de tu dispositivo.
 
-### Herramientas disponibles
+<table>
+<tr>
+<td>🔒</td>
+<td><strong>100% Cliente</strong></td>
+<td>Todo el procesamiento ocurre en tu navegador</td>
+</tr>
+<tr>
+<td>🚀</td>
+<td><strong>Sin Instalación</strong></td>
+<td>Accede desde cualquier dispositivo con navegador</td>
+</tr>
+<tr>
+<td>💾</td>
+<td><strong>Sin Registro</strong></td>
+<td>No necesitas crear cuenta ni iniciar sesión</td>
+</tr>
+<tr>
+<td>🌐</td>
+<td><strong>Open Source</strong></td>
+<td>Código abierto, transparente y auditable</td>
+</tr>
+<tr>
+<td>🎨</td>
+<td><strong>UI Moderna</strong></td>
+<td>Interfaz Liquid Glass inspirada en macOS</td>
+</tr>
+</table>
 
-| Herramienta | Descripci&oacute;n | Tecnolog&iacute;a principal |
-|-------------|-------------|---------------------|
-| **Audio Editor** | Corta, une y aplica efectos a archivos de audio con visualizaci&oacute;n de ondas en tiempo real | WaveSurfer.js |
-| **Image Editor** | Edita im&aacute;genes con filtros, recortes, ajustes de color y herramientas de dibujo | Canvas API |
-| **PDF Editor** | Combina, divide, rota y reorganiza documentos PDF | pdf-lib, PDF.js |
-| **3D Playground** | Experimenta con gr&aacute;ficos 3D, shaders y visualizaciones interactivas | Three.js |
-| **Dev Tools** | Formatea JSON/YAML, playground HTML/CSS/JS con preview en vivo | CodeMirror 6, js-yaml |
-| **SVG Editor** | Crea y edita gr&aacute;ficos vectoriales con herramientas de dibujo profesionales | SVG API |
-| **Unit Converter** | Convierte unidades de longitud, peso, temperatura, moneda y m&aacute;s | Frankfurter API |
-| **Color Picker** | Rueda de colores con armon&iacute;as crom&aacute;ticas y exportaci&oacute;n en m&uacute;ltiples formatos | Canvas API |
-| **Phone Tester** | Prueba tu diseño responsive en diferentes dispositivos m&oacute;viles con simulaci&oacute;n en tiempo real | @tbisoftware/phone |
+---
 
-## Requisitos previos
+## 🧰 Herramientas
 
-- **Node.js** >= 18.0.0
-- **npm** >= 9.0.0 (o **pnpm** / **yarn**)
+### 📸 Multimedia
 
-## Instalaci&oacute;n
+| Herramienta | Descripción | Tecnología |
+|:------------|:------------|:-----------|
+| **🖼️ Image Editor** | Filtros, recortes, ajustes de color, rotación, volteo y herramientas de dibujo | Canvas API |
+| **🎵 Audio Editor** | Corta, une y aplica efectos. Visualización de ondas en tiempo real | WaveSurfer.js |
+| **🎮 3D Playground** | Escenas 3D interactivas, shaders personalizados, controles orbitales | Three.js |
+| **✏️ SVG Editor** | Crea y edita gráficos vectoriales con herramientas profesionales | SVG API |
+
+### 📄 Documentos
+
+| Herramienta | Descripción | Tecnología |
+|:------------|:------------|:-----------|
+| **📕 PDF Editor** | Combina, divide, rota, reordena y anota documentos PDF | pdf-lib, PDF.js |
+| **📊 Spreadsheet Editor** | Hojas de cálculo con fórmulas, estilos y exportación a Excel | ExcelJS |
+| **📝 Markdown Editor** | Editor con preview en vivo, syntax highlighting y exportación | Marked, DOMPurify |
+
+### 💻 Technology
+
+| Herramienta | Descripción | Tecnología |
+|:------------|:------------|:-----------|
+| **🔧 Dev Tools** | Formatea JSON/YAML, playground HTML/CSS/JS con preview en vivo | CodeMirror 6, js-yaml |
+| **📱 Phone Tester** | Prueba llamadas SIP WebRTC, genera código para Vue y React | @tbisoftware/phone |
+| **🔐 CyberSecurity** | JWT Debugger, Base64 Encoder/Decoder, Hash Generator | Web Crypto API |
+
+### 🛠️ Tools
+
+| Herramienta | Descripción | Tecnología |
+|:------------|:------------|:-----------|
+| **📏 Unit Converter** | Convierte longitud, peso, temperatura, tiempo y monedas en tiempo real | Frankfurter API |
+| **🎨 Color Picker** | Rueda de colores, armonías cromáticas, gradientes, múltiples formatos | Canvas API |
+
+### 📚 Reference
+
+| Herramienta | Descripción |
+|:------------|:------------|
+| **📖 CheatSheets** | +50 guías rápidas: macOS, Windows, Linux, Bash, Git, Python, TypeScript, Docker, Kubernetes, Laravel, Vue, React, Tailwind, Photoshop, y más |
+
+---
+
+## 🚀 Inicio Rápido
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/web-tools.git
-cd web-tools
+git clone https://github.com/christianpasinrey/tools.git
+
+# Entrar al directorio
+cd tools
 
 # Instalar dependencias
 npm install
-```
 
-## Scripts disponibles
-
-| Comando | Descripci&oacute;n |
-|---------|-------------|
-| `npm run dev` | Inicia el servidor de desarrollo en `http://localhost:5173` |
-| `npm run build` | Genera la build de producci&oacute;n en `/dist` |
-| `npm run preview` | Previsualiza la build de producci&oacute;n localmente |
-
-## Desarrollo local
-
-```bash
 # Iniciar servidor de desarrollo
 npm run dev
-
-# El servidor estar&aacute; disponible en:
-# http://localhost:5173
 ```
 
-## Build de producci&oacute;n
+> [!TIP]
+> El servidor estará disponible en `http://localhost:5173`
 
-```bash
-# Generar build optimizada
-npm run build
+### Scripts Disponibles
 
-# Los archivos se generan en /dist
-# Para probar la build localmente:
-npm run preview
+| Comando | Descripción |
+|:--------|:------------|
+| `npm run dev` | Servidor de desarrollo con HMR |
+| `npm run build` | Build de producción en `/dist` |
+| `npm run preview` | Preview de la build localmente |
+
+---
+
+## 🏗️ Stack Tecnológico
+
+<details>
+<summary><strong>📦 Ver todas las dependencias</strong></summary>
+
+### Frontend Framework
+| Paquete | Versión | Descripción |
+|:--------|:--------|:------------|
+| [Vue](https://vuejs.org/) | 3.5.24 | Framework progresivo para UI |
+| [Vue Router](https://router.vuejs.org/) | 4.6.4 | Enrutamiento oficial para Vue |
+| [VueUse](https://vueuse.org/) | 14.1.0 | Colección de utilidades para Composition API |
+
+### Build & Styling
+| Paquete | Versión | Descripción |
+|:--------|:--------|:------------|
+| [Vite](https://vitejs.dev/) | 7.2.4 | Build tool ultrarrápido |
+| [Tailwind CSS](https://tailwindcss.com/) | 4.1.18 | Framework CSS utility-first |
+
+### Editores & Media
+| Paquete | Versión | Descripción |
+|:--------|:--------|:------------|
+| [CodeMirror](https://codemirror.net/) | 6.x | Editor de código extensible |
+| [WaveSurfer.js](https://wavesurfer-js.org/) | 7.12.1 | Visualización de audio |
+| [Three.js](https://threejs.org/) | 0.182.0 | Gráficos 3D con WebGL |
+
+### Documentos
+| Paquete | Versión | Descripción |
+|:--------|:--------|:------------|
+| [pdf-lib](https://pdf-lib.js.org/) | 1.17.1 | Crear y modificar PDFs |
+| [PDF.js](https://mozilla.github.io/pdf.js/) | 5.4.530 | Renderizar PDFs |
+| [ExcelJS](https://github.com/exceljs/exceljs) | 4.4.0 | Leer y escribir Excel |
+| [Marked](https://marked.js.org/) | 17.0.1 | Parser de Markdown |
+| [DOMPurify](https://github.com/cure53/DOMPurify) | 3.3.1 | Sanitización de HTML |
+
+### Utilidades
+| Paquete | Versión | Descripción |
+|:--------|:--------|:------------|
+| [js-yaml](https://github.com/nodeca/js-yaml) | 4.1.1 | Parser YAML |
+| [@tbisoftware/phone](https://github.com/Tu-buen-camino/phone) | 2.0.6 | Componente teléfono SIP |
+
+</details>
+
+---
+
+## 📁 Estructura del Proyecto
+
 ```
-
-## Estructura del proyecto
-
-```
-web-tools/
-├── public/
-│   └── .htaccess              # Configuraci&oacute;n Apache para SPA
-├── src/
-│   ├── assets/                # Recursos est&aacute;ticos
-│   ├── components/            # Componentes Vue reutilizables
-│   │   ├── audio/             # Componentes del editor de audio
-│   │   ├── image/             # Componentes del editor de im&aacute;genes
-│   │   ├── pdf/               # Componentes del editor de PDF
-│   │   └── three/             # Componentes del playground 3D
-│   ├── composables/           # Composables Vue (l&oacute;gica reutilizable)
-│   │   └── three/             # Composables espec&iacute;ficos de Three.js
-│   ├── router/                # Configuraci&oacute;n de Vue Router
-│   ├── views/                 # Vistas/p&aacute;ginas principales
-│   │   ├── Home.vue
-│   │   ├── AudioEditor.vue
-│   │   ├── ImageEditor.vue
-│   │   ├── PdfEditor.vue
-│   │   └── 3DPlayground.vue
-│   ├── App.vue                # Componente ra&iacute;z
-│   ├── main.js                # Punto de entrada
-│   └── style.css              # Estilos globales
+tools/
+├── 📂 public/
+│   └── .htaccess                 # Config Apache para SPA
+├── 📂 src/
+│   ├── 📂 components/
+│   │   ├── 📂 audio/             # Editor de audio
+│   │   ├── 📂 image/             # Editor de imagen
+│   │   ├── 📂 pdf/               # Editor de PDF
+│   │   ├── 📂 three/             # Playground 3D
+│   │   ├── Dock.vue              # Navegación principal
+│   │   ├── DockButton.vue        # Botones del dock
+│   │   ├── DockSubmenu.vue       # Submenús interactivos
+│   │   └── BentoGrid.vue         # Grid estilo bento
+│   ├── 📂 composables/
+│   │   ├── useCheatsheets.js     # Lógica de cheatsheets
+│   │   ├── useMultimedia.js      # Navegación multimedia
+│   │   ├── useTechnology.js      # Navegación technology
+│   │   └── useTools.js           # Navegación tools
+│   ├── 📂 data/
+│   │   └── 📂 cheatsheets/       # +50 archivos JSON
+│   ├── 📂 views/                 # Páginas principales
+│   ├── 📂 router/                # Configuración rutas
+│   ├── App.vue
+│   ├── main.js
+│   └── style.css
 ├── index.html
 ├── package.json
 ├── vite.config.js
 └── README.md
 ```
 
-## Stack tecnol&oacute;gico
+---
 
-### Frontend
-- **Vue 3** (Composition API) - Framework principal
-- **Vue Router 4** - Enrutamiento SPA
-- **Tailwind CSS 4** - Framework de estilos
+## 🚢 Deployment
 
-### Build Tools
-- **Vite 7** - Bundler y servidor de desarrollo
+<details>
+<summary><strong>Apache (con .htaccess)</strong></summary>
 
-### Librer&iacute;as espec&iacute;ficas
-- **Three.js** - Gr&aacute;ficos 3D y WebGL
-- **WaveSurfer.js** - Visualizaci&oacute;n y manipulaci&oacute;n de audio
-- **pdf-lib** - Manipulaci&oacute;n de PDFs
-- **PDF.js** - Renderizado de PDFs
-- **CodeMirror 6** - Editor de c&oacute;digo con syntax highlighting
-- **js-yaml** - Parser y serializador YAML
-- **@tbisoftware/phone** - Componente de entrada de tel&eacute;fono con validaci&oacute;n internacional
-
-## Despliegue
-
-### Apache (con .htaccess)
-
-El proyecto incluye un archivo `.htaccess` en `/public` que se copia autom&aacute;ticamente a `/dist` durante el build. Este archivo configura el rewrite para que Vue Router funcione correctamente con rutas en modo history.
+El proyecto incluye `.htaccess` en `/public` que se copia a `/dist` durante el build.
 
 ```bash
-# Build
 npm run build
-
 # Subir contenido de /dist al servidor
 ```
 
-### Nginx
+</details>
+
+<details>
+<summary><strong>Nginx</strong></summary>
 
 ```nginx
-location / {
-    try_files $uri $uri/ /index.html;
+server {
+    listen 80;
+    server_name tu-dominio.com;
+    root /var/www/tools/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
 }
 ```
 
-### Vercel / Netlify
+</details>
 
-Crear archivo `vercel.json` o `netlify.toml`:
+<details>
+<summary><strong>Vercel / Netlify</strong></summary>
 
+**vercel.json:**
 ```json
 {
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
 ```
 
-## Licencia
+**netlify.toml:**
+```toml
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
 
-MIT
+</details>
+
+---
+
+## 🤝 Contribuir
+
+> [!NOTE]
+> ¡Las contribuciones son bienvenidas! Este proyecto crece gracias a la comunidad.
+
+### Cómo Contribuir
+
+1. **Fork** el repositorio
+2. **Crea** una rama para tu feature (`git checkout -b feature/nueva-herramienta`)
+3. **Commit** tus cambios (`git commit -m 'feat: añadir nueva herramienta'`)
+4. **Push** a la rama (`git push origin feature/nueva-herramienta`)
+5. **Abre** un Pull Request
+
+### Tipos de Contribución
+
+| Tipo | Descripción |
+|:-----|:------------|
+| 🐛 **Bug Fix** | Corrige errores existentes |
+| ✨ **Feature** | Añade nueva funcionalidad |
+| 📝 **Docs** | Mejora la documentación |
+| 🌐 **i18n** | Traducciones y localización |
+| 🎨 **UI/UX** | Mejoras de interfaz |
+| ⚡ **Performance** | Optimizaciones de rendimiento |
+| 🧪 **Tests** | Añade o mejora tests |
+
+### Convención de Commits
+
+```
+feat: nueva funcionalidad
+fix: corrección de bug
+docs: cambios en documentación
+style: formato, sin cambios de código
+refactor: refactorización de código
+perf: mejoras de rendimiento
+test: añadir o corregir tests
+chore: tareas de mantenimiento
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [x] Sistema de navegación Dock estilo macOS
+- [x] Agrupación por categorías (Multimedia, Documents, Technology, Tools)
+- [x] CheatSheets con +50 guías organizadas por categorías
+- [x] Submenús interactivos con navegación anidada
+- [x] UI Liquid Glass
+- [ ] PWA Support (instalable)
+- [ ] Modo offline con Service Worker
+- [ ] Más idiomas en CheatSheets
+- [ ] Editor de Video básico
+- [ ] OCR para PDFs
+- [ ] Temas personalizables
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia **MIT**. Ver el archivo [LICENSE](LICENSE) para más detalles.
+
+```
+MIT License
+
+Copyright (c) 2024 Christian Pasin Rey
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software...
+```
 
 ---
 
 # English
 
-## Description
+## 📖 Description
 
-**Web Tools** is a suite of professional editing tools that run entirely in the client's browser. No data is sent to any server, ensuring complete privacy.
+**Web Tools** is a collection of editing and productivity tools that run entirely in your browser. No data ever leaves your device.
 
-### Available tools
+<table>
+<tr>
+<td>🔒</td>
+<td><strong>100% Client-Side</strong></td>
+<td>All processing happens in your browser</td>
+</tr>
+<tr>
+<td>🚀</td>
+<td><strong>No Installation</strong></td>
+<td>Access from any device with a browser</td>
+</tr>
+<tr>
+<td>💾</td>
+<td><strong>No Registration</strong></td>
+<td>No account or login required</td>
+</tr>
+<tr>
+<td>🌐</td>
+<td><strong>Open Source</strong></td>
+<td>Open, transparent and auditable code</td>
+</tr>
+<tr>
+<td>🎨</td>
+<td><strong>Modern UI</strong></td>
+<td>Liquid Glass interface inspired by macOS</td>
+</tr>
+</table>
 
-| Tool | Description | Main technology |
-|------|-------------|-----------------|
-| **Audio Editor** | Cut, merge and apply effects to audio files with real-time waveform visualization | WaveSurfer.js |
-| **Image Editor** | Edit images with filters, cropping, color adjustments and drawing tools | Canvas API |
-| **PDF Editor** | Merge, split, rotate and reorganize PDF documents | pdf-lib, PDF.js |
-| **3D Playground** | Experiment with 3D graphics, shaders and interactive visualizations | Three.js |
-| **Dev Tools** | Format JSON/YAML, HTML/CSS/JS playground with live preview | CodeMirror 6, js-yaml |
-| **SVG Editor** | Create and edit vector graphics with professional drawing tools | SVG API |
-| **Unit Converter** | Convert units of length, weight, temperature, currency and more | Frankfurter API |
-| **Color Picker** | Color wheel with chromatic harmonies and multi-format export | Canvas API |
-| **Phone Tester** | Test your responsive design on different mobile devices with real-time simulation | @tbisoftware/phone |
+---
 
-## Prerequisites
+## 🧰 Tools
 
-- **Node.js** >= 18.0.0
-- **npm** >= 9.0.0 (or **pnpm** / **yarn**)
+### 📸 Multimedia
 
-## Installation
+| Tool | Description | Technology |
+|:-----|:------------|:-----------|
+| **🖼️ Image Editor** | Filters, cropping, color adjustments, rotation, flip and drawing tools | Canvas API |
+| **🎵 Audio Editor** | Cut, merge and apply effects. Real-time waveform visualization | WaveSurfer.js |
+| **🎮 3D Playground** | Interactive 3D scenes, custom shaders, orbital controls | Three.js |
+| **✏️ SVG Editor** | Create and edit vector graphics with professional tools | SVG API |
+
+### 📄 Documents
+
+| Tool | Description | Technology |
+|:-----|:------------|:-----------|
+| **📕 PDF Editor** | Merge, split, rotate, reorder and annotate PDF documents | pdf-lib, PDF.js |
+| **📊 Spreadsheet Editor** | Spreadsheets with formulas, styles and Excel export | ExcelJS |
+| **📝 Markdown Editor** | Editor with live preview, syntax highlighting and export | Marked, DOMPurify |
+
+### 💻 Technology
+
+| Tool | Description | Technology |
+|:-----|:------------|:-----------|
+| **🔧 Dev Tools** | Format JSON/YAML, HTML/CSS/JS playground with live preview | CodeMirror 6, js-yaml |
+| **📱 Phone Tester** | Test SIP WebRTC calls, generate code for Vue and React | @tbisoftware/phone |
+| **🔐 CyberSecurity** | JWT Debugger, Base64 Encoder/Decoder, Hash Generator | Web Crypto API |
+
+### 🛠️ Tools
+
+| Tool | Description | Technology |
+|:-----|:------------|:-----------|
+| **📏 Unit Converter** | Convert length, weight, temperature, time and currencies in real-time | Frankfurter API |
+| **🎨 Color Picker** | Color wheel, chromatic harmonies, gradients, multiple formats | Canvas API |
+
+### 📚 Reference
+
+| Tool | Description |
+|:-----|:------------|
+| **📖 CheatSheets** | +50 quick guides: macOS, Windows, Linux, Bash, Git, Python, TypeScript, Docker, Kubernetes, Laravel, Vue, React, Tailwind, Photoshop, and more |
+
+---
+
+## 🚀 Quick Start
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/web-tools.git
-cd web-tools
+git clone https://github.com/christianpasinrey/tools.git
+
+# Enter the directory
+cd tools
 
 # Install dependencies
 npm install
-```
 
-## Available scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Starts development server at `http://localhost:5173` |
-| `npm run build` | Generates production build in `/dist` |
-| `npm run preview` | Preview production build locally |
-
-## Local development
-
-```bash
 # Start development server
 npm run dev
-
-# Server will be available at:
-# http://localhost:5173
 ```
 
-## Production build
+> [!TIP]
+> Server will be available at `http://localhost:5173`
 
-```bash
-# Generate optimized build
-npm run build
+### Available Scripts
 
-# Files are generated in /dist
-# To test the build locally:
-npm run preview
+| Command | Description |
+|:--------|:------------|
+| `npm run dev` | Development server with HMR |
+| `npm run build` | Production build to `/dist` |
+| `npm run preview` | Preview build locally |
+
+---
+
+## 🏗️ Tech Stack
+
+<details>
+<summary><strong>📦 View all dependencies</strong></summary>
+
+### Frontend Framework
+| Package | Version | Description |
+|:--------|:--------|:------------|
+| [Vue](https://vuejs.org/) | 3.5.24 | Progressive framework for UI |
+| [Vue Router](https://router.vuejs.org/) | 4.6.4 | Official router for Vue |
+| [VueUse](https://vueuse.org/) | 14.1.0 | Collection of Composition API utilities |
+
+### Build & Styling
+| Package | Version | Description |
+|:--------|:--------|:------------|
+| [Vite](https://vitejs.dev/) | 7.2.4 | Ultrafast build tool |
+| [Tailwind CSS](https://tailwindcss.com/) | 4.1.18 | Utility-first CSS framework |
+
+### Editors & Media
+| Package | Version | Description |
+|:--------|:--------|:------------|
+| [CodeMirror](https://codemirror.net/) | 6.x | Extensible code editor |
+| [WaveSurfer.js](https://wavesurfer-js.org/) | 7.12.1 | Audio visualization |
+| [Three.js](https://threejs.org/) | 0.182.0 | 3D graphics with WebGL |
+
+### Documents
+| Package | Version | Description |
+|:--------|:--------|:------------|
+| [pdf-lib](https://pdf-lib.js.org/) | 1.17.1 | Create and modify PDFs |
+| [PDF.js](https://mozilla.github.io/pdf.js/) | 5.4.530 | Render PDFs |
+| [ExcelJS](https://github.com/exceljs/exceljs) | 4.4.0 | Read and write Excel |
+| [Marked](https://marked.js.org/) | 17.0.1 | Markdown parser |
+| [DOMPurify](https://github.com/cure53/DOMPurify) | 3.3.1 | HTML sanitization |
+
+### Utilities
+| Package | Version | Description |
+|:--------|:--------|:------------|
+| [js-yaml](https://github.com/nodeca/js-yaml) | 4.1.1 | YAML parser |
+| [@tbisoftware/phone](https://github.com/Tu-buen-camino/phone) | 2.0.6 | SIP phone component |
+
+</details>
+
+---
+
+## 📁 Project Structure
+
 ```
-
-## Project structure
-
-```
-web-tools/
-├── public/
-│   └── .htaccess              # Apache configuration for SPA
-├── src/
-│   ├── assets/                # Static resources
-│   ├── components/            # Reusable Vue components
-│   │   ├── audio/             # Audio editor components
-│   │   ├── image/             # Image editor components
-│   │   ├── pdf/               # PDF editor components
-│   │   └── three/             # 3D playground components
-│   ├── composables/           # Vue composables (reusable logic)
-│   │   └── three/             # Three.js specific composables
-│   ├── router/                # Vue Router configuration
-│   ├── views/                 # Main views/pages
-│   │   ├── Home.vue
-│   │   ├── AudioEditor.vue
-│   │   ├── ImageEditor.vue
-│   │   ├── PdfEditor.vue
-│   │   └── 3DPlayground.vue
-│   ├── App.vue                # Root component
-│   ├── main.js                # Entry point
-│   └── style.css              # Global styles
+tools/
+├── 📂 public/
+│   └── .htaccess                 # Apache config for SPA
+├── 📂 src/
+│   ├── 📂 components/
+│   │   ├── 📂 audio/             # Audio editor
+│   │   ├── 📂 image/             # Image editor
+│   │   ├── 📂 pdf/               # PDF editor
+│   │   ├── 📂 three/             # 3D playground
+│   │   ├── Dock.vue              # Main navigation
+│   │   ├── DockButton.vue        # Dock buttons
+│   │   ├── DockSubmenu.vue       # Interactive submenus
+│   │   └── BentoGrid.vue         # Bento-style grid
+│   ├── 📂 composables/
+│   │   ├── useCheatsheets.js     # Cheatsheets logic
+│   │   ├── useMultimedia.js      # Multimedia navigation
+│   │   ├── useTechnology.js      # Technology navigation
+│   │   └── useTools.js           # Tools navigation
+│   ├── 📂 data/
+│   │   └── 📂 cheatsheets/       # +50 JSON files
+│   ├── 📂 views/                 # Main pages
+│   ├── 📂 router/                # Route configuration
+│   ├── App.vue
+│   ├── main.js
+│   └── style.css
 ├── index.html
 ├── package.json
 ├── vite.config.js
 └── README.md
 ```
 
-## Tech stack
+---
 
-### Frontend
-- **Vue 3** (Composition API) - Main framework
-- **Vue Router 4** - SPA routing
-- **Tailwind CSS 4** - Styling framework
+## 🚢 Deployment
 
-### Build Tools
-- **Vite 7** - Bundler and development server
+<details>
+<summary><strong>Apache (with .htaccess)</strong></summary>
 
-### Specific libraries
-- **Three.js** - 3D graphics and WebGL
-- **WaveSurfer.js** - Audio visualization and manipulation
-- **pdf-lib** - PDF manipulation
-- **PDF.js** - PDF rendering
-- **CodeMirror 6** - Code editor with syntax highlighting
-- **js-yaml** - YAML parser and serializer
-- **@tbisoftware/phone** - Phone input component with international validation
-
-## Deployment
-
-### Apache (with .htaccess)
-
-The project includes an `.htaccess` file in `/public` that is automatically copied to `/dist` during build. This file configures rewrite rules so Vue Router works correctly with history mode routes.
+The project includes `.htaccess` in `/public` that gets copied to `/dist` during build.
 
 ```bash
-# Build
 npm run build
-
 # Upload /dist contents to server
 ```
 
-### Nginx
+</details>
+
+<details>
+<summary><strong>Nginx</strong></summary>
 
 ```nginx
-location / {
-    try_files $uri $uri/ /index.html;
+server {
+    listen 80;
+    server_name your-domain.com;
+    root /var/www/tools/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
 }
 ```
 
-### Vercel / Netlify
+</details>
 
-Create `vercel.json` or `netlify.toml` file:
+<details>
+<summary><strong>Vercel / Netlify</strong></summary>
 
+**vercel.json:**
 ```json
 {
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
 ```
 
-## License
+**netlify.toml:**
+```toml
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
 
-MIT
+</details>
 
 ---
 
-<p align="center">
-  Made with Vue.js + Vite + Tailwind CSS
-</p>
+## 🤝 Contributing
+
+> [!NOTE]
+> Contributions are welcome! This project grows thanks to the community.
+
+### How to Contribute
+
+1. **Fork** the repository
+2. **Create** a branch for your feature (`git checkout -b feature/new-tool`)
+3. **Commit** your changes (`git commit -m 'feat: add new tool'`)
+4. **Push** to the branch (`git push origin feature/new-tool`)
+5. **Open** a Pull Request
+
+### Contribution Types
+
+| Type | Description |
+|:-----|:------------|
+| 🐛 **Bug Fix** | Fix existing bugs |
+| ✨ **Feature** | Add new functionality |
+| 📝 **Docs** | Improve documentation |
+| 🌐 **i18n** | Translations and localization |
+| 🎨 **UI/UX** | Interface improvements |
+| ⚡ **Performance** | Performance optimizations |
+| 🧪 **Tests** | Add or improve tests |
+
+### Commit Convention
+
+```
+feat: new feature
+fix: bug fix
+docs: documentation changes
+style: formatting, no code changes
+refactor: code refactoring
+perf: performance improvements
+test: add or fix tests
+chore: maintenance tasks
+```
+
+---
+
+## 🗺️ Roadmap
+
+- [x] macOS-style Dock navigation system
+- [x] Category grouping (Multimedia, Documents, Technology, Tools)
+- [x] CheatSheets with +50 guides organized by category
+- [x] Interactive submenus with nested navigation
+- [x] Liquid Glass UI
+- [ ] PWA Support (installable)
+- [ ] Offline mode with Service Worker
+- [ ] More languages in CheatSheets
+- [ ] Basic Video Editor
+- [ ] OCR for PDFs
+- [ ] Customizable themes
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+### ⭐ Star this repo if you find it useful!
+
+<br>
+
+<sub>Built with ❤️ by <a href="https://github.com/christianpasinrey">Christian Pasin Rey</a></sub>
+
+<br>
+
+<img src="https://img.shields.io/badge/Made%20with-Vue.js-4FC08D?style=flat-square&logo=vue.js" alt="Made with Vue.js">
+<img src="https://img.shields.io/badge/Styled%20with-Tailwind-38B2AC?style=flat-square&logo=tailwind-css" alt="Styled with Tailwind">
+<img src="https://img.shields.io/badge/Built%20with-Vite-646CFF?style=flat-square&logo=vite" alt="Built with Vite">
+
+</div>
