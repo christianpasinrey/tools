@@ -25,7 +25,7 @@ const highlightedValue = computed(() => {
     })
     .replace(/\b(true|false)\b/g, '<span class="text-amber-400">$1</span>')
     .replace(/\b(null)\b/g, '<span class="text-neutral-500">$1</span>')
-    .replace(/\b(-?\d+\.?\d*)\b/g, '<span class="text-purple-400">$1</span>')
+    .replace(/(^|[^-\w])(-?\d+\.?\d*)(?=\s*[,\]\}]|$)/gm, '$1<span class="text-purple-400">$2</span>')
 })
 </script>
 
