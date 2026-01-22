@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useMapEditor } from '../composables/useMapEditor'
 import 'leaflet/dist/leaflet.css'
 
@@ -7,14 +7,97 @@ const mapEditor = useMapEditor()
 const mapContainer = ref(null)
 const fileInput = ref(null)
 
+// Search functionality
+const searchQuery = ref('')
+const searchResults = ref([])
+const isSearching = ref(false)
+const showResults = ref(false)
+const searchInput = ref(null)
+let searchTimeout = null
+
+async function searchLocation(query) {
+  if (!query || query.length < 3) {
+    searchResults.value = []
+    return
+  }
+
+  isSearching.value = true
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=6&addressdetails=1`,
+      { headers: { 'Accept-Language': 'es,en' } }
+    )
+    const data = await response.json()
+    searchResults.value = data.map(item => ({
+      id: item.place_id,
+      name: item.display_name,
+      lat: parseFloat(item.lat),
+      lng: parseFloat(item.lon),
+      type: item.type,
+      icon: getPlaceIcon(item.type, item.class)
+    }))
+    showResults.value = true
+  } catch (err) {
+    console.error('Search error:', err)
+    searchResults.value = []
+  } finally {
+    isSearching.value = false
+  }
+}
+
+function getPlaceIcon(type, placeClass) {
+  if (placeClass === 'place' || type === 'city' || type === 'town' || type === 'village') {
+    return 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'
+  }
+  if (placeClass === 'highway' || type === 'road' || type === 'street') {
+    return 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7'
+  }
+  if (placeClass === 'amenity') {
+    return 'M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z'
+  }
+  return 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z'
+}
+
+function selectResult(result) {
+  mapEditor.map.value.flyTo([result.lat, result.lng], 15, {
+    duration: 1.5,
+    easeLinearity: 0.25
+  })
+  searchQuery.value = ''
+  searchResults.value = []
+  showResults.value = false
+}
+
+function handleSearchInput() {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => {
+    searchLocation(searchQuery.value)
+  }, 300)
+}
+
+function clearSearch() {
+  searchQuery.value = ''
+  searchResults.value = []
+  showResults.value = false
+}
+
+function handleClickOutside(e) {
+  if (searchInput.value && !searchInput.value.contains(e.target)) {
+    showResults.value = false
+  }
+}
+
 onMounted(() => {
   if (mapContainer.value) {
     mapEditor.initMap(mapContainer.value)
   }
+  document.addEventListener('click', handleClickOutside)
 })
 
 onUnmounted(() => {
   mapEditor.destroyMap()
+  document.removeEventListener('click', handleClickOutside)
+  clearTimeout(searchTimeout)
 })
 
 function handleFileImport(e) {
@@ -48,6 +131,71 @@ const tools = [
   <div class="h-full w-full flex relative overflow-hidden bg-neutral-950">
     <!-- Map Container -->
     <div ref="mapContainer" class="absolute inset-0 z-0"></div>
+
+    <!-- Search Bar -->
+    <div ref="searchInput" class="absolute top-4 left-1/2 -translate-x-1/2 z-20 w-80">
+      <div class="relative">
+        <div class="flex items-center bg-neutral-900/95 backdrop-blur-sm rounded-lg border border-neutral-700 shadow-lg">
+          <svg class="w-5 h-5 text-neutral-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            v-model="searchQuery"
+            @input="handleSearchInput"
+            @focus="showResults = searchResults.length > 0"
+            type="text"
+            placeholder="Buscar ubicación..."
+            class="flex-1 bg-transparent px-3 py-2.5 text-sm text-white placeholder-neutral-500 outline-none"
+          />
+          <div v-if="isSearching" class="mr-3">
+            <svg class="w-4 h-4 text-neutral-400 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+          <button
+            v-else-if="searchQuery"
+            @click="clearSearch"
+            class="mr-3 text-neutral-400 hover:text-white transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Search Results Dropdown -->
+        <div
+          v-if="showResults && searchResults.length > 0"
+          class="absolute top-full left-0 right-0 mt-2 bg-neutral-900/95 backdrop-blur-sm rounded-lg border border-neutral-700 shadow-xl overflow-hidden"
+        >
+          <div class="max-h-72 overflow-y-auto">
+            <button
+              v-for="result in searchResults"
+              :key="result.id"
+              @click="selectResult(result)"
+              class="w-full flex items-start gap-3 px-4 py-3 hover:bg-neutral-800/80 transition-colors text-left border-b border-neutral-800 last:border-0"
+            >
+              <svg class="w-5 h-5 text-blue-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="result.icon" />
+              </svg>
+              <div class="min-w-0 flex-1">
+                <div class="text-sm text-white truncate">{{ result.name.split(',')[0] }}</div>
+                <div class="text-xs text-neutral-500 truncate">{{ result.name.split(',').slice(1).join(',').trim() }}</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- No Results -->
+        <div
+          v-else-if="showResults && searchQuery.length >= 3 && !isSearching && searchResults.length === 0"
+          class="absolute top-full left-0 right-0 mt-2 bg-neutral-900/95 backdrop-blur-sm rounded-lg border border-neutral-700 shadow-xl p-4 text-center"
+        >
+          <div class="text-sm text-neutral-400">No se encontraron resultados</div>
+        </div>
+      </div>
+    </div>
 
     <!-- Toolbar -->
     <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
@@ -356,18 +504,20 @@ const tools = [
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 200px;
 }
 
 .popup-title {
   background: rgba(38, 38, 38, 0.8);
   border: 1px solid rgba(64, 64, 64, 0.5);
   border-radius: 4px;
-  padding: 6px 10px;
+  padding: 8px 12px;
   color: #e5e5e5;
   font-size: 14px;
   font-weight: 500;
   outline: none;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .popup-title:focus {
@@ -378,13 +528,14 @@ const tools = [
   background: rgba(38, 38, 38, 0.8);
   border: 1px solid rgba(64, 64, 64, 0.5);
   border-radius: 4px;
-  padding: 6px 10px;
+  padding: 8px 12px;
   color: #a3a3a3;
-  font-size: 12px;
+  font-size: 13px;
   outline: none;
-  resize: none;
-  min-height: 60px;
+  resize: vertical;
+  min-height: 70px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .popup-description:focus {
