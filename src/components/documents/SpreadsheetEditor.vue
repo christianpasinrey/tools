@@ -1186,10 +1186,11 @@ const handleContextAction = (action) => {
                   boxShadow: `0 0 0 2px ${themeColor}`,
                   fontWeight: spreadsheet.getCellStyle(rowIndex, colIndex).bold ? 'bold' : 'normal',
                   fontStyle: spreadsheet.getCellStyle(rowIndex, colIndex).italic ? 'italic' : 'normal',
+                  textAlign: spreadsheet.getCellStyle(rowIndex, colIndex).alignH || 'left',
                   minHeight: '24px'
                 }"
               />
-              <span v-else class="block whitespace-pre-wrap" :class="{ 'truncate': !cell.includes('\n') }">
+              <span v-else class="block whitespace-pre-wrap w-full" :class="{ 'truncate': !cell.includes('\n') }" :style="{ textAlign: spreadsheet.getCellStyle(rowIndex, colIndex).alignH || 'left' }">
                 {{ cell }}
               </span>
             </td>
