@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
+import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 
 defineProps({
   themeColor: {
@@ -103,6 +104,12 @@ const downloadHTML = () => {
   document.body.removeChild(element)
 }
 
+const getDocumentData = () => ({ content: markdown.value })
+
+const loadDocument = (data) => {
+  markdown.value = data.content || ''
+}
+
 const clearMarkdown = () => {
   if (confirm('¿Estás seguro de que quieres limpiar todo el contenido?')) {
     markdown.value = ''
@@ -198,6 +205,10 @@ const handleFileSelect = async (e) => {
           </svg>
           <span>Limpiar</span>
         </button>
+      </div>
+
+      <div class="ml-auto">
+        <VaultSaveLoad storeName="markdown-documents" :getData="getDocumentData" label="documento" @load="loadDocument" />
       </div>
     </div>
 

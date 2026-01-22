@@ -1,40 +1,25 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { buildHashMap, buildTabToHash, getToolColors, getDefaultTab } from '../config/tools'
 
-const validTabs = ['map', 'todo']
-
-const hashToTab = {
-  'map': 'map',
-  'maps': 'map',
-  'editor': 'map',
-  'todo': 'todo',
-  'kanban': 'todo',
-  'tasks': 'todo'
-}
-
-const tabToHash = {
-  'map': 'map',
-  'todo': 'todo'
-}
+const hashToTab = buildHashMap('apps')
+const tabToHash = buildTabToHash('apps')
+const tabColors = getToolColors('apps')
+const defaultTab = getDefaultTab('apps')
 
 function getTabFromHash() {
   const hash = window.location.hash.slice(1).toLowerCase()
-  return hashToTab[hash] || 'map'
+  return hashToTab[hash] || defaultTab
 }
 
 function setHashFromTab(tab) {
-  const hash = tabToHash[tab] || 'map'
+  const hash = tabToHash[tab] || defaultTab
   const newUrl = `${window.location.pathname}#${hash}`
   window.history.replaceState(null, '', newUrl)
 }
 
 export function useApps() {
   const activeTab = ref(getTabFromHash())
-  const themeColor = ref('#2563eb')
-
-  const tabColors = {
-    'map': '#2563eb',
-    'todo': '#6366f1'
-  }
+  const themeColor = ref(tabColors[defaultTab])
 
   const setThemeColor = (color) => {
     themeColor.value = color
@@ -42,7 +27,7 @@ export function useApps() {
 
   watch(activeTab, (newTab) => {
     setHashFromTab(newTab)
-    themeColor.value = tabColors[newTab] || '#2563eb'
+    themeColor.value = tabColors[newTab] || tabColors[defaultTab]
   }, { immediate: true })
 
   const onHashChange = () => {
@@ -54,7 +39,7 @@ export function useApps() {
     if (!window.location.hash) {
       setHashFromTab(activeTab.value)
     }
-    themeColor.value = tabColors[activeTab.value] || '#2563eb'
+    themeColor.value = tabColors[activeTab.value] || tabColors[defaultTab]
   })
 
   onUnmounted(() => {

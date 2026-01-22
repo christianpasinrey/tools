@@ -1,70 +1,35 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { buildHashMap, buildTabToHash, getToolColors, getDefaultTab } from '../config/tools'
 
-const validTabs = ['dev', 'security', 'phone', 'api', 'storage']
-
-// Map hash names to internal tab names
-const hashToTab = {
-  'dev': 'dev',
-  'devtools': 'dev',
-  'developer': 'dev',
-  'security': 'security',
-  'cyber': 'security',
-  'phone': 'phone',
-  'tester': 'phone',
-  'mobile': 'phone',
-  'api': 'api',
-  'postman': 'api',
-  'apitester': 'api',
-  'storage': 'storage',
-  'browser-storage': 'storage',
-  'localstorage': 'storage',
-  'indexeddb': 'storage'
-}
-
-// Map internal tab names to hash names
-const tabToHash = {
-  'dev': 'dev',
-  'security': 'security',
-  'phone': 'phone',
-  'api': 'api',
-  'storage': 'browser-storage'
-}
+const hashToTab = buildHashMap('technology')
+const tabToHash = buildTabToHash('technology')
+const tabColors = getToolColors('technology')
+const defaultTab = getDefaultTab('technology')
 
 function getTabFromHash() {
   const hash = window.location.hash.slice(1).toLowerCase()
-  return hashToTab[hash] || 'dev'
+  return hashToTab[hash] || defaultTab
 }
 
 function setHashFromTab(tab) {
-  const hash = tabToHash[tab] || 'dev'
+  const hash = tabToHash[tab] || defaultTab
   const newUrl = `${window.location.pathname}#${hash}`
   window.history.replaceState(null, '', newUrl)
 }
 
 export function useTechnology() {
   const activeTab = ref(getTabFromHash())
-  const themeColor = ref('#06b6d4')
-
-  // Theme colors per tab
-  const tabColors = {
-    'dev': '#06b6d4',
-    'security': '#ef4444',
-    'phone': '#10b981',
-    'api': '#f59e0b',
-    'storage': '#8b5cf6'
-  }
+  const themeColor = ref(tabColors[defaultTab])
 
   const setThemeColor = (color) => {
     themeColor.value = color
   }
 
-  // Update theme color when tab changes
   watch(activeTab, (newTab) => {
     setHashFromTab(newTab)
-    themeColor.value = tabColors[newTab] || '#06b6d4'
+    themeColor.value = tabColors[newTab] || tabColors[defaultTab]
   }, { immediate: true })
 
-  // Listen for hash changes (back/forward navigation)
   const onHashChange = () => {
     activeTab.value = getTabFromHash()
   }
@@ -74,7 +39,7 @@ export function useTechnology() {
     if (!window.location.hash) {
       setHashFromTab(activeTab.value)
     }
-    themeColor.value = tabColors[activeTab.value] || '#06b6d4'
+    themeColor.value = tabColors[activeTab.value] || tabColors[defaultTab]
   })
 
   onUnmounted(() => {

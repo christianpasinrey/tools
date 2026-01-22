@@ -1,6 +1,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import * as THREE from 'three'
+import { useAppCrypto } from '../composables/useAppCrypto'
+import CryptoLockButton from '../components/common/CryptoLockButton.vue'
+
+const appCrypto = useAppCrypto()
 
 const isVisible = ref(false)
 const threeCanvas = ref(null)
@@ -293,6 +297,7 @@ onMounted(() => {
   initThree()
   fetchGitHubCommits()
   fetchPackageStars()
+  appCrypto.checkHasSetup()
 
   // Scroll tracking setup
   windowHeight.value = window.innerHeight
@@ -714,74 +719,126 @@ const fetchGitHubCommits = async () => {
     <!-- Hero Section -->
     <div ref="heroSection" class="relative" style="z-index: 1;">
 
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40 text-center scroll-animated" :style="heroStyle">
-        <!-- Badge -->
-        <div
-          :class="[
-            'inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-full text-xs mb-10 backdrop-blur-sm transition-all duration-700',
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
-          ]"
-        >
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-          </span>
-          <span class="text-green-400 font-medium">100% en el navegador, sin servidores</span>
-        </div>
+      <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-28 lg:py-36 scroll-animated" :style="heroStyle">
+        <div class="flex flex-col items-center text-center">
 
-        <!-- Title -->
-        <h1
-          :class="[
-            'text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight transition-all duration-700 delay-100',
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          ]"
-        >
-          Web <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400">Tools</span>
-        </h1>
+          <!-- Vault Visual -->
+          <div
+            :class="[
+              'relative mb-10 transition-all duration-1000',
+              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
+            ]"
+          >
+            <!-- Outer ring -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-36 h-36 rounded-full border vault-ring-1" :class="appCrypto.isLocked.value ? 'border-amber-500/15' : 'border-emerald-500/15'"></div>
+            </div>
+            <!-- Inner ring -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-28 h-28 rounded-full border vault-ring-2" :class="appCrypto.isLocked.value ? 'border-amber-500/20' : 'border-emerald-500/20'"></div>
+            </div>
+            <!-- Dot orbit -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-32 h-32 vault-ring-3">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" :class="appCrypto.isLocked.value ? 'bg-amber-400/60' : 'bg-emerald-400/60'"></div>
+              </div>
+            </div>
+            <!-- Center lock icon -->
+            <div class="w-20 h-20 rounded-2xl flex items-center justify-center relative transition-colors duration-700" :class="appCrypto.isLocked.value ? 'bg-amber-500/10' : 'bg-emerald-500/10'">
+              <svg class="w-9 h-9 transition-all duration-700" :class="appCrypto.isLocked.value ? 'text-amber-400' : 'text-emerald-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path v-if="appCrypto.isLocked.value || !appCrypto.hasSetup.value" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+              </svg>
+              <!-- Glow pulse when unlocked -->
+              <div v-if="!appCrypto.isLocked.value && appCrypto.hasSetup.value" class="absolute inset-0 rounded-2xl bg-emerald-500/15 animate-ping opacity-30"></div>
+            </div>
+          </div>
 
-        <!-- Subtitle -->
-        <p
-          :class="[
-            'text-neutral-400 text-lg max-w-2xl mx-auto mb-12 leading-relaxed transition-all duration-700 delay-200',
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          ]"
-        >
-          Herramientas open source que funcionan completamente en tu navegador.
-          <br />
-          <span class="text-neutral-300 text-sm">Sin servidores, sin tracking, privacidad total.</span>
-        </p>
+          <!-- Title -->
+          <h1
+            :class="[
+              'text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 tracking-tight transition-all duration-700 delay-150',
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            ]"
+          >
+            Tu clave, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="appCrypto.hasSetup.value && !appCrypto.isLocked.value ? 'from-emerald-400 to-teal-400' : 'from-amber-400 to-orange-400'">tus datos</span>
+          </h1>
 
-        <!-- Features -->
-        <div
-          :class="[
-            'flex flex-wrap justify-center gap-8 text-sm transition-all duration-700 delay-300',
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          ]"
-        >
-          <div class="flex items-center gap-2 text-neutral-400 group">
-            <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
-              <svg class="w-3 h-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+          <!-- Subtitle -->
+          <p
+            :class="[
+              'text-neutral-500 text-sm sm:text-base max-w-md mx-auto mb-8 transition-all duration-700 delay-200',
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            ]"
+          >
+            Client-side AES-256-GCM encryption. Sin trafico de datos sensibles, sin servidores, sin cuentas.
+          </p>
+
+          <!-- CTA: CryptoLockButton or status -->
+          <div
+            :class="[
+              'transition-all duration-700 delay-300',
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+            ]"
+          >
+            <!-- If not set up: large CTA -->
+            <div v-if="!appCrypto.hasSetup.value" class="flex flex-col items-center gap-4">
+              <CryptoLockButton />
+              <p class="text-neutral-600 text-xs">Genera una clave de cifrado en un click</p>
+            </div>
+
+            <!-- If set up: show status + lock button -->
+            <div v-else class="flex flex-col items-center gap-4">
+              <div class="flex items-center gap-3">
+                <CryptoLockButton />
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border" :class="appCrypto.isLocked.value ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'">
+                  <span class="relative flex h-1.5 w-1.5">
+                    <span v-if="!appCrypto.isLocked.value" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-1.5 w-1.5" :class="appCrypto.isLocked.value ? 'bg-amber-400' : 'bg-emerald-400'"></span>
+                  </span>
+                  {{ appCrypto.isLocked.value ? 'Bloqueado' : 'Desbloqueado' }}
+                </div>
+              </div>
+              <p class="text-neutral-600 text-xs">{{ appCrypto.isLocked.value ? 'Desbloquea para acceder a tus datos cifrados' : 'Sesion activa — tus datos estan accesibles' }}</p>
+            </div>
+          </div>
+
+          <!-- Encrypted tools badges -->
+          <div
+            :class="[
+              'flex flex-wrap justify-center gap-2 mt-10 transition-all duration-700 delay-[400ms]',
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            ]"
+          >
+            <router-link to="/apps#invoice" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900/60 border border-neutral-800/60 text-xs text-neutral-500 hover:text-emerald-400 hover:border-emerald-500/30 backdrop-blur-sm transition-all">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Facturas
+            </router-link>
+            <router-link to="/apps#todo" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900/60 border border-neutral-800/60 text-xs text-neutral-500 hover:text-indigo-400 hover:border-indigo-500/30 backdrop-blur-sm transition-all">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              Kanban
+            </router-link>
+            <router-link to="/technology#browser-storage" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900/60 border border-neutral-800/60 text-xs text-neutral-500 hover:text-purple-400 hover:border-purple-500/30 backdrop-blur-sm transition-all">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+              Storage
+            </router-link>
+          </div>
+
+          <!-- Scroll hint -->
+          <div
+            :class="[
+              'mt-16 transition-all duration-700 delay-500',
+              isVisible ? 'opacity-100' : 'opacity-0'
+            ]"
+          >
+            <div class="flex flex-col items-center gap-2 text-neutral-600">
+              <span class="text-[10px] uppercase tracking-widest">Explorar herramientas</span>
+              <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
               </svg>
             </div>
-            <span>Privacidad total</span>
           </div>
-          <div class="flex items-center gap-2 text-neutral-400 group">
-            <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
-              <svg class="w-3 h-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-            <span>Sin instalación</span>
-          </div>
-          <div class="flex items-center gap-2 text-neutral-400 group">
-            <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30 transition-colors">
-              <svg class="w-3 h-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-            <span>Gratis y open source</span>
-          </div>
+
         </div>
       </div>
 
@@ -1369,5 +1426,34 @@ const fetchGitHubCommits = async () => {
     0 25px 50px -12px rgba(0, 0, 0, 0.5),
     0 0 30px rgba(34, 197, 94, 0.15);
   z-index: 10;
+}
+
+/* Vault ring animations */
+@keyframes vault-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes vault-spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes vault-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.vault-ring-1 {
+  animation: vault-spin-slow 20s linear infinite;
+}
+
+.vault-ring-2 {
+  animation: vault-spin-reverse 14s linear infinite;
+}
+
+.vault-ring-3 {
+  animation: vault-orbit 8s linear infinite;
+  position: relative;
 }
 </style>

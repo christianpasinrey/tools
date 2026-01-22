@@ -3,6 +3,7 @@ import { ref, computed, watch, nextTick } from 'vue'
 import { usePdfEditor } from '../composables/usePdfEditor'
 import * as pdfjsLib from 'pdfjs-dist'
 import PdfToolbar from '../components/pdf/PdfToolbar.vue'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 import PdfSidebar from '../components/pdf/PdfSidebar.vue'
 import PdfToast from '../components/pdf/PdfToast.vue'
 import PdfConfirmDialog from '../components/pdf/PdfConfirmDialog.vue'
@@ -52,6 +53,31 @@ watch(() => editor.pages.value.length, (len) => {
     previewIndex.value = 0
   }
 })
+
+// Vault save/load
+const MAX_PDF_SIZE = 10 * 1024 * 1024 // 10MB limit
+
+const getPdfData = () => {
+  if (!editor.pdfBytes.value) return null
+  if (editor.pdfBytes.value.byteLength > MAX_PDF_SIZE) {
+    alert('El PDF es demasiado grande para guardar en vault (máx 10MB)')
+    return null
+  }
+  return {
+    pdfBytes: Array.from(new Uint8Array(editor.pdfBytes.value)),
+    pages: editor.pages.value.map(p => ({ id: p.id, pageIndex: p.pageIndex, rotation: p.rotation })),
+    annotations: JSON.parse(JSON.stringify(editor.annotations.value)),
+    fileName: editor.fileName.value
+  }
+}
+
+const loadPdfData = async (data) => {
+  if (!data.pdfBytes) return
+  const bytes = new Uint8Array(data.pdfBytes)
+  const file = new File([bytes], data.fileName || 'documento.pdf', { type: 'application/pdf' })
+  await editor.loadFile(file)
+  if (data.annotations) editor.annotations.value = data.annotations
+}
 
 // File handling
 const openFilePicker = () => fileInput.value?.click()
@@ -354,6 +380,11 @@ const stopDragAnnotation = () => {
       @redo="editor.redo"
       @toggle-annotations="editor.toggleAnnotationPanel"
     />
+
+    <!-- Vault -->
+    <div v-if="editor.hasFile.value" class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+      <VaultSaveLoad storeName="pdf-documents" :getData="getPdfData" label="documento" @load="loadPdfData" />
+    </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex overflow-hidden relative">

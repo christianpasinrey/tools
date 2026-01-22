@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from 'vue'
+import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 
 const props = defineProps({
-  themeColor: String
+  themeColor: String,
+  getData: Function,
 })
 
-const emit = defineEmits(['color-change'])
+const emit = defineEmits(['color-change', 'load'])
 
 const showColors = ref(false)
 const colors = [
@@ -23,9 +25,12 @@ const colors = [
       <span class="text-white font-medium">Dev Tools</span>
     </div>
 
-    <div class="relative">
-      <button
-        @click="showColors = !showColors"
+    <div class="flex items-center gap-2">
+      <VaultSaveLoad storeName="devtools-snippets" :getData="getData" label="snippet" @load="(data) => emit('load', data)" />
+
+      <div class="relative">
+        <button
+          @click="showColors = !showColors"
         class="p-1.5 rounded hover:bg-neutral-800 transition-colors flex items-center gap-2"
         title="Theme color"
       >
@@ -49,6 +54,7 @@ const colors = [
             :style="{ backgroundColor: color }"
           ></button>
         </div>
+      </div>
       </div>
     </div>
   </div>

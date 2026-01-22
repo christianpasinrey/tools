@@ -5,8 +5,34 @@ import ImageToolbar from '../components/image/ImageToolbar.vue'
 import ImageCanvas from '../components/image/ImageCanvas.vue'
 import ImageSidebar from '../components/image/ImageSidebar.vue'
 import ImageHistory from '../components/image/ImageHistory.vue'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 
 const editor = useImageEditor()
+
+const getPresetData = () => ({
+  brightness: editor.brightness.value,
+  contrast: editor.contrast.value,
+  saturation: editor.saturation.value,
+  exposure: editor.exposure.value,
+  highlights: editor.highlights.value,
+  shadows: editor.shadows.value,
+  temperature: editor.temperature.value,
+  sharpness: editor.sharpness.value,
+  blur: editor.blur.value
+})
+
+const loadPreset = (data) => {
+  editor.brightness.value = data.brightness ?? 0
+  editor.contrast.value = data.contrast ?? 0
+  editor.saturation.value = data.saturation ?? 0
+  editor.exposure.value = data.exposure ?? 0
+  editor.highlights.value = data.highlights ?? 0
+  editor.shadows.value = data.shadows ?? 0
+  editor.temperature.value = data.temperature ?? 0
+  editor.sharpness.value = data.sharpness ?? 0
+  editor.blur.value = data.blur ?? 0
+  if (editor.hasFile.value) editor.renderImage()
+}
 const fileInput = ref(null)
 const isDragging = ref(false)
 
@@ -178,6 +204,12 @@ const doExport = () => {
       @zoom="(v) => editor.setZoom(v)"
       @color-change="editor.setThemeColor"
     />
+
+    <!-- Presets -->
+    <div class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+      <span class="text-xs text-neutral-500 mr-2">Presets</span>
+      <VaultSaveLoad storeName="image-presets" :getData="getPresetData" label="preset" @load="loadPreset" />
+    </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex overflow-hidden">

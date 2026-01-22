@@ -1,9 +1,29 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useMapEditor } from '../composables/useMapEditor'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 import 'leaflet/dist/leaflet.css'
 
 const mapEditor = useMapEditor()
+
+const getMapData = () => ({
+  currentTile: mapEditor.currentTile.value,
+  geojson: mapEditor.exportGeoJSON()
+})
+
+const loadMapData = (data) => {
+  // Clear existing markers and routes
+  while (mapEditor.markers.value.length > 0) {
+    mapEditor.removeMarker(mapEditor.markers.value[0].id)
+  }
+  while (mapEditor.routes.value.length > 0) {
+    mapEditor.removeRoute(mapEditor.routes.value[0].id)
+  }
+  // Restore tile layer
+  if (data.currentTile) mapEditor.setTileLayer(data.currentTile)
+  // Import GeoJSON data
+  if (data.geojson) mapEditor.importGeoJSON(data.geojson)
+}
 const mapContainer = ref(null)
 const fileInput = ref(null)
 
@@ -433,33 +453,36 @@ const tools = [
       </div>
 
       <!-- Export/Import -->
-      <div class="p-3 border-t border-neutral-800 flex gap-2">
-        <button
-          @click="mapEditor.downloadGeoJSON()"
-          class="flex-1 px-3 py-2 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded-md transition-colors flex items-center justify-center gap-1"
-          :disabled="mapEditor.markers.value.length === 0 && mapEditor.routes.value.length === 0"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          Export
-        </button>
-        <button
-          @click="fileInput.click()"
-          class="flex-1 px-3 py-2 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-md transition-colors flex items-center justify-center gap-1"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-          </svg>
-          Import
-        </button>
-        <input
-          ref="fileInput"
-          type="file"
-          accept=".geojson,.json"
-          class="hidden"
-          @change="handleFileImport"
-        />
+      <div class="p-3 border-t border-neutral-800 flex flex-col gap-2">
+        <div class="flex gap-2">
+          <button
+            @click="mapEditor.downloadGeoJSON()"
+            class="flex-1 px-3 py-2 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded-md transition-colors flex items-center justify-center gap-1"
+            :disabled="mapEditor.markers.value.length === 0 && mapEditor.routes.value.length === 0"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Export
+          </button>
+          <button
+            @click="fileInput.click()"
+            class="flex-1 px-3 py-2 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-md transition-colors flex items-center justify-center gap-1"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Import
+          </button>
+          <input
+            ref="fileInput"
+            type="file"
+            accept=".geojson,.json"
+            class="hidden"
+            @change="handleFileImport"
+          />
+        </div>
+        <VaultSaveLoad storeName="map-projects" :getData="getMapData" label="mapa" @load="loadMapData" />
       </div>
     </div>
 

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useColorWheel } from '../composables/useColorWheel'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 
 const colorWheel = useColorWheel()
 
@@ -170,6 +171,27 @@ const handleImageUpload = async (event) => {
 const clearExtractedImage = () => {
   extractedImagePreview.value = null
 }
+
+// Vault persistence
+function getPaletteData() {
+  return {
+    mode: colorWheel.currentMode.value,
+    colorPoints: colorWheel.colorPoints.value.map(p => ({ hue: p.hue, saturation: p.saturation })),
+    baseLightness: colorWheel.baseLightness.value
+  }
+}
+
+function loadPalette(data) {
+  if (data.mode) colorWheel.currentMode.value = data.mode
+  if (data.baseLightness !== undefined) colorWheel.baseLightness.value = data.baseLightness
+  if (data.colorPoints) {
+    colorWheel.colorPoints.value = data.colorPoints.map((p, i) => ({
+      ...colorWheel.colorPoints.value[i],
+      hue: p.hue,
+      saturation: p.saturation
+    }))
+  }
+}
 </script>
 
 <template>
@@ -177,9 +199,12 @@ const clearExtractedImage = () => {
     <div class="max-w-[1600px] mx-auto h-full flex flex-col">
       <!-- Compact Header -->
       <div class="flex items-center justify-between mb-4">
-        <div>
-          <h1 class="text-xl font-bold text-white">Color Picker</h1>
-          <p class="text-neutral-500 text-sm">Crea paletas de colores armónicas</p>
+        <div class="flex items-center gap-3">
+          <div>
+            <h1 class="text-xl font-bold text-white">Color Picker</h1>
+            <p class="text-neutral-500 text-sm">Crea paletas de colores armónicas</p>
+          </div>
+          <VaultSaveLoad storeName="color-palettes" :getData="getPaletteData" label="paleta" @load="loadPalette" />
         </div>
         <!-- Harmony Mode Pills -->
         <div class="flex gap-1.5">

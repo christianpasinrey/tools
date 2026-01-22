@@ -1,17 +1,22 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useAppCrypto } from '../../composables/useAppCrypto'
+import CryptoLockButton from '../common/CryptoLockButton.vue'
 
 const props = defineProps({
   themeColor: String
 })
+
+const appCrypto = useAppCrypto()
 
 // ==========================================
 // General State
 // ==========================================
 const activeStorageTab = ref('local') // local, indexed
 const viewMode = ref('pretty') // pretty, raw
-const selectedEntry = ref(null) // { source, key, value }
+const selectedEntry = ref(null) // { source, key, value, encrypted?, decryptedValue? }
 const copied = ref(false)
+const decryptingEntry = ref(false)
 
 function copyValue(val) {
   navigator.clipboard.writeText(val)
@@ -55,6 +60,87 @@ function getValueType(val) {
 function getTypeColor(type) {
   const colors = { object: '#3b82f6', array: '#8b5cf6', string: '#10b981', number: '#f59e0b', boolean: '#ef4444', null: '#6b7280' }
   return colors[type] || '#6b7280'
+}
+
+// ==========================================
+// Encrypted Entry Detection
+// ==========================================
+function isEncryptedObject(obj) {
+  return obj && typeof obj === 'object'
+    && 'salt' in obj && 'iv' in obj && 'data' in obj
+    && Array.isArray(obj.salt) && Array.isArray(obj.iv) && Array.isArray(obj.data)
+}
+
+function hasEncryptedData(value) {
+  if (isEncryptedObject(value)) return true
+  if (value && typeof value === 'object') {
+    if (Array.isArray(value.items)) {
+      return value.items.some(item => item?.encrypted && isEncryptedObject(item.encrypted))
+    }
+    for (const key of Object.keys(value)) {
+      if (isEncryptedObject(value[key])) return true
+    }
+  }
+  return false
+}
+
+async function toggleDecrypt() {
+  if (!selectedEntry.value) return
+  if (selectedEntry.value.decryptedValue) {
+    selectedEntry.value = { ...selectedEntry.value, decryptedValue: null }
+    return
+  }
+  if (appCrypto.isLocked.value) return
+
+  decryptingEntry.value = true
+  try {
+    const val = typeof selectedEntry.value.value === 'string'
+      ? JSON.parse(selectedEntry.value.value)
+      : selectedEntry.value.value
+
+    let decrypted
+    if (isEncryptedObject(val)) {
+      decrypted = await appCrypto.decrypt(val)
+    } else if (val?.items && Array.isArray(val.items)) {
+      const items = []
+      for (const item of val.items) {
+        if (item?.encrypted && isEncryptedObject(item.encrypted)) {
+          try {
+            const dec = await appCrypto.decrypt(item.encrypted)
+            items.push({ ...item, encrypted: undefined, decrypted: dec })
+          } catch {
+            items.push({ ...item, decryptError: true })
+          }
+        } else {
+          items.push(item)
+        }
+      }
+      decrypted = { ...val, items }
+    } else {
+      for (const key of Object.keys(val)) {
+        if (isEncryptedObject(val[key])) {
+          decrypted = decrypted || { ...val }
+          try {
+            decrypted[key] = await appCrypto.decrypt(val[key])
+          } catch {
+            decrypted[key] = { _decryptError: true }
+          }
+        }
+      }
+      if (!decrypted) decrypted = val
+    }
+
+    selectedEntry.value = {
+      ...selectedEntry.value,
+      decryptedValue: JSON.stringify(decrypted, null, 2)
+    }
+  } catch {
+    selectedEntry.value = {
+      ...selectedEntry.value,
+      decryptedValue: '// Error al descifrar. Verifica la clave.'
+    }
+  }
+  decryptingEntry.value = false
 }
 
 // ==========================================
@@ -224,7 +310,9 @@ async function loadStoreEntries() {
 }
 
 function viewIdbEntry(entry) {
-  selectedEntry.value = { source: 'IndexedDB', key: entry.key, value: typeof entry.value === 'string' ? entry.value : JSON.stringify(entry.value) }
+  const val = typeof entry.value === 'string' ? entry.value : JSON.stringify(entry.value)
+  const encrypted = hasEncryptedData(entry.value)
+  selectedEntry.value = { source: 'IndexedDB', key: entry.key, value: val, encrypted, decryptedValue: null }
 }
 
 async function deleteIdbEntry(key) {
@@ -344,6 +432,7 @@ function openDb(name, version) {
 onMounted(() => {
   loadLocalStorage()
   loadDatabases()
+  appCrypto.checkHasSetup()
 })
 </script>
 
@@ -371,6 +460,9 @@ onMounted(() => {
           <span class="ml-1 text-neutral-600">({{ idbDatabases.length }})</span>
           <div v-if="activeStorageTab === 'indexed'" class="absolute bottom-0 left-0 right-0 h-0.5" :style="{ backgroundColor: themeColor }"/>
         </button>
+        <div class="flex items-center px-2">
+          <CryptoLockButton />
+        </div>
       </div>
 
       <!-- localStorage Panel -->
@@ -565,6 +657,9 @@ onMounted(() => {
                 <div class="text-xs font-mono text-neutral-200">{{ entry.key }}</div>
                 <div class="text-xs text-neutral-500 font-mono truncate mt-0.5">{{ previewValue(entry.value) }}</div>
               </div>
+              <span v-if="hasEncryptedData(entry.value)" class="text-[10px] px-1.5 py-0.5 rounded shrink-0 bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                Cifrado
+              </span>
               <span class="text-xs px-1.5 py-0.5 rounded shrink-0" :style="{ backgroundColor: getTypeColor(entry.type) + '15', color: getTypeColor(entry.type) }">
                 {{ entry.type }}
               </span>
@@ -600,11 +695,30 @@ onMounted(() => {
           <span v-else class="text-xs text-neutral-600">Select an entry to view</span>
         </div>
         <div v-if="selectedEntry" class="flex items-center gap-1 shrink-0">
+          <!-- Decrypt toggle for encrypted entries -->
+          <button
+            v-if="selectedEntry.encrypted"
+            @click="toggleDecrypt"
+            class="flex items-center gap-1 px-2 py-1 text-xs rounded transition-colors"
+            :class="selectedEntry.decryptedValue
+              ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/30'
+              : appCrypto.isLocked.value
+                ? 'bg-neutral-800 text-neutral-500 border border-neutral-700 cursor-not-allowed'
+                : 'bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20'"
+            :disabled="appCrypto.isLocked.value && !selectedEntry.decryptedValue"
+            :title="appCrypto.isLocked.value ? 'Desbloquea primero para descifrar' : (selectedEntry.decryptedValue ? 'Ocultar descifrado' : 'Mostrar descifrado')"
+          >
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path v-if="selectedEntry.decryptedValue" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+              <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            {{ selectedEntry.decryptedValue ? 'Cifrado' : 'Descifrar' }}
+          </button>
           <div class="flex bg-neutral-800 rounded overflow-hidden border border-neutral-700">
             <button @click="viewMode = 'pretty'" class="px-2 py-1 text-xs transition-colors" :class="viewMode === 'pretty' ? 'text-white bg-neutral-700' : 'text-neutral-500 hover:text-neutral-300'">Pretty</button>
             <button @click="viewMode = 'raw'" class="px-2 py-1 text-xs transition-colors" :class="viewMode === 'raw' ? 'text-white bg-neutral-700' : 'text-neutral-500 hover:text-neutral-300'">Raw</button>
           </div>
-          <button @click="copyValue(formatValue(selectedEntry.value))" class="p-1.5 text-neutral-500 hover:text-neutral-300 transition-colors" title="Copy">
+          <button @click="copyValue(selectedEntry.decryptedValue || formatValue(selectedEntry.value))" class="p-1.5 text-neutral-500 hover:text-neutral-300 transition-colors" title="Copy">
             <svg v-if="!copied" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
             </svg>
@@ -616,7 +730,15 @@ onMounted(() => {
       </div>
 
       <div class="flex-1 overflow-auto p-3">
-        <pre v-if="selectedEntry" class="text-xs text-neutral-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ formatValue(selectedEntry.value) }}</pre>
+        <!-- Decrypting spinner -->
+        <div v-if="decryptingEntry" class="flex items-center justify-center py-8">
+          <div class="w-4 h-4 border-2 border-neutral-700 border-t-amber-400 rounded-full animate-spin"/>
+          <span class="ml-2 text-xs text-neutral-400">Descifrando...</span>
+        </div>
+        <!-- Decrypted value -->
+        <pre v-else-if="selectedEntry?.decryptedValue" class="text-xs text-emerald-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ selectedEntry.decryptedValue }}</pre>
+        <!-- Normal value -->
+        <pre v-else-if="selectedEntry" class="text-xs text-neutral-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ formatValue(selectedEntry.value) }}</pre>
         <div v-else class="flex items-center justify-center h-full">
           <div class="text-center text-neutral-700">
             <svg class="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -3,6 +3,7 @@ import { useApps } from '../composables/useApps'
 import AppsTabs from '../components/apps/AppsTabs.vue'
 import MapEditor from './MapEditor.vue'
 import TodoKanban from '../components/apps/TodoKanban.vue'
+import InvoiceGenerator from '../components/apps/InvoiceGenerator.vue'
 
 const apps = useApps()
 </script>
@@ -18,6 +19,7 @@ const apps = useApps()
     <div class="flex-1 overflow-hidden relative">
       <MapEditor v-if="apps.activeTab.value === 'map'" class="absolute inset-0" />
       <TodoKanban v-if="apps.activeTab.value === 'todo'" class="absolute inset-0" />
+      <InvoiceGenerator v-if="apps.activeTab.value === 'invoice'" class="absolute inset-0" />
     </div>
   </div>
 </template>

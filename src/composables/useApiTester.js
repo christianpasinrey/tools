@@ -1,4 +1,5 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useVault } from './useVault'
 
 const HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']
 
@@ -65,12 +66,53 @@ export function useApiTester() {
   const responseError = ref(null)
 
   // ==========================================
-  // Collections & History
+  // Collections & History (vault + localStorage fallback)
   // ==========================================
+  const vault = useVault()
+  const VAULT_STORE = 'api-collections'
+
   const collections = ref(loadFromStorage(STORAGE_KEYS.collections, []))
   const history = ref(loadFromStorage(STORAGE_KEYS.history, []))
   const sidebarTab = ref('collections') // collections, history
   const showSidebar = ref(true)
+
+  // Migrate to vault when unlocked
+  async function migrateToVault() {
+    if (vault.isLocked.value) return
+    try {
+      const lsCollections = loadFromStorage(STORAGE_KEYS.collections, null)
+      const lsHistory = loadFromStorage(STORAGE_KEYS.history, null)
+      if (lsCollections && lsCollections.length) {
+        await vault.save(VAULT_STORE, 'collections', 'collections', lsCollections)
+        localStorage.removeItem(STORAGE_KEYS.collections)
+      }
+      if (lsHistory && lsHistory.length) {
+        await vault.save(VAULT_STORE, 'history', 'history', lsHistory)
+        localStorage.removeItem(STORAGE_KEYS.history)
+      }
+    } catch { /* migration failed, keep localStorage */ }
+  }
+
+  async function loadFromVault() {
+    if (vault.isLocked.value) return
+    try {
+      const vCollections = await vault.load(VAULT_STORE, 'collections')
+      if (vCollections) collections.value = vCollections
+      const vHistory = await vault.load(VAULT_STORE, 'history')
+      if (vHistory) history.value = vHistory
+    } catch { /* keep current values */ }
+  }
+
+  async function initStorage() {
+    if (!vault.isLocked.value) {
+      await migrateToVault()
+      await loadFromVault()
+    }
+  }
+
+  watch(() => vault.isLocked.value, (locked) => {
+    if (!locked) initStorage()
+  }, { immediate: true })
 
   // ==========================================
   // Request Methods
@@ -643,10 +685,13 @@ export function useApiTester() {
   }
 
   function saveToStorage(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value))
-    } catch {
-      // Storage full or unavailable
+    if (!vault.isLocked.value) {
+      const vaultKey = key === STORAGE_KEYS.collections ? 'collections' : 'history'
+      vault.save(VAULT_STORE, vaultKey, vaultKey, value).catch(() => {})
+    } else {
+      try {
+        localStorage.setItem(key, JSON.stringify(value))
+      } catch { /* Storage full or unavailable */ }
     }
   }
 

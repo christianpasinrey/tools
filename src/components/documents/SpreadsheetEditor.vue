@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useSpreadsheet, TEXT_COLORS, BG_COLORS, BORDER_PRESETS, FONT_SIZES, NUMBER_FORMATS, isDark, toggleDark } from '../../composables/useSpreadsheet'
+import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 
 // Dropdown state for toolbar menus
 const showFontSizeDropdown = ref(false)
@@ -61,6 +62,36 @@ const handleGlobalClick = () => {
   spreadsheet.closeContextMenu()
   closeSheetContextMenu()
   closeAllDropdowns()
+}
+
+// Vault save/load
+const getWorkbookData = () => {
+  // Sync current active sheet state before saving
+  const sheetsData = spreadsheet.sheets.value.map((sheet, i) => {
+    if (i === spreadsheet.activeSheetIndex.value) {
+      return {
+        name: sheet.name,
+        data: spreadsheet.data.value,
+        styles: JSON.parse(JSON.stringify(spreadsheet.cellStyles.value)),
+        formulas: sheet.formulas,
+        colWidths: spreadsheet.columnWidths.value,
+        rowHeights: spreadsheet.rowHeights.value
+      }
+    }
+    return { name: sheet.name, data: sheet.data, styles: sheet.styles, formulas: sheet.formulas, colWidths: sheet.colWidths, rowHeights: sheet.rowHeights }
+  })
+  return { sheets: sheetsData, activeSheetIndex: spreadsheet.activeSheetIndex.value }
+}
+
+const loadWorkbook = (data) => {
+  if (!data.sheets || data.sheets.length === 0) return
+  spreadsheet.sheets.value = data.sheets
+  spreadsheet.activeSheetIndex.value = 0
+  const first = data.sheets[0]
+  spreadsheet.data.value = first.data
+  spreadsheet.cellStyles.value = first.styles || {}
+  spreadsheet.columnWidths.value = first.colWidths || {}
+  spreadsheet.rowHeights.value = first.rowHeights || {}
 }
 
 // File handling
@@ -909,6 +940,11 @@ const handleContextAction = (action) => {
           </svg>
           <span>CSV</span>
         </button>
+      </div>
+
+      <!-- Vault -->
+      <div class="flex items-center pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <VaultSaveLoad storeName="spreadsheet-workbooks" :getData="getWorkbookData" label="workbook" @load="loadWorkbook" />
       </div>
 
       <!-- Cell reference -->

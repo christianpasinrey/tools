@@ -2,8 +2,19 @@
 import { ref, computed } from 'vue'
 import { usePhoneTester } from '../composables/usePhoneTester'
 import { Phone } from '@tbisoftware/phone/vue'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 
 const tester = usePhoneTester()
+
+const getConfigData = () => ({
+  config: { ...tester.config.value },
+  framework: tester.selectedFramework.value
+})
+
+const loadConfig = (data) => {
+  if (data.config) tester.config.value = { ...data.config }
+  if (data.framework) tester.selectedFramework.value = data.framework
+}
 
 const showPreview = computed(() => tester.isConfigValid.value)
 
@@ -90,6 +101,7 @@ const activeSection = ref('config')
         >
           Reset
         </button>
+        <VaultSaveLoad storeName="phone-configs" :getData="getConfigData" label="config" @load="loadConfig" />
       </div>
     </div>
 

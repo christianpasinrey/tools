@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useKanbanDragDrop } from '../../composables/kanban/useKanbanDragDrop.js'
 import { useKanbanCrypto } from '../../composables/kanban/useKanbanCrypto.js'
 import { useKanbanStorage } from '../../composables/kanban/useKanbanStorage.js'
+import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 import KanbanHeader from './kanban/KanbanHeader.vue'
 import KanbanColumn from './kanban/KanbanColumn.vue'
 import KanbanFilterBar from './kanban/KanbanFilterBar.vue'
@@ -25,6 +26,19 @@ const columns = computed({
   set: (val) => { if (currentBoard.value) currentBoard.value.columns = val }
 })
 const boardTags = computed(() => currentBoard.value ? currentBoard.value.tags : [])
+
+// Vault save/load for boards
+const getBoardData = () => {
+  if (!currentBoard.value) return null
+  return JSON.parse(JSON.stringify(currentBoard.value))
+}
+
+const loadBoardData = (data) => {
+  if (!data || !data.columns) return
+  currentBoard.value = data
+  currentBoardId.value = data.id
+}
+
 const isLoaded = ref(false)
 const metaData = ref(null)
 const legacyColumns = ref(null)
@@ -369,6 +383,11 @@ const taskCount = computed(() => {
         @create-board="onCreateBoard"
         @update-search="searchQuery = $event"
       />
+
+      <!-- Vault Save/Load -->
+      <div v-if="currentBoard" class="h-8 bg-neutral-900/30 border-b border-neutral-800/50 flex items-center px-3 shrink-0">
+        <VaultSaveLoad storeName="kanban-boards" :getData="getBoardData" label="tablero" @load="loadBoardData" />
+      </div>
 
       <!-- Filter Bar -->
       <KanbanFilterBar

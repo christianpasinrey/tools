@@ -1,4 +1,6 @@
 <script setup>
+import { getToolsBySection } from '../../config/tools'
+
 defineProps({
   activeTab: String,
   themeColor: String
@@ -6,33 +8,7 @@ defineProps({
 
 const emit = defineEmits(['change'])
 
-const tabs = [
-  {
-    id: 'dev',
-    name: 'Dev Tools',
-    icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4'
-  },
-  {
-    id: 'security',
-    name: 'Cyber Security',
-    icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
-  },
-  {
-    id: 'phone',
-    name: 'Phone Tester',
-    icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'
-  },
-  {
-    id: 'api',
-    name: 'API Tester',
-    icon: 'M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
-  },
-  {
-    id: 'storage',
-    name: 'Browser Storage',
-    icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4'
-  }
-]
+const tabs = getToolsBySection('technology')
 </script>
 
 <template>

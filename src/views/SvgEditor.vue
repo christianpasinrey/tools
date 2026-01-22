@@ -5,8 +5,32 @@ import SvgToolbar from '../components/svg/SvgToolbar.vue'
 import SvgCanvas from '../components/svg/SvgCanvas.vue'
 import SvgSidebar from '../components/svg/SvgSidebar.vue'
 import SvgLayersList from '../components/svg/SvgLayersList.vue'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 
 const editor = useSvgEditor()
+
+const getProjectData = () => ({
+  elements: JSON.parse(JSON.stringify(editor.elements.value)),
+  artboard: {
+    width: editor.artboardWidth.value,
+    height: editor.artboardHeight.value,
+    gridSize: editor.gridSize.value,
+    showGrid: editor.showGrid.value,
+    snapToGrid: editor.snapToGrid.value
+  }
+})
+
+const loadProject = (data) => {
+  if (data.elements) editor.elements.value = data.elements
+  if (data.artboard) {
+    editor.artboardWidth.value = data.artboard.width ?? 512
+    editor.artboardHeight.value = data.artboard.height ?? 512
+    editor.gridSize.value = data.artboard.gridSize ?? 16
+    editor.showGrid.value = data.artboard.showGrid ?? true
+    editor.snapToGrid.value = data.artboard.snapToGrid ?? true
+  }
+  editor.clearSelection()
+}
 
 const fileInputRef = ref(null)
 
@@ -249,6 +273,12 @@ const handleReorder = (fromIndex, toIndex) => {
       @import="handleImport"
       @export="handleExport"
     />
+
+    <!-- Project Save/Load -->
+    <div class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+      <span class="text-xs text-neutral-500 mr-2">Proyecto</span>
+      <VaultSaveLoad storeName="svg-projects" :getData="getProjectData" label="proyecto" @load="loadProject" />
+    </div>
 
     <!-- Main content -->
     <div class="flex-1 flex overflow-hidden">

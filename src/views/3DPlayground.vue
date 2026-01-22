@@ -5,8 +5,33 @@ import { useThreePlayground } from '../composables/three/useThreePlayground'
 import ThreeToolbar from '../components/three/ThreeToolbar.vue'
 import ThreePropertiesPanel from '../components/three/ThreePropertiesPanel.vue'
 import ThreeObjectsList from '../components/three/ThreeObjectsList.vue'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 
 const playground = useThreePlayground()
+
+const getSceneData = () => ({
+  objects: playground.objects.value.map(obj => ({
+    type: obj.userData?.type || 'cube',
+    position: obj.position.toArray(),
+    rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
+    scale: obj.scale.toArray(),
+    color: obj.material?.color ? '#' + obj.material.color.getHexString() : '#22c55e'
+  }))
+})
+
+const loadSceneData = (data) => {
+  playground.quickActions.clearScene()
+  isPresetActive.value = false
+  if (!data.objects) return
+  data.objects.forEach(objData => {
+    const mesh = playground.addShape(objData.type || 'cube', { color: objData.color || '#22c55e' })
+    if (mesh) {
+      if (objData.position) mesh.position.fromArray(objData.position)
+      if (objData.rotation) mesh.rotation.set(objData.rotation[0], objData.rotation[1], objData.rotation[2])
+      if (objData.scale) mesh.scale.fromArray(objData.scale)
+    }
+  })
+}
 const canvasContainer = ref(null)
 const fileInput = ref(null)
 const isPresetActive = ref(false)
@@ -597,6 +622,12 @@ onUnmounted(() => {
       @material-change="playground.applyMaterialToSelected"
       @load-preset="loadPreset"
     />
+
+    <!-- Scene Save/Load -->
+    <div class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+      <span class="text-xs text-neutral-500 mr-2">Escena</span>
+      <VaultSaveLoad storeName="three-scenes" :getData="getSceneData" label="escena" @load="loadSceneData" />
+    </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex overflow-hidden min-h-0">

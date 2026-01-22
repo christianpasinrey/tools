@@ -4,15 +4,32 @@ import DevToolsToolbar from '../components/devtools/DevToolsToolbar.vue'
 import DevToolsTabs from '../components/devtools/DevToolsTabs.vue'
 import JsonTools from '../components/devtools/JsonTools.vue'
 import HtmlPlayground from '../components/devtools/HtmlPlayground.vue'
+import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 
 const editor = useDevTools()
+
+const getSnippetData = () => ({
+  htmlCode: editor.htmlCode.value,
+  cssCode: editor.cssCode.value,
+  jsCode: editor.jsCode.value
+})
+
+const loadSnippet = (data) => {
+  editor.htmlCode.value = data.htmlCode || ''
+  editor.cssCode.value = data.cssCode || ''
+  editor.jsCode.value = data.jsCode || ''
+  editor.activeTab.value = 'playground'
+  editor.runCode()
+}
 </script>
 
 <template>
   <div class="h-screen flex flex-col bg-neutral-950 text-neutral-300">
     <DevToolsToolbar
       :theme-color="editor.themeColor.value"
+      :get-data="getSnippetData"
       @color-change="editor.setThemeColor"
+      @load="loadSnippet"
     />
 
     <DevToolsTabs
