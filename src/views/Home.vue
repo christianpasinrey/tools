@@ -476,50 +476,11 @@ const colorClasses = {
 }
 
 const packages = ref([
+  // Build & tooling
   {
-    name: 'vuejs/core',
-    description: 'The progressive JavaScript framework for building modern web UI.',
-    url: 'https://github.com/vuejs/core',
-    language: 'TypeScript',
-    languageColor: '#3178c6',
-    stars: null
-  },
-  {
-    name: 'mrdoob/three.js',
-    description: 'JavaScript 3D Library providing Canvas, SVG, CSS3D and WebGL renderers.',
-    url: 'https://github.com/mrdoob/three.js',
-    language: 'JavaScript',
-    languageColor: '#f1e05a',
-    stars: null
-  },
-  {
-    name: 'codemirror/dev',
-    description: 'In-browser code editor with syntax highlighting, autocompletion and more.',
-    url: 'https://github.com/codemirror/dev',
-    language: 'TypeScript',
-    languageColor: '#3178c6',
-    stars: null
-  },
-  {
-    name: 'nodeca/js-yaml',
-    description: 'JavaScript YAML parser and serializer. Very fast.',
-    url: 'https://github.com/nodeca/js-yaml',
-    language: 'JavaScript',
-    languageColor: '#f1e05a',
-    stars: null
-  },
-  {
-    name: 'katspaugh/wavesurfer.js',
-    description: 'Audio waveform player with real-time visualization.',
-    url: 'https://github.com/katspaugh/wavesurfer.js',
-    language: 'TypeScript',
-    languageColor: '#3178c6',
-    stars: null
-  },
-  {
-    name: 'Hopding/pdf-lib',
-    description: 'Create and modify PDF documents in any JavaScript environment.',
-    url: 'https://github.com/Hopding/pdf-lib',
+    name: 'vitejs/vite',
+    description: 'Next generation frontend tooling. It\'s fast!',
+    url: 'https://github.com/vitejs/vite',
     language: 'TypeScript',
     languageColor: '#3178c6',
     stars: null
@@ -532,14 +493,66 @@ const packages = ref([
     languageColor: '#3178c6',
     stars: null
   },
+  // Framework & ecosystem
   {
-    name: 'vitejs/vite',
-    description: 'Next generation frontend tooling. It\'s fast!',
-    url: 'https://github.com/vitejs/vite',
+    name: 'vuejs/core',
+    description: 'The progressive JavaScript framework for building modern web UI.',
+    url: 'https://github.com/vuejs/core',
     language: 'TypeScript',
     languageColor: '#3178c6',
     stars: null
   },
+  {
+    name: 'vuejs/router',
+    description: 'The official Router for Vue.js. Expressive and configurable.',
+    url: 'https://github.com/vuejs/router',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
+  },
+  {
+    name: 'vueuse/vueuse',
+    description: 'Collection of essential Vue Composition Utilities.',
+    url: 'https://github.com/vueuse/vueuse',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
+  },
+  // Editors & code
+  {
+    name: 'codemirror/dev',
+    description: 'In-browser code editor with syntax highlighting, autocompletion and more.',
+    url: 'https://github.com/codemirror/dev',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
+  },
+  // 3D, maps & media
+  {
+    name: 'mrdoob/three.js',
+    description: 'JavaScript 3D Library providing Canvas, SVG, CSS3D and WebGL renderers.',
+    url: 'https://github.com/mrdoob/three.js',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'Leaflet/Leaflet',
+    description: 'JavaScript library for mobile-friendly interactive maps.',
+    url: 'https://github.com/Leaflet/Leaflet',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'katspaugh/wavesurfer.js',
+    description: 'Audio waveform player with real-time visualization.',
+    url: 'https://github.com/katspaugh/wavesurfer.js',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
+  },
+  // Document processing
   {
     name: 'mozilla/pdf.js',
     description: 'PDF.js is a PDF viewer built with HTML5.',
@@ -549,25 +562,9 @@ const packages = ref([
     stars: null
   },
   {
-    name: 'markedjs/marked',
-    description: 'A markdown parser and compiler. Built for speed. Built for CommonMark.',
-    url: 'https://github.com/markedjs/marked',
-    language: 'JavaScript',
-    languageColor: '#f1e05a',
-    stars: null
-  },
-  {
-    name: 'cure53/DOMPurify',
-    description: 'XSS sanitizer for HTML, MathML and SVG. Fast and easy to use.',
-    url: 'https://github.com/cure53/DOMPurify',
-    language: 'JavaScript',
-    languageColor: '#f1e05a',
-    stars: null
-  },
-  {
-    name: 'Tu-buen-camino/phone',
-    description: 'Multi-framework SIP WebRTC phone component.',
-    url: 'https://github.com/Tu-buen-camino/phone',
+    name: 'Hopding/pdf-lib',
+    description: 'Create and modify PDF documents in any JavaScript environment.',
+    url: 'https://github.com/Hopding/pdf-lib',
     language: 'TypeScript',
     languageColor: '#3178c6',
     stars: null
@@ -581,25 +578,35 @@ const packages = ref([
     stars: null
   },
   {
-    name: 'vueuse/vueuse',
-    description: 'Collection of essential Vue Composition Utilities.',
-    url: 'https://github.com/vueuse/vueuse',
-    language: 'TypeScript',
-    languageColor: '#3178c6',
+    name: 'markedjs/marked',
+    description: 'A markdown parser and compiler. Built for speed. Built for CommonMark.',
+    url: 'https://github.com/markedjs/marked',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
     stars: null
   },
+  // Utilities & security
   {
-    name: 'Leaflet/Leaflet',
-    description: 'JavaScript library for mobile-friendly interactive maps.',
-    url: 'https://github.com/Leaflet/Leaflet',
+    name: 'nodeca/js-yaml',
+    description: 'JavaScript YAML parser and serializer. Very fast.',
+    url: 'https://github.com/nodeca/js-yaml',
     language: 'JavaScript',
     languageColor: '#f1e05a',
     stars: null
   },
   {
-    name: 'vuejs/router',
-    description: 'The official Router for Vue.js. Expressive and configurable.',
-    url: 'https://github.com/vuejs/router',
+    name: 'cure53/DOMPurify',
+    description: 'XSS sanitizer for HTML, MathML and SVG. Fast and easy to use.',
+    url: 'https://github.com/cure53/DOMPurify',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  // Domain-specific
+  {
+    name: 'Tu-buen-camino/phone',
+    description: 'Multi-framework SIP WebRTC phone component.',
+    url: 'https://github.com/Tu-buen-camino/phone',
     language: 'TypeScript',
     languageColor: '#3178c6',
     stars: null
