@@ -178,96 +178,84 @@ export const SCENE_PRESETS = {
     icon: '🏛️',
     description: 'Atrio clasico para testing de iluminacion',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Sponza/glTF/Sponza.gltf',
-    scale: 1,
-    position: [0, 0, 0]
+    scale: 1
   },
   littlestTokyo: {
     name: 'Tokyo Street',
     icon: '🏙️',
     description: 'Calle japonesa con detalles animados',
     url: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb',
-    scale: 0.02,
-    position: [0, 4, 0]
+    scale: 0.02
   },
   damagedHelmet: {
     name: 'Casco Scifi',
     icon: '🪖',
     description: 'Casco con materiales PBR detallados',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/DamagedHelmet/glTF/DamagedHelmet.gltf',
-    scale: 2,
-    position: [0, 1.5, 0]
+    scale: 2
   },
   flightHelmet: {
     name: 'Casco de Aviador',
     icon: '🛩️',
     description: 'Casco vintage con texturas detalladas',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/FlightHelmet/glTF/FlightHelmet.gltf',
-    scale: 5,
-    position: [0, 0, 0]
+    scale: 5
   },
   fox: {
     name: 'Zorro Animado',
     icon: '🦊',
     description: 'Zorro low-poly con animacion',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Fox/glTF/Fox.gltf',
-    scale: 0.03,
-    position: [0, 0, 0]
+    scale: 0.03
   },
   duck: {
     name: 'Pato de Goma',
     icon: '🦆',
     description: 'Clasico pato amarillo',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Duck/glTF/Duck.gltf',
-    scale: 3,
-    position: [0, 0, 0]
+    scale: 3
   },
   lantern: {
     name: 'Linterna',
     icon: '🏮',
     description: 'Linterna con materiales PBR',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Lantern/glTF/Lantern.gltf',
-    scale: 0.1,
-    position: [0, 0, 0]
+    scale: 0.1
   },
   avocado: {
     name: 'Aguacate',
     icon: '🥑',
     description: 'Aguacate con texturas realistas',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/Avocado/glTF/Avocado.gltf',
-    scale: 30,
-    position: [0, 0.5, 0]
+    scale: 30
   },
   antiqueCamera: {
     name: 'Camara Antigua',
     icon: '📷',
     description: 'Camara fotografica vintage',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/AntiqueCamera/glTF/AntiqueCamera.gltf',
-    scale: 0.3,
-    position: [0, 0, 0]
+    scale: 0.3
   },
   toyCar: {
     name: 'Coche de Juguete',
     icon: '🚗',
     description: 'Coche con materiales brillantes',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/ToyCar/glTF/ToyCar.gltf',
-    scale: 100,
-    position: [0, 0, 0]
+    scale: 100
   },
   waterBottle: {
     name: 'Botella de Agua',
     icon: '🍶',
     description: 'Botella con materiales transparentes',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/WaterBottle/glTF/WaterBottle.gltf',
-    scale: 10,
-    position: [0, 0, 0]
+    scale: 10
   },
   boomBox: {
     name: 'BoomBox Retro',
     icon: '📻',
     description: 'Radiocasete con texturas detalladas',
     url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BoomBox/glTF/BoomBox.gltf',
-    scale: 100,
-    position: [0, 0.5, 0]
+    scale: 100
   }
 }
 

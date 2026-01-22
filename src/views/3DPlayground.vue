@@ -332,7 +332,6 @@ const loadScenePreset = async (presetKey) => {
 
     const model = gltf.scene
     model.scale.setScalar(preset.scale || 1)
-    model.position.set(...(preset.position || [0, 0, 0]))
 
     // Setup materials for better lighting visibility
     model.traverse((child) => {
@@ -341,6 +340,11 @@ const loadScenePreset = async (presetKey) => {
         child.receiveShadow = true
       }
     })
+
+    // Calculate bounding box and position model on top of the ground plane (y=0)
+    const box = new THREE.Box3().setFromObject(model)
+    const minY = box.min.y
+    model.position.set(0, -minY, 0) // Lift model so its bottom is at y=0
 
     model.userData = {
       type: 'scene',
