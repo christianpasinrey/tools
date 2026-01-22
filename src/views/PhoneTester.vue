@@ -54,7 +54,7 @@ const activeSection = ref('config')
 </script>
 
 <template>
-  <div class="h-[calc(100vh-4rem)] flex flex-col bg-neutral-950">
+  <div class="h-screen flex flex-col bg-neutral-950 pb-20">
     <!-- Toolbar -->
     <div class="flex items-center justify-between px-4 h-12 border-b border-neutral-800 bg-neutral-900/50">
       <div class="flex items-center gap-3">
