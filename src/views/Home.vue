@@ -587,6 +587,22 @@ const packages = ref([
     language: 'TypeScript',
     languageColor: '#3178c6',
     stars: null
+  },
+  {
+    name: 'Leaflet/Leaflet',
+    description: 'JavaScript library for mobile-friendly interactive maps.',
+    url: 'https://github.com/Leaflet/Leaflet',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'vuejs/router',
+    description: 'The official Router for Vue.js. Expressive and configurable.',
+    url: 'https://github.com/vuejs/router',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
   }
 ])
 
