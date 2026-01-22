@@ -221,7 +221,7 @@ export function useMapEditor() {
         <textarea class="popup-description" placeholder="Description">${marker.description}</textarea>
       </div>
     `
-    leafletMarker.bindPopup(popupContent, { maxWidth: 250 })
+    leafletMarker.bindPopup(popupContent, { minWidth: 220, maxWidth: 300 })
 
     leafletMarker.on('popupopen', () => {
       const popup = leafletMarker.getPopup()
