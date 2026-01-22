@@ -25,7 +25,7 @@ const copyResult = async (value) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-950 p-6">
+  <div class="min-h-screen bg-neutral-950 p-6 overflow-auto">
     <div class="max-w-6xl mx-auto">
       <!-- Header -->
       <div class="mb-8">

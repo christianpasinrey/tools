@@ -17,7 +17,7 @@ const tools = useTools()
       @change="(tab) => tools.activeTab.value = tab"
     />
 
-    <div class="flex-1 overflow-hidden">
+    <div class="flex-1 overflow-auto">
       <UnitConverter v-if="tools.activeTab.value === 'converter'" />
       <ColorPicker v-if="tools.activeTab.value === 'color'" />
     </div>
