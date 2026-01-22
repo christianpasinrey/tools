@@ -1,95 +1,129 @@
 <script setup>
-import { ref, onMounted, watch, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { useKanbanDragDrop } from '../../composables/kanban/useKanbanDragDrop.js'
+import { useKanbanCrypto } from '../../composables/kanban/useKanbanCrypto.js'
+import { useKanbanStorage } from '../../composables/kanban/useKanbanStorage.js'
+import KanbanHeader from './kanban/KanbanHeader.vue'
+import KanbanColumn from './kanban/KanbanColumn.vue'
+import KanbanFilterBar from './kanban/KanbanFilterBar.vue'
+import KanbanLockScreen from './kanban/KanbanLockScreen.vue'
+import KanbanExportModal from './kanban/KanbanExportModal.vue'
+import KanbanTaskSidebar from './kanban/KanbanTaskSidebar.vue'
 
-const router = useRouter()
+// === Crypto ===
+const cryptoModule = useKanbanCrypto()
+const { isLocked, isFirstSetup, generatedKey } = cryptoModule
 
-// === Encoding/Decoding (rot13 + base64) ===
-function rot13(str) {
-  return str.replace(/[a-zA-Z]/g, (c) => {
-    const base = c <= 'Z' ? 65 : 97
-    return String.fromCharCode(((c.charCodeAt(0) - base + 13) % 26) + base)
-  })
-}
+// === Storage (with crypto) ===
+const storage = useKanbanStorage(cryptoModule)
+const { boards, currentBoardId, loadMeta, loadBoard, saveBoard, saveMeta, createBoard, deleteBoard, renameBoard, checkLegacy, migrateFromLegacy, genId } = storage
 
-function encode(data) {
-  const json = JSON.stringify(data)
-  return btoa(unescape(encodeURIComponent(rot13(json))))
-}
-
-function decode(encoded) {
-  try {
-    const decoded = rot13(decodeURIComponent(escape(atob(encoded))))
-    return JSON.parse(decoded)
-  } catch {
-    return null
-  }
-}
-
-// === IndexedDB helpers ===
-const DB_NAME = 'todo-kanban-db'
-const STORE_NAME = 'boards'
-const BOARD_ID = 'default'
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1)
-    request.onupgradeneeded = (e) => {
-      const db = e.target.result
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id' })
-      }
-    }
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error)
-  })
-}
-
-async function saveBoard(columns) {
-  const db = await openDB()
-  const tx = db.transaction(STORE_NAME, 'readwrite')
-  const store = tx.objectStore(STORE_NAME)
-  store.put({ id: BOARD_ID, data: encode(columns) })
-  return new Promise((resolve, reject) => {
-    tx.oncomplete = () => { db.close(); resolve() }
-    tx.onerror = () => { db.close(); reject(tx.error) }
-  })
-}
-
-async function loadBoard() {
-  try {
-    const db = await openDB()
-    const tx = db.transaction(STORE_NAME, 'readonly')
-    const store = tx.objectStore(STORE_NAME)
-    const request = store.get(BOARD_ID)
-    return new Promise((resolve) => {
-      request.onsuccess = () => {
-        db.close()
-        if (request.result && request.result.data) {
-          resolve(decode(request.result.data))
-        } else {
-          resolve(null)
-        }
-      }
-      request.onerror = () => { db.close(); resolve(null) }
-    })
-  } catch {
-    return null
-  }
-}
-
-// === State ===
-const columns = ref([])
+// === Board State ===
+const currentBoard = ref(null)
+const columns = computed({
+  get: () => currentBoard.value ? currentBoard.value.columns : [],
+  set: (val) => { if (currentBoard.value) currentBoard.value.columns = val }
+})
+const boardTags = computed(() => currentBoard.value ? currentBoard.value.tags : [])
 const isLoaded = ref(false)
+const metaData = ref(null)
+const legacyColumns = ref(null)
+const lockScreenRef = ref(null)
 
-const defaultColumns = [
-  { id: genId(), title: 'To Do', tasks: [] },
-  { id: genId(), title: 'In Progress', tasks: [] },
-  { id: genId(), title: 'Done', tasks: [] }
-]
+// === Drag & Drop ===
+const {
+  draggedTask, draggedFromColumn, dragOverColumn, dragOverIndex,
+  draggedColumn, dragOverColumnIndex,
+  onTaskDragStart, onTaskDragEnd,
+  onColumnDragOver, onColumnDrop,
+  onColumnDragStart, onColumnDragOverHeader, onColumnDropHeader, onColumnDragEnd
+} = useKanbanDragDrop(columns)
 
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8)
+// === Filters ===
+const showFilters = ref(false)
+const searchQuery = ref('')
+const filterPriority = ref(null)
+const filterTags = ref([])
+const filterDateRange = ref({ from: null, to: null })
+
+const hasActiveFilters = computed(() => {
+  return !!(searchQuery.value || filterPriority.value || filterTags.value.length > 0 ||
+    filterDateRange.value.from || filterDateRange.value.to)
+})
+
+const filteredColumns = computed(() => {
+  if (!hasActiveFilters.value) return columns.value
+  return columns.value.map(col => ({
+    ...col,
+    tasks: col.tasks.filter(task => {
+      if (searchQuery.value) {
+        const q = searchQuery.value.toLowerCase()
+        if (!task.title.toLowerCase().includes(q) && !(task.description || '').toLowerCase().includes(q)) return false
+      }
+      if (filterPriority.value && task.priority !== filterPriority.value) return false
+      if (filterTags.value.length > 0 && !filterTags.value.some(t => (task.tags || []).includes(t))) return false
+      if (filterDateRange.value.from && (!task.dueDate || task.dueDate < filterDateRange.value.from)) return false
+      if (filterDateRange.value.to && (!task.dueDate || task.dueDate > filterDateRange.value.to)) return false
+      return true
+    })
+  }))
+})
+
+function clearFilters() {
+  searchQuery.value = ''
+  filterPriority.value = null
+  filterTags.value = []
+  filterDateRange.value = { from: null, to: null }
+}
+
+// === Export Modal ===
+const showExport = ref(false)
+
+// === Task Sidebar ===
+const sidebarTask = ref(null)
+const sidebarColumnId = ref(null)
+const sidebarMode = ref('view') // 'view' | 'edit' | 'create'
+const showSidebar = computed(() => sidebarMode.value === 'create' || sidebarTask.value !== null)
+
+const sidebarColumnName = computed(() => {
+  if (!sidebarColumnId.value || !currentBoard.value) return ''
+  const col = currentBoard.value.columns.find(c => c.id === sidebarColumnId.value)
+  return col ? col.title : ''
+})
+
+function openTask(task, columnId) {
+  sidebarTask.value = task
+  sidebarColumnId.value = columnId
+  sidebarMode.value = 'view'
+}
+
+function openCreateTask(columnId) {
+  sidebarTask.value = null
+  sidebarColumnId.value = columnId
+  sidebarMode.value = 'create'
+}
+
+function closeSidebar() {
+  sidebarTask.value = null
+  sidebarColumnId.value = null
+  sidebarMode.value = 'view'
+}
+
+function onSidebarSave(data) {
+  if (sidebarMode.value === 'create') {
+    addTask(sidebarColumnId.value, data)
+  } else if (sidebarTask.value) {
+    editTask(sidebarColumnId.value, sidebarTask.value.id, data)
+    // Update the local ref so sidebar reflects changes
+    Object.assign(sidebarTask.value, data)
+  }
+}
+
+function onSidebarDelete() {
+  if (sidebarTask.value && sidebarColumnId.value) {
+    deleteTask(sidebarColumnId.value, sidebarTask.value.id)
+    closeSidebar()
+  }
 }
 
 // === Persistence ===
@@ -97,110 +131,121 @@ let saveTimeout = null
 function scheduleSave() {
   if (saveTimeout) clearTimeout(saveTimeout)
   saveTimeout = setTimeout(() => {
-    saveBoard(columns.value)
+    if (currentBoard.value) saveBoard(currentBoard.value)
   }, 300)
 }
 
-watch(columns, () => {
-  if (isLoaded.value) scheduleSave()
+watch(currentBoard, () => {
+  if (isLoaded.value && currentBoard.value && !isLocked.value) scheduleSave()
 }, { deep: true })
 
+// === Initialization ===
 onMounted(async () => {
-  const saved = await loadBoard()
-  if (saved && Array.isArray(saved) && saved.length > 0) {
-    columns.value = saved
+  metaData.value = await loadMeta()
+
+  if (!metaData.value || !metaData.value.boards || metaData.value.boards.length === 0) {
+    // Check legacy data
+    const legacy = await checkLegacy()
+    if (legacy) {
+      legacyColumns.value = legacy
+    }
+    // First time or legacy: setup encryption
+    cryptoModule.prepareSetup()
+    isLocked.value = true
+  } else if (metaData.value.encryptionConfigured) {
+    // Has encryption: show unlock screen
+    isLocked.value = true
+    isFirstSetup.value = false
   } else {
-    columns.value = defaultColumns
+    // Has boards but no encryption (shouldn't happen in normal flow, but handle gracefully)
+    await loadFirstBoard()
   }
-  isLoaded.value = true
 })
 
-// === Drag & Drop ===
-const draggedTask = ref(null)
-const draggedFromColumn = ref(null)
-const dragOverColumn = ref(null)
-const dragOverIndex = ref(-1)
-const draggedColumn = ref(null)
-const dragOverColumnIndex = ref(-1)
-
-function onTaskDragStart(e, task, columnId) {
-  draggedTask.value = task
-  draggedFromColumn.value = columnId
-  e.dataTransfer.effectAllowed = 'move'
-  e.dataTransfer.setData('text/plain', task.id)
-  e.target.classList.add('opacity-50')
+async function loadFirstBoard() {
+  if (boards.value.length === 0) {
+    currentBoard.value = await createBoard('Mi Tablero')
+  } else {
+    currentBoardId.value = boards.value[0].id
+    const board = await loadBoard(boards.value[0].id)
+    currentBoard.value = board || await createBoard('Mi Tablero')
+  }
+  isLoaded.value = true
 }
 
-function onTaskDragEnd(e) {
-  e.target.classList.remove('opacity-50')
-  draggedTask.value = null
-  draggedFromColumn.value = null
-  dragOverColumn.value = null
-  dragOverIndex.value = -1
+// === Lock Screen Handlers ===
+async function onSetupConfirm() {
+  // Key has been generated and user confirmed they saved it
+  const testData = await cryptoModule.confirmSetup()
+
+  if (legacyColumns.value) {
+    // Migrate legacy data
+    currentBoard.value = await migrateFromLegacy(legacyColumns.value)
+    legacyColumns.value = null
+  } else if (boards.value.length > 0) {
+    // Re-encrypt existing boards
+    for (const b of boards.value) {
+      const board = await loadBoard(b.id)
+      if (board) await saveBoard(board)
+    }
+    await loadFirstBoard()
+  } else {
+    currentBoard.value = await createBoard('Mi Tablero')
+  }
+
+  // Save encryption config in meta
+  await saveMeta({
+    encryptionConfigured: true,
+    salt: testData.salt,
+    iv: testData.iv,
+    ciphertextTest: testData.ciphertextTest
+  })
+
+  isLocked.value = false
+  isLoaded.value = true
 }
 
-function onColumnDragOver(e, columnId, taskIndex) {
-  e.preventDefault()
-  e.dataTransfer.dropEffect = 'move'
-  dragOverColumn.value = columnId
-  dragOverIndex.value = taskIndex
+async function onVerify(passphrase) {
+  const testData = {
+    salt: metaData.value.salt,
+    iv: metaData.value.iv,
+    ciphertextTest: metaData.value.ciphertextTest
+  }
+  const ok = await cryptoModule.verifyPassphrase(passphrase, testData)
+  if (ok) {
+    await loadFirstBoard()
+  } else {
+    lockScreenRef.value?.onError()
+  }
 }
 
-function onColumnDrop(e, targetColumnId, dropIndex) {
-  e.preventDefault()
-  if (!draggedTask.value) return
-
-  const sourceCol = columns.value.find(c => c.id === draggedFromColumn.value)
-  const targetCol = columns.value.find(c => c.id === targetColumnId)
-  if (!sourceCol || !targetCol) return
-
-  const taskIdx = sourceCol.tasks.findIndex(t => t.id === draggedTask.value.id)
-  if (taskIdx === -1) return
-
-  const [task] = sourceCol.tasks.splice(taskIdx, 1)
-
-  const insertAt = dropIndex >= 0 ? dropIndex : targetCol.tasks.length
-  targetCol.tasks.splice(insertAt, 0, task)
-
-  dragOverColumn.value = null
-  dragOverIndex.value = -1
+function onLock() {
+  cryptoModule.lock()
+  currentBoard.value = null
+  isLoaded.value = false
 }
 
-// Column drag
-function onColumnDragStart(e, index) {
-  draggedColumn.value = index
-  e.dataTransfer.effectAllowed = 'move'
-  e.dataTransfer.setData('text/plain', 'column')
+// === Board Actions ===
+async function onSelectBoard(boardId) {
+  if (currentBoard.value) await saveBoard(currentBoard.value)
+  const board = await loadBoard(boardId)
+  if (board) {
+    currentBoard.value = board
+    currentBoardId.value = boardId
+  }
 }
 
-function onColumnDragOverHeader(e, index) {
-  e.preventDefault()
-  if (draggedColumn.value === null) return
-  dragOverColumnIndex.value = index
+async function onCreateBoard(name) {
+  if (currentBoard.value) await saveBoard(currentBoard.value)
+  currentBoard.value = await createBoard(name)
 }
 
-function onColumnDropHeader(e, index) {
-  e.preventDefault()
-  if (draggedColumn.value === null || draggedColumn.value === index) return
-  const [col] = columns.value.splice(draggedColumn.value, 1)
-  columns.value.splice(index, 0, col)
-  draggedColumn.value = null
-  dragOverColumnIndex.value = -1
-}
-
-function onColumnDragEnd() {
-  draggedColumn.value = null
-  dragOverColumnIndex.value = -1
-}
-
-// === Column Management ===
-const editingColumnId = ref(null)
-const editingColumnTitle = ref('')
-
+// === Column Actions ===
 function addColumn() {
-  columns.value.push({
+  if (!currentBoard.value) return
+  currentBoard.value.columns.push({
     id: genId(),
-    title: 'New Column',
+    title: 'Nueva Columna',
     tasks: []
   })
   nextTick(() => {
@@ -209,382 +254,206 @@ function addColumn() {
   })
 }
 
-function startEditColumn(col) {
-  editingColumnId.value = col.id
-  editingColumnTitle.value = col.title
-}
-
-function saveColumnTitle(col) {
-  if (editingColumnTitle.value.trim()) {
-    col.title = editingColumnTitle.value.trim()
-  }
-  editingColumnId.value = null
+function updateColumnTitle(colId, title) {
+  const col = currentBoard.value.columns.find(c => c.id === colId)
+  if (col) col.title = title
 }
 
 function deleteColumn(colId) {
-  const col = columns.value.find(c => c.id === colId)
-  if (col && col.tasks.length > 0) {
-    if (!confirm(`Eliminar "${col.title}" con ${col.tasks.length} tarea(s)?`)) return
-  }
-  columns.value = columns.value.filter(c => c.id !== colId)
+  currentBoard.value.columns = currentBoard.value.columns.filter(c => c.id !== colId)
 }
 
-// === Task Management ===
-const addingToColumn = ref(null)
-const newTaskTitle = ref('')
-const newTaskDescription = ref('')
-const newTaskPriority = ref('medium')
-
-const editingTask = ref(null)
-const editTaskTitle = ref('')
-const editTaskDescription = ref('')
-const editTaskPriority = ref('medium')
-
-function startAddTask(colId) {
-  addingToColumn.value = colId
-  newTaskTitle.value = ''
-  newTaskDescription.value = ''
-  newTaskPriority.value = 'medium'
-  nextTick(() => {
-    const input = document.querySelector('.new-task-input')
-    if (input) input.focus()
-  })
-}
-
-function confirmAddTask(colId) {
-  if (!newTaskTitle.value.trim()) return
-  const col = columns.value.find(c => c.id === colId)
+// === Task Actions ===
+function addTask(colId, data) {
+  const col = currentBoard.value.columns.find(c => c.id === colId)
   if (!col) return
   col.tasks.push({
     id: genId(),
-    title: newTaskTitle.value.trim(),
-    description: newTaskDescription.value.trim(),
-    priority: newTaskPriority.value,
+    title: data.title,
+    description: data.description || '',
+    priority: data.priority || 'medium',
+    dueDate: data.dueDate || null,
+    tags: data.tags || [],
+    subtasks: data.subtasks || [],
     createdAt: Date.now()
   })
-  addingToColumn.value = null
 }
 
-function cancelAddTask() {
-  addingToColumn.value = null
-}
-
-function startEditTask(task) {
-  editingTask.value = task.id
-  editTaskTitle.value = task.title
-  editTaskDescription.value = task.description || ''
-  editTaskPriority.value = task.priority || 'medium'
-}
-
-function saveEditTask(task) {
-  if (editTaskTitle.value.trim()) {
-    task.title = editTaskTitle.value.trim()
-    task.description = editTaskDescription.value.trim()
-    task.priority = editTaskPriority.value
-  }
-  editingTask.value = null
-}
-
-function cancelEditTask() {
-  editingTask.value = null
+function editTask(colId, taskId, data) {
+  const col = currentBoard.value.columns.find(c => c.id === colId)
+  if (!col) return
+  const task = col.tasks.find(t => t.id === taskId)
+  if (!task) return
+  Object.assign(task, {
+    title: data.title,
+    description: data.description || '',
+    priority: data.priority || 'medium',
+    dueDate: data.dueDate || null,
+    tags: data.tags || [],
+    subtasks: data.subtasks || []
+  })
 }
 
 function deleteTask(colId, taskId) {
-  const col = columns.value.find(c => c.id === colId)
+  const col = currentBoard.value.columns.find(c => c.id === colId)
   if (!col) return
   col.tasks = col.tasks.filter(t => t.id !== taskId)
 }
 
-// === Helpers ===
-const priorityColors = {
-  low: '#22c55e',
-  medium: '#f59e0b',
-  high: '#ef4444'
+// === Tag Management ===
+function addTag(tag) {
+  if (!currentBoard.value) return
+  currentBoard.value.tags.push({ id: genId(), ...tag })
 }
 
-const priorityLabels = {
-  low: 'Baja',
-  medium: 'Media',
-  high: 'Alta'
+function removeTag(tagId) {
+  if (!currentBoard.value) return
+  currentBoard.value.tags = currentBoard.value.tags.filter(t => t.id !== tagId)
+  currentBoard.value.columns.forEach(col => {
+    col.tasks.forEach(task => {
+      if (task.tags) task.tags = task.tags.filter(t => t !== tagId)
+    })
+  })
 }
 
-function goToStorage() {
-  router.push('/technology#browser-storage')
+// === Import ===
+async function onImport(data) {
+  const id = genId()
+  const board = {
+    id,
+    name: data.name || 'Importado',
+    createdAt: Date.now(),
+    tags: data.tags || [],
+    columns: data.columns || []
+  }
+  boards.value.push({ id, name: board.name, createdAt: board.createdAt })
+  await saveMeta()
+  await saveBoard(board)
+  currentBoard.value = board
+  currentBoardId.value = id
+  showExport.value = false
 }
+
+// === Task count ===
+const taskCount = computed(() => {
+  return columns.value.reduce((acc, c) => acc + c.tasks.length, 0)
+})
 </script>
 
 <template>
   <div class="h-full flex flex-col">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 shrink-0">
-      <div class="flex items-center gap-3">
-        <h2 class="text-sm font-medium text-white">Kanban Board</h2>
-        <span class="text-xs text-neutral-500">{{ columns.reduce((acc, c) => acc + c.tasks.length, 0) }} tareas</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <button
-          @click="goToStorage"
-          class="flex items-center gap-1.5 px-2 py-1 text-[10px] text-neutral-500 hover:text-indigo-400 transition-colors"
-          title="Ver datos en Browser Storage"
-        >
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          IndexedDB
-        </button>
-        <button
-          @click="addColumn"
-          class="flex items-center gap-1 px-2.5 py-1.5 text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded transition-colors"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-          </svg>
-          Columna
-        </button>
-      </div>
-    </div>
+    <!-- Lock Screen -->
+    <KanbanLockScreen
+      v-if="isLocked"
+      ref="lockScreenRef"
+      :is-setup="isFirstSetup"
+      :generated-key="generatedKey"
+      @setup-confirm="onSetupConfirm"
+      @verify="onVerify"
+    />
 
-    <!-- Board -->
-    <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scroll">
-      <div class="flex gap-4 p-4 h-full min-w-max">
-        <!-- Columns -->
-        <div
-          v-for="(col, colIndex) in columns"
-          :key="col.id"
-          class="flex flex-col w-72 bg-neutral-900/50 rounded-xl border border-neutral-800 shrink-0 max-h-full transition-all"
-          :class="{
-            'border-indigo-500/50 scale-[1.02]': dragOverColumnIndex === colIndex && draggedColumn !== null,
-            'opacity-50': draggedColumn === colIndex
-          }"
-          @dragover="onColumnDragOver($event, col.id, col.tasks.length)"
-          @drop="onColumnDrop($event, col.id, -1)"
-        >
-          <!-- Column Header -->
+    <template v-else>
+      <!-- Header -->
+      <KanbanHeader
+        :board-name="currentBoard?.name || 'Mi Tablero'"
+        :boards="boards"
+        :task-count="taskCount"
+        :search-query="searchQuery"
+        :has-active-filters="hasActiveFilters"
+        :is-locked="false"
+        @add-column="addColumn"
+        @toggle-filters="showFilters = !showFilters"
+        @toggle-export="showExport = !showExport"
+        @lock="onLock"
+        @select-board="onSelectBoard"
+        @create-board="onCreateBoard"
+        @update-search="searchQuery = $event"
+      />
+
+      <!-- Filter Bar -->
+      <KanbanFilterBar
+        v-if="showFilters"
+        :priority="filterPriority"
+        :tags="filterTags"
+        :date-range="filterDateRange"
+        :board-tags="boardTags"
+        @update-priority="filterPriority = $event"
+        @update-tags="filterTags = $event"
+        @update-date-range="filterDateRange = $event"
+        @clear="clearFilters"
+        @add-tag="addTag"
+        @remove-tag="removeTag"
+      />
+
+      <!-- Board -->
+      <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scroll">
+        <div class="flex gap-4 p-4 h-full min-w-max">
+          <KanbanColumn
+            v-for="(col, colIndex) in filteredColumns"
+            :key="col.id"
+            :column="col"
+            :col-index="colIndex"
+            :board-tags="boardTags"
+            :drag-over-column="dragOverColumn"
+            :drag-over-index="dragOverIndex"
+            :dragged-column="draggedColumn"
+            :drag-over-column-index="dragOverColumnIndex"
+            :dragged-task="draggedTask"
+            @delete-column="deleteColumn"
+            @update-title="updateColumnTitle"
+            @open-task="openTask"
+            @create-task="openCreateTask"
+            @delete-task="deleteTask"
+            @task-dragstart="(e, task, colId) => onTaskDragStart(e, task, colId)"
+            @task-dragend="onTaskDragEnd"
+            @column-dragover="onColumnDragOver"
+            @column-drop="onColumnDrop"
+            @column-dragstart="onColumnDragStart"
+            @column-dragover-header="onColumnDragOverHeader"
+            @column-drop-header="onColumnDropHeader"
+            @column-dragend="onColumnDragEnd"
+          />
+
+          <!-- Empty state -->
           <div
-            class="flex items-center justify-between px-3 py-2.5 border-b border-neutral-800 cursor-grab active:cursor-grabbing shrink-0"
-            draggable="true"
-            @dragstart="onColumnDragStart($event, colIndex)"
-            @dragover="onColumnDragOverHeader($event, colIndex)"
-            @drop="onColumnDropHeader($event, colIndex)"
-            @dragend="onColumnDragEnd"
+            v-if="columns.length === 0 && isLoaded"
+            class="flex flex-col items-center justify-center w-72 bg-neutral-900/30 rounded-xl border border-dashed border-neutral-700 p-8"
           >
-            <div class="flex items-center gap-2 flex-1 min-w-0">
-              <svg class="w-3.5 h-3.5 text-neutral-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
-              </svg>
-              <template v-if="editingColumnId === col.id">
-                <input
-                  v-model="editingColumnTitle"
-                  @keydown.enter="saveColumnTitle(col)"
-                  @keydown.escape="editingColumnId = null"
-                  @blur="saveColumnTitle(col)"
-                  class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-2 py-0.5 text-xs text-white outline-none focus:border-indigo-500/50"
-                  autofocus
-                />
-              </template>
-              <template v-else>
-                <span
-                  class="text-xs font-medium text-neutral-300 truncate cursor-pointer hover:text-white"
-                  @dblclick="startEditColumn(col)"
-                >
-                  {{ col.title }}
-                </span>
-                <span class="text-[10px] text-neutral-600 shrink-0">{{ col.tasks.length }}</span>
-              </template>
-            </div>
-            <div class="flex items-center gap-1 shrink-0 ml-2">
-              <button
-                @click="startAddTask(col.id)"
-                class="p-1 text-neutral-600 hover:text-indigo-400 transition-colors"
-                title="Añadir tarea"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-              </button>
-              <button
-                @click="deleteColumn(col.id)"
-                class="p-1 text-neutral-600 hover:text-red-400 transition-colors"
-                title="Eliminar columna"
-              >
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Tasks List -->
-          <div class="flex-1 overflow-y-auto p-2 space-y-2">
-            <!-- Add Task Form -->
-            <div v-if="addingToColumn === col.id" class="bg-neutral-800/80 rounded-lg p-2.5 border border-indigo-500/30">
-              <input
-                v-model="newTaskTitle"
-                placeholder="Título de la tarea"
-                class="new-task-input w-full bg-neutral-900 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50 mb-2"
-                @keydown.enter="confirmAddTask(col.id)"
-                @keydown.escape="cancelAddTask"
-              />
-              <textarea
-                v-model="newTaskDescription"
-                placeholder="Descripción (opcional)"
-                rows="2"
-                class="w-full bg-neutral-900 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50 mb-2 resize-none"
-              ></textarea>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-1">
-                  <button
-                    v-for="(label, key) in priorityLabels"
-                    :key="key"
-                    @click="newTaskPriority = key"
-                    class="px-2 py-0.5 text-[10px] rounded-full border transition-colors"
-                    :class="newTaskPriority === key
-                      ? 'border-current text-white'
-                      : 'border-neutral-700 text-neutral-500 hover:text-neutral-300'"
-                    :style="newTaskPriority === key ? { color: priorityColors[key], borderColor: priorityColors[key] + '80' } : {}"
-                  >
-                    {{ label }}
-                  </button>
-                </div>
-                <div class="flex items-center gap-1">
-                  <button @click="cancelAddTask" class="px-2 py-1 text-[10px] text-neutral-500 hover:text-white transition-colors">
-                    Cancelar
-                  </button>
-                  <button
-                    @click="confirmAddTask(col.id)"
-                    :disabled="!newTaskTitle.trim()"
-                    class="px-2.5 py-1 text-[10px] bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-white rounded transition-colors"
-                  >
-                    Añadir
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Task Cards -->
-            <div
-              v-for="(task, taskIndex) in col.tasks"
-              :key="task.id"
-              class="group relative bg-neutral-800/60 hover:bg-neutral-800 rounded-lg p-2.5 border border-neutral-700/50 hover:border-neutral-600 cursor-grab active:cursor-grabbing transition-all"
-              :class="{
-                'border-indigo-500/50 bg-indigo-500/5': dragOverColumn === col.id && dragOverIndex === taskIndex
-              }"
-              draggable="true"
-              @dragstart="onTaskDragStart($event, task, col.id)"
-              @dragend="onTaskDragEnd"
-              @dragover="onColumnDragOver($event, col.id, taskIndex)"
-              @drop.stop="onColumnDrop($event, col.id, taskIndex)"
+            <svg class="w-10 h-10 text-neutral-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <p class="text-xs text-neutral-500 mb-3">Sin columnas</p>
+            <button
+              @click="addColumn"
+              class="px-3 py-1.5 text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded transition-colors"
             >
-              <!-- Edit Mode -->
-              <template v-if="editingTask === task.id">
-                <input
-                  v-model="editTaskTitle"
-                  class="w-full bg-neutral-900 border border-neutral-700 rounded px-2 py-1 text-xs text-white outline-none focus:border-indigo-500/50 mb-1.5"
-                  @keydown.enter="saveEditTask(task)"
-                  @keydown.escape="cancelEditTask"
-                  autofocus
-                />
-                <textarea
-                  v-model="editTaskDescription"
-                  rows="2"
-                  class="w-full bg-neutral-900 border border-neutral-700 rounded px-2 py-1 text-xs text-white outline-none focus:border-indigo-500/50 mb-1.5 resize-none"
-                ></textarea>
-                <div class="flex items-center justify-between">
-                  <div class="flex gap-1">
-                    <button
-                      v-for="(label, key) in priorityLabels"
-                      :key="key"
-                      @click="editTaskPriority = key"
-                      class="px-1.5 py-0.5 text-[10px] rounded-full border transition-colors"
-                      :class="editTaskPriority === key
-                        ? 'border-current text-white'
-                        : 'border-neutral-700 text-neutral-500'"
-                      :style="editTaskPriority === key ? { color: priorityColors[key], borderColor: priorityColors[key] + '80' } : {}"
-                    >
-                      {{ label }}
-                    </button>
-                  </div>
-                  <div class="flex gap-1">
-                    <button @click="cancelEditTask" class="px-2 py-0.5 text-[10px] text-neutral-500 hover:text-white">Cancelar</button>
-                    <button @click="saveEditTask(task)" class="px-2 py-0.5 text-[10px] bg-indigo-500 text-white rounded">Guardar</button>
-                  </div>
-                </div>
-              </template>
-
-              <!-- View Mode -->
-              <template v-else>
-                <!-- Priority indicator -->
-                <div
-                  class="absolute top-0 left-0 w-0.5 h-full rounded-l-lg"
-                  :style="{ backgroundColor: priorityColors[task.priority || 'medium'] }"
-                ></div>
-
-                <div class="flex items-start justify-between gap-2">
-                  <span class="text-xs text-white leading-snug pl-1.5">{{ task.title }}</span>
-                  <!-- Actions -->
-                  <div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                    <button
-                      @click.stop="startEditTask(task)"
-                      class="p-0.5 text-neutral-500 hover:text-indigo-400 transition-colors"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                      </svg>
-                    </button>
-                    <button
-                      @click.stop="deleteTask(col.id, task.id)"
-                      class="p-0.5 text-neutral-500 hover:text-red-400 transition-colors"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Description -->
-                <p v-if="task.description" class="text-[10px] text-neutral-500 mt-1 pl-1.5 line-clamp-2">
-                  {{ task.description }}
-                </p>
-
-                <!-- Footer -->
-                <div class="flex items-center gap-2 mt-2 pl-1.5">
-                  <span
-                    class="text-[9px] px-1.5 py-0.5 rounded-full"
-                    :style="{ color: priorityColors[task.priority || 'medium'], backgroundColor: priorityColors[task.priority || 'medium'] + '15', border: '1px solid ' + priorityColors[task.priority || 'medium'] + '30' }"
-                  >
-                    {{ priorityLabels[task.priority || 'medium'] }}
-                  </span>
-                </div>
-              </template>
-            </div>
-
-            <!-- Drop zone indicator at bottom -->
-            <div
-              v-if="draggedTask && dragOverColumn === col.id && dragOverIndex === col.tasks.length"
-              class="h-1 bg-indigo-500/30 rounded-full mx-2"
-            ></div>
+              Crear columna
+            </button>
           </div>
-        </div>
-
-        <!-- Empty state / Add column button -->
-        <div
-          v-if="columns.length === 0"
-          class="flex flex-col items-center justify-center w-72 bg-neutral-900/30 rounded-xl border border-dashed border-neutral-700 p-8"
-        >
-          <svg class="w-10 h-10 text-neutral-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-          </svg>
-          <p class="text-xs text-neutral-500 mb-3">Sin columnas</p>
-          <button
-            @click="addColumn"
-            class="px-3 py-1.5 text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded transition-colors"
-          >
-            Crear columna
-          </button>
         </div>
       </div>
-    </div>
+    </template>
+
+    <!-- Export Modal -->
+    <KanbanExportModal
+      v-if="showExport"
+      :board="currentBoard"
+      @close="showExport = false"
+      @import="onImport"
+    />
+
+    <!-- Task Sidebar -->
+    <KanbanTaskSidebar
+      v-if="showSidebar"
+      :task="sidebarTask"
+      :column-id="sidebarColumnId"
+      :column-name="sidebarColumnName"
+      :board-tags="boardTags"
+      :mode="sidebarMode"
+      @close="closeSidebar"
+      @save="onSidebarSave"
+      @delete="onSidebarDelete"
+    />
   </div>
 </template>
 
