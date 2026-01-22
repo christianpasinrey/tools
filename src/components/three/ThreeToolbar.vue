@@ -226,7 +226,7 @@ const toggleMenu = (menu) => {
         </svg>
       </button>
 
-      <div v-if="showShapes" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
+      <div v-if="showShapes" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[180px] max-h-[70vh] overflow-y-auto">
         <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Geometrias</div>
         <button
           v-for="shape in shapes"
