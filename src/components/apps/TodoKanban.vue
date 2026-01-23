@@ -1,7 +1,6 @@
 <script setup>
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useKanbanDragDrop } from '../../composables/kanban/useKanbanDragDrop.js'
-import { useAppCrypto } from '../../composables/useAppCrypto.js'
 import { useKanbanStorage } from '../../composables/kanban/useKanbanStorage.js'
 import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 import KanbanHeader from './kanban/KanbanHeader.vue'
@@ -10,22 +9,24 @@ import KanbanFilterBar from './kanban/KanbanFilterBar.vue'
 import KanbanExportModal from './kanban/KanbanExportModal.vue'
 import KanbanTaskSidebar from './kanban/KanbanTaskSidebar.vue'
 
-// === Crypto (centralized app crypto for optional encryption) ===
-const crypto = useAppCrypto()
-
-// === Storage (with centralized crypto) ===
-const storage = useKanbanStorage(crypto)
-const { boards, currentBoardId, loadMeta, loadBoard, saveBoard, saveMeta, createBoard, deleteBoard, renameBoard, checkLegacy, migrateFromLegacy, genId } = storage
+// === In-memory board management ===
+const storage = useKanbanStorage()
+const { boards, currentBoardId, createBoard, deleteBoard, renameBoard, genId } = storage
 
 // === Board State ===
 const currentBoard = ref(null)
+const boardDataMap = ref({}) // In-memory store for multi-board switching
+
 const columns = computed({
   get: () => currentBoard.value ? currentBoard.value.columns : [],
   set: (val) => { if (currentBoard.value) currentBoard.value.columns = val }
 })
 const boardTags = computed(() => currentBoard.value ? currentBoard.value.tags : [])
 
-// Vault save/load for boards
+// Initialize with default board
+currentBoard.value = createBoard('Mi Tablero')
+
+// === Vault save/load for encrypted persistence ===
 const getBoardData = () => {
   if (!currentBoard.value) return null
   return JSON.parse(JSON.stringify(currentBoard.value))
@@ -35,9 +36,13 @@ const loadBoardData = (data) => {
   if (!data || !data.columns) return
   currentBoard.value = data
   currentBoardId.value = data.id
+  // Add to board list if not present
+  if (!boards.value.find(b => b.id === data.id)) {
+    boards.value.push({ id: data.id, name: data.name, createdAt: data.createdAt || Date.now() })
+  }
+  // Store in memory map
+  boardDataMap.value[data.id] = data
 }
-
-const isLoaded = ref(false)
 
 // === Drag & Drop ===
 const {
@@ -123,7 +128,6 @@ function onSidebarSave(data) {
     addTask(sidebarColumnId.value, data)
   } else if (sidebarTask.value) {
     editTask(sidebarColumnId.value, sidebarTask.value.id, data)
-    // Update the local ref so sidebar reflects changes
     Object.assign(sidebarTask.value, data)
   }
 }
@@ -135,61 +139,24 @@ function onSidebarDelete() {
   }
 }
 
-// === Persistence ===
-let saveTimeout = null
-function scheduleSave() {
-  if (saveTimeout) clearTimeout(saveTimeout)
-  saveTimeout = setTimeout(() => {
-    if (currentBoard.value) saveBoard(currentBoard.value)
-  }, 300)
-}
-
-watch(currentBoard, () => {
-  if (isLoaded.value && currentBoard.value) scheduleSave()
-}, { deep: true })
-
-// === Initialization ===
-onMounted(async () => {
-  const metaData = await loadMeta()
-
-  if (!metaData || !metaData.boards || metaData.boards.length === 0) {
-    // Check legacy data
-    const legacy = await checkLegacy()
-    if (legacy) {
-      currentBoard.value = await migrateFromLegacy(legacy)
-    } else {
-      currentBoard.value = await createBoard('Mi Tablero')
-    }
-  } else {
-    await loadFirstBoard()
-  }
-
-  isLoaded.value = true
-})
-
-async function loadFirstBoard() {
-  if (boards.value.length === 0) {
-    currentBoard.value = await createBoard('Mi Tablero')
-  } else {
-    currentBoardId.value = boards.value[0].id
-    const board = await loadBoard(boards.value[0].id)
-    currentBoard.value = board || await createBoard('Mi Tablero')
-  }
-}
-
 // === Board Actions ===
-async function onSelectBoard(boardId) {
-  if (currentBoard.value) await saveBoard(currentBoard.value)
-  const board = await loadBoard(boardId)
+function onSelectBoard(boardId) {
+  if (currentBoard.value) {
+    boardDataMap.value[currentBoard.value.id] = JSON.parse(JSON.stringify(currentBoard.value))
+  }
+  const board = boardDataMap.value[boardId]
   if (board) {
     currentBoard.value = board
     currentBoardId.value = boardId
   }
 }
 
-async function onCreateBoard(name) {
-  if (currentBoard.value) await saveBoard(currentBoard.value)
-  currentBoard.value = await createBoard(name)
+function onCreateBoard(name) {
+  if (currentBoard.value) {
+    boardDataMap.value[currentBoard.value.id] = JSON.parse(JSON.stringify(currentBoard.value))
+  }
+  currentBoard.value = createBoard(name)
+  boardDataMap.value[currentBoard.value.id] = currentBoard.value
 }
 
 // === Column Actions ===
@@ -269,7 +236,7 @@ function removeTag(tagId) {
 }
 
 // === Import ===
-async function onImport(data) {
+function onImport(data) {
   const id = genId()
   const board = {
     id,
@@ -279,8 +246,7 @@ async function onImport(data) {
     columns: data.columns || []
   }
   boards.value.push({ id, name: board.name, createdAt: board.createdAt })
-  await saveMeta()
-  await saveBoard(board)
+  boardDataMap.value[id] = board
   currentBoard.value = board
   currentBoardId.value = id
   showExport.value = false
@@ -360,7 +326,7 @@ const taskCount = computed(() => {
 
         <!-- Empty state -->
         <div
-          v-if="columns.length === 0 && isLoaded"
+          v-if="columns.length === 0"
           class="flex flex-col items-center justify-center w-72 bg-neutral-900/30 rounded-xl border border-dashed border-neutral-700 p-8"
         >
           <svg class="w-10 h-10 text-neutral-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

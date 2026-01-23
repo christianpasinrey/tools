@@ -1043,56 +1043,38 @@ describe('3DPlayground — VaultSaveLoad controls', () => {
 // 10. TODO KANBAN
 // ============================================================
 const mockKanbanDragDrop = { startDrag: vi.fn(), onDrop: vi.fn(), onDragOver: vi.fn(), draggedTask: ref(null) }
-const mockAppCryptoForKanban = {
-  isLocked: ref(false), hasSetup: ref(true), generatedKey: ref(''),
-  setup: vi.fn(), unlock: vi.fn(), lock: vi.fn(), checkHasSetup: vi.fn().mockResolvedValue(true),
-  encrypt: vi.fn(d => ({ salt: [], iv: [], data: [] })), decrypt: vi.fn(d => d),
-  generateNewKey: vi.fn(() => 'key'), hasKey: vi.fn(() => true), resetCrypto: vi.fn()
-}
 const mockKanbanStorage = {
   boards: ref([{ id: 'board1', name: 'Sprint 1' }]),
   currentBoardId: ref('board1'),
-  loadMeta: vi.fn().mockResolvedValue({ boards: [{ id: 'board1', name: 'Sprint 1' }], encryptionConfigured: false }),
-  loadBoard: vi.fn().mockResolvedValue(null),
-  saveBoard: vi.fn(), saveMeta: vi.fn(),
   deleteBoard: vi.fn(), renameBoard: vi.fn(),
-  createBoard: vi.fn().mockResolvedValue({ id: 'new', name: 'New', columns: [], tags: [] }),
-  checkLegacy: vi.fn().mockResolvedValue(false),
-  migrateFromLegacy: vi.fn(), genId: vi.fn(() => 'gen-id')
+  createBoard: vi.fn(() => ({
+    id: 'board1', name: 'Sprint 1', createdAt: Date.now(), tags: [],
+    columns: [
+      { id: 'col1', title: 'To Do', tasks: [{ id: 't1', title: 'Task 1', description: '', priority: 'high', createdAt: Date.now() }] },
+      { id: 'col2', title: 'Done', tasks: [] }
+    ]
+  })),
+  genId: vi.fn(() => 'gen-id')
 }
 vi.mock('@/composables/kanban/useKanbanDragDrop', () => ({ useKanbanDragDrop: () => mockKanbanDragDrop }))
-vi.mock('@/composables/useAppCrypto', () => ({ useAppCrypto: () => mockAppCryptoForKanban }))
 vi.mock('@/composables/kanban/useKanbanStorage', () => ({ useKanbanStorage: () => mockKanbanStorage }))
 
 describe('TodoKanban — VaultSaveLoad controls', () => {
   let TodoKanban
-  const sampleBoard = {
-    id: 'board1', name: 'Sprint 1',
-    columns: [
-      { id: 'col1', name: 'To Do', color: '#6366f1', tasks: [{ id: 't1', title: 'Task 1', description: '', priority: 'high', createdAt: Date.now() }] },
-      { id: 'col2', name: 'Done', color: '#22c55e', tasks: [] }
-    ],
-    tags: []
-  }
 
   beforeEach(async () => {
     vi.clearAllMocks()
-    // loadBoard returns sample board so currentBoard is set during onMounted
-    mockKanbanStorage.loadBoard.mockResolvedValue(JSON.parse(JSON.stringify(sampleBoard)))
-    mockKanbanStorage.loadMeta.mockResolvedValue({ boards: [{ id: 'board1', name: 'Sprint 1' }], encryptionConfigured: false })
     mockKanbanStorage.boards.value = [{ id: 'board1', name: 'Sprint 1' }]
     mockKanbanStorage.currentBoardId.value = 'board1'
     TodoKanban = (await import('@/components/apps/TodoKanban.vue')).default
   })
 
-  async function mountAndWait() {
-    const wrapper = shallowMount(TodoKanban)
-    await flushPromises()
-    return wrapper
+  function mountKanban() {
+    return shallowMount(TodoKanban)
   }
 
-  it('getData returns deep clone of current board', async () => {
-    const wrapper = await mountAndWait()
+  it('getData returns deep clone of current board', () => {
+    const wrapper = mountKanban()
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
     if (!vaultSaveLoad.exists()) return
 
@@ -1102,8 +1084,8 @@ describe('TodoKanban — VaultSaveLoad controls', () => {
     expect(data.columns[0].tasks[0].title).toBe('Task 1')
   })
 
-  it('getData returns independent copy (deep clone)', async () => {
-    const wrapper = await mountAndWait()
+  it('getData returns independent copy (deep clone)', () => {
+    const wrapper = mountKanban()
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
     if (!vaultSaveLoad.exists()) return
 
@@ -1114,7 +1096,7 @@ describe('TodoKanban — VaultSaveLoad controls', () => {
   })
 
   it('load handler sets currentBoard and currentBoardId', async () => {
-    const wrapper = await mountAndWait()
+    const wrapper = mountKanban()
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
     if (!vaultSaveLoad.exists()) return
 
@@ -1132,7 +1114,7 @@ describe('TodoKanban — VaultSaveLoad controls', () => {
   })
 
   it('load handler ignores data without columns', async () => {
-    const wrapper = await mountAndWait()
+    const wrapper = mountKanban()
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
     if (!vaultSaveLoad.exists()) return
 
@@ -1144,7 +1126,7 @@ describe('TodoKanban — VaultSaveLoad controls', () => {
   })
 
   it('load handler ignores null data', async () => {
-    const wrapper = await mountAndWait()
+    const wrapper = mountKanban()
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
     if (!vaultSaveLoad.exists()) return
 
@@ -1155,8 +1137,8 @@ describe('TodoKanban — VaultSaveLoad controls', () => {
     expect(data.columns).toHaveLength(2)
   })
 
-  it('VaultSaveLoad has correct storeName', async () => {
-    const wrapper = await mountAndWait()
+  it('VaultSaveLoad has correct storeName', () => {
+    const wrapper = mountKanban()
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
     if (!vaultSaveLoad.exists()) return
     expect(vaultSaveLoad.props('storeName')).toBe('kanban-boards')
