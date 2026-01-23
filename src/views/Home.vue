@@ -854,22 +854,22 @@ const fetchGitHubCommits = async () => {
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-neutral-500 shrink-0"></span>
-                    <span class="text-xs text-neutral-300">Escribes tus datos</span>
+                    <span class="text-xs text-neutral-300">Tus datos viajan a sus servidores</span>
                   </div>
                   <div class="flex items-center gap-2.5 pl-2">
                     <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Viajan al servidor de la empresa</span>
+                    <span class="text-xs text-neutral-400">Cifran en su infraestructura, <span class="text-red-300 font-medium">con sus claves</span></span>
                   </div>
                   <div class="flex items-center gap-2.5 pl-2">
                     <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Se guardan <span class="text-red-300 font-medium">en texto plano</span></span>
+                    <span class="text-xs text-neutral-400">Tecnicamente <span class="text-red-300">pueden acceder</span> a todo</span>
                   </div>
                   <div class="flex items-center gap-2.5 pl-2">
                     <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Brechas, empleados, ordenes judiciales = <span class="text-red-300">expuesto</span></span>
+                    <span class="text-xs text-neutral-400">Brechas, ordenes judiciales, cambios de politica...</span>
                   </div>
                   <div class="mt-4 px-3 py-2.5 rounded-lg bg-red-950/60 border border-red-500/30">
-                    <p class="text-[11px] text-red-300 leading-relaxed">La empresa puede leer, analizar y compartir todo lo que guardas.</p>
+                    <p class="text-[11px] text-red-300 leading-relaxed">Confias en que la empresa proteja tus datos. No en la criptografia.</p>
                   </div>
                 </div>
               </div>
