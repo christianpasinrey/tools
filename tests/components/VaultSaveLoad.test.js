@@ -19,9 +19,6 @@ vi.mock('@/composables/useVault', () => ({
   useVault: () => mockVault
 }))
 
-// Stub CryptoLockButton
-const CryptoLockButtonStub = { template: '<button class="crypto-lock-stub" />' }
-
 describe('VaultSaveLoad', () => {
   const defaultProps = {
     storeName: 'color-palettes',
@@ -52,9 +49,6 @@ describe('VaultSaveLoad', () => {
   function createWrapper(props = {}) {
     wrapper = mount(VaultSaveLoad, {
       props: { ...defaultProps, ...props },
-      global: {
-        stubs: { CryptoLockButton: CryptoLockButtonStub }
-      },
       attachTo: document.body
     })
     return wrapper
@@ -72,12 +66,15 @@ describe('VaultSaveLoad', () => {
       expect(buttons.length).toBeGreaterThanOrEqual(2)
     })
 
-    it('shows CryptoLockButton when vault is locked', () => {
+    it('shows disabled buttons when vault is locked', () => {
       mockVault.isLocked.value = true
       createWrapper()
-      expect(wrapper.find('.crypto-lock-stub').exists()).toBe(true)
-      // No save/load buttons when locked
-      expect(wrapper.find('button[title="Guardar en vault"]').exists()).toBe(false)
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      expect(saveBtn.exists()).toBe(true)
+      expect(loadBtn.exists()).toBe(true)
+      expect(saveBtn.attributes('disabled')).toBeDefined()
+      expect(loadBtn.attributes('disabled')).toBeDefined()
     })
 
     it('shows item count badge when items exist', async () => {
@@ -107,8 +104,12 @@ describe('VaultSaveLoad', () => {
     it('does not show save input when locked', async () => {
       mockVault.isLocked.value = true
       createWrapper()
-      // No save button exists when locked
-      expect(wrapper.find('button[title="Guardar en vault"]').exists()).toBe(false)
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      await saveBtn.trigger('click')
+      await flushPromises()
+      // Save input should not appear
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      expect(input).toBeNull()
     })
 
     it('calls vault.save with correct args on confirm', async () => {
@@ -258,8 +259,12 @@ describe('VaultSaveLoad', () => {
     it('does not open panel when locked', async () => {
       mockVault.isLocked.value = true
       createWrapper()
-      // No load button when locked
-      expect(wrapper.find('button[title="Cargar desde vault"]').exists()).toBe(false)
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      await loadBtn.trigger('click')
+      await flushPromises()
+      // Panel should not appear
+      const panel = document.body.querySelector('.vault-popover')
+      expect(panel).toBeNull()
     })
 
     it('emits load event with decrypted data on item click', async () => {
