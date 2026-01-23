@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue'
 import { useInvoiceGenerator } from '../../composables/useInvoiceGenerator.js'
-import CryptoLockButton from '../common/CryptoLockButton.vue'
 
 const {
   invoice, totales, emisorSaved, logoError,
@@ -43,7 +42,6 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
         <span class="text-sm font-medium text-white">Generador de Facturas</span>
       </div>
       <div class="flex items-center gap-2">
-        <CryptoLockButton />
         <button
           @click="fillDemo"
           class="px-3 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-amber-400 rounded border border-neutral-700 transition-colors"

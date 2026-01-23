@@ -28,9 +28,14 @@ const popoverPos = ref({ top: 0, left: 0 })
 function updatePopoverPos(buttonRef) {
   if (!buttonRef) return
   const rect = buttonRef.getBoundingClientRect()
+  const popoverWidth = 260
+  let left = rect.left
+  if (left + popoverWidth > window.innerWidth - 8) {
+    left = window.innerWidth - popoverWidth - 8
+  }
   popoverPos.value = {
     top: rect.bottom + 4,
-    left: rect.left
+    left: Math.max(8, left)
   }
 }
 

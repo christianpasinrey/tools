@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAppCrypto } from '../../composables/useAppCrypto'
-import CryptoLockButton from '../common/CryptoLockButton.vue'
 
 const props = defineProps({
   themeColor: String
@@ -460,9 +459,6 @@ onMounted(() => {
           <span class="ml-1 text-neutral-600">({{ idbDatabases.length }})</span>
           <div v-if="activeStorageTab === 'indexed'" class="absolute bottom-0 left-0 right-0 h-0.5" :style="{ backgroundColor: themeColor }"/>
         </button>
-        <div class="flex items-center px-2">
-          <CryptoLockButton />
-        </div>
       </div>
 
       <!-- localStorage Panel -->

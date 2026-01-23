@@ -37,8 +37,7 @@ const getScrollProgress = (el) => {
 
 // Hero parallax style - subtle movement
 const heroStyle = computed(() => ({
-  transform: `translateY(${scrollY.value * 0.1}px)`,
-  opacity: Math.max(0, 1 - scrollY.value / 600)
+  transform: `translateY(${scrollY.value * 0.1}px)`
 }))
 
 // Tool card style - alternates left/right by row, linked to scroll
@@ -761,33 +760,38 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            Tu clave, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="appCrypto.hasSetup.value && !appCrypto.isLocked.value ? 'from-emerald-400 to-teal-400' : 'from-amber-400 to-orange-400'">tus datos</span>
+            Tu navegador, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="appCrypto.hasSetup.value && !appCrypto.isLocked.value ? 'from-emerald-400 to-teal-400' : 'from-amber-400 to-orange-400'">tus datos</span>
           </h1>
 
           <!-- Subtitle -->
-          <p
+          <div
             :class="[
-              'text-neutral-500 text-sm sm:text-base max-w-md mx-auto mb-8 transition-all duration-700 delay-200',
+              'max-w-md mx-auto mb-8 transition-all duration-700 delay-200',
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            Client-side AES-256-GCM encryption. Sin trafico de datos sensibles, sin servidores, sin cuentas.
-          </p>
+            <p class="text-neutral-400 text-sm sm:text-base font-medium">Client-side AES-256-GCM encryption.</p>
+            <p class="text-neutral-600 text-xs sm:text-sm mt-1">Sin trafico de datos sensibles, sin servidores, sin cuentas.</p>
+          </div>
 
-          <!-- CTA: CryptoLockButton or status -->
+          <!-- Status indicator -->
           <div
             :class="[
               'transition-all duration-700 delay-300',
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            <!-- If not set up: large CTA -->
             <div v-if="!appCrypto.hasSetup.value" class="flex flex-col items-center gap-4">
-              <CryptoLockButton />
+              <div class="flex items-center gap-3">
+                <CryptoLockButton />
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border bg-neutral-800/50 text-neutral-400 border-neutral-700">
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-neutral-500"></span>
+                  Sin configurar
+                </div>
+              </div>
               <p class="text-neutral-600 text-xs">Genera una clave de cifrado en un click</p>
             </div>
 
-            <!-- If set up: show status + lock button -->
             <div v-else class="flex flex-col items-center gap-4">
               <div class="flex items-center gap-3">
                 <CryptoLockButton />
@@ -824,10 +828,110 @@ const fetchGitHubCommits = async () => {
             </router-link>
           </div>
 
+          <!-- Educational section -->
+          <div class="relative z-10 mt-20 max-w-3xl mx-auto px-4 w-full">
+
+            <!-- Section title -->
+            <div class="text-center mb-10">
+              <p class="text-xs uppercase tracking-[0.2em] text-neutral-400 mb-2">Por que es diferente</p>
+              <h2 class="text-xl sm:text-2xl font-bold text-white">Tus datos no deberian ser de otro</h2>
+            </div>
+
+            <!-- Comparison cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+
+              <!-- Normal apps card -->
+              <div class="relative rounded-xl border border-red-500/40 bg-neutral-900 p-5 overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                <div class="flex items-center gap-2.5 mb-4">
+                  <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+                    <svg class="w-4.5 h-4.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
+                    </svg>
+                  </div>
+                  <h3 class="text-sm font-bold text-red-300">Apps normales</h3>
+                </div>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-2 h-2 rounded-full bg-neutral-500 shrink-0"></span>
+                    <span class="text-xs text-neutral-300">Escribes tus datos</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 pl-2">
+                    <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
+                    <span class="text-xs text-neutral-400">Viajan al servidor de la empresa</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 pl-2">
+                    <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
+                    <span class="text-xs text-neutral-400">Se guardan <span class="text-red-300 font-medium">en texto plano</span></span>
+                  </div>
+                  <div class="flex items-center gap-2.5 pl-2">
+                    <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
+                    <span class="text-xs text-neutral-400">Brechas, empleados, ordenes judiciales = <span class="text-red-300">expuesto</span></span>
+                  </div>
+                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-red-950/60 border border-red-500/30">
+                    <p class="text-[11px] text-red-300 leading-relaxed">La empresa puede leer, analizar y compartir todo lo que guardas.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- This app card -->
+              <div class="relative rounded-xl border border-emerald-500/40 bg-neutral-900 p-5 overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                <div class="flex items-center gap-2.5 mb-4">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                    <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                  </div>
+                  <h3 class="text-sm font-bold text-emerald-300">Esta app</h3>
+                </div>
+                <div class="space-y-3">
+                  <div class="flex items-center gap-2.5">
+                    <span class="w-2 h-2 rounded-full bg-neutral-500 shrink-0"></span>
+                    <span class="text-xs text-neutral-300">Escribes tus datos</span>
+                  </div>
+                  <div class="flex items-center gap-2.5 pl-2">
+                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
+                    <span class="text-xs text-neutral-400">Se cifran <span class="text-emerald-300 font-medium">en tu navegador</span></span>
+                  </div>
+                  <div class="flex items-center gap-2.5 pl-2">
+                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
+                    <span class="text-xs text-neutral-400">Se guardan <span class="text-emerald-300 font-medium">cifrados en tu dispositivo</span></span>
+                  </div>
+                  <div class="flex items-center gap-2.5 pl-2">
+                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
+                    <span class="text-xs text-neutral-400">Solo <span class="text-emerald-300">tu clave</span> puede descifrarlos</span>
+                  </div>
+                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-950/60 border border-emerald-500/30">
+                    <p class="text-[11px] text-emerald-300 leading-relaxed">Nadie mas puede leerlos. Ni nosotros, ni tu ISP, ni nadie.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Soft delete callout -->
+            <div class="rounded-xl border border-amber-500/30 bg-neutral-900 p-5">
+              <div class="flex items-start gap-4">
+                <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-4.5 h-4.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-amber-300 mb-2">Cuando "borras" no borras</h3>
+                  <p class="text-xs text-neutral-300 leading-relaxed">
+                    La mayoria de apps usan <span class="text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">soft delete</span>: al pulsar "eliminar", solo marcan tus datos con una fecha (<span class="text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">deleted_at</span>) y los ocultan de tu vista. Siguen en sus servidores, accesibles para la empresa, indefinidamente.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
           <!-- Scroll hint -->
           <div
             :class="[
-              'mt-16 transition-all duration-700 delay-500',
+              'mt-12 transition-all duration-700 delay-[600ms]',
               isVisible ? 'opacity-100' : 'opacity-0'
             ]"
           >
