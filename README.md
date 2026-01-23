@@ -154,6 +154,8 @@ npm run dev
 | `npm run dev` | Servidor de desarrollo con HMR |
 | `npm run build` | Build de producción en `/dist` |
 | `npm run preview` | Preview de la build localmente |
+| `npm test` | Ejecuta tests en modo watch |
+| `npm run test:run` | Ejecuta todos los tests una vez |
 
 ---
 
@@ -302,7 +304,11 @@ server {
 2. **Crea** una rama para tu feature (`git checkout -b feature/nueva-herramienta`)
 3. **Commit** tus cambios (`git commit -m 'feat: añadir nueva herramienta'`)
 4. **Push** a la rama (`git push origin feature/nueva-herramienta`)
-5. **Abre** un Pull Request
+5. **Verifica** que los tests pasan (`npm run test:run`)
+6. **Abre** un Pull Request
+
+> [!IMPORTANT]
+> Todos los Pull Requests deben pasar la suite de tests antes de ser mergeados. Si tu PR añade nueva funcionalidad, incluye tests que la cubran. Ejecuta `npm run test:run` antes de abrir tu PR para verificar que todo funciona correctamente.
 
 ### Tipos de Contribución
 
@@ -439,6 +445,8 @@ npm run dev
 | `npm run dev` | Development server with HMR |
 | `npm run build` | Production build to `/dist` |
 | `npm run preview` | Preview build locally |
+| `npm test` | Run tests in watch mode |
+| `npm run test:run` | Run all tests once |
 
 ---
 
@@ -587,7 +595,11 @@ server {
 2. **Create** a branch for your feature (`git checkout -b feature/new-tool`)
 3. **Commit** your changes (`git commit -m 'feat: add new tool'`)
 4. **Push** to the branch (`git push origin feature/new-tool`)
-5. **Open** a Pull Request
+5. **Verify** that tests pass (`npm run test:run`)
+6. **Open** a Pull Request
+
+> [!IMPORTANT]
+> All Pull Requests must pass the test suite before being merged. If your PR adds new functionality, include tests covering it. Run `npm run test:run` before opening your PR to verify everything works correctly.
 
 ### Contribution Types
 
