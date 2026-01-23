@@ -6,13 +6,12 @@ const props = defineProps({
   boards: { type: Array, default: () => [] },
   taskCount: { type: Number, default: 0 },
   searchQuery: { type: String, default: '' },
-  hasActiveFilters: { type: Boolean, default: false },
-  isLocked: { type: Boolean, default: false }
+  hasActiveFilters: { type: Boolean, default: false }
 })
 
 const emit = defineEmits([
   'add-column', 'toggle-filters', 'toggle-export',
-  'lock', 'select-board', 'create-board', 'update-search'
+  'select-board', 'create-board', 'update-search'
 ])
 
 const showBoardMenu = ref(false)
@@ -119,19 +118,6 @@ function onCreateBoard() {
       >
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-      </button>
-
-      <!-- Lock -->
-      <button
-        @click="emit('lock')"
-        class="p-1.5 transition-colors"
-        :class="isLocked ? 'text-green-500 hover:text-green-400' : 'text-neutral-500 hover:text-amber-400'"
-        :title="isLocked ? 'Bloqueado' : 'Bloquear'"
-      >
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path v-if="!isLocked" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
-          <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
         </svg>
       </button>
 

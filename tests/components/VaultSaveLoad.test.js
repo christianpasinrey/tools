@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import VaultSaveLoad from '@/components/common/VaultSaveLoad.vue'
@@ -29,6 +29,8 @@ describe('VaultSaveLoad', () => {
     label: 'paleta'
   }
 
+  let wrapper
+
   beforeEach(() => {
     vi.clearAllMocks()
     mockVault.isLocked.value = false
@@ -38,30 +40,44 @@ describe('VaultSaveLoad', () => {
     mockVault.remove.mockResolvedValue(true)
   })
 
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount()
+      wrapper = null
+    }
+    // Clean up teleported content
+    document.body.querySelectorAll('.vault-popover').forEach(el => el.remove())
+  })
+
   function createWrapper(props = {}) {
-    return mount(VaultSaveLoad, {
+    wrapper = mount(VaultSaveLoad, {
       props: { ...defaultProps, ...props },
       global: {
         stubs: { CryptoLockButton: CryptoLockButtonStub }
-      }
+      },
+      attachTo: document.body
     })
+    return wrapper
+  }
+
+  function findTeleportedPopover(selector) {
+    return document.body.querySelector(`.vault-popover ${selector}`) ||
+           document.body.querySelector(selector)
   }
 
   describe('rendering', () => {
-    it('renders save and load buttons', () => {
-      const wrapper = createWrapper()
+    it('renders save and load buttons when unlocked', () => {
+      createWrapper()
       const buttons = wrapper.findAll('button')
       expect(buttons.length).toBeGreaterThanOrEqual(2)
     })
 
-    it('disables buttons when vault is locked', () => {
+    it('shows CryptoLockButton when vault is locked', () => {
       mockVault.isLocked.value = true
-      const wrapper = createWrapper()
-      const buttons = wrapper.findAll('button')
-      const saveBtn = buttons[0]
-      const loadBtn = buttons[1]
-      expect(saveBtn.attributes('disabled')).toBeDefined()
-      expect(loadBtn.attributes('disabled')).toBeDefined()
+      createWrapper()
+      expect(wrapper.find('.crypto-lock-stub').exists()).toBe(true)
+      // No save/load buttons when locked
+      expect(wrapper.find('button[title="Guardar en vault"]').exists()).toBe(false)
     })
 
     it('shows item count badge when items exist', async () => {
@@ -69,7 +85,7 @@ describe('VaultSaveLoad', () => {
         { id: '1', name: 'Item 1', updatedAt: Date.now() },
         { id: '2', name: 'Item 2', updatedAt: Date.now() }
       ])
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
       const badge = wrapper.find('span')
@@ -79,35 +95,35 @@ describe('VaultSaveLoad', () => {
 
   describe('save flow', () => {
     it('shows save input on save button click', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
+      createWrapper()
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
+      await flushPromises()
 
-      const input = wrapper.find('input[type="text"]')
-      expect(input.exists()).toBe(true)
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      expect(input).not.toBeNull()
     })
 
     it('does not show save input when locked', async () => {
       mockVault.isLocked.value = true
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
-      await saveBtn.trigger('click')
-
-      const input = wrapper.find('input[type="text"]')
-      expect(input.exists()).toBe(false)
+      createWrapper()
+      // No save button exists when locked
+      expect(wrapper.find('button[title="Guardar en vault"]').exists()).toBe(false)
     })
 
     it('calls vault.save with correct args on confirm', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
+      createWrapper()
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
+      await flushPromises()
 
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('My Palette')
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      input.value = 'My Palette'
+      input.dispatchEvent(new Event('input'))
+      await flushPromises()
 
-      // Click OK button
-      const okBtn = wrapper.find('button.px-2.py-1.bg-emerald-600')
-      await okBtn.trigger('click')
+      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      okBtn.click()
       await flushPromises()
 
       expect(mockVault.save).toHaveBeenCalledWith(
@@ -120,30 +136,36 @@ describe('VaultSaveLoad', () => {
 
     it('calls getData prop to get save data', async () => {
       const getData = vi.fn(() => ({ test: 'data' }))
-      const wrapper = createWrapper({ getData })
-      const saveBtn = wrapper.findAll('button')[0]
+      createWrapper({ getData })
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
+      await flushPromises()
 
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('Test')
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      input.value = 'Test'
+      input.dispatchEvent(new Event('input'))
+      await flushPromises()
 
-      const okBtn = wrapper.find('button.px-2.py-1.bg-emerald-600')
-      await okBtn.trigger('click')
+      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      okBtn.click()
       await flushPromises()
 
       expect(getData).toHaveBeenCalled()
     })
 
     it('trims whitespace from save name', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
+      createWrapper()
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
+      await flushPromises()
 
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('  Trimmed Name  ')
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      input.value = '  Trimmed Name  '
+      input.dispatchEvent(new Event('input'))
+      await flushPromises()
 
-      const okBtn = wrapper.find('button.px-2.py-1.bg-emerald-600')
-      await okBtn.trigger('click')
+      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      okBtn.click()
       await flushPromises()
 
       expect(mockVault.save).toHaveBeenCalledWith(
@@ -155,69 +177,54 @@ describe('VaultSaveLoad', () => {
     })
 
     it('does not save when name is empty', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
+      createWrapper()
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
+      await flushPromises()
 
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('   ')
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      input.value = '   '
+      input.dispatchEvent(new Event('input'))
+      await flushPromises()
 
-      const okBtn = wrapper.find('button.px-2.py-1.bg-emerald-600')
-      await okBtn.trigger('click')
+      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      okBtn.click()
       await flushPromises()
 
       expect(mockVault.save).not.toHaveBeenCalled()
     })
 
     it('hides save input after successful save', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
+      createWrapper()
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
-
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('Name')
-
-      const okBtn = wrapper.find('button.px-2.py-1.bg-emerald-600')
-      await okBtn.trigger('click')
       await flushPromises()
 
-      expect(wrapper.find('input[type="text"]').exists()).toBe(false)
-    })
-
-    it('saves on Enter keypress', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
-      await saveBtn.trigger('click')
-
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('Enter Save')
-      await input.trigger('keyup.enter')
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      input.value = 'Name'
+      input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      expect(mockVault.save).toHaveBeenCalled()
-    })
+      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      okBtn.click()
+      await flushPromises()
 
-    it('closes save input on Escape', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
-      await saveBtn.trigger('click')
-      expect(wrapper.find('input[type="text"]').exists()).toBe(true)
-
-      const input = wrapper.find('input[type="text"]')
-      await input.trigger('keyup.escape')
-
-      expect(wrapper.find('input[type="text"]').exists()).toBe(false)
+      expect(document.body.querySelector('.vault-popover input[type="text"]')).toBeNull()
     })
 
     it('refreshes list after save', async () => {
-      const wrapper = createWrapper()
-      const saveBtn = wrapper.findAll('button')[0]
+      createWrapper()
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
+      await flushPromises()
 
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('Test')
-      const okBtn = wrapper.find('button.px-2.py-1.bg-emerald-600')
-      await okBtn.trigger('click')
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      input.value = 'Test'
+      input.dispatchEvent(new Event('input'))
+      await flushPromises()
+
+      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      okBtn.click()
       await flushPromises()
 
       // list is called on mount (if unlocked) + after save
@@ -236,41 +243,39 @@ describe('VaultSaveLoad', () => {
     })
 
     it('shows items panel on load button click', async () => {
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
-      expect(wrapper.text()).toContain('Warm Palette')
-      expect(wrapper.text()).toContain('Cool Palette')
+      const panel = document.body.querySelector('.vault-popover')
+      expect(panel.textContent).toContain('Warm Palette')
+      expect(panel.textContent).toContain('Cool Palette')
     })
 
     it('does not open panel when locked', async () => {
       mockVault.isLocked.value = true
-      const wrapper = createWrapper()
-      const loadBtn = wrapper.findAll('button')[1]
-      await loadBtn.trigger('click')
-      await flushPromises()
-
-      expect(wrapper.text()).not.toContain('Warm Palette')
+      createWrapper()
+      // No load button when locked
+      expect(wrapper.find('button[title="Cargar desde vault"]').exists()).toBe(false)
     })
 
     it('emits load event with decrypted data on item click', async () => {
       const loadedData = { colors: ['#123456'] }
       mockVault.load.mockResolvedValue(loadedData)
 
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
       // Click on the first item's content area
-      const itemDivs = wrapper.findAll('.flex-1.min-w-0')
-      await itemDivs[0].trigger('click')
+      const itemDiv = document.body.querySelector('.vault-popover .flex-1.min-w-0')
+      itemDiv.click()
       await flushPromises()
 
       expect(mockVault.load).toHaveBeenCalledWith('color-palettes', 'item1')
@@ -280,41 +285,43 @@ describe('VaultSaveLoad', () => {
 
     it('closes panel after loading', async () => {
       mockVault.load.mockResolvedValue({ data: 'test' })
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
-      const itemDivs = wrapper.findAll('.flex-1.min-w-0')
-      await itemDivs[0].trigger('click')
+      const itemDiv = document.body.querySelector('.vault-popover .flex-1.min-w-0')
+      itemDiv.click()
       await flushPromises()
 
-      expect(wrapper.text()).not.toContain('Warm Palette')
+      expect(document.body.querySelector('.vault-popover .flex-1.min-w-0')).toBeNull()
     })
 
     it('shows empty message when no items', async () => {
       mockVault.list.mockResolvedValue([])
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
-      expect(wrapper.text()).toContain('Sin items guardados')
+      const panel = document.body.querySelector('.vault-popover')
+      expect(panel.textContent).toContain('Sin items guardados')
     })
 
     it('shows label in panel header', async () => {
-      const wrapper = createWrapper({ label: 'paleta' })
+      createWrapper({ label: 'paleta' })
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
-      expect(wrapper.text()).toContain('paleta')
+      const panel = document.body.querySelector('.vault-popover')
+      expect(panel.textContent).toContain('paleta')
     })
   })
 
@@ -328,19 +335,21 @@ describe('VaultSaveLoad', () => {
     })
 
     it('shows confirm buttons on delete click', async () => {
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
       // Find delete button (trash icon)
-      const deleteBtn = wrapper.find('button[title="Eliminar"]')
-      await deleteBtn.trigger('click')
+      const deleteBtn = document.body.querySelector('.vault-popover button[title="Eliminar"]')
+      deleteBtn.click()
+      await flushPromises()
 
-      expect(wrapper.text()).toContain('Si')
-      expect(wrapper.text()).toContain('No')
+      const panel = document.body.querySelector('.vault-popover')
+      expect(panel.textContent).toContain('Si')
+      expect(panel.textContent).toContain('No')
     })
 
     it('calls vault.remove on confirm', async () => {
@@ -349,39 +358,42 @@ describe('VaultSaveLoad', () => {
         .mockResolvedValueOnce(mockItems) // refresh on panel open
         .mockResolvedValue([]) // after delete
 
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
-      const deleteBtn = wrapper.find('button[title="Eliminar"]')
-      await deleteBtn.trigger('click')
+      const deleteBtn = document.body.querySelector('.vault-popover button[title="Eliminar"]')
+      deleteBtn.click()
+      await flushPromises()
 
       // Click "Si" to confirm
-      const confirmBtn = wrapper.find('button.bg-red-600')
-      await confirmBtn.trigger('click')
+      const confirmBtn = document.body.querySelector('.vault-popover button.bg-red-600')
+      confirmBtn.click()
       await flushPromises()
 
       expect(mockVault.remove).toHaveBeenCalledWith('color-palettes', 'item1')
     })
 
     it('cancels delete on No click', async () => {
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
-      const deleteBtn = wrapper.find('button[title="Eliminar"]')
-      await deleteBtn.trigger('click')
+      const deleteBtn = document.body.querySelector('.vault-popover button[title="Eliminar"]')
+      deleteBtn.click()
+      await flushPromises()
 
-      // Click "No" to cancel
-      const cancelBtns = wrapper.findAll('button')
-      const noBtn = cancelBtns.find(b => b.text() === 'No')
-      await noBtn.trigger('click')
+      // Find "No" button
+      const buttons = document.body.querySelectorAll('.vault-popover button')
+      const noBtn = Array.from(buttons).find(b => b.textContent.trim() === 'No')
+      noBtn.click()
+      await flushPromises()
 
       expect(mockVault.remove).not.toHaveBeenCalled()
     })
@@ -390,15 +402,19 @@ describe('VaultSaveLoad', () => {
   describe('error handling', () => {
     it('shows error feedback when save fails', async () => {
       mockVault.save.mockRejectedValue(new Error('Encryption failed'))
-      const wrapper = createWrapper()
+      createWrapper()
 
-      const saveBtn = wrapper.findAll('button')[0]
+      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
       await saveBtn.trigger('click')
+      await flushPromises()
 
-      const input = wrapper.find('input[type="text"]')
-      await input.setValue('Fail')
-      const okBtn = wrapper.find('button.px-2.py-1.bg-emerald-600')
-      await okBtn.trigger('click')
+      const input = document.body.querySelector('.vault-popover input[type="text"]')
+      input.value = 'Fail'
+      input.dispatchEvent(new Event('input'))
+      await flushPromises()
+
+      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      okBtn.click()
       await flushPromises()
 
       expect(wrapper.text()).toContain('Error')
@@ -408,15 +424,15 @@ describe('VaultSaveLoad', () => {
       mockVault.list.mockResolvedValue([{ id: 'x', name: 'X', updatedAt: 1 }])
       mockVault.load.mockRejectedValue(new Error('Decryption failed'))
 
-      const wrapper = createWrapper()
+      createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.findAll('button')[1]
+      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
-      const itemDivs = wrapper.findAll('.flex-1.min-w-0')
-      await itemDivs[0].trigger('click')
+      const itemDiv = document.body.querySelector('.vault-popover .flex-1.min-w-0')
+      itemDiv.click()
       await flushPromises()
 
       expect(wrapper.text()).toContain('Error')

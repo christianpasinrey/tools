@@ -48,7 +48,7 @@ export function useKanbanStorage(crypto) {
     let record
     if (crypto && crypto.hasKey()) {
       const encrypted = await crypto.encrypt(plainBoard)
-      record = { id: plainBoard.id, encrypted: true, ...encrypted }
+      record = { id: plainBoard.id, encrypted: true, encryptedData: encrypted }
     } else {
       record = { id: plainBoard.id, data: JSON.stringify(plainBoard) }
     }
@@ -74,8 +74,14 @@ export function useKanbanStorage(crypto) {
 
           if (result.encrypted && crypto && crypto.hasKey()) {
             try {
-              const decrypted = await crypto.decrypt(result.iv, result.ciphertext, result.salt)
-              resolve(decrypted)
+              // New format: encryptedData is { salt, iv, data } (Arrays)
+              if (result.encryptedData) {
+                const decrypted = await crypto.decrypt(result.encryptedData)
+                resolve(decrypted)
+              } else {
+                // Incompatible old format - cannot decrypt
+                resolve(null)
+              }
             } catch {
               resolve(null)
             }
@@ -119,14 +125,13 @@ export function useKanbanStorage(crypto) {
     }
   }
 
-  async function saveMeta(extraData = {}) {
+  async function saveMeta() {
     const db = await openDB()
     const tx = db.transaction(STORE_NAME, 'readwrite')
     const store = tx.objectStore(STORE_NAME)
     store.put(JSON.parse(JSON.stringify({
       id: 'boards-meta',
-      boards: boards.value,
-      ...extraData
+      boards: boards.value
     })))
     return new Promise((resolve, reject) => {
       tx.oncomplete = () => { db.close(); resolve() }

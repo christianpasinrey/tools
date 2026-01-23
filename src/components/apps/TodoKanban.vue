@@ -1,22 +1,20 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useKanbanDragDrop } from '../../composables/kanban/useKanbanDragDrop.js'
-import { useKanbanCrypto } from '../../composables/kanban/useKanbanCrypto.js'
+import { useAppCrypto } from '../../composables/useAppCrypto.js'
 import { useKanbanStorage } from '../../composables/kanban/useKanbanStorage.js'
 import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 import KanbanHeader from './kanban/KanbanHeader.vue'
 import KanbanColumn from './kanban/KanbanColumn.vue'
 import KanbanFilterBar from './kanban/KanbanFilterBar.vue'
-import KanbanLockScreen from './kanban/KanbanLockScreen.vue'
 import KanbanExportModal from './kanban/KanbanExportModal.vue'
 import KanbanTaskSidebar from './kanban/KanbanTaskSidebar.vue'
 
-// === Crypto ===
-const cryptoModule = useKanbanCrypto()
-const { isLocked, isFirstSetup, generatedKey } = cryptoModule
+// === Crypto (centralized app crypto for optional encryption) ===
+const crypto = useAppCrypto()
 
-// === Storage (with crypto) ===
-const storage = useKanbanStorage(cryptoModule)
+// === Storage (with centralized crypto) ===
+const storage = useKanbanStorage(crypto)
 const { boards, currentBoardId, loadMeta, loadBoard, saveBoard, saveMeta, createBoard, deleteBoard, renameBoard, checkLegacy, migrateFromLegacy, genId } = storage
 
 // === Board State ===
@@ -40,9 +38,6 @@ const loadBoardData = (data) => {
 }
 
 const isLoaded = ref(false)
-const metaData = ref(null)
-const legacyColumns = ref(null)
-const lockScreenRef = ref(null)
 
 // === Drag & Drop ===
 const {
@@ -150,30 +145,26 @@ function scheduleSave() {
 }
 
 watch(currentBoard, () => {
-  if (isLoaded.value && currentBoard.value && !isLocked.value) scheduleSave()
+  if (isLoaded.value && currentBoard.value) scheduleSave()
 }, { deep: true })
 
 // === Initialization ===
 onMounted(async () => {
-  metaData.value = await loadMeta()
+  const metaData = await loadMeta()
 
-  if (!metaData.value || !metaData.value.boards || metaData.value.boards.length === 0) {
+  if (!metaData || !metaData.boards || metaData.boards.length === 0) {
     // Check legacy data
     const legacy = await checkLegacy()
     if (legacy) {
-      legacyColumns.value = legacy
+      currentBoard.value = await migrateFromLegacy(legacy)
+    } else {
+      currentBoard.value = await createBoard('Mi Tablero')
     }
-    // First time or legacy: setup encryption
-    cryptoModule.prepareSetup()
-    isLocked.value = true
-  } else if (metaData.value.encryptionConfigured) {
-    // Has encryption: show unlock screen
-    isLocked.value = true
-    isFirstSetup.value = false
   } else {
-    // Has boards but no encryption (shouldn't happen in normal flow, but handle gracefully)
     await loadFirstBoard()
   }
+
+  isLoaded.value = true
 })
 
 async function loadFirstBoard() {
@@ -184,59 +175,6 @@ async function loadFirstBoard() {
     const board = await loadBoard(boards.value[0].id)
     currentBoard.value = board || await createBoard('Mi Tablero')
   }
-  isLoaded.value = true
-}
-
-// === Lock Screen Handlers ===
-async function onSetupConfirm() {
-  // Key has been generated and user confirmed they saved it
-  const testData = await cryptoModule.confirmSetup()
-
-  if (legacyColumns.value) {
-    // Migrate legacy data
-    currentBoard.value = await migrateFromLegacy(legacyColumns.value)
-    legacyColumns.value = null
-  } else if (boards.value.length > 0) {
-    // Re-encrypt existing boards
-    for (const b of boards.value) {
-      const board = await loadBoard(b.id)
-      if (board) await saveBoard(board)
-    }
-    await loadFirstBoard()
-  } else {
-    currentBoard.value = await createBoard('Mi Tablero')
-  }
-
-  // Save encryption config in meta
-  await saveMeta({
-    encryptionConfigured: true,
-    salt: testData.salt,
-    iv: testData.iv,
-    ciphertextTest: testData.ciphertextTest
-  })
-
-  isLocked.value = false
-  isLoaded.value = true
-}
-
-async function onVerify(passphrase) {
-  const testData = {
-    salt: metaData.value.salt,
-    iv: metaData.value.iv,
-    ciphertextTest: metaData.value.ciphertextTest
-  }
-  const ok = await cryptoModule.verifyPassphrase(passphrase, testData)
-  if (ok) {
-    await loadFirstBoard()
-  } else {
-    lockScreenRef.value?.onError()
-  }
-}
-
-function onLock() {
-  cryptoModule.lock()
-  currentBoard.value = null
-  isLoaded.value = false
 }
 
 // === Board Actions ===
@@ -356,102 +294,88 @@ const taskCount = computed(() => {
 
 <template>
   <div class="h-full flex flex-col">
-    <!-- Lock Screen -->
-    <KanbanLockScreen
-      v-if="isLocked"
-      ref="lockScreenRef"
-      :is-setup="isFirstSetup"
-      :generated-key="generatedKey"
-      @setup-confirm="onSetupConfirm"
-      @verify="onVerify"
+    <!-- Header -->
+    <KanbanHeader
+      :board-name="currentBoard?.name || 'Mi Tablero'"
+      :boards="boards"
+      :task-count="taskCount"
+      :search-query="searchQuery"
+      :has-active-filters="hasActiveFilters"
+      @add-column="addColumn"
+      @toggle-filters="showFilters = !showFilters"
+      @toggle-export="showExport = !showExport"
+      @select-board="onSelectBoard"
+      @create-board="onCreateBoard"
+      @update-search="searchQuery = $event"
     />
 
-    <template v-else>
-      <!-- Header -->
-      <KanbanHeader
-        :board-name="currentBoard?.name || 'Mi Tablero'"
-        :boards="boards"
-        :task-count="taskCount"
-        :search-query="searchQuery"
-        :has-active-filters="hasActiveFilters"
-        :is-locked="false"
-        @add-column="addColumn"
-        @toggle-filters="showFilters = !showFilters"
-        @toggle-export="showExport = !showExport"
-        @lock="onLock"
-        @select-board="onSelectBoard"
-        @create-board="onCreateBoard"
-        @update-search="searchQuery = $event"
-      />
+    <!-- Vault Save/Load -->
+    <div v-if="currentBoard" class="h-8 bg-neutral-900/30 border-b border-neutral-800/50 flex items-center px-3 shrink-0">
+      <VaultSaveLoad storeName="kanban-boards" :getData="getBoardData" label="tablero" @load="loadBoardData" />
+    </div>
 
-      <!-- Vault Save/Load -->
-      <div v-if="currentBoard" class="h-8 bg-neutral-900/30 border-b border-neutral-800/50 flex items-center px-3 shrink-0">
-        <VaultSaveLoad storeName="kanban-boards" :getData="getBoardData" label="tablero" @load="loadBoardData" />
-      </div>
+    <!-- Filter Bar -->
+    <KanbanFilterBar
+      v-if="showFilters"
+      :priority="filterPriority"
+      :tags="filterTags"
+      :date-range="filterDateRange"
+      :board-tags="boardTags"
+      @update-priority="filterPriority = $event"
+      @update-tags="filterTags = $event"
+      @update-date-range="filterDateRange = $event"
+      @clear="clearFilters"
+      @add-tag="addTag"
+      @remove-tag="removeTag"
+    />
 
-      <!-- Filter Bar -->
-      <KanbanFilterBar
-        v-if="showFilters"
-        :priority="filterPriority"
-        :tags="filterTags"
-        :date-range="filterDateRange"
-        :board-tags="boardTags"
-        @update-priority="filterPriority = $event"
-        @update-tags="filterTags = $event"
-        @update-date-range="filterDateRange = $event"
-        @clear="clearFilters"
-        @add-tag="addTag"
-        @remove-tag="removeTag"
-      />
+    <!-- Board -->
+    <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scroll">
+      <div class="flex gap-4 p-4 h-full min-w-max">
+        <KanbanColumn
+          v-for="(col, colIndex) in filteredColumns"
+          :key="col.id"
+          :column="col"
+          :col-index="colIndex"
+          :board-tags="boardTags"
+          :drag-over-column="dragOverColumn"
+          :drag-over-index="dragOverIndex"
+          :dragged-column="draggedColumn"
+          :drag-over-column-index="dragOverColumnIndex"
+          :dragged-task="draggedTask"
+          @delete-column="deleteColumn"
+          @update-title="updateColumnTitle"
+          @open-task="openTask"
+          @create-task="openCreateTask"
+          @delete-task="deleteTask"
+          @task-dragstart="(e, task, colId) => onTaskDragStart(e, task, colId)"
+          @task-dragend="onTaskDragEnd"
+          @column-dragover="onColumnDragOver"
+          @column-drop="onColumnDrop"
+          @column-dragstart="onColumnDragStart"
+          @column-dragover-header="onColumnDragOverHeader"
+          @column-drop-header="onColumnDropHeader"
+          @column-dragend="onColumnDragEnd"
+        />
 
-      <!-- Board -->
-      <div class="flex-1 overflow-x-auto overflow-y-hidden kanban-scroll">
-        <div class="flex gap-4 p-4 h-full min-w-max">
-          <KanbanColumn
-            v-for="(col, colIndex) in filteredColumns"
-            :key="col.id"
-            :column="col"
-            :col-index="colIndex"
-            :board-tags="boardTags"
-            :drag-over-column="dragOverColumn"
-            :drag-over-index="dragOverIndex"
-            :dragged-column="draggedColumn"
-            :drag-over-column-index="dragOverColumnIndex"
-            :dragged-task="draggedTask"
-            @delete-column="deleteColumn"
-            @update-title="updateColumnTitle"
-            @open-task="openTask"
-            @create-task="openCreateTask"
-            @delete-task="deleteTask"
-            @task-dragstart="(e, task, colId) => onTaskDragStart(e, task, colId)"
-            @task-dragend="onTaskDragEnd"
-            @column-dragover="onColumnDragOver"
-            @column-drop="onColumnDrop"
-            @column-dragstart="onColumnDragStart"
-            @column-dragover-header="onColumnDragOverHeader"
-            @column-drop-header="onColumnDropHeader"
-            @column-dragend="onColumnDragEnd"
-          />
-
-          <!-- Empty state -->
-          <div
-            v-if="columns.length === 0 && isLoaded"
-            class="flex flex-col items-center justify-center w-72 bg-neutral-900/30 rounded-xl border border-dashed border-neutral-700 p-8"
+        <!-- Empty state -->
+        <div
+          v-if="columns.length === 0 && isLoaded"
+          class="flex flex-col items-center justify-center w-72 bg-neutral-900/30 rounded-xl border border-dashed border-neutral-700 p-8"
+        >
+          <svg class="w-10 h-10 text-neutral-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+          <p class="text-xs text-neutral-500 mb-3">Sin columnas</p>
+          <button
+            @click="addColumn"
+            class="px-3 py-1.5 text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded transition-colors"
           >
-            <svg class="w-10 h-10 text-neutral-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-            </svg>
-            <p class="text-xs text-neutral-500 mb-3">Sin columnas</p>
-            <button
-              @click="addColumn"
-              class="px-3 py-1.5 text-xs bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded transition-colors"
-            >
-              Crear columna
-            </button>
-          </div>
+            Crear columna
+          </button>
         </div>
       </div>
-    </template>
+    </div>
 
     <!-- Export Modal -->
     <KanbanExportModal

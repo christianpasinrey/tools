@@ -1043,12 +1043,11 @@ describe('3DPlayground — VaultSaveLoad controls', () => {
 // 10. TODO KANBAN
 // ============================================================
 const mockKanbanDragDrop = { startDrag: vi.fn(), onDrop: vi.fn(), onDragOver: vi.fn(), draggedTask: ref(null) }
-const mockKanbanCrypto = {
-  isLocked: ref(false), isFirstSetup: ref(false), hasSetup: ref(true), password: ref('test'),
+const mockAppCryptoForKanban = {
+  isLocked: ref(false), hasSetup: ref(true), generatedKey: ref(''),
   setup: vi.fn(), unlock: vi.fn(), lock: vi.fn(), checkHasSetup: vi.fn().mockResolvedValue(true),
-  encrypt: vi.fn(d => d), decrypt: vi.fn(d => d), generateKey: vi.fn(() => 'key'),
-  generatedKey: ref(''), prepareSetup: vi.fn(), confirmSetup: vi.fn().mockResolvedValue(null),
-  verifyPassphrase: vi.fn().mockResolvedValue(true)
+  encrypt: vi.fn(d => ({ salt: [], iv: [], data: [] })), decrypt: vi.fn(d => d),
+  generateNewKey: vi.fn(() => 'key'), hasKey: vi.fn(() => true), resetCrypto: vi.fn()
 }
 const mockKanbanStorage = {
   boards: ref([{ id: 'board1', name: 'Sprint 1' }]),
@@ -1062,7 +1061,7 @@ const mockKanbanStorage = {
   migrateFromLegacy: vi.fn(), genId: vi.fn(() => 'gen-id')
 }
 vi.mock('@/composables/kanban/useKanbanDragDrop', () => ({ useKanbanDragDrop: () => mockKanbanDragDrop }))
-vi.mock('@/composables/kanban/useKanbanCrypto', () => ({ useKanbanCrypto: () => mockKanbanCrypto }))
+vi.mock('@/composables/useAppCrypto', () => ({ useAppCrypto: () => mockAppCryptoForKanban }))
 vi.mock('@/composables/kanban/useKanbanStorage', () => ({ useKanbanStorage: () => mockKanbanStorage }))
 
 describe('TodoKanban — VaultSaveLoad controls', () => {
