@@ -833,77 +833,57 @@ const fetchGitHubCommits = async () => {
 
             <!-- Section title -->
             <div class="text-center mb-10">
-              <p class="text-xs uppercase tracking-[0.2em] text-neutral-400 mb-2">Por que es diferente</p>
-              <h2 class="text-xl sm:text-2xl font-bold text-white">Tus datos no deberian ser de otro</h2>
+              <p class="text-xs uppercase tracking-[0.2em] text-neutral-400 mb-2">Modelo de confianza</p>
+              <h2 class="text-xl sm:text-2xl font-bold text-white">Quien puede leer tus datos?</h2>
             </div>
 
             <!-- Comparison cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
 
-              <!-- Normal apps card -->
-              <div class="relative rounded-xl border border-red-500/40 bg-neutral-900 p-5 overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+              <!-- Traditional model card -->
+              <div class="relative rounded-xl border border-neutral-700 bg-neutral-900 p-5 overflow-hidden">
                 <div class="flex items-center gap-2.5 mb-4">
-                  <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
-                    <svg class="w-4.5 h-4.5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div class="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center">
+                    <svg class="w-4.5 h-4.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
                     </svg>
                   </div>
-                  <h3 class="text-sm font-bold text-red-300">Apps normales</h3>
+                  <h3 class="text-sm font-bold text-neutral-200">Modelo tradicional</h3>
                 </div>
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-neutral-500 shrink-0"></span>
-                    <span class="text-xs text-neutral-300">Tus datos viajan a sus servidores</span>
+                    <span class="text-xs text-neutral-300">Tu, la empresa, y quien ella autorice</span>
                   </div>
-                  <div class="flex items-center gap-2.5 pl-2">
-                    <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Cifran en su infraestructura, <span class="text-red-300 font-medium">con sus claves</span></span>
-                  </div>
-                  <div class="flex items-center gap-2.5 pl-2">
-                    <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Tecnicamente <span class="text-red-300">pueden acceder</span> a todo</span>
-                  </div>
-                  <div class="flex items-center gap-2.5 pl-2">
-                    <svg class="w-3.5 h-3.5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Brechas, ordenes judiciales, cambios de politica...</span>
-                  </div>
-                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-red-950/60 border border-red-500/30">
-                    <p class="text-[11px] text-red-300 leading-relaxed">Confias en que la empresa proteja tus datos. No en la criptografia.</p>
+                  <p class="text-[11px] text-neutral-500 leading-relaxed pl-4">
+                    Las apps cifran correctamente tu conexion y sus servidores. Pero la empresa gestiona las claves de cifrado — es su infraestructura. Pueden cumplir ordenes judiciales, sufrir brechas, o cambiar sus politicas de privacidad.
+                  </p>
+                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-neutral-800/80 border border-neutral-700">
+                    <p class="text-[11px] text-neutral-400 leading-relaxed">Tu privacidad depende de la confianza en un tercero.</p>
                   </div>
                 </div>
               </div>
 
               <!-- This app card -->
               <div class="relative rounded-xl border border-emerald-500/40 bg-neutral-900 p-5 overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
                 <div class="flex items-center gap-2.5 mb-4">
                   <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
                     <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
                   </div>
-                  <h3 class="text-sm font-bold text-emerald-300">Esta app</h3>
+                  <h3 class="text-sm font-bold text-emerald-300">Cifrado en cliente</h3>
                 </div>
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
-                    <span class="w-2 h-2 rounded-full bg-neutral-500 shrink-0"></span>
-                    <span class="text-xs text-neutral-300">Escribes tus datos</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                    <span class="text-xs text-neutral-300">Solo tu</span>
                   </div>
-                  <div class="flex items-center gap-2.5 pl-2">
-                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Se cifran <span class="text-emerald-300 font-medium">en tu navegador</span></span>
-                  </div>
-                  <div class="flex items-center gap-2.5 pl-2">
-                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Se guardan <span class="text-emerald-300 font-medium">cifrados en tu dispositivo</span></span>
-                  </div>
-                  <div class="flex items-center gap-2.5 pl-2">
-                    <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7"/></svg>
-                    <span class="text-xs text-neutral-400">Solo <span class="text-emerald-300">tu clave</span> puede descifrarlos</span>
-                  </div>
+                  <p class="text-[11px] text-neutral-500 leading-relaxed pl-4">
+                    Tus datos se cifran con tu clave directamente en el navegador, antes de guardarse. No hay servidor, no hay terceros, no hay que confiar en nadie. Solo quien tenga la clave puede descifrar.
+                  </p>
                   <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-950/60 border border-emerald-500/30">
-                    <p class="text-[11px] text-emerald-300 leading-relaxed">Nadie mas puede leerlos. Ni nosotros, ni tu ISP, ni nadie.</p>
+                    <p class="text-[11px] text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografia. No de la confianza.</p>
                   </div>
                 </div>
               </div>
