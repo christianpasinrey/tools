@@ -21,10 +21,6 @@ const STATUS_COLORS = {
   5: '#ef4444'  // 5xx Server Error
 }
 
-const STORAGE_KEYS = {
-  history: 'api-tester-history',
-  collections: 'api-tester-collections'
-}
 
 export function useApiTester() {
   // ==========================================
@@ -66,32 +62,15 @@ export function useApiTester() {
   const responseError = ref(null)
 
   // ==========================================
-  // Collections & History (vault + localStorage fallback)
+  // Collections & History (in-memory, persisted via vault)
   // ==========================================
   const vault = useVault()
   const VAULT_STORE = 'api-collections'
 
-  const collections = ref(loadFromStorage(STORAGE_KEYS.collections, []))
-  const history = ref(loadFromStorage(STORAGE_KEYS.history, []))
+  const collections = ref([])
+  const history = ref([])
   const sidebarTab = ref('collections') // collections, history
   const showSidebar = ref(true)
-
-  // Migrate to vault when unlocked
-  async function migrateToVault() {
-    if (vault.isLocked.value) return
-    try {
-      const lsCollections = loadFromStorage(STORAGE_KEYS.collections, null)
-      const lsHistory = loadFromStorage(STORAGE_KEYS.history, null)
-      if (lsCollections && lsCollections.length) {
-        await vault.save(VAULT_STORE, 'collections', 'collections', lsCollections)
-        localStorage.removeItem(STORAGE_KEYS.collections)
-      }
-      if (lsHistory && lsHistory.length) {
-        await vault.save(VAULT_STORE, 'history', 'history', lsHistory)
-        localStorage.removeItem(STORAGE_KEYS.history)
-      }
-    } catch { /* migration failed, keep localStorage */ }
-  }
 
   async function loadFromVault() {
     if (vault.isLocked.value) return
@@ -103,15 +82,8 @@ export function useApiTester() {
     } catch { /* keep current values */ }
   }
 
-  async function initStorage() {
-    if (!vault.isLocked.value) {
-      await migrateToVault()
-      await loadFromVault()
-    }
-  }
-
   watch(() => vault.isLocked.value, (locked) => {
-    if (!locked) initStorage()
+    if (!locked) loadFromVault()
   }, { immediate: true })
 
   // ==========================================
@@ -309,7 +281,7 @@ export function useApiTester() {
     if (history.value.length > 50) {
       history.value = history.value.slice(0, 50)
     }
-    saveToStorage(STORAGE_KEYS.history, history.value)
+    saveToVault('history', history.value)
   }
 
   function loadHistoryEntry(entry) {
@@ -339,7 +311,7 @@ export function useApiTester() {
 
   function clearHistory() {
     history.value = []
-    saveToStorage(STORAGE_KEYS.history, [])
+    saveToVault('history', [])
   }
 
   // ==========================================
@@ -406,7 +378,7 @@ export function useApiTester() {
   }
 
   function saveCollections() {
-    saveToStorage(STORAGE_KEYS.collections, collections.value)
+    saveToVault('collections', collections.value)
   }
 
   // ==========================================
@@ -675,24 +647,9 @@ export function useApiTester() {
     URL.revokeObjectURL(url)
   }
 
-  function loadFromStorage(key, defaultValue) {
-    try {
-      const stored = localStorage.getItem(key)
-      return stored ? JSON.parse(stored) : defaultValue
-    } catch {
-      return defaultValue
-    }
-  }
-
-  function saveToStorage(key, value) {
-    if (!vault.isLocked.value) {
-      const vaultKey = key === STORAGE_KEYS.collections ? 'collections' : 'history'
-      vault.save(VAULT_STORE, vaultKey, vaultKey, value).catch(() => {})
-    } else {
-      try {
-        localStorage.setItem(key, JSON.stringify(value))
-      } catch { /* Storage full or unavailable */ }
-    }
+  function saveToVault(vaultKey, value) {
+    if (vault.isLocked.value) return
+    vault.save(VAULT_STORE, vaultKey, vaultKey, value).catch(() => {})
   }
 
   // ==========================================
