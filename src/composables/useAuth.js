@@ -23,6 +23,9 @@ const accessToken = ref(null)
 const isAuthenticated = computed(() => !!accessToken.value)
 const authLoading = ref(false)
 const authError = ref('')
+const resetLoading = ref(false)
+const resetError = ref('')
+const resetSuccess = ref('')
 
 export function useAuth() {
   const cryptoModule = useAppCrypto()
@@ -145,6 +148,65 @@ export function useAuth() {
     return true
   }
 
+  async function requestPasswordReset(email) {
+    resetLoading.value = true
+    resetError.value = ''
+    resetSuccess.value = ''
+    try {
+      const res = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Request failed')
+      resetSuccess.value = 'Si existe una cuenta con ese email, recibiras un enlace de recuperacion.'
+      return true
+    } catch (err) {
+      resetError.value = err.message
+      return false
+    } finally {
+      resetLoading.value = false
+    }
+  }
+
+  async function verifyResetToken(email, token) {
+    try {
+      const res = await fetch(`${API_URL}/auth/verify-reset-token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, token })
+      })
+      if (!res.ok) return { valid: false }
+      return { valid: true }
+    } catch {
+      return { valid: false }
+    }
+  }
+
+  async function resetAccountWithNewPassword(email, token, newPassword) {
+    resetLoading.value = true
+    resetError.value = ''
+    resetSuccess.value = ''
+    try {
+      const newAuthKey = await deriveAuthKey(newPassword)
+      const res = await fetch(`${API_URL}/auth/reset-account`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, token, newPassword: newAuthKey })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Reset failed')
+      resetSuccess.value = 'Cuenta restablecida. Todos los datos anteriores han sido eliminados.'
+      return true
+    } catch (err) {
+      resetError.value = err.message
+      return false
+    } finally {
+      resetLoading.value = false
+    }
+  }
+
   async function authFetch(url, options = {}) {
     options.headers = {
       ...options.headers,
@@ -176,11 +238,17 @@ export function useAuth() {
     isAuthenticated,
     authLoading,
     authError,
+    resetLoading,
+    resetError,
+    resetSuccess,
     init,
     register,
     login,
     logout,
     changePassword,
+    requestPasswordReset,
+    verifyResetToken,
+    resetAccountWithNewPassword,
     authFetch
   }
 }

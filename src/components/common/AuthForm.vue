@@ -68,11 +68,20 @@ async function handleSubmit() {
       </button>
     </form>
 
-    <button
-      @click="mode = mode === 'login' ? 'register' : 'login'"
-      class="mt-2 text-xs text-neutral-500 hover:text-neutral-300 underline"
-    >
-      {{ mode === 'login' ? 'No tengo cuenta' : 'Ya tengo cuenta' }}
-    </button>
+    <div class="mt-2 flex items-center justify-between">
+      <button
+        @click="mode = mode === 'login' ? 'register' : 'login'"
+        class="text-xs text-neutral-500 hover:text-neutral-300 underline"
+      >
+        {{ mode === 'login' ? 'No tengo cuenta' : 'Ya tengo cuenta' }}
+      </button>
+      <router-link
+        v-if="mode === 'login'"
+        to="/forgot-password"
+        class="text-[10px] text-neutral-500 hover:text-neutral-300 transition-colors"
+      >
+        Olvidaste tu password?
+      </router-link>
+    </div>
   </div>
 </template>

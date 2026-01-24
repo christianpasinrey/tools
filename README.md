@@ -235,6 +235,8 @@ tools/
 │   ├── 📂 data/
 │   │   └── 📂 cheatsheets/       # +50 archivos JSON
 │   ├── 📂 views/                 # Páginas principales
+│   │   ├── ForgotPassword.vue        # Solicitar reset
+│   │   └── ResetAccount.vue          # Nuevo password + wipe
 │   ├── 📂 router/                # Configuración rutas
 │   ├── App.vue
 │   ├── main.js
@@ -320,6 +322,7 @@ Password del usuario
 | Sync | Last-Write-Wins basado en timestamps del cliente |
 | Offline | Cola de cambios en localStorage, flush al reconectar |
 | Cambiar password | Re-cifra todos los items con la nueva clave |
+| Reset account | Email con token (1h), borra vault, nuevo password |
 | Backend | Node.js + Express + MongoDB ([tools-sync-api](../tools-sync-api)) |
 
 > [!NOTE]
@@ -563,6 +566,8 @@ tools/
 │   ├── 📂 data/
 │   │   └── 📂 cheatsheets/       # +50 JSON files
 │   ├── 📂 views/                 # Main pages
+│   │   ├── ForgotPassword.vue        # Request reset
+│   │   └── ResetAccount.vue          # New password + wipe
 │   ├── 📂 router/                # Route configuration
 │   ├── App.vue
 │   ├── main.js
@@ -648,6 +653,7 @@ User password
 | Sync | Last-Write-Wins based on client timestamps |
 | Offline | Change queue in localStorage, flush on reconnect |
 | Change password | Re-encrypts all items with the new key |
+| Reset account | Email with token (1h), wipes vault, new password |
 | Backend | Node.js + Express + MongoDB ([tools-sync-api](../tools-sync-api)) |
 
 > [!NOTE]

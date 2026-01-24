@@ -84,6 +84,16 @@ const routes = [
   {
     path: '/map-editor',
     redirect: '/apps#map'
+  },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: () => import('../views/ForgotPassword.vue')
+  },
+  {
+    path: '/reset-account',
+    name: 'ResetAccount',
+    component: () => import('../views/ResetAccount.vue')
   }
 ]
 
