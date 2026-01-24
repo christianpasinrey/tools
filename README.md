@@ -319,10 +319,14 @@ Password del usuario
 | Auth | JWT (access 15min + refresh 7d con rotación) |
 | Sync | Last-Write-Wins basado en timestamps del cliente |
 | Offline | Cola de cambios en localStorage, flush al reconectar |
+| Cambiar password | Re-cifra todos los items con la nueva clave |
 | Backend | Node.js + Express + MongoDB ([tools-sync-api](../tools-sync-api)) |
 
 > [!NOTE]
 > El servidor solo almacena blobs `{ salt, iv, data }` en Base64. La clave de cifrado nunca sale del navegador.
+
+> [!WARNING]
+> No existe recuperación de password. Si lo pierdes, tus datos cifrados son irrecuperables. Esto es inherente al diseño zero-knowledge.
 
 ---
 
@@ -643,10 +647,14 @@ User password
 | Auth | JWT (access 15min + refresh 7d with rotation) |
 | Sync | Last-Write-Wins based on client timestamps |
 | Offline | Change queue in localStorage, flush on reconnect |
+| Change password | Re-encrypts all items with the new key |
 | Backend | Node.js + Express + MongoDB ([tools-sync-api](../tools-sync-api)) |
 
 > [!NOTE]
 > The server only stores `{ salt, iv, data }` blobs in Base64. The encryption key never leaves the browser.
+
+> [!WARNING]
+> There is no password recovery. If you lose it, your encrypted data is unrecoverable. This is inherent to the zero-knowledge design.
 
 ---
 

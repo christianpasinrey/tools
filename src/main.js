@@ -8,10 +8,6 @@ import { useVault, STORES } from './composables/useVault'
 
 const app = createApp(App).use(router)
 
-// Initialize auth from localStorage
-const auth = useAuth()
-auth.init()
-
 // Initialize sync with vault access
 const sync = useCloudSync()
 const vault = useVault()
@@ -24,10 +20,13 @@ sync.setVaultAccess({
 })
 sync.loadPendingQueue()
 
-// If authenticated, trigger initial sync
-if (auth.isAuthenticated.value) {
-  sync.fullSync()
-}
+// Initialize auth (async — restores session from HttpOnly cookie)
+const auth = useAuth()
+auth.init().then(() => {
+  if (auth.isAuthenticated.value) {
+    sync.fullSync()
+  }
+})
 
 // Flush queue when coming back online
 window.addEventListener('online', () => {

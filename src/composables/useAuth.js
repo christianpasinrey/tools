@@ -6,7 +6,6 @@ const AUTH_SALT = new TextEncoder().encode('tools-sync-auth-key-derivation')
 
 // Derive an auth key from password using PBKDF2 (one-way).
 // This is what gets sent to the server — never the raw password.
-// The server cannot reverse this to obtain the encryption password.
 async function deriveAuthKey(password) {
   const keyMaterial = await crypto.subtle.importKey(
     'raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']
@@ -18,10 +17,9 @@ async function deriveAuthKey(password) {
   return Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
-// Singleton state
+// Singleton state — memory only, no localStorage
 const user = ref(null)
 const accessToken = ref(null)
-const refreshToken = ref(null)
 const isAuthenticated = computed(() => !!accessToken.value)
 const authLoading = ref(false)
 const authError = ref('')
@@ -29,36 +27,24 @@ const authError = ref('')
 export function useAuth() {
   const cryptoModule = useAppCrypto()
 
-  function init() {
-    const stored = localStorage.getItem('tools-sync-auth')
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        user.value = parsed.user
-        accessToken.value = parsed.accessToken
-        refreshToken.value = parsed.refreshToken
-      } catch { /* corrupt data, ignore */ }
-    }
-    // Restore password from sessionStorage (persists within tab, cleared on browser close)
+  async function init() {
+    // Try to restore session via HttpOnly refresh cookie
     const sessionPwd = sessionStorage.getItem('tools-sync-pwd')
-    if (sessionPwd && accessToken.value) {
-      cryptoModule.setPassword(sessionPwd)
-    }
-  }
-
-  function persistAuth() {
-    localStorage.setItem('tools-sync-auth', JSON.stringify({
-      user: user.value,
-      accessToken: accessToken.value,
-      refreshToken: refreshToken.value
-    }))
-  }
-
-  function clearAuth() {
-    user.value = null
-    accessToken.value = null
-    refreshToken.value = null
-    localStorage.removeItem('tools-sync-auth')
+    try {
+      const res = await fetch(`${API_URL}/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include'
+      })
+      if (res.ok) {
+        const data = await res.json()
+        user.value = data.user
+        accessToken.value = data.token
+        // Restore encryption password from sessionStorage if available
+        if (sessionPwd) {
+          cryptoModule.setPassword(sessionPwd)
+        }
+      }
+    } catch { /* no session, stay unauthenticated */ }
   }
 
   async function register(email, password) {
@@ -69,16 +55,15 @@ export function useAuth() {
       const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password: authKey })
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Registration failed')
       user.value = data.user
       accessToken.value = data.token
-      refreshToken.value = data.refreshToken
       cryptoModule.setPassword(password)
       sessionStorage.setItem('tools-sync-pwd', password)
-      persistAuth()
       return true
     } catch (err) {
       authError.value = err.message
@@ -96,16 +81,15 @@ export function useAuth() {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password: authKey })
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Login failed')
       user.value = data.user
       accessToken.value = data.token
-      refreshToken.value = data.refreshToken
       cryptoModule.setPassword(password)
       sessionStorage.setItem('tools-sync-pwd', password)
-      persistAuth()
       return true
     } catch (err) {
       authError.value = err.message
@@ -119,27 +103,26 @@ export function useAuth() {
     try {
       await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${accessToken.value}` }
+        headers: { 'Authorization': `Bearer ${accessToken.value}` },
+        credentials: 'include'
       })
     } catch { /* ignore */ }
     cryptoModule.lock()
     sessionStorage.removeItem('tools-sync-pwd')
-    clearAuth()
+    user.value = null
+    accessToken.value = null
   }
 
   async function refreshAccessToken() {
-    if (!refreshToken.value) return false
     try {
       const res = await fetch(`${API_URL}/auth/refresh`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: refreshToken.value })
+        credentials: 'include'
       })
       if (!res.ok) return false
       const data = await res.json()
       accessToken.value = data.token
-      refreshToken.value = data.refreshToken
-      persistAuth()
+      user.value = data.user
       return true
     } catch {
       return false
@@ -168,6 +151,7 @@ export function useAuth() {
       'Authorization': `Bearer ${accessToken.value}`,
       'Content-Type': 'application/json'
     }
+    options.credentials = 'include'
     let response = await fetch(`${API_URL}${url}`, options)
 
     if (response.status === 401) {
@@ -178,7 +162,8 @@ export function useAuth() {
           options.headers['Authorization'] = `Bearer ${accessToken.value}`
           response = await fetch(`${API_URL}${url}`, options)
         } else {
-          clearAuth()
+          user.value = null
+          accessToken.value = null
           throw new Error('Session expired')
         }
       }
