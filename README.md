@@ -316,7 +316,7 @@ Password del usuario
 | Concepto | Detalle |
 |:---------|:--------|
 | Cifrado | AES-256-GCM con PBKDF2 (100k iteraciones) |
-| Auth | JWT (access 15min + refresh 7d con rotación) |
+| Auth | JWT access 15min (memory-only) + refresh 7d (HttpOnly cookie) |
 | Sync | Last-Write-Wins basado en timestamps del cliente |
 | Offline | Cola de cambios en localStorage, flush al reconectar |
 | Cambiar password | Re-cifra todos los items con la nueva clave |
@@ -644,7 +644,7 @@ User password
 | Concept | Detail |
 |:--------|:-------|
 | Encryption | AES-256-GCM with PBKDF2 (100k iterations) |
-| Auth | JWT (access 15min + refresh 7d with rotation) |
+| Auth | JWT access 15min (memory-only) + refresh 7d (HttpOnly cookie) |
 | Sync | Last-Write-Wins based on client timestamps |
 | Offline | Change queue in localStorage, flush on reconnect |
 | Change password | Re-encrypts all items with the new key |
