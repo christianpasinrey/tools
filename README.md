@@ -329,7 +329,7 @@ Password del usuario
 > El servidor solo almacena blobs `{ salt, iv, data }` en Base64. La clave de cifrado nunca sale del navegador.
 
 > [!WARNING]
-> No existe recuperación de password. Si lo pierdes, tus datos cifrados son irrecuperables. Esto es inherente al diseño zero-knowledge.
+> Si pierdes tu password, tus datos cifrados son irrecuperables. Puedes restablecer tu cuenta (via email), pero esto elimina permanentemente todos los datos anteriores. Esto es inherente al diseño zero-knowledge.
 
 ---
 
@@ -660,7 +660,7 @@ User password
 > The server only stores `{ salt, iv, data }` blobs in Base64. The encryption key never leaves the browser.
 
 > [!WARNING]
-> There is no password recovery. If you lose it, your encrypted data is unrecoverable. This is inherent to the zero-knowledge design.
+> If you lose your password, your encrypted data is unrecoverable. You can reset your account (via email), but this permanently deletes all previous data. This is inherent to the zero-knowledge design.
 
 ---
 
