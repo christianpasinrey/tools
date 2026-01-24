@@ -707,6 +707,22 @@ const backendPackages = ref([
     language: 'JavaScript',
     languageColor: '#f1e05a',
     stars: null
+  },
+  {
+    name: 'expressjs/cookie-parser',
+    description: 'Parse Cookie header and populate req.cookies with an object.',
+    url: 'https://github.com/expressjs/cookie-parser',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'nodemailer/nodemailer',
+    description: 'Send emails from Node.js. Supports SMTP, SES, and more.',
+    url: 'https://github.com/nodemailer/nodemailer',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
   }
 ])
 
