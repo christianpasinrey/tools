@@ -1,9 +1,10 @@
 import { useAppCrypto } from './useAppCrypto'
+import { useCloudSync } from './useCloudSync'
 
 const DB_NAME = 'app-vault'
 const DB_VERSION = 1
 
-const STORES = [
+export const STORES = [
   'image-presets',
   'svg-projects',
   'three-scenes',
@@ -37,6 +38,7 @@ function openDB() {
 
 export function useVault() {
   const crypto = useAppCrypto()
+  const sync = useCloudSync()
 
   async function save(storeName, id, name, data) {
     if (!crypto.hasKey()) throw new Error('Vault locked')
@@ -47,7 +49,11 @@ export function useVault() {
     const store = tx.objectStore(storeName)
     store.put(entry)
     return new Promise((resolve, reject) => {
-      tx.oncomplete = () => { db.close(); resolve(true) }
+      tx.oncomplete = () => {
+        db.close()
+        sync.onLocalSave(storeName, id, name, encrypted, entry.updatedAt)
+        resolve(true)
+      }
       tx.onerror = () => { db.close(); reject(tx.error) }
     })
   }
@@ -100,6 +106,33 @@ export function useVault() {
     const store = tx.objectStore(storeName)
     store.delete(id)
     return new Promise((resolve, reject) => {
+      tx.oncomplete = () => {
+        db.close()
+        sync.onLocalDelete(storeName, id)
+        resolve(true)
+      }
+      tx.onerror = () => { db.close(); reject(tx.error) }
+    })
+  }
+
+  async function getRawEntry(storeName, id) {
+    const db = await openDB()
+    const tx = db.transaction(storeName, 'readonly')
+    const store = tx.objectStore(storeName)
+    const request = store.get(id)
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => { db.close(); resolve(request.result || null) }
+      request.onerror = () => { db.close(); reject(request.error) }
+    })
+  }
+
+  async function saveRawEntry(storeName, id, name, encryptedPayload, updatedAt) {
+    const entry = { id, name, encrypted: encryptedPayload, updatedAt }
+    const db = await openDB()
+    const tx = db.transaction(storeName, 'readwrite')
+    const store = tx.objectStore(storeName)
+    store.put(entry)
+    return new Promise((resolve, reject) => {
       tx.oncomplete = () => { db.close(); resolve(true) }
       tx.onerror = () => { db.close(); reject(tx.error) }
     })
@@ -122,8 +155,9 @@ export function useVault() {
     list,
     remove,
     clearStore,
+    getRawEntry,
+    saveRawEntry,
     isLocked: crypto.isLocked,
-    hasSetup: crypto.hasSetup,
     hasKey: crypto.hasKey
   }
 }

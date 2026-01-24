@@ -2,9 +2,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import * as THREE from 'three'
 import { useAppCrypto } from '../composables/useAppCrypto'
-import CryptoLockButton from '../components/common/CryptoLockButton.vue'
+import { useAuth } from '../composables/useAuth'
+import SyncAccountButton from '../components/common/SyncAccountButton.vue'
 
 const appCrypto = useAppCrypto()
+const auth = useAuth()
 
 const isVisible = ref(false)
 const threeCanvas = ref(null)
@@ -18,6 +20,7 @@ const heroSection = ref(null)
 const toolsSection = ref(null)
 const repoSection = ref(null)
 const packagesSection = ref(null)
+const backendSection = ref(null)
 
 const onScroll = () => {
   scrollY.value = window.scrollY
@@ -296,7 +299,7 @@ onMounted(() => {
   initThree()
   fetchGitHubCommits()
   fetchPackageStars()
-  appCrypto.checkHasSetup()
+  fetchBackendStars()
 
   // Scroll tracking setup
   windowHeight.value = window.innerHeight
@@ -632,6 +635,169 @@ const packages = ref([
   }
 ])
 
+const backendPackages = ref([
+  {
+    name: 'expressjs/express',
+    description: 'Fast, unopinionated, minimalist web framework for Node.js.',
+    url: 'https://github.com/expressjs/express',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'Automattic/mongoose',
+    description: 'MongoDB object modeling designed to work in an asynchronous environment.',
+    url: 'https://github.com/Automattic/mongoose',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'kelektiv/node.bcrypt.js',
+    description: 'bcrypt for Node.js. Hash and compare passwords securely.',
+    url: 'https://github.com/kelektiv/node.bcrypt.js',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'auth0/node-jsonwebtoken',
+    description: 'JsonWebToken implementation for Node.js. Sign and verify tokens.',
+    url: 'https://github.com/auth0/node-jsonwebtoken',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'helmetjs/helmet',
+    description: 'Help secure Express apps with various HTTP headers.',
+    url: 'https://github.com/helmetjs/helmet',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'expressjs/cors',
+    description: 'Node.js CORS middleware for Express with various options.',
+    url: 'https://github.com/expressjs/cors',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  },
+  {
+    name: 'express-rate-limit/express-rate-limit',
+    description: 'Basic rate-limiting middleware for Express to limit repeated requests.',
+    url: 'https://github.com/express-rate-limit/express-rate-limit',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
+  },
+  {
+    name: 'express-validator/express-validator',
+    description: 'Express middleware for validator.js. Validate and sanitize inputs.',
+    url: 'https://github.com/express-validator/express-validator',
+    language: 'TypeScript',
+    languageColor: '#3178c6',
+    stars: null
+  },
+  {
+    name: 'motdotla/dotenv',
+    description: 'Loads environment variables from .env file into process.env.',
+    url: 'https://github.com/motdotla/dotenv',
+    language: 'JavaScript',
+    languageColor: '#f1e05a',
+    stars: null
+  }
+])
+
+const backendCards = ref([])
+const hoveredBackendCard = ref(null)
+
+const getBackendPackageStyle = (index) => {
+  const progress = getScrollProgress(backendSection.value)
+  const row = Math.floor(index / 3)
+  const stagger = row * 0.1
+  const itemProgress = Math.max(0, Math.min(1, (progress - stagger) * 1.5))
+  return {
+    opacity: itemProgress,
+    transform: `translateY(${(1 - itemProgress) * 30}px)`
+  }
+}
+
+const onBackendMouseMove = (e, index) => {
+  const card = backendCards.value[index]
+  if (!card) return
+  const rect = card.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+  const centerX = rect.width / 2
+  const centerY = rect.height / 2
+  const rotateX = ((y - centerY) / centerY) * -15
+  const rotateY = ((x - centerX) / centerX) * 15
+  const shineX = (x / rect.width) * 100
+  const shineY = (y / rect.height) * 100
+  card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`
+  card.style.setProperty('--shine-x', `${shineX}%`)
+  card.style.setProperty('--shine-y', `${shineY}%`)
+}
+
+const onBackendMouseEnter = (index) => {
+  hoveredBackendCard.value = index
+}
+
+const onBackendMouseLeave = (index) => {
+  const card = backendCards.value[index]
+  if (!card) return
+  hoveredBackendCard.value = null
+  card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)'
+}
+
+const onBackendSectionMouseMove = (e) => {
+  backendCards.value.forEach((card, index) => {
+    if (!card || hoveredBackendCard.value === index) return
+    const rect = card.getBoundingClientRect()
+    const cardCenterX = rect.left + rect.width / 2
+    const cardCenterY = rect.top + rect.height / 2
+    const deltaX = e.clientX - cardCenterX
+    const deltaY = e.clientY - cardCenterY
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    const maxDistance = 200
+    if (distance < maxDistance) {
+      const force = (1 - distance / maxDistance) * 8
+      const moveX = -(deltaX / distance) * force
+      const moveY = -(deltaY / distance) * force
+      card.style.transform = `perspective(1000px) translateX(${moveX}px) translateY(${moveY}px)`
+    } else {
+      card.style.transform = 'perspective(1000px) translateX(0) translateY(0)'
+    }
+  })
+}
+
+const onBackendSectionMouseLeave = () => {
+  backendCards.value.forEach((card) => {
+    if (!card) return
+    card.style.transform = 'perspective(1000px) translateX(0) translateY(0)'
+  })
+}
+
+const fetchBackendStars = async () => {
+  const results = await Promise.all(
+    backendPackages.value.map(async (pkg) => {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${pkg.name}`)
+        const data = await res.json()
+        return data.stargazers_count
+      } catch {
+        return null
+      }
+    })
+  )
+  backendPackages.value = backendPackages.value.map((pkg, i) => ({
+    ...pkg,
+    stars: results[i]
+  }))
+}
+
 const formatStars = (count) => {
   if (count >= 1000) {
     return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
@@ -745,11 +911,11 @@ const fetchGitHubCommits = async () => {
             <!-- Center lock icon -->
             <div class="w-20 h-20 rounded-2xl flex items-center justify-center relative transition-colors duration-700" :class="appCrypto.isLocked.value ? 'bg-amber-500/10' : 'bg-emerald-500/10'">
               <svg class="w-9 h-9 transition-all duration-700" :class="appCrypto.isLocked.value ? 'text-amber-400' : 'text-emerald-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path v-if="appCrypto.isLocked.value || !appCrypto.hasSetup.value" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path v-if="appCrypto.isLocked.value || !auth.isAuthenticated.value" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
               </svg>
               <!-- Glow pulse when unlocked -->
-              <div v-if="!appCrypto.isLocked.value && appCrypto.hasSetup.value" class="absolute inset-0 rounded-2xl bg-emerald-500/15 animate-ping opacity-30"></div>
+              <div v-if="!appCrypto.isLocked.value && auth.isAuthenticated.value" class="absolute inset-0 rounded-2xl bg-emerald-500/15 animate-ping opacity-30"></div>
             </div>
           </div>
 
@@ -760,7 +926,7 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            Tu navegador, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="appCrypto.hasSetup.value && !appCrypto.isLocked.value ? 'from-emerald-400 to-teal-400' : 'from-amber-400 to-orange-400'">tus datos</span>
+            Tu navegador, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="auth.isAuthenticated.value && !appCrypto.isLocked.value ? 'from-emerald-400 to-teal-400' : 'from-amber-400 to-orange-400'">tus datos</span>
           </h1>
 
           <!-- Subtitle -->
@@ -771,7 +937,7 @@ const fetchGitHubCommits = async () => {
             ]"
           >
             <p class="text-neutral-400 text-sm sm:text-base font-medium">Client-side AES-256-GCM encryption.</p>
-            <p class="text-neutral-600 text-xs sm:text-sm mt-1">Sin trafico de datos sensibles, sin servidores, sin cuentas.</p>
+            <p class="text-neutral-600 text-xs sm:text-sm mt-1">Tus datos se cifran antes de salir del navegador. Sync entre dispositivos.</p>
           </div>
 
           <!-- Status indicator -->
@@ -781,29 +947,29 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            <div v-if="!appCrypto.hasSetup.value" class="flex flex-col items-center gap-4">
+            <div v-if="!auth.isAuthenticated.value" class="flex flex-col items-center gap-4">
               <div class="flex items-center gap-3">
-                <CryptoLockButton />
+                <SyncAccountButton />
                 <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border bg-neutral-800/50 text-neutral-400 border-neutral-700">
                   <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-neutral-500"></span>
-                  Sin configurar
+                  Sin cuenta
                 </div>
               </div>
-              <p class="text-neutral-600 text-xs">Genera una clave de cifrado en un click</p>
+              <p class="text-neutral-600 text-xs">Crea una cuenta para cifrar y sincronizar tus datos</p>
             </div>
 
             <div v-else class="flex flex-col items-center gap-4">
               <div class="flex items-center gap-3">
-                <CryptoLockButton />
+                <SyncAccountButton />
                 <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border" :class="appCrypto.isLocked.value ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'">
                   <span class="relative flex h-1.5 w-1.5">
                     <span v-if="!appCrypto.isLocked.value" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-1.5 w-1.5" :class="appCrypto.isLocked.value ? 'bg-amber-400' : 'bg-emerald-400'"></span>
                   </span>
-                  {{ appCrypto.isLocked.value ? 'Bloqueado' : 'Desbloqueado' }}
+                  {{ appCrypto.isLocked.value ? 'Bloqueado' : 'Conectado' }}
                 </div>
               </div>
-              <p class="text-neutral-600 text-xs">{{ appCrypto.isLocked.value ? 'Desbloquea para acceder a tus datos cifrados' : 'Sesion activa — tus datos estan accesibles' }}</p>
+              <p class="text-neutral-600 text-xs">{{ appCrypto.isLocked.value ? 'Inicia sesion para acceder a tus datos' : 'Sesion activa — datos cifrados y sincronizados' }}</p>
             </div>
           </div>
 
@@ -872,7 +1038,7 @@ const fetchGitHubCommits = async () => {
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
                   </div>
-                  <h3 class="text-sm font-bold text-emerald-300">Cifrado en cliente</h3>
+                  <h3 class="text-sm font-bold text-emerald-300">Zero-Knowledge</h3>
                 </div>
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
@@ -880,7 +1046,7 @@ const fetchGitHubCommits = async () => {
                     <span class="text-xs text-neutral-300">Solo tu</span>
                   </div>
                   <p class="text-[11px] text-neutral-500 leading-relaxed pl-4">
-                    Tus datos se cifran con tu clave directamente en el navegador, antes de guardarse. No hay servidor, no hay terceros, no hay que confiar en nadie. Solo quien tenga la clave puede descifrar.
+                    Tus datos se cifran con tu clave en el navegador antes de salir. El servidor sincroniza blobs cifrados entre tus dispositivos, pero no puede descifrarlos — nunca recibe tu password ni la clave de cifrado.
                   </p>
                   <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-950/60 border border-emerald-500/30">
                     <p class="text-[11px] text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografia. No de la confianza.</p>
@@ -1304,6 +1470,153 @@ const fetchGitHubCommits = async () => {
       <!-- Footer Note -->
       <p class="text-center text-neutral-600 text-xs mt-8">
         Built with love using these amazing open source projects
+      </p>
+    </div>
+
+    <!-- Backend & Sync Architecture Section -->
+    <div ref="backendSection" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40" style="z-index: 1;">
+
+      <!-- Section Header -->
+      <div class="flex items-center gap-3 mb-4">
+        <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-widest">
+          Zero-Knowledge Sync
+        </h2>
+      </div>
+
+      <!-- Architecture Explanation -->
+      <div class="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- How it works card -->
+        <div class="rounded-2xl border border-neutral-800/50 bg-neutral-900/50 backdrop-blur-sm p-6">
+          <h3 class="text-white font-semibold text-base mb-4">Como se guardan tus datos</h3>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">1</span>
+              <p class="text-neutral-400 text-sm">Tu password genera una <span class="text-emerald-400 font-mono text-xs">AES-256-GCM key</span> via PBKDF2 (100k iteraciones)</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">2</span>
+              <p class="text-neutral-400 text-sm">Los datos se cifran <span class="text-white font-medium">en el navegador</span> antes de guardarse en IndexedDB</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">3</span>
+              <p class="text-neutral-400 text-sm">Los blobs cifrados <span class="text-neutral-300 font-mono text-xs">{salt, iv, data}</span> se sincronizan al servidor</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">4</span>
+              <p class="text-neutral-400 text-sm">El servidor <span class="text-amber-400 font-medium">nunca</span> recibe tu password ni puede descifrar nada</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical details card -->
+        <div class="rounded-2xl border border-neutral-800/50 bg-neutral-900/50 backdrop-blur-sm p-6">
+          <h3 class="text-white font-semibold text-base mb-4">Detalles tecnicos</h3>
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
+              <span class="text-neutral-500 text-xs">Cifrado</span>
+              <span class="text-neutral-300 text-xs font-mono">AES-256-GCM</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
+              <span class="text-neutral-500 text-xs">Key derivation</span>
+              <span class="text-neutral-300 text-xs font-mono">PBKDF2 (100k iter)</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
+              <span class="text-neutral-500 text-xs">Auth tokens</span>
+              <span class="text-neutral-300 text-xs font-mono">JWT (15min + 7d refresh)</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
+              <span class="text-neutral-500 text-xs">Password hash (server)</span>
+              <span class="text-neutral-300 text-xs font-mono">bcrypt (12 rounds)</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
+              <span class="text-neutral-500 text-xs">Conflictos</span>
+              <span class="text-neutral-300 text-xs font-mono">Last-Write-Wins</span>
+            </div>
+            <div class="flex items-center justify-between py-1.5">
+              <span class="text-neutral-500 text-xs">Offline</span>
+              <span class="text-neutral-300 text-xs font-mono">Cola en localStorage</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backend Packages Mosaic -->
+      <div class="flex items-center gap-2 mb-6">
+        <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
+        </svg>
+        <span class="text-xs text-neutral-500 uppercase tracking-wider font-medium">Backend Stack</span>
+      </div>
+
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 auto-rows-fr"
+        @mousemove="onBackendSectionMouseMove"
+        @mouseleave="onBackendSectionMouseLeave"
+      >
+        <a
+          v-for="(pkg, index) in backendPackages"
+          :key="pkg.name"
+          :ref="el => backendCards[index] = el"
+          :href="pkg.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="glass-container group scroll-animated package-card-3d h-full"
+          :style="getBackendPackageStyle(index)"
+          @mousemove="onBackendMouseMove($event, index)"
+          @mouseenter="onBackendMouseEnter(index)"
+          @mouseleave="onBackendMouseLeave(index)"
+        >
+          <!-- Liquid Glass Layers -->
+          <div class="glass-filter"></div>
+          <div class="glass-overlay"></div>
+          <div class="glass-specular"></div>
+
+          <!-- Glass content -->
+          <div class="glass-content h-full flex flex-col">
+            <!-- Repo Header -->
+            <div class="flex items-start gap-3 mb-3">
+              <svg class="w-4 h-4 text-white/60 mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
+              </svg>
+              <span class="text-white/90 text-sm font-semibold group-hover:text-white truncate transition-colors">
+                {{ pkg.name }}
+              </span>
+            </div>
+
+            <!-- Description -->
+            <p class="text-white/50 text-xs leading-relaxed mb-4 line-clamp-2 group-hover:text-white/70 transition-colors flex-1">
+              {{ pkg.description }}
+            </p>
+
+            <!-- Footer -->
+            <div class="flex items-center gap-4 text-xs text-white/40 mt-auto">
+              <!-- Language -->
+              <div class="flex items-center gap-1.5">
+                <span
+                  class="w-2.5 h-2.5 rounded-full ring-2 ring-white/20"
+                  :style="{ backgroundColor: pkg.languageColor }"
+                ></span>
+                <span>{{ pkg.language }}</span>
+              </div>
+
+              <!-- Stars -->
+              <div v-if="pkg.stars" class="flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/>
+                </svg>
+                <span>{{ formatStars(pkg.stars) }}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <p class="text-center text-neutral-600 text-xs mt-8">
+        Sync API powered by these open source projects
       </p>
     </div>
   </div>

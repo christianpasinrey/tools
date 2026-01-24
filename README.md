@@ -17,8 +17,8 @@
   <img src="https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square" alt="PRs Welcome">
 </p>
 
-**Suite de herramientas profesionales que funcionan 100% en el navegador.**<br>
-Sin servidores • Sin registro • Sin límites • Privacidad total
+**Suite de herramientas profesionales con cifrado zero-knowledge.**<br>
+Cifrado en cliente • Sync entre dispositivos • Open Source • Privacidad total
 
 <p>
   <a href="#-inicio-rápido"><strong>Inicio Rápido</strong></a> •
@@ -54,23 +54,23 @@ Sin servidores • Sin registro • Sin límites • Privacidad total
 
 ## 📖 Descripción
 
-**Web Tools** es una colección de herramientas de edición y productividad que se ejecutan completamente en tu navegador. Ningún dato sale de tu dispositivo.
+**Web Tools** es una colección de herramientas de edición y productividad con cifrado zero-knowledge. Tus datos se cifran con AES-256-GCM directamente en el navegador antes de guardarse o sincronizarse.
 
 <table>
 <tr>
 <td>🔒</td>
-<td><strong>100% Cliente</strong></td>
-<td>Todo el procesamiento ocurre en tu navegador</td>
+<td><strong>Zero-Knowledge</strong></td>
+<td>Cifrado AES-256-GCM en cliente. El servidor solo almacena blobs cifrados</td>
+</tr>
+<tr>
+<td>🔄</td>
+<td><strong>Sync Cross-Device</strong></td>
+<td>Sincroniza datos cifrados entre dispositivos via API REST</td>
 </tr>
 <tr>
 <td>🚀</td>
 <td><strong>Sin Instalación</strong></td>
 <td>Accede desde cualquier dispositivo con navegador</td>
-</tr>
-<tr>
-<td>💾</td>
-<td><strong>Sin Registro</strong></td>
-<td>No necesitas crear cuenta ni iniciar sesión</td>
 </tr>
 <tr>
 <td>🌐</td>
@@ -215,11 +215,19 @@ tools/
 │   │   ├── 📂 image/             # Editor de imagen
 │   │   ├── 📂 pdf/               # Editor de PDF
 │   │   ├── 📂 three/             # Playground 3D
+│   │   ├── 📂 common/            # Componentes compartidos
+│   │   │   ├── SyncAccountButton.vue   # Botón cloud sync
+│   │   │   ├── AuthForm.vue            # Login/registro
+│   │   │   └── SyncStatusPanel.vue     # Estado de sync
 │   │   ├── Dock.vue              # Navegación principal
 │   │   ├── DockButton.vue        # Botones del dock
 │   │   ├── DockSubmenu.vue       # Submenús interactivos
 │   │   └── BentoGrid.vue         # Grid estilo bento
 │   ├── 📂 composables/
+│   │   ├── useAppCrypto.js       # Cifrado AES-256-GCM
+│   │   ├── useAuth.js            # Autenticación JWT
+│   │   ├── useCloudSync.js       # Sync zero-knowledge
+│   │   ├── useVault.js           # IndexedDB + sync hooks
 │   │   ├── useCheatsheets.js     # Lógica de cheatsheets
 │   │   ├── useMultimedia.js      # Navegación multimedia
 │   │   ├── useTechnology.js      # Navegación technology
@@ -293,6 +301,31 @@ server {
 
 ---
 
+## 🔐 Cifrado y Sync
+
+### Arquitectura Zero-Knowledge
+
+Los datos se cifran en el navegador con **AES-256-GCM** antes de guardarse en IndexedDB o sincronizarse con el backend. El servidor nunca tiene acceso a los datos en claro.
+
+```
+Password del usuario
+  ├─ PBKDF2 (salt fijo) ──→ authKey ──→ servidor (autenticación)
+  └─ PBKDF2 (salt aleatorio/item) ──→ AES key ──→ cifra datos localmente
+```
+
+| Concepto | Detalle |
+|:---------|:--------|
+| Cifrado | AES-256-GCM con PBKDF2 (100k iteraciones) |
+| Auth | JWT (access 15min + refresh 7d con rotación) |
+| Sync | Last-Write-Wins basado en timestamps del cliente |
+| Offline | Cola de cambios en localStorage, flush al reconectar |
+| Backend | Node.js + Express + MongoDB ([tools-sync-api](../tools-sync-api)) |
+
+> [!NOTE]
+> El servidor solo almacena blobs `{ salt, iv, data }` en Base64. La clave de cifrado nunca sale del navegador.
+
+---
+
 ## 🤝 Contribuir
 
 > [!NOTE]
@@ -345,23 +378,23 @@ Este proyecto está bajo la licencia **MIT**. Ver el archivo [LICENSE](LICENSE) 
 
 ## 📖 Description
 
-**Web Tools** is a collection of editing and productivity tools that run entirely in your browser. No data ever leaves your device.
+**Web Tools** is a collection of editing and productivity tools with zero-knowledge encryption. Your data is encrypted with AES-256-GCM directly in the browser before being stored or synced.
 
 <table>
 <tr>
 <td>🔒</td>
-<td><strong>100% Client-Side</strong></td>
-<td>All processing happens in your browser</td>
+<td><strong>Zero-Knowledge</strong></td>
+<td>Client-side AES-256-GCM encryption. The server only stores encrypted blobs</td>
+</tr>
+<tr>
+<td>🔄</td>
+<td><strong>Cross-Device Sync</strong></td>
+<td>Sync encrypted data across devices via REST API</td>
 </tr>
 <tr>
 <td>🚀</td>
 <td><strong>No Installation</strong></td>
 <td>Access from any device with a browser</td>
-</tr>
-<tr>
-<td>💾</td>
-<td><strong>No Registration</strong></td>
-<td>No account or login required</td>
 </tr>
 <tr>
 <td>🌐</td>
@@ -506,11 +539,19 @@ tools/
 │   │   ├── 📂 image/             # Image editor
 │   │   ├── 📂 pdf/               # PDF editor
 │   │   ├── 📂 three/             # 3D playground
+│   │   ├── 📂 common/            # Shared components
+│   │   │   ├── SyncAccountButton.vue   # Cloud sync button
+│   │   │   ├── AuthForm.vue            # Login/register
+│   │   │   └── SyncStatusPanel.vue     # Sync status
 │   │   ├── Dock.vue              # Main navigation
 │   │   ├── DockButton.vue        # Dock buttons
 │   │   ├── DockSubmenu.vue       # Interactive submenus
 │   │   └── BentoGrid.vue         # Bento-style grid
 │   ├── 📂 composables/
+│   │   ├── useAppCrypto.js       # AES-256-GCM encryption
+│   │   ├── useAuth.js            # JWT authentication
+│   │   ├── useCloudSync.js       # Zero-knowledge sync
+│   │   ├── useVault.js           # IndexedDB + sync hooks
 │   │   ├── useCheatsheets.js     # Cheatsheets logic
 │   │   ├── useMultimedia.js      # Multimedia navigation
 │   │   ├── useTechnology.js      # Technology navigation
@@ -581,6 +622,31 @@ server {
 ```
 
 </details>
+
+---
+
+## 🔐 Encryption & Sync
+
+### Zero-Knowledge Architecture
+
+Data is encrypted in the browser with **AES-256-GCM** before being stored in IndexedDB or synced to the backend. The server never has access to plaintext data.
+
+```
+User password
+  ├─ PBKDF2 (fixed salt) ──→ authKey ──→ server (authentication)
+  └─ PBKDF2 (random salt/item) ──→ AES key ──→ encrypts data locally
+```
+
+| Concept | Detail |
+|:--------|:-------|
+| Encryption | AES-256-GCM with PBKDF2 (100k iterations) |
+| Auth | JWT (access 15min + refresh 7d with rotation) |
+| Sync | Last-Write-Wins based on client timestamps |
+| Offline | Change queue in localStorage, flush on reconnect |
+| Backend | Node.js + Express + MongoDB ([tools-sync-api](../tools-sync-api)) |
+
+> [!NOTE]
+> The server only stores `{ salt, iv, data }` blobs in Base64. The encryption key never leaves the browser.
 
 ---
 

@@ -431,7 +431,6 @@ function openDb(name, version) {
 onMounted(() => {
   loadLocalStorage()
   loadDatabases()
-  appCrypto.checkHasSetup()
 })
 </script>
 
