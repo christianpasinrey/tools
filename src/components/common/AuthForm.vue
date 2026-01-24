@@ -49,6 +49,14 @@ async function handleSubmit() {
         required
       />
 
+      <!-- No recovery warning -->
+      <div v-if="mode === 'register'" class="flex items-start gap-2 px-2 py-2 rounded bg-amber-500/10 border border-amber-500/20">
+        <svg class="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+        <p class="text-[10px] text-amber-300/90 leading-relaxed">Si pierdes tu password, tus datos no se pueden recuperar. No existe mecanismo de recuperacion en un sistema zero-knowledge.</p>
+      </div>
+
       <p v-if="auth.authError.value" class="text-red-400 text-xs">{{ auth.authError.value }}</p>
 
       <button

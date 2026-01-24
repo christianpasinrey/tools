@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { useAuth } from './useAuth'
+import { useAppCrypto } from './useAppCrypto'
 
 // Singleton state
 const syncStatus = ref('idle') // 'idle' | 'syncing' | 'error' | 'offline'
@@ -288,6 +289,70 @@ export function useCloudSync() {
     }
   }
 
+  async function reEncryptAll(oldPassword, newPassword) {
+    if (!vaultList || !vaultGetRaw || !vaultSaveRaw) {
+      throw new Error('Vault access not configured')
+    }
+
+    const cryptoModule = useAppCrypto()
+    syncStatus.value = 'syncing'
+    syncErrors.value = []
+
+    let totalItems = 0
+    let processed = 0
+
+    try {
+      // Count total items
+      for (const storeName of vaultStores) {
+        try {
+          const items = await vaultList(storeName)
+          totalItems += items.length
+        } catch { /* store might not exist */ }
+      }
+
+      syncProgress.value = { current: 0, total: totalItems }
+
+      // Re-encrypt each item
+      for (const storeName of vaultStores) {
+        let items
+        try {
+          items = await vaultList(storeName)
+        } catch { continue }
+
+        for (const item of items) {
+          try {
+            const entry = await vaultGetRaw(storeName, item.id)
+            if (!entry || !entry.encrypted) continue
+
+            // Decrypt with old password
+            const plainData = await cryptoModule.decryptWith(entry.encrypted, oldPassword)
+            // Re-encrypt with new password
+            const newEncrypted = await cryptoModule.encryptWith(plainData, newPassword)
+            const updatedAt = Date.now()
+
+            // Save locally
+            await vaultSaveRaw(storeName, item.id, entry.name, newEncrypted, updatedAt)
+
+            // Push to server
+            const payload = encryptedToBase64(newEncrypted)
+            await pushItem(storeName, item.id, entry.name, payload, updatedAt)
+
+            processed++
+            syncProgress.value.current = processed
+          } catch (err) {
+            syncErrors.value.push({ type: 're-encrypt', storeName, itemId: item.id, error: err.message })
+          }
+        }
+      }
+
+      syncStatus.value = syncErrors.value.length > 0 ? 'error' : 'idle'
+      return processed
+    } catch (err) {
+      syncStatus.value = 'error'
+      throw err
+    }
+  }
+
   return {
     syncStatus,
     lastSyncTime,
@@ -297,6 +362,7 @@ export function useCloudSync() {
     setVaultAccess,
     loadPendingQueue,
     fullSync,
+    reEncryptAll,
     onLocalSave,
     onLocalDelete
   }

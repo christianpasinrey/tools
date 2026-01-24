@@ -146,6 +146,22 @@ export function useAuth() {
     }
   }
 
+  async function changePassword(currentPassword, newPassword) {
+    const currentAuthKey = await deriveAuthKey(currentPassword)
+    const newAuthKey = await deriveAuthKey(newPassword)
+    const res = await authFetch('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword: currentAuthKey, newPassword: newAuthKey })
+    })
+    if (!res.ok) {
+      const data = await res.json()
+      throw new Error(data.error || 'Change password failed')
+    }
+    cryptoModule.setPassword(newPassword)
+    sessionStorage.setItem('tools-sync-pwd', newPassword)
+    return true
+  }
+
   async function authFetch(url, options = {}) {
     options.headers = {
       ...options.headers,
@@ -179,6 +195,7 @@ export function useAuth() {
     register,
     login,
     logout,
+    changePassword,
     authFetch
   }
 }

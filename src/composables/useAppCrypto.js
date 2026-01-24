@@ -58,12 +58,36 @@ export function useAppCrypto() {
     return JSON.parse(new TextDecoder().decode(decrypted))
   }
 
+  async function encryptWith(data, password) {
+    const salt = crypto.getRandomValues(new Uint8Array(16))
+    const iv = crypto.getRandomValues(new Uint8Array(12))
+    const key = await deriveKey(password, salt)
+    const enc = new TextEncoder()
+    const encrypted = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      enc.encode(JSON.stringify(data))
+    )
+    return { salt: Array.from(salt), iv: Array.from(iv), data: Array.from(new Uint8Array(encrypted)) }
+  }
+
+  async function decryptWith(encObj, password) {
+    const salt = new Uint8Array(encObj.salt)
+    const iv = new Uint8Array(encObj.iv)
+    const data = new Uint8Array(encObj.data)
+    const key = await deriveKey(password, salt)
+    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data)
+    return JSON.parse(new TextDecoder().decode(decrypted))
+  }
+
   return {
     isLocked,
     hasKey,
     setPassword,
     lock,
     encrypt,
-    decrypt
+    decrypt,
+    encryptWith,
+    decryptWith
   }
 }
