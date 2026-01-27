@@ -1,12 +1,15 @@
 <script setup>
 import { useTools } from '../composables/useTools'
+import { useDevice } from '../composables/useDevice'
 import ToolsTabs from '../components/tools/ToolsTabs.vue'
 
 // Import tools
 import UnitConverter from './UnitConverter.vue'
 import ColorPicker from './ColorPicker.vue'
+import MobileColorPicker from './MobileColorPicker.vue'
 
 const tools = useTools()
+const { isMobile } = useDevice()
 </script>
 
 <template>
@@ -19,7 +22,8 @@ const tools = useTools()
 
     <div class="flex-1 overflow-auto">
       <UnitConverter v-if="tools.activeTab.value === 'converter'" />
-      <ColorPicker v-if="tools.activeTab.value === 'color'" />
+      <MobileColorPicker v-if="tools.activeTab.value === 'color' && isMobile" />
+      <ColorPicker v-if="tools.activeTab.value === 'color' && !isMobile" />
     </div>
   </div>
 </template>
