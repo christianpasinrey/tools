@@ -68,6 +68,24 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
 
     <!-- Form -->
     <div class="flex-1 overflow-y-auto p-4 space-y-4">
+      <!-- LEGAL COMPLIANCE -->
+      <section class="rounded-lg border border-neutral-800/50 p-3 bg-neutral-900/30">
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          <div class="space-y-1">
+            <p class="text-[11px] text-neutral-300 font-medium">Conforme a la normativa AEAT</p>
+            <p class="text-[10px] text-neutral-500 leading-relaxed">
+              Art. 6 del <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2012-14696" target="_blank" class="text-emerald-500/80 hover:text-emerald-400 underline">RD 1619/2012</a>
+              (Reglamento de Obligaciones de Facturacion).
+              Incluye todos los campos obligatorios: identificacion emisor/receptor, NIF, numeracion correlativa,
+              fecha, descripcion, base imponible, tipo impositivo y cuota tributaria.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <!-- EMISOR -->
       <section class="bg-neutral-900/50 rounded-lg border border-neutral-800">
         <button @click="toggleSection('emisor')" class="w-full flex items-center justify-between px-4 py-2.5 text-left">
@@ -431,23 +449,6 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
         </div>
       </section>
 
-      <!-- LEGAL COMPLIANCE -->
-      <section class="rounded-lg border border-neutral-800/50 p-3 bg-neutral-900/30">
-        <div class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-          </svg>
-          <div class="space-y-1">
-            <p class="text-[11px] text-neutral-300 font-medium">Conforme a la normativa AEAT</p>
-            <p class="text-[10px] text-neutral-500 leading-relaxed">
-              Art. 6 del <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2012-14696" target="_blank" class="text-emerald-500/80 hover:text-emerald-400 underline">RD 1619/2012</a>
-              (Reglamento de Obligaciones de Facturación).
-              Incluye todos los campos obligatorios: identificación emisor/receptor, NIF, numeración correlativa,
-              fecha, descripción, base imponible, tipo impositivo y cuota tributaria.
-            </p>
-          </div>
-        </div>
-      </section>
     </div>
 
     <!-- CONFIG MODAL (save name) -->
