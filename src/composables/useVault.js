@@ -2,7 +2,7 @@ import { useAppCrypto } from './useAppCrypto'
 import { useCloudSync } from './useCloudSync'
 
 const DB_NAME = 'app-vault'
-const DB_VERSION = 1
+const DB_VERSION = 2
 
 export const STORES = [
   'image-presets',
@@ -11,6 +11,7 @@ export const STORES = [
   'pdf-documents',
   'spreadsheet-workbooks',
   'markdown-documents',
+  'docx-documents',
   'color-palettes',
   'devtools-snippets',
   'api-collections',

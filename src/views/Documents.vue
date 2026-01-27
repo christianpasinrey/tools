@@ -6,6 +6,7 @@ import DocumentsTabs from '../components/documents/DocumentsTabs.vue'
 // Lazy load document editors
 import PdfEditorContent from './PdfEditor.vue'
 import SpreadsheetEditor from '../components/documents/SpreadsheetEditor.vue'
+import DocxEditor from '../components/documents/DocxEditor.vue'
 import MarkdownEditorContent from '../components/documents/MarkdownEditorContent.vue'
 import MobileMarkdownEditor from '../components/documents/MobileMarkdownEditor.vue'
 
@@ -24,6 +25,7 @@ const { isMobile } = useDevice()
     <div class="flex-1 overflow-auto">
       <PdfEditorContent v-if="docs.activeTab.value === 'pdf'" />
       <SpreadsheetEditor v-if="docs.activeTab.value === 'spreadsheet'" :theme-color="docs.themeColor.value" />
+      <DocxEditor v-if="docs.activeTab.value === 'docx'" :theme-color="docs.themeColor.value" />
       <!-- Markdown: mobile vs desktop -->
       <template v-if="docs.activeTab.value === 'markdown'">
         <MobileMarkdownEditor v-if="isMobile" />
