@@ -1,12 +1,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useMapEditor } from '../composables/useMapEditor'
-import { useDevice } from '../composables/useDevice'
 import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 import 'leaflet/dist/leaflet.css'
 
 const mapEditor = useMapEditor()
-const { isMobile } = useDevice()
 
 const getMapData = () => ({
   currentTile: mapEditor.currentTile.value,
@@ -151,7 +149,7 @@ const tools = [
     <div ref="mapContainer" class="absolute inset-0 z-0"></div>
 
     <!-- Search Bar -->
-    <div ref="searchInput" class="absolute top-4 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 z-20 md:w-80">
+    <div ref="searchInput" class="absolute top-4 left-1/2 -translate-x-1/2 z-20 w-80">
       <div class="relative">
         <div class="flex items-center bg-neutral-900/95 backdrop-blur-sm rounded-lg border border-neutral-700 shadow-lg">
           <svg class="w-5 h-5 text-neutral-400 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +214,7 @@ const tools = [
     </div>
 
     <!-- Toolbar -->
-    <div class="absolute top-20 md:top-4 left-4 flex flex-col gap-2 z-10">
+    <div class="absolute top-4 left-4 flex flex-col gap-2 z-10">
       <!-- Drawing Tools -->
       <div class="bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 p-1.5 flex flex-col gap-1">
         <button
@@ -332,11 +330,7 @@ const tools = [
     <!-- Layer Panel -->
     <div
       v-if="mapEditor.layerPanelOpen.value"
-      :class="isMobile
-        ? 'fixed inset-0 z-50 bg-neutral-900'
-        : 'absolute top-4 right-4 bottom-20 w-72 bg-neutral-900/95 backdrop-blur-sm rounded-lg border border-neutral-800 z-10'"
-      class="flex flex-col overflow-hidden"
-      :style="isMobile ? 'height: 100dvh;' : ''"
+      class="absolute top-4 right-4 bottom-20 w-72 bg-neutral-900/95 backdrop-blur-sm rounded-lg border border-neutral-800 z-10 flex flex-col overflow-hidden"
     >
       <!-- Panel Header -->
       <div class="flex items-center justify-between p-3 border-b border-neutral-800">
@@ -493,7 +487,7 @@ const tools = [
     </div>
 
     <!-- Coordinates Display -->
-    <div class="absolute bottom-20 md:bottom-4 left-4 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-3 py-2 z-10 flex items-center gap-3">
+    <div class="absolute bottom-4 left-4 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-3 py-2 z-10 flex items-center gap-3">
       <div class="text-xs">
         <span class="text-neutral-500">Lat:</span>
         <span class="text-neutral-300 ml-1 font-mono">{{ mapEditor.cursorCoords.value.lat }}</span>
@@ -515,18 +509,17 @@ const tools = [
 
     <!-- Instructions -->
     <div v-if="mapEditor.activeTool.value && !mapEditor.isRoutingMode.value"
-         class="absolute bottom-20 md:bottom-4 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-4 py-2 z-10">
+         class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-4 py-2 z-10">
       <div class="text-xs text-neutral-400">
-        <template v-if="mapEditor.activeTool.value === 'marker'">{{ isMobile ? 'Toca para añadir un lugar' : 'Click to add a place' }}</template>
-        <template v-else-if="mapEditor.activeTool.value === 'route'">{{ isMobile ? 'Toca para añadir puntos de ruta' : 'Click to add route waypoints' }}</template>
+        <template v-if="mapEditor.activeTool.value === 'marker'">Click to add a place</template>
+        <template v-else-if="mapEditor.activeTool.value === 'route'">Click to add route waypoints</template>
       </div>
     </div>
 
     <div v-if="mapEditor.isRoutingMode.value"
-         class="absolute bottom-20 md:bottom-4 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-4 py-2 z-10">
+         class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-neutral-900/90 backdrop-blur-sm rounded-lg border border-neutral-800 px-4 py-2 z-10">
       <div class="text-xs text-neutral-400">
-        <template v-if="isMobile">Toca para añadir puntos · usa los botones para finalizar</template>
-        <template v-else>Click to add waypoints · <span class="text-neutral-500">Enter</span> to finish · <span class="text-neutral-500">Esc</span> to cancel</template>
+        Click to add waypoints · <span class="text-neutral-500">Enter</span> to finish · <span class="text-neutral-500">Esc</span> to cancel
       </div>
     </div>
   </div>
