@@ -1,10 +1,12 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useMapEditor } from '../composables/useMapEditor'
+import { useDevice } from '../composables/useDevice'
 import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
 import 'leaflet/dist/leaflet.css'
 
 const mapEditor = useMapEditor()
+const { isMobile } = useDevice()
 
 const getMapData = () => ({
   currentTile: mapEditor.currentTile.value,
