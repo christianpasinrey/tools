@@ -18,3 +18,13 @@
   @apply w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400 active:bg-neutral-700 active:text-white transition-colors;
   touch-action: manipulation;
 }
+
+/* ===== DOCX EDITOR STYLES ===== */
+
+.docx-btn {
+  @apply p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-700/50 transition-colors;
+}
+
+.docx-btn-sm {
+  @apply p-1.5 rounded text-neutral-400 hover:text-white transition-colors;
+}
