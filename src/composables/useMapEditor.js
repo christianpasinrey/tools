@@ -824,6 +824,7 @@ export function useMapEditor() {
     routes,
     selectedRouteColor,
     isRoutingMode,
+    isCalculatingRoute,
     routeWaypoints,
     addRouteWaypoint,
     finishRoute,
