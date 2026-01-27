@@ -214,6 +214,7 @@ export function useMapEditor() {
 
   // Route building state
   const isRoutingMode = ref(false)
+  const isCalculatingRoute = ref(false)
   const routeWaypoints = ref([])
   const tempRouteMarkers = ref([])
   const tempRouteLine = shallowRef(null)
@@ -492,7 +493,10 @@ export function useMapEditor() {
       return
     }
 
+    isCalculatingRoute.value = true
     const routeData = await getRoute(routeWaypoints.value)
+    isCalculatingRoute.value = false
+
     if (!routeData) {
       console.error('Could not calculate route')
       cancelRoute()
