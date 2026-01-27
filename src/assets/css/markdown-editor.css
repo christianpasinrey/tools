@@ -1,0 +1,20 @@
+/* ===== MARKDOWN EDITOR STYLES ===== */
+
+/* Desktop toolbar button */
+.md-toolbar-btn {
+  @apply w-7 h-7 flex items-center justify-center rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors;
+}
+
+.md-toolbar-btn.active {
+  @apply text-emerald-400 bg-emerald-500/10;
+}
+
+.md-toolbar-btn:disabled {
+  @apply opacity-40 cursor-not-allowed;
+}
+
+/* Mobile format button */
+.md-mobile-format-btn {
+  @apply w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400 active:bg-neutral-700 active:text-white transition-colors;
+  touch-action: manipulation;
+}

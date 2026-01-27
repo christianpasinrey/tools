@@ -267,42 +267,42 @@ function clearAll() {
 
     <!-- Format Toolbar (only in edit mode) -->
     <div v-if="mode === 'edit'" class="flex items-center gap-1 px-3 py-2 bg-neutral-900/30 border-b border-neutral-800 overflow-x-auto">
-      <button @click="insertFormat('**', '**')" class="format-btn" title="Negrita">
+      <button @click="insertFormat('**', '**')" class="md-mobile-format-btn" title="Negrita">
         <span class="font-bold">B</span>
       </button>
-      <button @click="insertFormat('*', '*')" class="format-btn" title="Cursiva">
+      <button @click="insertFormat('*', '*')" class="md-mobile-format-btn" title="Cursiva">
         <span class="italic">I</span>
       </button>
-      <button @click="insertFormat('~~', '~~')" class="format-btn" title="Tachado">
+      <button @click="insertFormat('~~', '~~')" class="md-mobile-format-btn" title="Tachado">
         <span class="line-through">S</span>
       </button>
       <div class="w-px h-5 bg-neutral-700 mx-1"></div>
-      <button @click="insertHeading" class="format-btn" title="Heading">
+      <button @click="insertHeading" class="md-mobile-format-btn" title="Heading">
         <span class="text-xs font-bold">H</span>
       </button>
-      <button @click="insertList(false)" class="format-btn" title="Lista">
+      <button @click="insertList(false)" class="md-mobile-format-btn" title="Lista">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
-      <button @click="insertList(true)" class="format-btn" title="Lista numerada">
+      <button @click="insertList(true)" class="md-mobile-format-btn" title="Lista numerada">
         <span class="text-xs font-mono">1.</span>
       </button>
       <div class="w-px h-5 bg-neutral-700 mx-1"></div>
-      <button @click="insertFormat('`', '`')" class="format-btn" title="Codigo inline">
+      <button @click="insertFormat('`', '`')" class="md-mobile-format-btn" title="Codigo inline">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
         </svg>
       </button>
-      <button @click="insertCodeBlock" class="format-btn" title="Bloque de codigo">
+      <button @click="insertCodeBlock" class="md-mobile-format-btn" title="Bloque de codigo">
         <span class="text-[10px] font-mono">{}</span>
       </button>
-      <button @click="insertQuote" class="format-btn" title="Cita">
+      <button @click="insertQuote" class="md-mobile-format-btn" title="Cita">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
         </svg>
       </button>
-      <button @click="insertLink" class="format-btn" title="Enlace">
+      <button @click="insertLink" class="md-mobile-format-btn" title="Enlace">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
         </svg>
@@ -349,11 +349,6 @@ function clearAll() {
 </template>
 
 <style scoped>
-.format-btn {
-  @apply w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400 active:bg-neutral-700 active:text-white transition-colors;
-  touch-action: manipulation;
-}
-
 /* Prose mobile styles */
 :deep(.prose) {
   color: #d1d5db;

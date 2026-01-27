@@ -416,22 +416,22 @@ onUnmounted(() => {
     <div class="h-10 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-0.5 shrink-0">
       <!-- File actions -->
       <div class="flex items-center gap-0.5 pr-2 border-r border-neutral-700/50">
-        <button @click="openFile" class="toolbar-btn" title="Abrir archivo">
+        <button @click="openFile" class="md-toolbar-btn" title="Abrir archivo">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
           </svg>
         </button>
-        <button @click="copyMarkdown" class="toolbar-btn" title="Copiar">
+        <button @click="copyMarkdown" class="md-toolbar-btn" title="Copiar">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
           </svg>
         </button>
-        <button @click="downloadMarkdown" class="toolbar-btn text-emerald-400" title="Descargar .md">
+        <button @click="downloadMarkdown" class="md-toolbar-btn text-emerald-400" title="Descargar .md">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
           </svg>
         </button>
-        <button @click="downloadHTML" class="toolbar-btn" title="Descargar .html">
+        <button @click="downloadHTML" class="md-toolbar-btn" title="Descargar .html">
           <span class="text-[10px] font-medium">HTML</span>
         </button>
       </div>
@@ -440,7 +440,7 @@ onUnmounted(() => {
       <div class="flex items-center gap-0.5 px-2 border-r border-neutral-700/50 overflow-x-auto">
         <template v-for="(action, i) in formatActions" :key="i">
           <div v-if="action.type === 'divider'" class="w-px h-4 bg-neutral-700/50 mx-0.5"></div>
-          <button v-else @click="action.action" class="toolbar-btn" :title="action.title">
+          <button v-else @click="action.action" class="md-toolbar-btn" :title="action.title">
             <span v-if="action.icon === 'B'" class="font-bold text-xs">B</span>
             <span v-else-if="action.icon === 'I'" class="italic text-xs">I</span>
             <span v-else-if="action.icon === 'S'" class="line-through text-xs">S</span>
@@ -479,7 +479,7 @@ onUnmounted(() => {
       <div class="flex items-center gap-0.5 px-2 border-r border-neutral-700/50">
         <button
           @click="viewMode = 'editor'"
-          :class="['toolbar-btn', viewMode === 'editor' && 'bg-neutral-700 text-white']"
+          :class="['md-toolbar-btn', viewMode === 'editor' && 'bg-neutral-700 text-white']"
           title="Solo editor"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -488,7 +488,7 @@ onUnmounted(() => {
         </button>
         <button
           @click="viewMode = 'split'"
-          :class="['toolbar-btn', viewMode === 'split' && 'bg-neutral-700 text-white']"
+          :class="['md-toolbar-btn', viewMode === 'split' && 'bg-neutral-700 text-white']"
           title="Vista dividida"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -497,7 +497,7 @@ onUnmounted(() => {
         </button>
         <button
           @click="viewMode = 'preview'"
-          :class="['toolbar-btn', viewMode === 'preview' && 'bg-neutral-700 text-white']"
+          :class="['md-toolbar-btn', viewMode === 'preview' && 'bg-neutral-700 text-white']"
           title="Solo preview"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -511,7 +511,7 @@ onUnmounted(() => {
       <div class="flex items-center gap-0.5 px-2">
         <button
           @click="showOutline = !showOutline"
-          :class="['toolbar-btn', showOutline && 'bg-neutral-700 text-white']"
+          :class="['md-toolbar-btn', showOutline && 'bg-neutral-700 text-white']"
           title="Mostrar outline"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -520,7 +520,7 @@ onUnmounted(() => {
         </button>
         <button
           @click="syncScroll = !syncScroll"
-          :class="['toolbar-btn', syncScroll && 'bg-neutral-700 text-white']"
+          :class="['md-toolbar-btn', syncScroll && 'bg-neutral-700 text-white']"
           title="Sync scroll"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -529,14 +529,14 @@ onUnmounted(() => {
         </button>
         <button
           @click="showSearch = !showSearch"
-          :class="['toolbar-btn', showSearch && 'bg-neutral-700 text-white']"
+          :class="['md-toolbar-btn', showSearch && 'bg-neutral-700 text-white']"
           title="Buscar (Ctrl+F)"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
         </button>
-        <button @click="clearAll" class="toolbar-btn text-red-400 hover:text-red-300" title="Limpiar">
+        <button @click="clearAll" class="md-toolbar-btn text-red-400 hover:text-red-300" title="Limpiar">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
           </svg>
@@ -679,9 +679,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.toolbar-btn {
-  @apply w-7 h-7 flex items-center justify-center rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors;
-}
 
 /* Prose styles */
 :deep(.prose) {
