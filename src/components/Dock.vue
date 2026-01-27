@@ -3,6 +3,7 @@ import { ref, reactive, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import DockButton from './DockButton.vue'
 import DockSubmenu from './DockSubmenu.vue'
+import MobileDockSubmenu from './MobileDockSubmenu.vue'
 import { useDevice } from '../composables/useDevice'
 
 const route = useRoute()
@@ -389,7 +390,8 @@ const MAX_SCALE = 1.25
 const EFFECT_DISTANCE = 60
 
 const onDockMouseMove = (e) => {
-  if (!dockRef.value) return
+  // No hacer nada en móvil
+  if (isMobile.value || !dockRef.value) return
 
   const mouseX = e.clientX
 
@@ -413,6 +415,9 @@ const onDockMouseMove = (e) => {
 }
 
 const onDockMouseLeave = () => {
+  // No hacer nada en móvil
+  if (isMobile.value) return
+
   hoveredIndex.value = -1
   scales.value.forEach((_, index) => {
     scales.value[index] = 1
@@ -436,13 +441,15 @@ const onIconMouseLeave = () => {
   hoveredIndex.value = -1
 }
 
-// Submenu handlers
+// Submenu handlers (solo desktop)
 const onSubmenuEnter = (index) => {
+  if (isMobile.value) return
   clearTimeout(submenuTimeout)
   activeSubmenuIndex.value = index
 }
 
 const onSubmenuLeave = (index) => {
+  if (isMobile.value) return
   // Delay to allow transition to submenu
   submenuTimeout = setTimeout(() => {
     if (!submenuHovered.value) {
@@ -452,11 +459,13 @@ const onSubmenuLeave = (index) => {
 }
 
 const onSubmenuMouseEnter = () => {
+  if (isMobile.value) return
   clearTimeout(submenuTimeout)
   submenuHovered.value = true
 }
 
 const onSubmenuMouseLeave = () => {
+  if (isMobile.value) return
   submenuHovered.value = false
   submenuTimeout = setTimeout(() => {
     activeSubmenuIndex.value = -1
@@ -503,9 +512,9 @@ const activeSubmenu = computed(() => {
       </defs>
     </svg>
 
-    <!-- Submenu Panel -->
+    <!-- Submenu Panel - Desktop -->
     <DockSubmenu
-      v-if="activeSubmenu?.hasSubmenu"
+      v-if="!isMobile && activeSubmenu?.hasSubmenu"
       :visible="activeSubmenuIndex !== -1"
       :title="activeSubmenu?.submenuTitle"
       :items="activeSubmenu?.submenuItems"
@@ -514,6 +523,17 @@ const activeSubmenu = computed(() => {
       :columns="activeSubmenu?.submenuColumns || 3"
       @mouseenter="onSubmenuMouseEnter"
       @mouseleave="onSubmenuMouseLeave"
+      @item-click="onSubmenuItemClick"
+      @close="closeSubmenu"
+    />
+
+    <!-- Submenu Panel - Mobile -->
+    <MobileDockSubmenu
+      v-if="isMobile && activeSubmenu?.hasSubmenu"
+      :visible="activeSubmenuIndex !== -1"
+      :title="activeSubmenu?.submenuTitle"
+      :items="activeSubmenu?.submenuItems"
+      :color="activeSubmenu?.color"
       @item-click="onSubmenuItemClick"
       @close="closeSubmenu"
     />

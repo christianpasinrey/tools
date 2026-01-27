@@ -58,6 +58,8 @@ const isActive = computed(() => {
 })
 
 const handleMouseEnter = () => {
+  // En móvil no hacemos nada con hover
+  if (isMobile.value) return
   emit('mouseenter')
   if (props.hasSubmenu) {
     emit('submenu-enter')
@@ -65,6 +67,8 @@ const handleMouseEnter = () => {
 }
 
 const handleMouseLeave = () => {
+  // En móvil no hacemos nada con hover
+  if (isMobile.value) return
   emit('mouseleave')
   if (props.hasSubmenu) {
     emit('submenu-leave')
