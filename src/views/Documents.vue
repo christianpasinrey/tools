@@ -3,12 +3,16 @@ import { useDocuments } from '../composables/useDocuments'
 import { useDevice } from '../composables/useDevice'
 import DocumentsTabs from '../components/documents/DocumentsTabs.vue'
 
-// Lazy load document editors
+// Desktop document editors
 import PdfEditorContent from './PdfEditor.vue'
 import SpreadsheetEditor from '../components/documents/SpreadsheetEditor.vue'
 import DocxEditor from '../components/documents/DocxEditor.vue'
 import MarkdownEditorContent from '../components/documents/MarkdownEditorContent.vue'
+
+// Mobile document editors
 import MobileMarkdownEditor from '../components/documents/MobileMarkdownEditor.vue'
+import MobileDocxEditor from '../components/documents/MobileDocxEditor.vue'
+import MobileSpreadsheetEditor from '../components/documents/MobileSpreadsheetEditor.vue'
 
 const docs = useDocuments()
 const { isMobile } = useDevice()
@@ -23,9 +27,21 @@ const { isMobile } = useDevice()
     />
 
     <div class="flex-1 overflow-auto">
+      <!-- PDF (same for mobile/desktop for now) -->
       <PdfEditorContent v-if="docs.activeTab.value === 'pdf'" />
-      <SpreadsheetEditor v-if="docs.activeTab.value === 'spreadsheet'" :theme-color="docs.themeColor.value" />
-      <DocxEditor v-if="docs.activeTab.value === 'docx'" :theme-color="docs.themeColor.value" />
+
+      <!-- Spreadsheet: mobile vs desktop -->
+      <template v-if="docs.activeTab.value === 'spreadsheet'">
+        <MobileSpreadsheetEditor v-if="isMobile" />
+        <SpreadsheetEditor v-else :theme-color="docs.themeColor.value" />
+      </template>
+
+      <!-- DOCX: mobile vs desktop -->
+      <template v-if="docs.activeTab.value === 'docx'">
+        <MobileDocxEditor v-if="isMobile" />
+        <DocxEditor v-else :theme-color="docs.themeColor.value" />
+      </template>
+
       <!-- Markdown: mobile vs desktop -->
       <template v-if="docs.activeTab.value === 'markdown'">
         <MobileMarkdownEditor v-if="isMobile" />
