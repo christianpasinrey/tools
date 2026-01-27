@@ -5,15 +5,27 @@ const props = defineProps({
   visible: { type: Boolean, default: false },
   title: { type: String, default: '' },
   items: { type: Array, default: () => [] },
-  color: { type: String, default: '#22c55e' }
+  color: { type: String, default: '#22c55e' },
+  allSections: { type: Array, default: () => [] },
+  currentIndex: { type: Number, default: -1 }
 })
 
-const emit = defineEmits(['close', 'item-click'])
+const emit = defineEmits(['close', 'item-click', 'navigate-section'])
 
 const selectedCategory = ref(null)
 
 watch(() => props.visible, (visible) => {
-  if (!visible) selectedCategory.value = null
+  if (!visible) {
+    // Delay reset to allow transition
+    setTimeout(() => {
+      if (!props.visible) selectedCategory.value = null
+    }, 300)
+  }
+})
+
+// Reset selectedCategory when section changes
+watch(() => props.currentIndex, () => {
+  selectedCategory.value = null
 })
 
 const currentItems = computed(() => {
@@ -33,6 +45,37 @@ const currentColor = computed(() => {
 
 const goBack = () => {
   selectedCategory.value = null
+}
+
+// Navigation between sections
+const prevSection = computed(() => {
+  if (props.currentIndex <= 0 || !props.allSections.length) return null
+  for (let i = props.currentIndex - 1; i >= 0; i--) {
+    if (props.allSections[i].hasSubmenu) return { section: props.allSections[i], index: i }
+  }
+  return null
+})
+
+const nextSection = computed(() => {
+  if (props.currentIndex < 0 || !props.allSections.length) return null
+  for (let i = props.currentIndex + 1; i < props.allSections.length; i++) {
+    if (props.allSections[i].hasSubmenu) return { section: props.allSections[i], index: i }
+  }
+  return null
+})
+
+const goToPrevSection = () => {
+  if (prevSection.value) {
+    selectedCategory.value = null
+    emit('navigate-section', prevSection.value.index)
+  }
+}
+
+const goToNextSection = () => {
+  if (nextSection.value) {
+    selectedCategory.value = null
+    emit('navigate-section', nextSection.value.index)
+  }
 }
 
 const handleItemClick = (e, item) => {
@@ -55,7 +98,7 @@ const handleItemClick = (e, item) => {
     <Transition name="mobile-menu">
       <div
         v-if="visible"
-        class="fixed inset-0 z-[9999] bg-neutral-950"
+        class="mobile-dock-submenu fixed inset-0 z-[9999] bg-neutral-950"
         style="height: 100dvh;"
       >
         <!-- Header -->
@@ -86,7 +129,7 @@ const handleItemClick = (e, item) => {
         </div>
 
         <!-- Items List -->
-        <div class="flex-1 overflow-y-auto pb-24" style="height: calc(100dvh - 64px);">
+        <div class="flex-1 overflow-y-auto" style="height: calc(100dvh - 64px - 72px);">
           <div class="py-2">
             <component
               :is="item.path ? 'router-link' : 'div'"
@@ -139,6 +182,40 @@ const handleItemClick = (e, item) => {
               </svg>
             </component>
           </div>
+        </div>
+
+        <!-- Navigation Footer -->
+        <div
+          v-if="prevSection || nextSection"
+          class="fixed bottom-0 left-0 right-0 h-[72px] bg-neutral-900 border-t border-neutral-800 flex items-center justify-between px-4 gap-3"
+        >
+          <button
+            v-if="prevSection"
+            @click="goToPrevSection"
+            class="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-neutral-800 active:bg-neutral-700 transition-colors"
+          >
+            <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span class="text-sm font-medium" :style="{ color: prevSection.section.color }">
+              {{ prevSection.section.name }}
+            </span>
+          </button>
+          <div v-else class="flex-1"></div>
+
+          <button
+            v-if="nextSection"
+            @click="goToNextSection"
+            class="flex-1 h-12 flex items-center justify-center gap-2 rounded-xl bg-neutral-800 active:bg-neutral-700 transition-colors"
+          >
+            <span class="text-sm font-medium" :style="{ color: nextSection.section.color }">
+              {{ nextSection.section.name }}
+            </span>
+            <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <div v-else class="flex-1"></div>
         </div>
       </div>
     </Transition>

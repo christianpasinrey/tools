@@ -77,7 +77,7 @@ function getLineaTotal(linea) {
     </div>
 
     <!-- Form -->
-    <div class="flex-1 overflow-y-auto pb-24">
+    <div class="flex-1 overflow-y-auto pb-36">
       <!-- EMISOR -->
       <section class="border-b border-neutral-800">
         <button
