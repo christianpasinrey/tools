@@ -1,5 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import { device } from '../composables/useDevice'
+
+// Rutas no soportadas en dispositivos móviles
+const mobileUnsupportedRoutes = [
+  '/multimedia',           // Toda la sección multimedia
+  '/audio-editor',
+  '/image-editor',
+  '/3d-playground',
+  '/svg-editor'
+]
+
+// Hashes no soportados en móvil para rutas parcialmente soportadas
+const mobileUnsupportedHashes = {
+  '/documents': ['#pdf', '#spreadsheet'],
+  '/technology': ['#dev', '#api']
+}
 
 const routes = [
   {
@@ -106,6 +122,30 @@ const router = createRouter({
     }
     return { top: 0 }
   }
+})
+
+// Navigation guard para dispositivos móviles
+router.beforeEach((to, from, next) => {
+  // Solo aplicar en dispositivos móviles
+  if (!device.isMobile) {
+    next()
+    return
+  }
+
+  // Verificar si la ruta base no está soportada
+  if (mobileUnsupportedRoutes.includes(to.path)) {
+    next('/')
+    return
+  }
+
+  // Verificar si el hash específico no está soportado
+  const unsupportedHashes = mobileUnsupportedHashes[to.path]
+  if (unsupportedHashes && to.hash && unsupportedHashes.includes(to.hash)) {
+    next('/')
+    return
+  }
+
+  next()
 })
 
 export default router

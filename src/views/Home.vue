@@ -3,10 +3,12 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import * as THREE from 'three'
 import { useAppCrypto } from '../composables/useAppCrypto'
 import { useAuth } from '../composables/useAuth'
+import { useDevice } from '../composables/useDevice'
 import SyncAccountButton from '../components/common/SyncAccountButton.vue'
 
 const appCrypto = useAppCrypto()
 const auth = useAuth()
+const { isMobile, platform } = useDevice()
 
 const isVisible = ref(false)
 const threeCanvas = ref(null)
@@ -316,14 +318,15 @@ onUnmounted(() => {
   if (renderer) renderer.dispose()
 })
 
-const tools = [
+const allTools = [
   {
     path: '/multimedia#image',
     name: 'Image Editor',
     description: 'Edita imágenes con filtros, recortes, ajustes de color y más herramientas profesionales.',
     icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
     color: 'blue',
-    status: 'active'
+    status: 'active',
+    mobileSupport: false
   },
   {
     path: '/multimedia#audio',
@@ -331,7 +334,8 @@ const tools = [
     description: 'Corta, une y aplica efectos a archivos de audio. Visualización de ondas en tiempo real.',
     icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3',
     color: 'purple',
-    status: 'active'
+    status: 'active',
+    mobileSupport: false
   },
   {
     path: '/documents#pdf',
@@ -339,7 +343,8 @@ const tools = [
     description: 'Combina, divide, rota y anota documentos PDF directamente en el navegador.',
     icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9.5 8.5c0 .83-.67 1.5-1.5 1.5H7v2H5.5V9H8c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V9H13c.83 0 1.5.67 1.5 1.5v3zm4-3H17v1h1.5V13H17v2h-1.5V9h3v1.5zM7 10.5h1v1H7v-1zm4 0h1v3h-1v-3z',
     color: 'red',
-    status: 'active'
+    status: 'active',
+    mobileSupport: false
   },
   {
     path: '/documents#spreadsheet',
@@ -347,7 +352,8 @@ const tools = [
     description: 'Editor de hojas de cálculo con estilos, fórmulas y exportación a Excel.',
     icon: 'M3 3h18v18H3V3zm16 4H5v12h14V7zM7 9h2v2H7V9zm0 4h2v2H7v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2z',
     color: 'green',
-    status: 'active'
+    status: 'active',
+    mobileSupport: false
   },
   {
     path: '/multimedia#3d',
@@ -355,7 +361,8 @@ const tools = [
     description: 'Experimenta con gráficos 3D, shaders y visualizaciones interactivas.',
     icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
     color: 'green',
-    status: 'active'
+    status: 'active',
+    mobileSupport: false
   },
   {
     path: '/technology#dev',
@@ -363,7 +370,8 @@ const tools = [
     description: 'Formatea, valida y convierte JSON/YAML. Playground HTML/CSS/JS con preview en vivo.',
     icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
     color: 'cyan',
-    status: 'active'
+    status: 'active',
+    mobileSupport: false
   },
   {
     path: '/multimedia#svg',
@@ -371,7 +379,8 @@ const tools = [
     description: 'Crea y edita gráficos vectoriales SVG con herramientas profesionales de dibujo.',
     icon: 'M4 5a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 7.414V10a1 1 0 01-2 0V6a1 1 0 011-1zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V7.414l-2.293 2.293a1 1 0 01-1.414-1.414L16.586 6H14a1 1 0 010-2zM5 14a1 1 0 011 1v2.586l2.293-2.293a1 1 0 011.414 1.414L7.414 19H10a1 1 0 010 2H6a1 1 0 01-1-1v-4a1 1 0 011-1zm14 0a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h2.586l-2.293-2.293a1 1 0 011.414-1.414L19 16.586V15a1 1 0 011-1z',
     color: 'orange',
-    status: 'active'
+    status: 'active',
+    mobileSupport: false
   },
   {
     path: '/tools#converter',
@@ -379,7 +388,8 @@ const tools = [
     description: 'Convierte unidades de longitud, peso, temperatura, moneda y más. Tasas de cambio en tiempo real.',
     icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
     color: 'emerald',
-    status: 'active'
+    status: 'active',
+    mobileSupport: true
   },
   {
     path: '/tools#color',
@@ -387,7 +397,8 @@ const tools = [
     description: 'Rueda de colores con armonías, paletas y exportación en múltiples formatos. Inspirado en Adobe Color.',
     icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01',
     color: 'pink',
-    status: 'active'
+    status: 'active',
+    mobileSupport: true
   },
   {
     path: '/cheatsheets',
@@ -395,7 +406,8 @@ const tools = [
     description: 'Guías rápidas y cheatsheets de lenguajes, frameworks y herramientas de desarrollo.',
     icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
     color: 'green',
-    status: 'active'
+    status: 'active',
+    mobileSupport: true
   },
   {
     path: '/documents#markdown',
@@ -403,7 +415,8 @@ const tools = [
     description: 'Editor de Markdown con preview en vivo. Exporta a HTML o descarga como .md',
     icon: 'M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41zM6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38h1.92zm8.56-1.98V8.81h-1.93v6.38h4.55v-1.98h-2.62z',
     color: 'blue',
-    status: 'active'
+    status: 'active',
+    mobileSupport: true
   },
   {
     path: '/technology#phone',
@@ -411,7 +424,8 @@ const tools = [
     description: 'Configura y prueba el componente de telefono SIP WebRTC. Genera codigo para Vue y React.',
     icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z',
     color: 'emerald',
-    status: 'active'
+    status: 'active',
+    mobileSupport: true
   },
   {
     path: '/technology#security',
@@ -419,7 +433,8 @@ const tools = [
     description: 'JWT Debugger, Base64 Encoder/Decoder y Hash Generator. Herramientas de seguridad.',
     icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
     color: 'red',
-    status: 'active'
+    status: 'active',
+    mobileSupport: true
   },
   {
     path: '/apps#todo',
@@ -427,9 +442,49 @@ const tools = [
     description: 'Tablero de tareas tipo Trello con columnas, drag & drop y persistencia en IndexedDB.',
     icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
     color: 'indigo',
-    status: 'active'
+    status: 'active',
+    mobileSupport: true
+  },
+  {
+    path: '/apps#map',
+    name: 'Map Editor',
+    description: 'Mapas interactivos con marcadores, formas y capas personalizadas usando Leaflet.',
+    icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
+    color: 'blue',
+    status: 'active',
+    mobileSupport: true
+  },
+  {
+    path: '/apps#invoice',
+    name: 'Facturas',
+    description: 'Generador de facturas profesionales con exportación a PDF y gestión de clientes.',
+    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    color: 'emerald',
+    status: 'active',
+    mobileSupport: true
+  },
+  {
+    path: '/technology#storage',
+    name: 'Browser Storage',
+    description: 'Visualiza y gestiona LocalStorage, SessionStorage e IndexedDB del navegador.',
+    icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4',
+    color: 'purple',
+    status: 'active',
+    mobileSupport: true
   }
 ]
+
+// Computed para filtrar herramientas según plataforma
+const tools = computed(() => {
+  if (!isMobile.value) return allTools
+  return allTools.filter(tool => tool.mobileSupport === true)
+})
+
+// Contador de herramientas ocultas para mostrar mensaje
+const hiddenToolsCount = computed(() => {
+  if (!isMobile.value) return 0
+  return allTools.filter(t => t.mobileSupport === false).length
+})
 
 const colorClasses = {
   purple: {

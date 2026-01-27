@@ -3,7 +3,9 @@ import { ref, computed } from 'vue'
 import { usePhoneTester } from '../composables/usePhoneTester'
 import { Phone } from '@tbisoftware/phone/vue'
 import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
+import { useDevice } from '../composables/useDevice'
 
+const { isMobile } = useDevice()
 const tester = usePhoneTester()
 
 const getConfigData = () => ({
@@ -65,9 +67,9 @@ const activeSection = ref('config')
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-950">
+  <div class="phone-tester-container">
     <!-- Toolbar -->
-    <div class="flex items-center justify-between px-4 h-12 border-b border-neutral-800 bg-neutral-900/50">
+    <div class="phone-toolbar">
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
@@ -75,7 +77,7 @@ const activeSection = ref('config')
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
           </div>
-          <div>
+          <div v-if="!isMobile">
             <h1 class="text-sm font-semibold text-white leading-tight">Phone Tester</h1>
             <p class="text-xs text-neutral-500">SIP WebRTC Component</p>
           </div>
@@ -83,30 +85,30 @@ const activeSection = ref('config')
       </div>
 
       <div class="flex items-center gap-2">
-        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" :class="tester.isConfigValid.value ? 'bg-emerald-500/20' : 'bg-neutral-800'">
+        <div class="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-lg" :class="tester.isConfigValid.value ? 'bg-emerald-500/20' : 'bg-neutral-800'">
           <div class="w-2 h-2 rounded-full" :class="tester.isConfigValid.value ? 'bg-emerald-500 animate-pulse' : 'bg-neutral-600'"></div>
           <span class="text-xs" :class="tester.isConfigValid.value ? 'text-emerald-400' : 'text-neutral-500'">
-            {{ tester.isConfigValid.value ? 'Ready' : 'Configure' }}
+            {{ tester.isConfigValid.value ? 'Ready' : 'Config' }}
           </span>
         </div>
         <button
           @click="tester.loadExample"
-          class="px-3 py-1.5 text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 rounded-lg transition-colors"
+          class="px-2 md:px-3 py-1.5 text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 rounded-lg transition-colors"
         >
           Demo
         </button>
         <button
           @click="tester.resetConfig"
-          class="px-3 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-400 rounded-lg transition-colors"
+          class="hidden md:block px-3 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-400 rounded-lg transition-colors"
         >
           Reset
         </button>
-        <VaultSaveLoad storeName="phone-configs" :getData="getConfigData" label="config" @load="loadConfig" />
+        <VaultSaveLoad v-if="!isMobile" storeName="phone-configs" :getData="getConfigData" label="config" @load="loadConfig" />
       </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="flex-1 flex overflow-hidden">
+    <!-- Desktop Main Content -->
+    <div v-if="!isMobile" class="flex-1 flex overflow-hidden">
       <!-- Left Panel: Config -->
       <div class="w-80 border-r border-neutral-800 flex flex-col bg-neutral-900/30">
         <!-- Section Tabs -->
@@ -323,5 +325,147 @@ const activeSection = ref('config')
         </div>
       </div>
     </div>
+
+    <!-- Mobile Main Content -->
+    <div v-else class="mobile-content">
+      <!-- 1. Formulario de configuración -->
+      <div class="mobile-section">
+        <p class="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider mb-2 px-4 pt-3">Configuración SIP</p>
+        <div class="px-4 pb-3 space-y-2">
+          <input
+            v-for="field in [...configFields.connection, ...configFields.credentials]"
+            :key="field.key"
+            v-model="tester.config.value[field.key]"
+            :type="field.type"
+            :placeholder="field.placeholder"
+            class="w-full px-3 py-2.5 bg-neutral-800/50 border border-neutral-700/50 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors placeholder:text-neutral-600"
+          />
+        </div>
+      </div>
+
+      <!-- 2. Preview del teléfono -->
+      <div class="mobile-section mobile-phone-preview">
+        <div v-if="showPreview" class="flex justify-center py-4">
+          <Phone
+            :config="tester.config.value"
+            @call-start="handleCallStart"
+            @call-end="handleCallEnd"
+            @status-change="handleStatusChange"
+          />
+        </div>
+        <div v-else class="flex flex-col items-center justify-center py-6 text-center">
+          <div class="w-16 h-16 mx-auto mb-3 rounded-xl bg-neutral-800/50 border border-neutral-700/50 flex items-center justify-center">
+            <svg class="w-8 h-8 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </div>
+          <p class="text-neutral-500 text-xs">Configura SIP para ver el preview</p>
+        </div>
+      </div>
+
+      <!-- 3. Toggle Vue/React -->
+      <div class="mobile-section">
+        <div class="flex items-center gap-2 px-4 py-3">
+          <button
+            @click="tester.selectedFramework.value = 'vue'"
+            class="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-xs font-medium transition-all"
+            :class="tester.selectedFramework.value === 'vue'
+              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50'
+              : 'bg-neutral-800/50 text-neutral-400 border border-transparent'"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 1.61h-9.94L12 5.16 9.94 1.61H0l12 20.78L24 1.61zM12 14.08 5.16 2.23h4.43L12 6.41l2.41-4.18h4.43L12 14.08z"/>
+            </svg>
+            Vue
+          </button>
+          <button
+            @click="tester.selectedFramework.value = 'react'"
+            class="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-xs font-medium transition-all"
+            :class="tester.selectedFramework.value === 'react'
+              ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50'
+              : 'bg-neutral-800/50 text-neutral-400 border border-transparent'"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="2.139"/>
+              <ellipse cx="12" cy="12" rx="11" ry="4.2" fill="none" stroke="currentColor" stroke-width="1"/>
+              <ellipse cx="12" cy="12" rx="11" ry="4.2" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(60 12 12)"/>
+              <ellipse cx="12" cy="12" rx="11" ry="4.2" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(120 12 12)"/>
+            </svg>
+            React
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. Código generado -->
+      <div class="mobile-section mobile-code-section">
+        <div class="px-4 py-3">
+          <pre class="text-[11px] text-neutral-400 font-mono leading-relaxed whitespace-pre-wrap break-all max-h-48 overflow-auto"><code>{{ tester.generatedCode.value }}</code></pre>
+        </div>
+        <div class="px-4 pb-4">
+          <button
+            @click="tester.copyCode"
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
+            :class="tester.copied.value
+              ? 'bg-emerald-500 text-white'
+              : 'bg-emerald-500/20 active:bg-emerald-500/30 text-emerald-400'"
+          >
+            <svg v-if="!tester.copied.value" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            {{ tester.copied.value ? '¡Copiado!' : 'Copiar código' }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.phone-tester-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgb(10, 10, 10);
+}
+
+.phone-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 48px;
+  border-bottom: 1px solid rgb(38, 38, 38);
+  background: rgba(23, 23, 23, 0.5);
+  flex-shrink: 0;
+}
+
+/* Mobile styles */
+.mobile-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-section {
+  border-bottom: 1px solid rgb(38, 38, 38);
+}
+
+.mobile-phone-preview {
+  background: linear-gradient(to bottom right, rgb(23, 23, 23), rgb(10, 10, 10), rgb(23, 23, 23));
+}
+
+.mobile-code-section {
+  background: rgba(23, 23, 23, 0.3);
+  border-bottom: none;
+}
+
+@media (min-width: 769px) {
+  .phone-tester-container {
+    height: 100%;
+  }
+}
+</style>

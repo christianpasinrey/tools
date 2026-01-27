@@ -1,6 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useDevice } from '../composables/useDevice'
+
+const { isMobile } = useDevice()
 
 const props = defineProps({
   path: {
@@ -37,7 +40,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['mouseenter', 'mouseleave', 'submenu-enter', 'submenu-leave'])
+const emit = defineEmits(['mouseenter', 'mouseleave', 'submenu-enter', 'submenu-leave', 'submenu-toggle'])
 
 const route = useRoute()
 const router = useRouter()
@@ -68,10 +71,19 @@ const handleMouseLeave = () => {
   }
 }
 
-// Handle click on submenu button - navigate to path
-const handleClick = () => {
-  if (props.hasSubmenu && props.path) {
-    router.push(props.path)
+// Handle click on submenu button
+const handleClick = (e) => {
+  if (props.hasSubmenu) {
+    // En móvil, hacer toggle del submenu sin navegar
+    if (isMobile.value) {
+      e.preventDefault()
+      emit('submenu-toggle')
+      return
+    }
+    // En desktop, navegar al path
+    if (props.path) {
+      router.push(props.path)
+    }
   }
 }
 </script>
@@ -133,6 +145,8 @@ const handleClick = () => {
 
 .dock-item.has-submenu {
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 /* Dock Icon */

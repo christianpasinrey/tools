@@ -2,6 +2,12 @@
 import { ref, computed } from 'vue'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
+import { useDevice } from '../composables/useDevice'
+
+const { isMobile } = useDevice()
+
+// Modo móvil: 'edit' o 'preview'
+const mobileMode = ref('edit')
 
 const markdown = ref(`# Bienvenido al Editor de Markdown
 
@@ -113,14 +119,15 @@ const clearMarkdown = () => {
 
     <!-- Header -->
     <div class="sticky top-0 z-50 border-b border-neutral-800/30 bg-gradient-to-b from-neutral-950 to-neutral-950/90 backdrop-blur-md">
-      <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <svg class="w-7 h-7 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <svg class="w-6 h-6 sm:w-7 sm:h-7 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 19H6a2 2 0 01-2-2V7a2 2 0 012-2h11a2 2 0 012 2m-2 11l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M9 12h4" />
           </svg>
-          <h1 class="text-2xl font-bold text-white">Markdown Editor</h1>
+          <h1 class="text-lg sm:text-2xl font-bold text-white">Markdown</h1>
         </div>
-        <div class="flex gap-3 items-center">
+        <!-- Desktop buttons -->
+        <div class="hidden sm:flex gap-3 items-center">
           <button
             @click="copyMarkdown"
             class="group px-4 py-2 text-sm font-medium rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all duration-300"
@@ -162,12 +169,76 @@ const clearMarkdown = () => {
             </span>
           </button>
         </div>
+        <!-- Mobile buttons (icon only) -->
+        <div class="flex sm:hidden gap-2 items-center">
+          <button
+            @click="copyMarkdown"
+            class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+            title="Copiar"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+          </button>
+          <button
+            @click="downloadMarkdown"
+            class="p-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400"
+            title="Descargar MD"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+          </button>
+          <button
+            @click="clearMarkdown"
+            class="p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400"
+            title="Limpiar"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Mode Toggle -->
+    <div v-if="isMobile" class="sticky top-[73px] z-40 bg-neutral-950/95 backdrop-blur-sm border-b border-neutral-800/30 px-4 py-3">
+      <div class="flex gap-2 justify-center">
+        <button
+          @click="mobileMode = 'edit'"
+          :class="[
+            'flex-1 max-w-[150px] px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
+            mobileMode === 'edit'
+              ? 'bg-emerald-500/20 border border-emerald-500/50 text-emerald-400'
+              : 'bg-neutral-800/50 border border-neutral-700/50 text-neutral-400 hover:bg-neutral-800'
+          ]"
+        >
+          <span class="flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Editar
+          </span>
+        </button>
+        <button
+          @click="mobileMode = 'preview'"
+          :class="[
+            'flex-1 max-w-[150px] px-4 py-2.5 text-sm font-medium rounded-lg transition-all duration-200',
+            mobileMode === 'preview'
+              ? 'bg-blue-500/20 border border-blue-500/50 text-blue-400'
+              : 'bg-neutral-800/50 border border-neutral-700/50 text-neutral-400 hover:bg-neutral-800'
+          ]"
+        >
+          <span class="flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Preview
+          </span>
+        </button>
       </div>
     </div>
 
     <!-- Main Content -->
     <div class="relative max-w-7xl mx-auto px-6 py-10" style="z-index: 1;">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Desktop: Side by side -->
+      <div v-if="!isMobile" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Editor -->
         <div class="flex flex-col">
           <label class="text-sm font-semibold text-neutral-300 mb-3 uppercase tracking-wide">Editor</label>
@@ -183,6 +254,26 @@ const clearMarkdown = () => {
         <div class="flex flex-col">
           <label class="text-sm font-semibold text-neutral-300 mb-3 uppercase tracking-wide">Preview</label>
           <div class="flex-1 p-6 bg-neutral-900/40 border border-neutral-800/50 rounded-xl overflow-auto backdrop-blur-sm prose-dark scrollbar-thin scrollbar-thumb-emerald-500/20 scrollbar-track-transparent">
+            <div class="prose prose-invert max-w-none" v-html="preview"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile: Toggle between edit and preview -->
+      <div v-else class="flex flex-col">
+        <!-- Editor (Mobile) -->
+        <div v-if="mobileMode === 'edit'" class="flex flex-col">
+          <textarea
+            v-model="markdown"
+            class="flex-1 min-h-[calc(100vh-220px)] p-4 bg-neutral-900/40 border border-neutral-800/50 rounded-xl text-neutral-100 font-mono text-sm resize-none focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 backdrop-blur-sm transition-all duration-300"
+            placeholder="Escribe tu Markdown aquí..."
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <!-- Preview (Mobile) -->
+        <div v-else class="flex flex-col">
+          <div class="flex-1 min-h-[calc(100vh-220px)] p-4 bg-neutral-900/40 border border-neutral-800/50 rounded-xl overflow-auto backdrop-blur-sm prose-dark scrollbar-thin scrollbar-thumb-emerald-500/20 scrollbar-track-transparent">
             <div class="prose prose-invert max-w-none" v-html="preview"></div>
           </div>
         </div>

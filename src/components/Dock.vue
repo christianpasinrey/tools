@@ -1,13 +1,15 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import DockButton from './DockButton.vue'
 import DockSubmenu from './DockSubmenu.vue'
+import { useDevice } from '../composables/useDevice'
 
 const route = useRoute()
+const { isMobile } = useDevice()
 
-// Tools configuration
-const tools = [
+// Tools configuration (con soporte móvil)
+const allTools = [
   {
     path: '/multimedia',
     name: 'Multimedia',
@@ -15,34 +17,39 @@ const tools = [
     color: '#a855f7',
     hasSubmenu: true,
     submenuTitle: 'Multimedia',
+    mobileSupport: false,
     submenuItems: [
       {
         path: '/multimedia#image',
         name: 'Editor de Imagen',
         description: 'Edita, recorta y transforma imágenes',
         icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
-        color: '#3b82f6'
+        color: '#3b82f6',
+        mobileSupport: false
       },
       {
         path: '/multimedia#audio',
         name: 'Editor de Audio',
         description: 'Corta, mezcla y exporta audio',
         icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3',
-        color: '#a855f7'
+        color: '#a855f7',
+        mobileSupport: false
       },
       {
         path: '/multimedia#3d',
         name: '3D Playground',
         description: 'Escenas 3D interactivas con Three.js',
         icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
-        color: '#22c55e'
+        color: '#22c55e',
+        mobileSupport: false
       },
       {
         path: '/multimedia#svg',
         name: 'Editor SVG',
         description: 'Crea y edita gráficos vectoriales',
         icon: 'M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z',
-        color: '#f97316'
+        color: '#f97316',
+        mobileSupport: false
       }
     ]
   },
@@ -53,27 +60,31 @@ const tools = [
     color: '#ef4444',
     hasSubmenu: true,
     submenuTitle: 'Documentos',
+    mobileSupport: true,
     submenuItems: [
       {
         path: '/documents#pdf',
         name: 'PDF Editor',
         description: 'Combina, divide y anota PDFs',
         icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9.5 8.5c0 .83-.67 1.5-1.5 1.5H7v2H5.5V9H8c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V9H13c.83 0 1.5.67 1.5 1.5v3zm4-3H17v1h1.5V13H17v2h-1.5V9h3v1.5zM7 10.5h1v1H7v-1zm4 0h1v3h-1v-3z',
-        color: '#ef4444'
+        color: '#ef4444',
+        mobileSupport: false
       },
       {
         path: '/documents#spreadsheet',
         name: 'Spreadsheet Editor',
         description: 'Hojas de cálculo con fórmulas',
         icon: 'M3 3h18v18H3V3zm16 4H5v12h14V7zM7 9h2v2H7V9zm0 4h2v2H7v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2z',
-        color: '#22c55e'
+        color: '#22c55e',
+        mobileSupport: false
       },
       {
         path: '/documents#markdown',
         name: 'Markdown Editor',
         description: 'Editor MD con preview en vivo',
         icon: 'M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41zM6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38h1.92zm8.56-1.98V8.81h-1.93v6.38h4.55v-1.98h-2.62z',
-        color: '#3b82f6'
+        color: '#3b82f6',
+        mobileSupport: true
       }
     ]
   },
@@ -84,27 +95,31 @@ const tools = [
     color: '#06b6d4',
     hasSubmenu: true,
     submenuTitle: 'Technology',
+    mobileSupport: true,
     submenuItems: [
       {
         path: '/technology#dev',
         name: 'Dev Tools',
         description: 'JSON, YAML, HTML/CSS/JS playground',
         icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
-        color: '#06b6d4'
+        color: '#06b6d4',
+        mobileSupport: false
       },
       {
         path: '/technology#phone',
         name: 'Phone Tester',
         description: 'Prueba llamadas SIP WebRTC',
         icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z',
-        color: '#10b981'
+        color: '#10b981',
+        mobileSupport: true
       },
       {
         path: '/technology#security',
         name: 'Cyber Security',
         description: 'JWT, Base64, Hash y más',
         icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
-        color: '#ef4444'
+        color: '#ef4444',
+        mobileSupport: true
       }
     ]
   },
@@ -117,20 +132,23 @@ const tools = [
     submenuTitle: 'Tools',
     submenuColumns: 2,
     submenuLayout: ['large', 'large'],
+    mobileSupport: true,
     submenuItems: [
       {
         path: '/tools#converter',
         name: 'Unit Converter',
         description: 'Longitud, peso, temperatura, tiempo, monedas y más',
         icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
-        color: '#10b981'
+        color: '#10b981',
+        mobileSupport: true
       },
       {
         path: '/tools#color',
         name: 'Color Picker',
         description: 'Paletas de colores, gradientes, conversión HEX/RGB/HSL',
         icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01',
-        color: '#ec4899'
+        color: '#ec4899',
+        mobileSupport: true
       }
     ]
   },
@@ -141,27 +159,31 @@ const tools = [
     color: '#6366f1',
     hasSubmenu: true,
     submenuTitle: 'Apps',
+    mobileSupport: true,
     submenuItems: [
       {
         path: '/apps#map',
         name: 'Map Editor',
         description: 'Mapas interactivos con marcadores y formas',
         icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
-        color: '#2563eb'
+        color: '#2563eb',
+        mobileSupport: true
       },
       {
         path: '/apps#todo',
         name: 'TODO Kanban',
         description: 'Tablero de tareas con drag & drop',
         icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
-        color: '#6366f1'
+        color: '#6366f1',
+        mobileSupport: true
       },
       {
         path: '/apps#invoice',
         name: 'Facturas',
         description: 'Generador de facturas con PDF profesional',
         icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-        color: '#10b981'
+        color: '#10b981',
+        mobileSupport: true
       }
     ]
   },
@@ -172,6 +194,7 @@ const tools = [
     color: '#f59e0b',
     hasSubmenu: true,
     submenuTitle: 'Cheatsheets',
+    mobileSupport: true,
     submenuItems: [
       {
         name: 'Sistemas',
@@ -322,11 +345,40 @@ const tools = [
   },
 ]
 
+// Computed para filtrar herramientas según plataforma
+const tools = computed(() => {
+  if (!isMobile.value) return allTools
+
+  return allTools
+    .filter(tool => tool.mobileSupport !== false)
+    .map(tool => {
+      // Si tiene submenu, filtrar sus items también
+      if (tool.submenuItems) {
+        const filteredItems = tool.submenuItems.filter(
+          item => item.mobileSupport !== false
+        )
+        // Si no quedan items después de filtrar, excluir la sección
+        if (filteredItems.length === 0) return null
+        return {
+          ...tool,
+          submenuItems: filteredItems
+        }
+      }
+      return tool
+    })
+    .filter(tool => tool !== null)
+})
+
 // Dock magnetic effect
 const dockRef = ref(null)
 const iconRefs = ref([])
-const scales = reactive(tools.map(() => 1))
+const scales = ref(tools.value.map(() => 1))
 const hoveredIndex = ref(-1)
+
+// Actualizar scales cuando cambie tools filtrado
+watch(tools, (newTools) => {
+  scales.value = newTools.map(() => 1)
+}, { immediate: true })
 
 // Submenu state
 const activeSubmenuIndex = ref(-1)
@@ -353,17 +405,17 @@ const onDockMouseMove = (e) => {
 
     if (distance < EFFECT_DISTANCE) {
       const scale = MAX_SCALE - (distance / EFFECT_DISTANCE) * (MAX_SCALE - 1)
-      scales[index] = scale
+      scales.value[index] = scale
     } else {
-      scales[index] = 1
+      scales.value[index] = 1
     }
   })
 }
 
 const onDockMouseLeave = () => {
   hoveredIndex.value = -1
-  scales.forEach((_, index) => {
-    scales[index] = 1
+  scales.value.forEach((_, index) => {
+    scales.value[index] = 1
   })
 
   // Delay closing submenu to allow mouse to move to it
@@ -416,10 +468,25 @@ const onSubmenuItemClick = () => {
   submenuHovered.value = false
 }
 
+// Close submenu (used by mobile)
+const closeSubmenu = () => {
+  activeSubmenuIndex.value = -1
+  submenuHovered.value = false
+}
+
+// Toggle submenu (used by mobile)
+const onSubmenuToggle = (index) => {
+  if (activeSubmenuIndex.value === index) {
+    activeSubmenuIndex.value = -1
+  } else {
+    activeSubmenuIndex.value = index
+  }
+}
+
 // Computed for active submenu
 const activeSubmenu = computed(() => {
   if (activeSubmenuIndex.value === -1) return null
-  return tools[activeSubmenuIndex.value]
+  return tools.value[activeSubmenuIndex.value]
 })
 </script>
 
@@ -448,6 +515,7 @@ const activeSubmenu = computed(() => {
       @mouseenter="onSubmenuMouseEnter"
       @mouseleave="onSubmenuMouseLeave"
       @item-click="onSubmenuItemClick"
+      @close="closeSubmenu"
     />
 
     <div
@@ -497,6 +565,7 @@ const activeSubmenu = computed(() => {
           @mouseleave="onIconMouseLeave"
           @submenu-enter="onSubmenuEnter(index)"
           @submenu-leave="onSubmenuLeave(index)"
+          @submenu-toggle="onSubmenuToggle(index)"
         />
       </div>
     </div>
@@ -648,6 +717,8 @@ const activeSubmenu = computed(() => {
   transform-origin: bottom center;
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .dock-item:hover {
@@ -752,51 +823,51 @@ const activeSubmenu = computed(() => {
 /* ===== RESPONSIVE - Mobile ===== */
 @media (max-width: 480px) {
   .dock-wrapper {
-    bottom: 8px;
-    left: 8px;
-    right: 8px;
-    transform: none;
-    max-width: none;
+    bottom: 12px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 24px);
   }
 
   .dock-glass {
-    border-radius: 14px;
-    width: 100%;
+    border-radius: 18px;
+    width: auto;
   }
 
   .dock-glass-filter,
   .dock-glass-overlay,
   .dock-glass-specular {
-    border-radius: 14px;
+    border-radius: 18px;
   }
 
   .dock-content {
-    padding: 6px 8px;
-    gap: 1px;
-    justify-content: space-between;
-    width: 100%;
+    padding: 8px 10px;
+    gap: 4px;
+    justify-content: center;
+    width: auto;
   }
 
   .dock-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
   }
 
   .dock-icon svg {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
   }
 
   .dock-separator {
-    height: 24px;
-    margin: 0 4px;
+    height: 28px;
+    margin: 0 6px;
   }
 
   .dock-active-dot {
-    width: 3px;
-    height: 3px;
-    bottom: -4px;
+    width: 4px;
+    height: 4px;
+    bottom: -5px;
   }
 
   .dock-item {
@@ -805,38 +876,44 @@ const activeSubmenu = computed(() => {
   }
 
   .dock-item:active {
-    transform: scale(0.9) !important;
+    transform: scale(0.92) !important;
   }
 
   .dock-item:active .dock-icon {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Ocultar tooltip en móvil */
+  .dock-tooltip {
+    display: none !important;
   }
 }
 
 /* ===== RESPONSIVE - Very small screens ===== */
 @media (max-width: 380px) {
   .dock-content {
-    padding: 5px 6px;
+    padding: 6px 8px;
+    gap: 3px;
   }
 
   .dock-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 7px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
   }
 
   .dock-icon svg {
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
   }
 
   .dock-separator {
-    height: 20px;
-    margin: 0 3px;
+    height: 24px;
+    margin: 0 4px;
   }
 
   .dock-active-dot {
-    bottom: -3px;
+    bottom: -4px;
   }
 }
 </style>
