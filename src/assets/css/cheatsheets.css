@@ -84,8 +84,9 @@
 
 /* Categories Container - Horizontal Layout */
 .categories-container {
-  @apply flex gap-1 flex-wrap justify-center;
+  @apply flex gap-1 justify-center;
   overflow: visible !important;
+  flex-wrap: wrap;
 }
 
 /* Category Dropdown */
@@ -103,7 +104,7 @@
   font-weight: 500;
 }
 
-.category-btn svg {
+.category-icon {
   @apply w-4 h-4 flex-shrink-0;
 }
 
@@ -642,19 +643,33 @@
   .sheet-menu-wrapper {
     top: 4px;
     padding: 2px 6px;
+    justify-content: flex-start;
+  }
+
+  .sheet-menu {
+    max-width: 100%;
+    width: 100%;
   }
 
   .sheet-menu-content {
     padding: 4px 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .categories-container {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.25rem;
   }
 
   .category-btn {
-    padding: 6px 10px;
+    padding: 8px 10px;
     font-size: 12px;
   }
 
-  .category-btn svg {
-    @apply w-3.5 h-3.5;
+  .category-icon {
+    @apply w-4 h-4;
   }
 
   .category-label {
@@ -685,15 +700,15 @@
   }
 
   .category-btn {
-    padding: 6px 8px;
+    padding: 8px;
   }
 
-  .category-btn svg {
+  .category-icon {
     @apply w-4 h-4;
   }
 
   .categories-container {
-    gap: 0.5;
+    gap: 0.25rem;
   }
 }
 

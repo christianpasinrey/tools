@@ -1,10 +1,36 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useDark, useToggle } from '@vueuse/core'
 import MobileDockSubmenu from './MobileDockSubmenu.vue'
+import { useAuth } from '../composables/useAuth'
+import { useAppCrypto } from '../composables/useAppCrypto'
+import { useCloudSync } from '../composables/useCloudSync'
+import AuthForm from './common/AuthForm.vue'
+import SyncStatusPanel from './common/SyncStatusPanel.vue'
 
 const route = useRoute()
 const router = useRouter()
+
+// Dark mode
+const isDark = useDark()
+const toggleDark = useToggle(isDark)
+
+// Auth & Sync
+const auth = useAuth()
+const crypto = useAppCrypto()
+const cloudSync = useCloudSync()
+const showSyncPanel = ref(false)
+
+// Sync status
+const syncStatusClass = computed(() => {
+  if (!auth.isAuthenticated.value) return 'text-neutral-400'
+  if (crypto.isLocked.value) return 'text-amber-400'
+  if (cloudSync.syncStatus.value === 'syncing') return 'text-blue-400'
+  if (cloudSync.syncStatus.value === 'error') return 'text-red-400'
+  if (cloudSync.pendingChanges.value.length > 0) return 'text-amber-400'
+  return 'text-emerald-400'
+})
 
 // Expanded state
 const isExpanded = ref(false)
@@ -202,35 +228,51 @@ const isActive = (path) => {
       @navigate-section="navigateToSection"
     />
 
-    <!-- Toggle Button -->
+    <!-- Toggle Button (when collapsed) -->
     <button
+      v-if="!isExpanded"
       class="dock-toggle"
       @click.stop="toggleDock"
-      :class="{ active: isExpanded }"
     >
-      <svg
-        class="toggle-icon"
-        :class="{ rotated: isExpanded }"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          v-if="!isExpanded"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M4 6h16M4 12h16M4 18h16"
-        />
-        <path
-          v-else
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
+      <svg class="toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
       </svg>
     </button>
+
+    <!-- Bottom bar with 3 buttons (when expanded) -->
+    <div v-else class="dock-bottom-bar">
+      <!-- Close -->
+      <button class="dock-bottom-btn" @click.stop="toggleDock">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="dock-bottom-divider"></div>
+      <!-- Theme toggle -->
+      <button class="dock-bottom-btn" @click.stop="toggleDark()">
+        <svg v-if="isDark" class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <svg v-else class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+      <div class="dock-bottom-divider"></div>
+      <!-- Sync -->
+      <button class="dock-bottom-btn" :class="syncStatusClass" @click.stop="showSyncPanel = !showSyncPanel">
+        <svg class="w-4 h-4" :class="{ 'animate-pulse': cloudSync.syncStatus.value === 'syncing' }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Sync Panel -->
+    <Transition name="sync-slide">
+      <div v-if="showSyncPanel && isExpanded" class="dock-sync-panel">
+        <AuthForm v-if="!auth.isAuthenticated.value" />
+        <SyncStatusPanel v-else />
+      </div>
+    </Transition>
 
     <!-- Expandable Content -->
     <div class="dock-items" :class="{ visible: isExpanded }">
@@ -271,276 +313,3 @@ const isActive = (path) => {
   </div>
 </template>
 
-<style scoped>
-.mobile-dock {
-  position: fixed;
-  bottom: 16px;
-  left: 16px;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-}
-
-.mobile-dock.expanded {
-  align-items: flex-start;
-}
-
-/* Toggle Button */
-.dock-toggle {
-  width: 48px;
-  height: 48px;
-  border-radius: 16px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.85);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.25),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
-    0 4px 16px rgba(0, 0, 0, 0.2),
-    0 0 0 0.5px rgba(255, 255, 255, 0.1);
-  z-index: 2;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  order: 1;
-}
-
-.dock-toggle::before {
-  content: '';
-  position: absolute;
-  top: 1px;
-  left: 15%;
-  right: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  border-radius: 50%;
-  transition: all 0.35s ease;
-}
-
-.dock-toggle:active {
-  transform: scale(0.95);
-}
-
-/* When expanded: move toggle below as full-width tab */
-.dock-toggle.active {
-  order: 2;
-  width: 100%;
-  height: 32px;
-  border-radius: 0 0 14px 14px;
-  margin-top: -1px;
-  border-top-color: transparent;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    inset 0 -1px 1px rgba(255, 255, 255, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.15);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.dock-toggle.active::before {
-  opacity: 0;
-}
-
-.dock-toggle.active svg {
-  width: 18px;
-  height: 18px;
-}
-
-.toggle-icon {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.3s ease;
-}
-
-.toggle-icon.rotated {
-  transform: rotate(90deg);
-}
-
-/* Expandable Items Container */
-.dock-items {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.06) 100%
-  );
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 18px;
-  order: 1;
-
-  /* Hidden by default */
-  max-width: 0;
-  max-height: 0;
-  padding: 0;
-  opacity: 0;
-  overflow: hidden;
-  transform: scale(0.9) translateY(10px);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.2),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.2),
-    0 0 0 0.5px rgba(255, 255, 255, 0.08);
-}
-
-.dock-items.visible {
-  max-width: 500px;
-  max-height: 60px;
-  padding: 8px 12px;
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  pointer-events: auto;
-  border-radius: 14px 14px 0 0;
-  border-bottom-color: transparent;
-}
-
-/* Dock Item */
-.dock-item {
-  position: relative;
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.85);
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.25),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 0 0 0.5px rgba(255, 255, 255, 0.1);
-
-  /* Stagger animation */
-  opacity: 0;
-  transform: scale(0.8) translateX(-10px);
-}
-
-.dock-item::before {
-  content: '';
-  position: absolute;
-  top: 1px;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  border-radius: 50%;
-}
-
-.dock-items.visible .dock-item {
-  opacity: 1;
-  transform: scale(1) translateX(0);
-  transition-delay: var(--delay, 0ms);
-}
-
-.dock-item:active {
-  transform: scale(0.92);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.12) 100%
-  );
-}
-
-.dock-item.is-active {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(255, 255, 255, 0.08) 100%
-  );
-  border-color: rgba(255, 255, 255, 0.25);
-  color: var(--tool-color);
-}
-
-.dock-item.submenu-open {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
-  border-color: rgba(255, 255, 255, 0.3);
-  color: #fff;
-}
-
-.dock-item svg,
-.dock-toggle svg {
-  filter:
-    drop-shadow(0 0 1px rgba(0, 0, 0, 0.6))
-    drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
-}
-
-/* Submenu indicator dot */
-.submenu-indicator {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.dock-item.is-active .submenu-indicator {
-  background: var(--tool-color);
-}
-
-/* Separator */
-.dock-separator {
-  width: 1px;
-  height: 28px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(255, 255, 255, 0.2) 20%,
-    rgba(255, 255, 255, 0.2) 80%,
-    transparent
-  );
-  margin: 0 4px;
-  flex-shrink: 0;
-
-  opacity: 0;
-}
-
-.dock-items.visible .dock-separator {
-  opacity: 1;
-  transition-delay: 50ms;
-}
-</style>

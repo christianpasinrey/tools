@@ -1,0 +1,100 @@
+/* Mobile Editors Shared Styles */
+
+/* Mobile sheet button */
+.mobile-sheet-btn {
+  @apply flex items-center justify-center px-4 py-2.5 rounded-lg text-sm;
+  @apply text-neutral-400 bg-neutral-800 transition-all;
+  touch-action: manipulation;
+}
+
+.mobile-sheet-btn:active:not(:disabled) {
+  @apply bg-neutral-700 text-white;
+}
+
+.mobile-sheet-btn:disabled {
+  @apply opacity-40;
+}
+
+/* Mobile sheet button small */
+.mobile-sheet-btn-sm {
+  @apply w-9 h-9 flex items-center justify-center rounded-md;
+  @apply text-neutral-400 bg-neutral-800 transition-all;
+  touch-action: manipulation;
+}
+
+.mobile-sheet-btn-sm:active:not(:disabled) {
+  @apply bg-neutral-700 text-white;
+}
+
+.mobile-sheet-btn-sm:disabled {
+  @apply opacity-40;
+}
+
+/* Mobile docx button */
+.mobile-docx-btn {
+  @apply w-10 h-10 flex items-center justify-center rounded-lg;
+  @apply text-neutral-400 bg-neutral-800 transition-all;
+  touch-action: manipulation;
+}
+
+.mobile-docx-btn:active:not(:disabled) {
+  @apply bg-neutral-700 text-white;
+}
+
+.mobile-docx-btn:disabled {
+  @apply opacity-40;
+}
+
+/* Mobile DOCX Editor specific */
+.mobile-docx-editor .mobile-superdoc-container {
+  @apply min-h-full p-4;
+}
+
+.mobile-docx-editor .mobile-superdoc-container .ProseMirror {
+  min-height: calc(100vh - 200px);
+  @apply outline-none text-base leading-relaxed;
+}
+
+.mobile-docx-editor .mobile-superdoc-container .ProseMirror p {
+  @apply my-2;
+}
+
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  @apply transition-opacity duration-150 ease-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  @apply opacity-0;
+}
+
+/* Slide transition */
+.slide-enter-active,
+.slide-leave-active {
+  @apply transition-all duration-200 ease-out;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  @apply opacity-0;
+  max-height: 0;
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  max-height: 200px;
+}
+
+/* Toast transition */
+.toast-enter-active,
+.toast-leave-active {
+  @apply transition-all duration-200 ease-out;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  @apply opacity-0;
+  transform: translate(-50%, 10px);
+}

@@ -469,6 +469,9 @@ async function exportToPDF() {
                 @click="toggleCategory(category.id)"
                 class="category-btn"
               >
+                <svg class="category-icon" fill="currentColor" viewBox="0 0 24 24">
+                  <path :d="category.icon" />
+                </svg>
                 <span class="category-label">{{ category.name }}</span>
               </button>
 

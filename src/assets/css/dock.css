@@ -1,0 +1,265 @@
+/* Mobile Dock Styles */
+
+/* Glassmorphism base effect */
+.dock-glass {
+  @apply backdrop-blur-xl;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+/* Main dock container */
+.mobile-dock {
+  @apply fixed bottom-4 left-4 z-[100] flex flex-col items-start;
+}
+
+/* Toggle button when collapsed */
+.dock-toggle {
+  @apply w-12 h-12 rounded-2xl flex items-center justify-center z-[2] order-1;
+  @apply transition-all duration-300 ease-out;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.dock-toggle::before {
+  @apply absolute top-px rounded-full;
+  content: '';
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+}
+
+.dock-toggle:active {
+  @apply scale-95;
+}
+
+.toggle-icon {
+  @apply w-5 h-5;
+}
+
+/* Expandable items container */
+.dock-items {
+  @apply flex items-center gap-1.5 rounded-[18px] order-1;
+  @apply max-w-0 max-h-0 p-0 opacity-0 overflow-hidden pointer-events-none;
+  @apply transition-all duration-300 ease-out;
+  transform: scale(0.9) translateY(10px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+.dock-items.visible {
+  @apply max-w-[500px] max-h-[60px] py-2 px-3 opacity-100 pointer-events-auto;
+  @apply rounded-t-[14px] rounded-b-none;
+  transform: scale(1) translateY(0);
+  border-bottom-color: transparent;
+}
+
+/* Individual dock item */
+.dock-item {
+  @apply relative w-[42px] h-[42px] rounded-[14px] flex items-center justify-center shrink-0;
+  @apply transition-all duration-200 ease-out opacity-0;
+  transform: scale(0.8) translateX(-10px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.dock-item::before {
+  @apply absolute top-px rounded-full;
+  content: '';
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+}
+
+.dock-items.visible .dock-item {
+  @apply opacity-100;
+  transform: scale(1) translateX(0);
+  transition-delay: var(--delay, 0ms);
+}
+
+.dock-item:active {
+  @apply scale-[0.92];
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+}
+
+.dock-item.is-active {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.25);
+  color: var(--tool-color);
+}
+
+.dock-item.submenu-open {
+  @apply text-white;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Icon shadows */
+.dock-item svg,
+.dock-toggle svg,
+.dock-bottom-btn svg {
+  filter:
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
+}
+
+/* Submenu indicator */
+.submenu-indicator {
+  @apply absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.dock-item.is-active .submenu-indicator {
+  background: var(--tool-color);
+}
+
+/* Separator */
+.dock-separator {
+  @apply w-px h-7 mx-1 shrink-0 opacity-0;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.2) 80%,
+    transparent
+  );
+}
+
+.dock-items.visible .dock-separator {
+  @apply opacity-100;
+  transition-delay: 50ms;
+}
+
+/* Bottom bar with action buttons */
+.dock-bottom-bar {
+  @apply flex items-stretch w-full h-9 order-2 -mt-px overflow-hidden;
+  @apply rounded-b-[14px];
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top-color: transparent;
+  box-shadow:
+    inset 0 -1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+.dock-bottom-btn {
+  @apply flex-1 flex items-center justify-center transition-all duration-200;
+  color: rgba(255, 255, 255, 0.7);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.dock-bottom-btn:active {
+  @apply text-white;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dock-bottom-divider {
+  @apply w-px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.2) 80%,
+    transparent
+  );
+}
+
+/* Sync panel */
+.dock-sync-panel {
+  @apply absolute bottom-full left-0 right-0 mb-2 p-3 rounded-[14px] min-w-[280px];
+  background: rgba(30, 30, 30, 0.95);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+.sync-slide-enter-active,
+.sync-slide-leave-active {
+  @apply transition-all duration-300 ease-out;
+}
+
+.sync-slide-enter-from,
+.sync-slide-leave-to {
+  @apply opacity-0;
+  transform: translateY(10px) scale(0.95);
+}

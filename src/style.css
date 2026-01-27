@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "./assets/css/cheatsheets.css";
 @import "./assets/css/editors.css";
+@import "./assets/css/dock.css";
+@import "./assets/css/mobile-editors.css";
 
 body {
   margin: 0;

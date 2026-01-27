@@ -13,7 +13,7 @@ const { isMobile } = useDevice()
   <div class="min-h-screen bg-neutral-950">
     <MobileDock v-if="isMobile" />
     <Dock v-else />
-    <div class="fixed top-2 right-3 z-[100]">
+    <div v-if="!isMobile" class="fixed top-2 right-3 z-[100]">
       <SyncAccountButton />
     </div>
     <router-view />
