@@ -153,7 +153,7 @@ const handleClick = (e) => {
   touch-action: manipulation;
 }
 
-/* Dock Icon */
+/* Dock Icon - Dark mode (default, same as MobileDock) */
 .dock-icon {
   position: relative;
   width: 44px;
@@ -161,46 +161,131 @@ const handleClick = (e) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.7);
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
   transition: all 0.2s ease;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1);
+}
+
+.dock-icon::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 9999px;
 }
 
 .dock-item:hover .dock-icon {
-  background: rgba(45, 45, 45, 1);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.25);
   color: var(--tool-color, #22c55e);
   box-shadow:
     0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .dock-item.is-active .dock-icon {
-  background: color-mix(in srgb, var(--tool-color, #22c55e) 15%, rgba(0, 0, 0, 0.3));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.25);
   color: var(--tool-color, #22c55e);
   box-shadow:
-    0 0 16px color-mix(in srgb, var(--tool-color, #22c55e) 20%, transparent),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+    0 0 16px color-mix(in srgb, var(--tool-color, #22c55e) 25%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .dock-item.submenu-open .dock-icon {
-  background: rgba(45, 45, 45, 1);
-  border-color: var(--tool-color, #22c55e);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 60%, rgba(255, 255, 255, 0.2));
   color: var(--tool-color, #22c55e);
   box-shadow:
     0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 40%, transparent),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Dock Icon - Light mode */
+:global(html:not(.dark)) .dock-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.7);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .dock-icon::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+}
+
+:global(html:not(.dark)) .dock-item:hover .dock-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 25%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+:global(html:not(.dark)) .dock-item.is-active .dock-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 40%, rgba(0, 0, 0, 0.1));
+}
+
+:global(html:not(.dark)) .dock-item.submenu-open .dock-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.92) 100%
+  );
+  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 50%, rgba(0, 0, 0, 0.1));
 }
 
 /* Active dot indicator */
@@ -216,16 +301,21 @@ const handleClick = (e) => {
   box-shadow: 0 0 8px var(--tool-color, #22c55e);
 }
 
-/* Tooltip with liquid glass effect */
+/* Tooltip with liquid glass effect - Dark mode (default) */
 .dock-tooltip {
   position: absolute;
   bottom: calc(100% + 14px);
   left: 50%;
   transform: translateX(-50%);
   padding: 8px 14px;
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(16px) saturate(1.5);
-  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 10px;
   color: white;
@@ -234,22 +324,21 @@ const handleClick = (e) => {
   white-space: nowrap;
   pointer-events: none;
   box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
     0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 1px 1px 1px rgba(255, 255, 255, 0.2),
-    inset -1px -1px 1px rgba(0, 0, 0, 0.2);
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
 }
 
 .dock-tooltip::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: 10px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    transparent 50%
-  );
-  pointer-events: none;
+  top: 1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 9999px;
 }
 
 .dock-tooltip::after {
@@ -259,8 +348,33 @@ const handleClick = (e) => {
   left: 50%;
   transform: translateX(-50%);
   border: 6px solid transparent;
-  border-top-color: rgba(20, 20, 20, 0.7);
+  border-top-color: rgba(255, 255, 255, 0.08);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Tooltip - Light mode */
+:global(html:not(.dark)) .dock-tooltip {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.8);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .dock-tooltip::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+}
+
+:global(html:not(.dark)) .dock-tooltip::after {
+  border-top-color: rgba(255, 255, 255, 0.85);
 }
 
 /* Tooltip transition */

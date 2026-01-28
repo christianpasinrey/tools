@@ -1,4 +1,9 @@
 @import "tailwindcss";
+
+/* Configurar dark mode basado en clase .dark en el html */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@import "./assets/css/glass.css";
 @import "./assets/css/cheatsheets.css";
 @import "./assets/css/editors.css";
 @import "./assets/css/dock.css";
@@ -13,11 +18,16 @@ body {
   min-height: 100vh;
 }
 
-/* Custom Scrollbars - Elegant Dark Theme */
+/* Custom Scrollbars - Theme Aware */
 :root {
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.25);
+  --scrollbar-track: transparent;
+}
+
+.dark {
   --scrollbar-thumb: rgba(255, 255, 255, 0.1);
   --scrollbar-thumb-hover: rgba(255, 255, 255, 0.2);
-  --scrollbar-track: transparent;
 }
 
 /* Webkit browsers (Chrome, Safari, Edge) */
@@ -90,9 +100,17 @@ body {
 
 /* Accent color scrollbar (for special areas) */
 .scrollbar-accent::-webkit-scrollbar-thumb {
-  background: rgba(34, 197, 94, 0.3);
+  background: rgba(59, 130, 246, 0.3);
 }
 
 .scrollbar-accent::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+.dark .scrollbar-accent::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+.dark .scrollbar-accent::-webkit-scrollbar-thumb:hover {
   background: rgba(34, 197, 94, 0.5);
 }

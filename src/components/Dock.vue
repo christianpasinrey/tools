@@ -603,104 +603,64 @@ const activeSubmenu = computed(() => {
   padding: 8px;
 }
 
-/* Liquid Glass Container */
+/* Liquid Glass Container - Dark mode (default, same as MobileDock) */
 .dock-glass {
-  --lg-bg-color: rgba(20, 20, 20, 0.75);
-  --lg-highlight: rgba(255, 255, 255, 0.4);
-  --lg-highlight-soft: rgba(255, 255, 255, 0.15);
-  --lg-border: rgba(255, 255, 255, 0.15);
   position: relative;
   border-radius: 20px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
-}
-
-.dock-glass:hover {
-  --lg-bg-color: rgba(25, 25, 25, 0.85);
-  --lg-highlight: rgba(255, 255, 255, 0.55);
-  --lg-highlight-soft: rgba(255, 255, 255, 0.25);
-}
-
-/* Background blur + lens distortion */
-.dock-glass-filter {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  backdrop-filter: blur(16px) saturate(1.5);
-  -webkit-backdrop-filter: blur(16px) saturate(1.5);
-  filter: url(#dockLensFilter);
-  z-index: 1;
-}
-
-/* Semi-transparent overlay */
-.dock-glass-overlay {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  background: var(--lg-bg-color);
-  border: 1px solid var(--lg-border);
-  transition: all 0.4s ease;
-  z-index: 2;
-}
-
-.dock-glass:hover .dock-glass-overlay {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-
-/* Specular highlights - liquid bubble shine */
-.dock-glass-specular {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
   background: linear-gradient(
     135deg,
-    var(--lg-highlight-soft) 0%,
-    transparent 40%,
-    transparent 60%,
-    rgba(255, 255, 255, 0.05) 100%
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
   );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow:
-    inset 1px 1px 1px var(--lg-highlight),
-    inset 2px 2px 6px var(--lg-highlight-soft),
-    inset -1px -1px 3px rgba(0, 0, 0, 0.2),
-    inset 0 -2px 8px rgba(0, 0, 0, 0.15);
-  pointer-events: none;
-  transition: all 0.4s ease;
-  z-index: 3;
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
 }
 
-.dock-glass-specular::before {
+.dock-glass::before {
   content: '';
   position: absolute;
-  top: 4px;
-  left: 8px;
-  right: 60%;
-  height: 12px;
+  top: 1px;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 9999px;
+}
+
+/* Light mode */
+:global(html:not(.dark)) .dock-glass {
   background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.35) 0%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 100%
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.7) 100%
   );
-  border-radius: 50%;
-  filter: blur(3px);
-  opacity: 0.9;
-  transition: opacity 0.4s ease;
-}
-
-.dock-glass:hover .dock-glass-specular {
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow:
-    inset 2px 2px 2px var(--lg-highlight),
-    inset 4px 4px 10px var(--lg-highlight-soft),
-    inset -1px -1px 4px rgba(0, 0, 0, 0.25),
-    inset 0 -4px 12px rgba(0, 0, 0, 0.2);
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-.dock-glass:hover .dock-glass-specular::before {
-  opacity: 1;
+:global(html:not(.dark)) .dock-glass::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+}
+
+/* Hide the extra glass layers - not needed with new approach */
+.dock-glass-filter,
+.dock-glass-overlay,
+.dock-glass-specular {
+  display: none;
 }
 
 /* Dock content layer */
@@ -713,7 +673,7 @@ const activeSubmenu = computed(() => {
   z-index: 4;
 }
 
-/* Separator between home and tools */
+/* Separator between home and tools - Dark mode (default) */
 .dock-separator {
   width: 1px;
   height: 32px;
@@ -726,6 +686,17 @@ const activeSubmenu = computed(() => {
   );
   margin: 0 8px;
   align-self: center;
+}
+
+/* Light mode */
+:global(html:not(.dark)) .dock-separator {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.15) 20%,
+    rgba(0, 0, 0, 0.15) 80%,
+    transparent
+  );
 }
 
 /* Home Dock Item */
@@ -745,41 +716,128 @@ const activeSubmenu = computed(() => {
   z-index: 10;
 }
 
-/* Dock Icon */
+/* Dock Icon - Dark mode (default, same as MobileDock) */
 .dock-icon {
+  position: relative;
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.7);
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.85);
   transition: all 0.2s ease;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1);
+}
+
+.dock-icon::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 9999px;
+}
+
+.dock-icon svg {
+  filter:
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.6))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
 }
 
 .dock-item:hover .dock-icon {
-  background: rgba(45, 45, 45, 1);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.25);
   color: var(--tool-color, #22c55e);
   box-shadow:
     0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .dock-item.is-active .dock-icon {
-  background: color-mix(in srgb, var(--tool-color, #22c55e) 15%, rgba(0, 0, 0, 0.3));
-  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 30%, transparent);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.25);
   color: var(--tool-color, #22c55e);
   box-shadow:
-    0 0 16px color-mix(in srgb, var(--tool-color, #22c55e) 20%, transparent),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.2);
+    0 0 16px color-mix(in srgb, var(--tool-color, #22c55e) 25%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Dock Icon - Light mode */
+:global(html:not(.dark)) .dock-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.7);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .dock-icon::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+}
+
+:global(html:not(.dark)) .dock-icon svg {
+  filter:
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.1));
+}
+
+:global(html:not(.dark)) .dock-item:hover .dock-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 25%, transparent),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+:global(html:not(.dark)) .dock-item.is-active .dock-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-color: color-mix(in srgb, var(--tool-color, #22c55e) 40%, rgba(0, 0, 0, 0.1));
 }
 
 /* Home icon special styling */

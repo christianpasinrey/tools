@@ -1,0 +1,192 @@
+/* ============================================
+   GLASS DESIGN SYSTEM
+   Copiado EXACTAMENTE de dock.css (MobileDock)
+   ============================================ */
+
+/* Base glass effect - EXACTO del dock */
+.glass {
+  position: relative;
+  @apply backdrop-blur-xl;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+/* Light mode */
+html:not(.dark) .glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+html:not(.dark) .glass::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+}
+
+/* Glass hover - copiado de dock-item:active */
+.glass-hover {
+  @apply transition-all duration-200 ease-out;
+}
+
+.glass-hover:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    0 0 0 0.5px rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+html:not(.dark) .glass-hover:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 0 0 0.5px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================
+   TEXT COLORS
+   ============================================ */
+
+.glass-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+html:not(.dark) .glass-text {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.glass-text-muted {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html:not(.dark) .glass-text-muted {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.glass-text-subtle {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+html:not(.dark) .glass-text-subtle {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   ICON COLORS
+   ============================================ */
+
+.glass-icon {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+html:not(.dark) .glass-icon {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================
+   BORDER COLORS
+   ============================================ */
+
+.glass-border {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html:not(.dark) .glass-border {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================
+   SMALL GLASS (badges)
+   ============================================ */
+
+.glass-sm {
+  position: relative;
+  @apply backdrop-blur-xl;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1);
+}
+
+html:not(.dark) .glass-sm {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================
+   GLASS RING (icon backgrounds)
+   ============================================ */
+
+.glass-ring {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+html:not(.dark) .glass-ring {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}

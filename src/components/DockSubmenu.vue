@@ -138,12 +138,13 @@ const goBack = () => {
       </div>
 
       <!-- Arrow pointing down to dock -->
-      <div class="submenu-arrow" :style="{ borderTopColor: 'rgba(30, 30, 30, 0.95)' }"></div>
+      <div class="submenu-arrow"></div>
     </div>
   </Transition>
 </template>
 
 <style scoped>
+/* Dark mode (default, same as MobileDock) */
 .dock-submenu {
   position: absolute;
   bottom: calc(100% + 16px);
@@ -152,65 +153,58 @@ const goBack = () => {
   width: max-content;
   border-radius: 20px;
   z-index: 50;
-}
-
-/* Liquid Glass Layers */
-.submenu-glass-filter {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
-  z-index: 1;
-}
-
-.submenu-glass-overlay {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  background: rgba(30, 30, 30, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
-  z-index: 2;
-}
-
-.submenu-glass-specular {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    transparent 40%,
-    transparent 60%,
-    rgba(255, 255, 255, 0.03) 100%
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
   );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow:
-    inset 1px 1px 2px rgba(255, 255, 255, 0.3),
-    inset 2px 2px 8px rgba(255, 255, 255, 0.1),
-    inset -1px -1px 4px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-  z-index: 3;
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
 }
 
-.submenu-glass-specular::before {
+.dock-submenu::before {
   content: '';
   position: absolute;
-  top: 6px;
-  left: 12px;
-  right: 50%;
-  height: 16px;
+  top: 1px;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 9999px;
+}
+
+/* Light mode */
+:global(html:not(.dark)) .dock-submenu {
   background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
   );
-  border-radius: 50%;
-  filter: blur(4px);
-  opacity: 0.8;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 20px 60px rgba(0, 0, 0, 0.12),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .dock-submenu::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+}
+
+/* Hide extra glass layers - not needed with new approach */
+.submenu-glass-filter,
+.submenu-glass-overlay,
+.submenu-glass-specular {
+  display: none;
 }
 
 /* Content layer */
@@ -225,17 +219,21 @@ const goBack = () => {
   min-height: 308px;
 }
 
-/* Header with back button */
+/* Header with back button - Dark mode (default) */
 .submenu-header {
   display: flex;
   align-items: center;
   gap: 8px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 12px;
 }
 
-/* Back button */
+:global(html:not(.dark)) .submenu-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Back button - Dark mode (default) */
 .submenu-back {
   display: flex;
   align-items: center;
@@ -243,8 +241,8 @@ const goBack = () => {
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   transition: all 0.2s ease;
@@ -252,8 +250,20 @@ const goBack = () => {
 }
 
 .submenu-back:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.18);
   color: white;
+}
+
+/* Back button - Light mode */
+:global(html:not(.dark)) .submenu-back {
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:global(html:not(.dark)) .submenu-back:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: black;
 }
 
 /* Title */
@@ -276,7 +286,7 @@ const goBack = () => {
   opacity: 0;
 }
 
-/* Down arrow pointing to dock */
+/* Down arrow pointing to dock - Dark mode (default) */
 .submenu-arrow {
   position: absolute;
   bottom: -8px;
@@ -286,8 +296,14 @@ const goBack = () => {
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid rgba(30, 30, 30, 0.95);
+  border-top: 10px solid rgba(255, 255, 255, 0.08);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Light mode */
+:global(html:not(.dark)) .submenu-arrow {
+  border-top-color: rgba(255, 255, 255, 0.85);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 /* Transitions */

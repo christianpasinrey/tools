@@ -154,20 +154,64 @@ const gridStyle = computed(() => ({
   min-width: 340px;
 }
 
-/* Bento Item - Base */
+/* Bento Item - Base - Dark mode (default, same as MobileDock) */
 .bento-item {
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 14px;
   border-radius: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   overflow: hidden;
   cursor: pointer;
+}
+
+.bento-item::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  border-radius: 9999px;
+}
+
+/* Light mode */
+:global(html:not(.dark)) .bento-item {
+  color: rgba(0, 0, 0, 0.85);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.75) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.03),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 0 0 0.5px rgba(0, 0, 0, 0.03);
+}
+
+:global(html:not(.dark)) .bento-item::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
 }
 
 /* Layout: Wide - spans 2 columns, horizontal layout */
@@ -348,14 +392,37 @@ const gridStyle = computed(() => ({
   min-width: 380px;
 }
 
-/* Hover states */
+/* Hover states - Dark mode (default) */
 .bento-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: color-mix(in srgb, var(--item-color, #22c55e) 40%, transparent);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-color: color-mix(in srgb, var(--item-color, #22c55e) 50%, rgba(255, 255, 255, 0.2));
   transform: translateY(-2px);
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.3),
-    0 0 0 1px color-mix(in srgb, var(--item-color, #22c55e) 20%, transparent);
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.25),
+    0 0 20px color-mix(in srgb, var(--item-color, #22c55e) 20%, transparent);
+}
+
+/* Light mode */
+:global(html:not(.dark)) .bento-item:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-color: color-mix(in srgb, var(--item-color, #22c55e) 40%, rgba(0, 0, 0, 0.1));
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 0 20px color-mix(in srgb, var(--item-color, #22c55e) 15%, transparent);
 }
 
 .bento-item:hover .bento-icon {
@@ -393,7 +460,7 @@ const gridStyle = computed(() => ({
   pointer-events: none;
 }
 
-/* Icon container */
+/* Icon container - Dark mode (default) */
 .bento-icon {
   width: 38px;
   height: 38px;
@@ -401,10 +468,17 @@ const gridStyle = computed(() => ({
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
   transition: all 0.3s ease;
+}
+
+/* Light mode */
+:global(html:not(.dark)) .bento-icon {
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .bento-icon svg {
@@ -420,16 +494,29 @@ const gridStyle = computed(() => ({
   margin-top: 10px;
 }
 
+/* Name - Dark mode (default) */
 .bento-name {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.9);
 }
 
+/* Name - Light mode */
+:global(html:not(.dark)) .bento-name {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+/* Description - Dark mode (default) */
 .bento-description {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.6);
   line-height: 1.3;
+}
+
+/* Description - Light mode */
+:global(html:not(.dark)) .bento-description {
+  color: rgba(0, 0, 0, 0.55);
 }
 
 /* Color dot for items without icon */
@@ -520,5 +607,20 @@ const gridStyle = computed(() => ({
   .bento-tall .bento-description {
     display: none;
   }
+}
+</style>
+
+<!-- Light mode overrides (sin scoped) -->
+<style>
+html:not(.dark) .bento-name {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .bento-description {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+
+html:not(.dark) .bento-icon {
+  color: rgba(0, 0, 0, 0.6) !important;
 }
 </style>

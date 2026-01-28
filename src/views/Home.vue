@@ -1,14 +1,32 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import * as THREE from 'three'
 import { useAppCrypto } from '../composables/useAppCrypto'
 import { useAuth } from '../composables/useAuth'
 import { useDevice } from '../composables/useDevice'
+import { isDark } from '../composables/useSpreadsheet'
 import SyncAccountButton from '../components/common/SyncAccountButton.vue'
 
 const appCrypto = useAppCrypto()
 const auth = useAuth()
 const { isMobile, platform } = useDevice()
+
+// Color palettes for particles
+const darkModeColors = [
+  new THREE.Color(0x22c55e), // green-500
+  new THREE.Color(0x10b981), // emerald-500
+  new THREE.Color(0x14b8a6), // teal-500
+  new THREE.Color(0x059669), // emerald-600
+]
+
+const lightModeColors = [
+  new THREE.Color(0x3b82f6), // blue-500
+  new THREE.Color(0x06b6d4), // cyan-500
+  new THREE.Color(0x0ea5e9), // sky-500
+  new THREE.Color(0x2563eb), // blue-600
+]
+
+const getCurrentColorPalette = () => isDark.value ? darkModeColors : lightModeColors
 
 const isVisible = ref(false)
 const threeCanvas = ref(null)
@@ -218,12 +236,7 @@ const initThree = () => {
   const colors = new Float32Array(particleCount * 3)
   const sizes = new Float32Array(particleCount)
 
-  const colorPalette = [
-    new THREE.Color(0x22c55e), // green-500
-    new THREE.Color(0x10b981), // emerald-500
-    new THREE.Color(0x14b8a6), // teal-500
-    new THREE.Color(0x059669), // emerald-600
-  ]
+  const colorPalette = getCurrentColorPalette()
 
   for (let i = 0; i < particleCount; i++) {
     positions[i * 3] = (Math.random() - 0.5) * 200
@@ -293,6 +306,29 @@ const onResize = () => {
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
+
+// Update particle colors when theme changes
+const updateParticleColors = () => {
+  if (!particles) return
+
+  const colorPalette = getCurrentColorPalette()
+  const colors = particles.geometry.attributes.color.array
+  const particleCount = colors.length / 3
+
+  for (let i = 0; i < particleCount; i++) {
+    const color = colorPalette[Math.floor(Math.random() * colorPalette.length)]
+    colors[i * 3] = color.r
+    colors[i * 3 + 1] = color.g
+    colors[i * 3 + 2] = color.b
+  }
+
+  particles.geometry.attributes.color.needsUpdate = true
+}
+
+// Watch for theme changes
+watch(isDark, () => {
+  updateParticleColors()
+})
 
 onMounted(() => {
   setTimeout(() => {
@@ -948,9 +984,9 @@ const fetchGitHubCommits = async () => {
     <canvas ref="threeCanvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0;"></canvas>
 
     <!-- Gradient Orbs with subtle parallax - fixed position so they don't get clipped -->
-    <div class="fixed top-20 left-1/4 w-96 h-96 bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.08}px)` }"></div>
-    <div class="fixed top-40 right-1/4 w-80 h-80 bg-emerald-500/15 rounded-full blur-[100px] animate-float pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.12}px)` }"></div>
-    <div class="fixed top-1/2 left-1/2 w-72 h-72 bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" style="z-index: 0; animation-delay: 1s;" :style="{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.15}px)` }"></div>
+    <div class="fixed top-20 left-1/4 w-96 h-96 bg-blue-500/20 dark:bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.08}px)` }"></div>
+    <div class="fixed top-40 right-1/4 w-80 h-80 bg-cyan-500/15 dark:bg-emerald-500/15 rounded-full blur-[100px] animate-float pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.12}px)` }"></div>
+    <div class="fixed top-1/2 left-1/2 w-72 h-72 bg-sky-500/10 dark:bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" style="z-index: 0; animation-delay: 1s;" :style="{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.15}px)` }"></div>
 
     <!-- Hero Section -->
     <div ref="heroSection" class="relative" style="z-index: 1;">
@@ -993,7 +1029,7 @@ const fetchGitHubCommits = async () => {
           <!-- Title -->
           <h1
             :class="[
-              'text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 tracking-tight transition-all duration-700 delay-150',
+              'text-4xl sm:text-5xl lg:text-6xl font-bold hero-title mb-5 tracking-tight transition-all duration-700 delay-150',
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
@@ -1007,8 +1043,8 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            <p class="text-neutral-400 text-sm sm:text-base font-medium">Client-side AES-256-GCM encryption.</p>
-            <p class="text-neutral-600 text-xs sm:text-sm mt-1">Tus datos se cifran antes de salir del navegador. Sync entre dispositivos.</p>
+            <p class="hero-subtitle text-sm sm:text-base font-medium">Client-side AES-256-GCM encryption.</p>
+            <p class="hero-muted text-xs sm:text-sm mt-1">Tus datos se cifran antes de salir del navegador. Sync entre dispositivos.</p>
           </div>
 
           <!-- Status indicator -->
@@ -1021,12 +1057,12 @@ const fetchGitHubCommits = async () => {
             <div v-if="!auth.isAuthenticated.value" class="flex flex-col items-center gap-4">
               <div class="flex items-center gap-3">
                 <SyncAccountButton />
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border bg-neutral-800/50 text-neutral-400 border-neutral-700">
-                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-neutral-500"></span>
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border status-badge-inactive">
+                  <span class="relative inline-flex rounded-full h-1.5 w-1.5 status-dot-inactive"></span>
                   Sin cuenta
                 </div>
               </div>
-              <p class="text-neutral-600 text-xs">Crea una cuenta para cifrar y sincronizar tus datos</p>
+              <p class="status-hint text-xs">Crea una cuenta para cifrar y sincronizar tus datos</p>
             </div>
 
             <div v-else class="flex flex-col items-center gap-4">
@@ -1040,7 +1076,7 @@ const fetchGitHubCommits = async () => {
                   {{ appCrypto.isLocked.value ? 'Bloqueado' : 'Conectado' }}
                 </div>
               </div>
-              <p class="text-neutral-600 text-xs">{{ appCrypto.isLocked.value ? 'Inicia sesion para acceder a tus datos' : 'Sesion activa — datos cifrados y sincronizados' }}</p>
+              <p class="status-hint text-xs">{{ appCrypto.isLocked.value ? 'Inicia sesion para acceder a tus datos' : 'Sesion activa — datos cifrados y sincronizados' }}</p>
             </div>
           </div>
 
@@ -1051,15 +1087,15 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             ]"
           >
-            <router-link to="/apps#invoice" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900/60 border border-neutral-800/60 text-xs text-neutral-500 hover:text-emerald-400 hover:border-emerald-500/30 backdrop-blur-sm transition-all">
+            <router-link to="/apps#invoice" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-emerald-400 transition-all">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
               Facturas
             </router-link>
-            <router-link to="/apps#todo" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900/60 border border-neutral-800/60 text-xs text-neutral-500 hover:text-indigo-400 hover:border-indigo-500/30 backdrop-blur-sm transition-all">
+            <router-link to="/apps#todo" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-indigo-400 transition-all">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
               Kanban
             </router-link>
-            <router-link to="/technology#browser-storage" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-neutral-900/60 border border-neutral-800/60 text-xs text-neutral-500 hover:text-purple-400 hover:border-purple-500/30 backdrop-blur-sm transition-all">
+            <router-link to="/technology#browser-storage" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-purple-400 transition-all">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
               Storage
             </router-link>
@@ -1070,64 +1106,64 @@ const fetchGitHubCommits = async () => {
 
             <!-- Section title -->
             <div class="text-center mb-10">
-              <p class="text-xs uppercase tracking-[0.2em] text-neutral-400 mb-2">Modelo de confianza</p>
-              <h2 class="text-xl sm:text-2xl font-bold text-white">Quien puede leer tus datos?</h2>
+              <p class="text-xs uppercase tracking-[0.2em] section-label mb-2">Modelo de confianza</p>
+              <h2 class="text-xl sm:text-2xl font-bold section-title">Quien puede leer tus datos?</h2>
             </div>
 
             <!-- Comparison cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
 
               <!-- Traditional model card -->
-              <div class="relative rounded-xl border border-neutral-700 bg-neutral-900 p-5 overflow-hidden">
+              <div class="comparison-card relative rounded-xl p-5 overflow-hidden">
                 <div class="flex items-center gap-2.5 mb-4">
-                  <div class="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center">
-                    <svg class="w-4.5 h-4.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div class="comparison-icon w-8 h-8 rounded-lg flex items-center justify-center">
+                    <svg class="w-4.5 h-4.5 comparison-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
                     </svg>
                   </div>
-                  <h3 class="text-sm font-bold text-neutral-200">Modelo tradicional</h3>
+                  <h3 class="text-sm font-bold comparison-title">Modelo tradicional</h3>
                 </div>
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
-                    <span class="w-2 h-2 rounded-full bg-neutral-500 shrink-0"></span>
-                    <span class="text-xs text-neutral-300">Tu, la empresa, y quien ella autorice</span>
+                    <span class="w-2 h-2 rounded-full bg-neutral-500 dark:bg-neutral-500 shrink-0"></span>
+                    <span class="text-xs comparison-text">Tu, la empresa, y quien ella autorice</span>
                   </div>
-                  <p class="text-[11px] text-neutral-500 leading-relaxed pl-4">
+                  <p class="text-[11px] comparison-muted leading-relaxed pl-4">
                     Las apps cifran correctamente tu conexion y sus servidores. Pero la empresa gestiona las claves de cifrado — es su infraestructura. Pueden cumplir ordenes judiciales, sufrir brechas, o cambiar sus politicas de privacidad.
                   </p>
-                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-neutral-800/80 border border-neutral-700">
-                    <p class="text-[11px] text-neutral-400 leading-relaxed">Tu privacidad depende de la confianza en un tercero.</p>
+                  <div class="mt-4 px-3 py-2.5 rounded-lg comparison-callout">
+                    <p class="text-[11px] comparison-muted leading-relaxed">Tu privacidad depende de la confianza en un tercero.</p>
                   </div>
                 </div>
               </div>
 
               <!-- This app card -->
-              <div class="relative rounded-xl border border-emerald-500/40 bg-neutral-900 p-5 overflow-hidden">
+              <div class="comparison-card comparison-card-highlight relative rounded-xl p-5 overflow-hidden">
                 <div class="flex items-center gap-2.5 mb-4">
                   <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
                     <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
                   </div>
-                  <h3 class="text-sm font-bold text-emerald-300">Zero-Knowledge</h3>
+                  <h3 class="text-sm font-bold text-emerald-400 dark:text-emerald-300">Zero-Knowledge</h3>
                 </div>
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                    <span class="text-xs text-neutral-300">Solo tu</span>
+                    <span class="text-xs comparison-text">Solo tu</span>
                   </div>
-                  <p class="text-[11px] text-neutral-500 leading-relaxed pl-4">
+                  <p class="text-[11px] comparison-muted leading-relaxed pl-4">
                     Tus datos se cifran con tu clave en el navegador antes de salir. El servidor sincroniza blobs cifrados entre tus dispositivos, pero no puede descifrarlos — nunca recibe tu password ni la clave de cifrado.
                   </p>
-                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-950/60 border border-emerald-500/30">
-                    <p class="text-[11px] text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografia. No de la confianza.</p>
+                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-950/60 dark:bg-emerald-950/60 border border-emerald-500/30">
+                    <p class="text-[11px] text-emerald-400 dark:text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografia. No de la confianza.</p>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Soft delete callout -->
-            <div class="rounded-xl border border-amber-500/30 bg-neutral-900 p-5">
+            <div class="callout-card callout-amber rounded-xl p-5">
               <div class="flex items-start gap-4">
                 <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
                   <svg class="w-4.5 h-4.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1135,9 +1171,9 @@ const fetchGitHubCommits = async () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-sm font-bold text-amber-300 mb-2">Cuando "borras" no borras</h3>
-                  <p class="text-xs text-neutral-300 leading-relaxed">
-                    La mayoria de apps usan <span class="text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">soft delete</span>: al pulsar "eliminar", solo marcan tus datos con una fecha (<span class="text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">deleted_at</span>) y los ocultan de tu vista. Siguen en sus servidores, accesibles para la empresa, indefinidamente.
+                  <h3 class="text-sm font-bold text-amber-400 dark:text-amber-300 mb-2">Cuando "borras" no borras</h3>
+                  <p class="text-xs callout-text leading-relaxed">
+                    La mayoria de apps usan <span class="text-amber-400 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">soft delete</span>: al pulsar "eliminar", solo marcan tus datos con una fecha (<span class="text-amber-400 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">deleted_at</span>) y los ocultan de tu vista. Siguen en sus servidores, accesibles para la empresa, indefinidamente.
                   </p>
                 </div>
               </div>
@@ -1152,7 +1188,7 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100' : 'opacity-0'
             ]"
           >
-            <div class="flex flex-col items-center gap-2 text-neutral-600">
+            <div class="flex flex-col items-center gap-2 hero-muted">
               <span class="text-[10px] uppercase tracking-widest">Explorar herramientas</span>
               <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
@@ -1167,7 +1203,7 @@ const fetchGitHubCommits = async () => {
 
     <!-- Tools Grid -->
     <div ref="toolsSection" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40" style="z-index: 1;">
-      <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-widest mb-8">
+      <h2 class="text-xs font-semibold section-label uppercase tracking-widest mb-8">
         Herramientas disponibles
       </h2>
 
@@ -1177,49 +1213,37 @@ const fetchGitHubCommits = async () => {
           :key="tool.path"
           :to="tool.status === 'active' ? tool.path : '#'"
           :class="[
-            'group relative overflow-hidden rounded-2xl p-6 transition-shadow duration-300',
-            'bg-neutral-900/50 backdrop-blur-sm border border-neutral-800/50',
-            'hover:border-neutral-700/50 hover:shadow-2xl',
-            colorClasses[tool.color].glow,
+            'group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 tool-card',
             tool.status === 'active' ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
             'scroll-animated'
           ]"
           :style="getToolCardStyle(index)"
         >
-          <!-- Hover gradient overlay -->
-          <div
-            :class="[
-              'absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500',
-              `bg-gradient-to-br from-${tool.color}-500/5 via-transparent to-transparent`
-            ]"
-          ></div>
-
           <!-- Glow effect on hover -->
           <div
             :class="[
-              'absolute -inset-1 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl',
+              'absolute -inset-1 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none',
               `bg-${tool.color}-500/10`
             ]"
           ></div>
 
           <!-- Status Badge -->
           <div v-if="tool.status === 'coming'" class="absolute top-4 right-4 z-10">
-            <span class="px-2.5 py-1 bg-neutral-800/80 text-neutral-400 text-[10px] font-medium rounded-full backdrop-blur-sm">Próximamente</span>
+            <span class="px-2.5 py-1 coming-soon-badge text-[10px] font-medium rounded-full backdrop-blur-sm">Próximamente</span>
           </div>
 
           <div class="relative flex items-start gap-5">
             <!-- Icon -->
             <div
               :class="[
-                'w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300',
-                'bg-neutral-800/80 border border-neutral-700/50',
-                'group-hover:scale-110 group-hover:border-neutral-600/50',
+                'w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 tool-icon',
+                'group-hover:scale-110',
                 colorClasses[tool.color].bg
               ]"
             >
               <svg
                 :class="[
-                  'w-6 h-6 text-neutral-400 transition-colors duration-300',
+                  'w-6 h-6 tool-icon-svg transition-colors duration-300',
                   colorClasses[tool.color].icon
                 ]"
                 fill="none"
@@ -1234,13 +1258,13 @@ const fetchGitHubCommits = async () => {
             <div class="flex-1 min-w-0">
               <h3
                 :class="[
-                  'text-white font-semibold text-lg mb-2 transition-colors duration-300',
+                  'tool-title font-semibold text-lg mb-2 transition-colors duration-300',
                   `group-hover:${colorClasses[tool.color].text}`
                 ]"
               >
                 {{ tool.name }}
               </h3>
-              <p class="text-neutral-500 text-sm leading-relaxed group-hover:text-neutral-400 transition-colors duration-300">
+              <p class="tool-description text-sm leading-relaxed transition-colors duration-300">
                 {{ tool.description }}
               </p>
             </div>
@@ -1248,15 +1272,11 @@ const fetchGitHubCommits = async () => {
             <!-- Arrow -->
             <div
               v-if="tool.status === 'active'"
-              :class="[
-                'w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300',
-                'bg-neutral-800/50 group-hover:bg-neutral-700/50',
-                'group-hover:translate-x-1'
-              ]"
+              class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 tool-arrow group-hover:translate-x-1"
             >
               <svg
                 :class="[
-                  'w-4 h-4 text-neutral-500 transition-colors duration-300',
+                  'w-4 h-4 tool-arrow-svg transition-colors duration-300',
                   colorClasses[tool.color].icon
                 ]"
                 fill="none"
@@ -1286,7 +1306,7 @@ const fetchGitHubCommits = async () => {
         <div class="glass-content p-0">
           <div class="flex flex-col md:flex-row">
             <!-- Left: Repository Info -->
-            <div class="flex-1 p-8 md:border-r border-white/5 flex flex-col">
+            <div class="flex-1 p-8 md:border-r repo-divider flex flex-col">
               <!-- Header -->
               <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center gap-4">
@@ -1296,26 +1316,26 @@ const fetchGitHubCommits = async () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 class="text-white font-semibold text-lg group-hover:text-green-400 transition-colors">Web Tools</h3>
-                    <p class="text-neutral-500 text-sm">christianpasinrey/tools</p>
+                    <h3 class="repo-title font-semibold text-lg group-hover:text-green-400 transition-colors">Web Tools</h3>
+                    <p class="repo-subtitle text-sm">christianpasinrey/tools</p>
                   </div>
                 </div>
-                <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
-                  <svg class="w-4 h-4 text-neutral-500 group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-8 h-8 rounded-full repo-icon-bg flex items-center justify-center group-hover:bg-green-500/20 transition-colors">
+                  <svg class="w-4 h-4 repo-icon group-hover:text-green-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                   </svg>
                 </div>
               </div>
 
               <!-- Description -->
-              <p class="text-neutral-400 text-base leading-relaxed mb-6">
+              <p class="repo-desc text-base leading-relaxed mb-6">
                 Herramientas útiles que funcionan
                 <span class="text-green-400 font-medium">100% en tu navegador</span>.
                 Sin servidores, sin uploads, privacidad total.
               </p>
 
               <!-- Features -->
-              <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-neutral-500">
+              <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm repo-features">
                 <span class="flex items-center gap-1.5">
                   <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -1337,10 +1357,10 @@ const fetchGitHubCommits = async () => {
               </div>
 
               <!-- Repository Stats -->
-              <div class="grid grid-cols-2 gap-4 py-6 border-y border-white/5 my-6">
+              <div class="grid grid-cols-2 gap-4 py-6 repo-border my-6">
                 <div class="text-center">
                   <div class="text-2xl font-bold text-green-400">{{ tools.length }}</div>
-                  <div class="text-xs text-neutral-600 mt-1">Herramientas</div>
+                  <div class="text-xs repo-muted mt-1">Herramientas</div>
                 </div>
                 <a
                   href="https://github.com/christianpasinrey/tools"
@@ -1357,10 +1377,10 @@ const fetchGitHubCommits = async () => {
               </div>
 
               <!-- Tech stack - aligned bottom -->
-              <div class="mt-auto pt-6 border-t border-white/5">
+              <div class="mt-auto pt-6 tech-border">
                 <div class="flex items-center gap-5">
                   <!-- Vue -->
-                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#42b883] transition-colors" title="Vue.js">
+                  <div class="flex items-center gap-1.5 tech-icon hover:text-[#42b883] transition-colors" title="Vue.js">
                     <svg class="w-5 h-5" viewBox="0 0 256 221" fill="currentColor">
                       <path d="M204.8 0H256L128 220.8L0 0h97.92L128 51.2L157.44 0h47.36Z" fill-opacity="0.5"/>
                       <path d="M0 0l128 220.8L256 0h-51.2L128 132.48L50.56 0H0Z" fill-opacity="0.8"/>
@@ -1374,19 +1394,19 @@ const fetchGitHubCommits = async () => {
                     </svg>
                   </div>
                   <!-- Tailwind -->
-                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#38bdf8] transition-colors" title="Tailwind CSS">
+                  <div class="flex items-center gap-1.5 tech-icon hover:text-[#38bdf8] transition-colors" title="Tailwind CSS">
                     <svg class="w-5 h-5" viewBox="0 0 256 154" fill="currentColor">
                       <path d="M128 0Q85 0 64 43q32-22 64 0 16 11 24 33 19-43 64-43 43 0 64 43-32-22-64 0-16 11-24 33-19-43-64-43ZM64 77Q21 77 0 120q32-22 64 0 16 11 24 33 19-43 64-43 43 0 64 43-32-22-64 0-16 11-24 33-19-43-64-43Z"/>
                     </svg>
                   </div>
                   <!-- Three.js -->
-                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-white transition-colors" title="Three.js">
+                  <div class="flex items-center gap-1.5 tech-icon hover:text-white transition-colors" title="Three.js">
                     <svg class="w-5 h-5" viewBox="0 0 256 256" fill="currentColor">
                       <path d="M32 224L224 224L128 32L32 224ZM80 192L128 96L176 192L80 192Z" fill-opacity="0.7"/>
                     </svg>
                   </div>
                   <!-- CodeMirror -->
-                  <div class="flex items-center gap-1.5 text-neutral-500 hover:text-[#d30707] transition-colors" title="CodeMirror">
+                  <div class="flex items-center gap-1.5 tech-icon hover:text-[#d30707] transition-colors" title="CodeMirror">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill-opacity="0.7"/>
                     </svg>
@@ -1396,12 +1416,12 @@ const fetchGitHubCommits = async () => {
             </div>
 
             <!-- Right: Recent Commits -->
-            <div class="flex-1 p-8 bg-white/[0.02]">
+            <div class="flex-1 p-8 commits-section">
               <div class="flex items-center gap-2 mb-4">
-                <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-4 h-4 commits-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <span class="text-xs font-medium text-neutral-500 uppercase tracking-wider">Recent Activity</span>
+                <span class="text-xs font-medium commits-label uppercase tracking-wider">Recent Activity</span>
               </div>
 
               <!-- Commit Timeline -->
@@ -1418,13 +1438,13 @@ const fetchGitHubCommits = async () => {
                   <!-- Timeline line -->
                   <div class="absolute left-[7px] top-6 bottom-0 w-px bg-gradient-to-b from-green-500/30 to-transparent" v-if="i < recentCommits.length - 1"></div>
                   <!-- Dot -->
-                  <div class="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-green-500/50 bg-neutral-950 group-hover/commit:border-green-400 group-hover/commit:bg-green-500/20 transition-all">
+                  <div class="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-green-500/50 commit-dot group-hover/commit:border-green-400 group-hover/commit:bg-green-500/20 transition-all">
                     <div class="absolute inset-1 rounded-full bg-green-500/50"></div>
                   </div>
                   <!-- Content -->
                   <div class="pb-3">
-                    <p class="text-white/80 text-sm leading-snug mb-1 group-hover/commit:text-white transition-colors">{{ commit.message }}</p>
-                    <div class="flex items-center gap-2 text-[10px] text-neutral-600">
+                    <p class="commit-message text-sm leading-snug mb-1 group-hover/commit:text-green-400 transition-colors">{{ commit.message }}</p>
+                    <div class="flex items-center gap-2 text-[10px] commit-meta">
                       <span class="font-mono text-green-500/70 group-hover/commit:text-green-400 transition-colors">{{ commit.hash }}</span>
                       <span>·</span>
                       <span>{{ commit.time }}</span>
@@ -1438,10 +1458,10 @@ const fetchGitHubCommits = async () => {
                 href="https://github.com/christianpasinrey/tools/commits/main"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="mt-3 pt-3 border-t border-white/5 block group/all"
+                class="mt-3 pt-3 commits-border block group/all"
                 @click.stop
               >
-                <span class="text-xs text-neutral-500 group-hover/all:text-green-400 transition-colors flex items-center gap-1">
+                <span class="text-xs commits-link group-hover/all:text-green-400 transition-colors flex items-center gap-1">
                   View all commits
                   <svg class="w-3 h-3 group-hover/all:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -1457,10 +1477,10 @@ const fetchGitHubCommits = async () => {
     <!-- Open Source Section -->
     <div ref="packagesSection" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40" style="z-index: 1;">
       <div class="flex items-center gap-3 mb-8">
-        <svg class="w-6 h-6 text-neutral-400" viewBox="0 0 16 16" fill="currentColor">
+        <svg class="w-6 h-6 section-icon" viewBox="0 0 16 16" fill="currentColor">
           <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/>
         </svg>
-        <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-widest">
+        <h2 class="text-xs font-semibold section-label uppercase tracking-widest">
           Powered by Open Source
         </h2>
       </div>
@@ -1502,25 +1522,25 @@ const fetchGitHubCommits = async () => {
           <div class="glass-content h-full flex flex-col">
             <!-- Repo Header -->
             <div class="flex items-start gap-3 mb-3">
-              <svg class="w-4 h-4 text-white/60 mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+              <svg class="w-4 h-4 pkg-icon mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
               </svg>
-              <span class="text-white/90 text-sm font-semibold group-hover:text-white truncate transition-colors">
+              <span class="pkg-title text-sm font-semibold truncate transition-colors">
                 {{ pkg.name }}
               </span>
             </div>
 
             <!-- Description -->
-            <p class="text-white/50 text-xs leading-relaxed mb-4 line-clamp-2 group-hover:text-white/70 transition-colors flex-1">
+            <p class="pkg-desc text-xs leading-relaxed mb-4 line-clamp-2 transition-colors flex-1">
               {{ pkg.description }}
             </p>
 
             <!-- Footer -->
-            <div class="flex items-center gap-4 text-xs text-white/40 mt-auto">
+            <div class="flex items-center gap-4 text-xs pkg-meta mt-auto">
               <!-- Language -->
               <div class="flex items-center gap-1.5">
                 <span
-                  class="w-2.5 h-2.5 rounded-full ring-2 ring-white/20"
+                  class="w-2.5 h-2.5 rounded-full pkg-ring"
                   :style="{ backgroundColor: pkg.languageColor }"
                 ></span>
                 <span>{{ pkg.language }}</span>
@@ -1539,7 +1559,7 @@ const fetchGitHubCommits = async () => {
       </div>
 
       <!-- Footer Note -->
-      <p class="text-center text-neutral-600 text-xs mt-8">
+      <p class="text-center footer-note text-xs mt-8">
         Built with love using these amazing open source projects
       </p>
     </div>
@@ -1549,10 +1569,10 @@ const fetchGitHubCommits = async () => {
 
       <!-- Section Header -->
       <div class="flex items-center gap-3 mb-4">
-        <svg class="w-6 h-6 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6 section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
         </svg>
-        <h2 class="text-xs font-semibold text-neutral-500 uppercase tracking-widest">
+        <h2 class="text-xs font-semibold section-label uppercase tracking-widest">
           Zero-Knowledge Sync
         </h2>
       </div>
@@ -1561,55 +1581,55 @@ const fetchGitHubCommits = async () => {
       <div class="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
 
         <!-- How it works card -->
-        <div class="rounded-2xl border border-neutral-800/50 bg-neutral-900/50 backdrop-blur-sm p-6">
-          <h3 class="text-white font-semibold text-base mb-4">Como se guardan tus datos</h3>
+        <div class="arch-card rounded-2xl p-6">
+          <h3 class="arch-title font-semibold text-base mb-4">Como se guardan tus datos</h3>
           <div class="space-y-3">
             <div class="flex items-start gap-3">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">1</span>
-              <p class="text-neutral-400 text-sm">Tu password genera una <span class="text-emerald-400 font-mono text-xs">AES-256-GCM key</span> via PBKDF2 (100k iteraciones)</p>
+              <p class="arch-text text-sm">Tu password genera una <span class="text-emerald-400 font-mono text-xs">AES-256-GCM key</span> via PBKDF2 (100k iteraciones)</p>
             </div>
             <div class="flex items-start gap-3">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">2</span>
-              <p class="text-neutral-400 text-sm">Los datos se cifran <span class="text-white font-medium">en el navegador</span> antes de guardarse en IndexedDB</p>
+              <p class="arch-text text-sm">Los datos se cifran <span class="arch-highlight font-medium">en el navegador</span> antes de guardarse en IndexedDB</p>
             </div>
             <div class="flex items-start gap-3">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">3</span>
-              <p class="text-neutral-400 text-sm">Los blobs cifrados <span class="text-neutral-300 font-mono text-xs">{salt, iv, data}</span> se sincronizan al servidor</p>
+              <p class="arch-text text-sm">Los blobs cifrados <span class="arch-code font-mono text-xs">{salt, iv, data}</span> se sincronizan al servidor</p>
             </div>
             <div class="flex items-start gap-3">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">4</span>
-              <p class="text-neutral-400 text-sm">El servidor <span class="text-amber-400 font-medium">nunca</span> recibe tu password ni puede descifrar nada</p>
+              <p class="arch-text text-sm">El servidor <span class="text-amber-400 font-medium">nunca</span> recibe tu password ni puede descifrar nada</p>
             </div>
           </div>
         </div>
 
         <!-- Technical details card -->
-        <div class="rounded-2xl border border-neutral-800/50 bg-neutral-900/50 backdrop-blur-sm p-6">
-          <h3 class="text-white font-semibold text-base mb-4">Detalles tecnicos</h3>
+        <div class="arch-card rounded-2xl p-6">
+          <h3 class="arch-title font-semibold text-base mb-4">Detalles tecnicos</h3>
           <div class="space-y-2.5">
-            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
-              <span class="text-neutral-500 text-xs">Cifrado</span>
-              <span class="text-neutral-300 text-xs font-mono">AES-256-GCM</span>
+            <div class="flex items-center justify-between py-1.5 arch-row">
+              <span class="arch-label text-xs">Cifrado</span>
+              <span class="arch-value text-xs font-mono">AES-256-GCM</span>
             </div>
-            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
-              <span class="text-neutral-500 text-xs">Key derivation</span>
-              <span class="text-neutral-300 text-xs font-mono">PBKDF2 (100k iter)</span>
+            <div class="flex items-center justify-between py-1.5 arch-row">
+              <span class="arch-label text-xs">Key derivation</span>
+              <span class="arch-value text-xs font-mono">PBKDF2 (100k iter)</span>
             </div>
-            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
-              <span class="text-neutral-500 text-xs">Auth tokens</span>
-              <span class="text-neutral-300 text-xs font-mono">JWT (15min + 7d refresh)</span>
+            <div class="flex items-center justify-between py-1.5 arch-row">
+              <span class="arch-label text-xs">Auth tokens</span>
+              <span class="arch-value text-xs font-mono">JWT (15min + 7d refresh)</span>
             </div>
-            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
-              <span class="text-neutral-500 text-xs">Password hash (server)</span>
-              <span class="text-neutral-300 text-xs font-mono">bcrypt (12 rounds)</span>
+            <div class="flex items-center justify-between py-1.5 arch-row">
+              <span class="arch-label text-xs">Password hash (server)</span>
+              <span class="arch-value text-xs font-mono">bcrypt (12 rounds)</span>
             </div>
-            <div class="flex items-center justify-between py-1.5 border-b border-neutral-800/50">
-              <span class="text-neutral-500 text-xs">Conflictos</span>
-              <span class="text-neutral-300 text-xs font-mono">Last-Write-Wins</span>
+            <div class="flex items-center justify-between py-1.5 arch-row">
+              <span class="arch-label text-xs">Conflictos</span>
+              <span class="arch-value text-xs font-mono">Last-Write-Wins</span>
             </div>
             <div class="flex items-center justify-between py-1.5">
-              <span class="text-neutral-500 text-xs">Offline</span>
-              <span class="text-neutral-300 text-xs font-mono">Cola en localStorage</span>
+              <span class="arch-label text-xs">Offline</span>
+              <span class="arch-value text-xs font-mono">Cola en localStorage</span>
             </div>
           </div>
         </div>
@@ -1617,10 +1637,10 @@ const fetchGitHubCommits = async () => {
 
       <!-- Backend Packages Mosaic -->
       <div class="flex items-center gap-2 mb-6">
-        <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
         </svg>
-        <span class="text-xs text-neutral-500 uppercase tracking-wider font-medium">Backend Stack</span>
+        <span class="text-xs section-label uppercase tracking-wider font-medium">Backend Stack</span>
       </div>
 
       <div
@@ -1650,25 +1670,25 @@ const fetchGitHubCommits = async () => {
           <div class="glass-content h-full flex flex-col">
             <!-- Repo Header -->
             <div class="flex items-start gap-3 mb-3">
-              <svg class="w-4 h-4 text-white/60 mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+              <svg class="w-4 h-4 pkg-icon mt-0.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"/>
               </svg>
-              <span class="text-white/90 text-sm font-semibold group-hover:text-white truncate transition-colors">
+              <span class="pkg-title text-sm font-semibold truncate transition-colors">
                 {{ pkg.name }}
               </span>
             </div>
 
             <!-- Description -->
-            <p class="text-white/50 text-xs leading-relaxed mb-4 line-clamp-2 group-hover:text-white/70 transition-colors flex-1">
+            <p class="pkg-desc text-xs leading-relaxed mb-4 line-clamp-2 transition-colors flex-1">
               {{ pkg.description }}
             </p>
 
             <!-- Footer -->
-            <div class="flex items-center gap-4 text-xs text-white/40 mt-auto">
+            <div class="flex items-center gap-4 text-xs pkg-meta mt-auto">
               <!-- Language -->
               <div class="flex items-center gap-1.5">
                 <span
-                  class="w-2.5 h-2.5 rounded-full ring-2 ring-white/20"
+                  class="w-2.5 h-2.5 rounded-full pkg-ring"
                   :style="{ backgroundColor: pkg.languageColor }"
                 ></span>
                 <span>{{ pkg.language }}</span>
@@ -1686,7 +1706,7 @@ const fetchGitHubCommits = async () => {
         </a>
       </div>
 
-      <p class="text-center text-neutral-600 text-xs mt-8">
+      <p class="text-center footer-note text-xs mt-8">
         Sync API powered by these open source projects
       </p>
     </div>
@@ -1735,106 +1755,97 @@ const fetchGitHubCommits = async () => {
   -webkit-backface-visibility: hidden;
 }
 
-/* Liquid Glass Effect */
+/* Liquid Glass Effect - Dark mode (default, same as MobileDock) */
 .glass-container {
-  --lg-bg-color: rgba(30, 30, 30, 0.85);
-  --lg-highlight: rgba(255, 255, 255, 0.35);
-  --lg-highlight-soft: rgba(255, 255, 255, 0.12);
-  --lg-border: rgba(255, 255, 255, 0.12);
   position: relative;
   border-radius: 24px;
-  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+.glass-container::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 15%;
+  right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 9999px;
+  z-index: 5;
 }
 
 .glass-container:hover {
-  --lg-bg-color: rgba(35, 35, 35, 0.9);
-  --lg-highlight: rgba(255, 255, 255, 0.5);
-  --lg-highlight-soft: rgba(255, 255, 255, 0.2);
-}
-
-/* Background blur + lens distortion filter */
-.glass-filter {
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  backdrop-filter: blur(12px) saturate(1.3);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
-  filter: url(#lensFilter);
-  z-index: 1;
-}
-
-/* Semi-transparent overlay */
-.glass-overlay {
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  background: var(--lg-bg-color);
-  border: 1px solid var(--lg-border);
-  transition: all 0.4s ease;
-  z-index: 2;
-}
-
-.glass-container:hover .glass-overlay {
-  border-color: rgba(34, 197, 94, 0.25);
-  box-shadow:
-    0 8px 32px rgba(34, 197, 94, 0.12),
-    0 0 0 1px rgba(34, 197, 94, 0.08);
-}
-
-/* Specular highlights - the "liquid bubble" shine */
-.glass-specular {
-  position: absolute;
-  inset: 0;
-  border-radius: 24px;
   background: linear-gradient(
     135deg,
-    var(--lg-highlight-soft) 0%,
-    transparent 40%,
-    transparent 60%,
-    rgba(255, 255, 255, 0.03) 100%
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.1) 100%
   );
+  border-color: rgba(34, 197, 94, 0.4);
   box-shadow:
-    inset 1px 1px 1px var(--lg-highlight),
-    inset 2px 2px 4px var(--lg-highlight-soft),
-    inset -1px -1px 2px rgba(0, 0, 0, 0.15),
-    inset 0 -2px 6px rgba(0, 0, 0, 0.1);
-  pointer-events: none;
-  transition: all 0.4s ease;
-  z-index: 3;
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(34, 197, 94, 0.15);
 }
 
-.glass-specular::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 12px;
-  right: 50%;
-  height: 20px;
+/* Light mode */
+:global(html:not(.dark)) .glass-container {
   background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
   );
-  border-radius: 50%;
-  filter: blur(4px);
-  opacity: 0.8;
-  transition: opacity 0.4s ease;
-}
-
-.glass-container:hover .glass-specular::before {
-  opacity: 1;
-}
-
-.glass-container:hover .glass-specular {
+  border: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow:
-    inset 2px 2px 2px var(--lg-highlight),
-    inset 3px 3px 8px var(--lg-highlight-soft),
-    inset -1px -1px 3px rgba(0, 0, 0, 0.2),
-    inset 0 -3px 10px rgba(0, 0, 0, 0.12);
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .glass-container::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+}
+
+:global(html:not(.dark)) .glass-container:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-color: rgba(34, 197, 94, 0.3);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 0 20px rgba(34, 197, 94, 0.1);
+}
+
+/* Hide extra glass layers - not needed with new approach */
+.glass-filter,
+.glass-overlay,
+.glass-specular {
+  display: none;
 }
 
 /* Content layer */
@@ -1847,6 +1858,38 @@ const fetchGitHubCommits = async () => {
 
 .glass-content.p-0 {
   padding: 0;
+}
+
+/* Text colors - Dark mode (default) */
+.glass-container .text-white\/90,
+.glass-container .text-white\/80,
+.glass-container .text-white {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.glass-container .text-white\/60,
+.glass-container .text-white\/50 {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.glass-container .text-white\/40 {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Text colors - Light mode */
+:global(html:not(.dark)) .glass-container .text-white\/90,
+:global(html:not(.dark)) .glass-container .text-white\/80,
+:global(html:not(.dark)) .glass-container .text-white {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .glass-container .text-white\/60,
+:global(html:not(.dark)) .glass-container .text-white\/50 {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:global(html:not(.dark)) .glass-container .text-white\/40 {
+  color: rgba(0, 0, 0, 0.5);
 }
 
 @keyframes glass-appear {
@@ -1923,5 +1966,941 @@ const fetchGitHubCommits = async () => {
 .vault-ring-3 {
   animation: vault-orbit 8s linear infinite;
   position: relative;
+}
+
+/* Tool Cards - Dark mode (default) */
+.tool-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08);
+}
+
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  border-radius: 9999px;
+}
+
+.tool-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.tool-icon {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.tool-icon-svg {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tool-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tool-description {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.tool-card:hover .tool-description {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tool-arrow {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tool-card:hover .tool-arrow {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.tool-arrow-svg {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Tool Cards - Light mode */
+:global(html:not(.dark)) .tool-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .tool-card::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+}
+
+:global(html:not(.dark)) .tool-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+:global(html:not(.dark)) .tool-icon {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+:global(html:not(.dark)) .tool-icon-svg {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .tool-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .tool-description {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .tool-card:hover .tool-description {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+:global(html:not(.dark)) .tool-arrow {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .tool-card:hover .tool-arrow {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+:global(html:not(.dark)) .tool-arrow-svg {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Comparison Cards - Dark mode (default) */
+.comparison-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.comparison-card-highlight {
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.comparison-icon {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.comparison-icon-svg {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.comparison-title {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.comparison-text {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.comparison-muted {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.comparison-callout {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Comparison Cards - Light mode */
+:global(html:not(.dark)) .comparison-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+:global(html:not(.dark)) .comparison-card-highlight {
+  border-color: rgba(52, 211, 153, 0.5);
+}
+
+:global(html:not(.dark)) .comparison-icon {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:global(html:not(.dark)) .comparison-icon-svg {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .comparison-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .comparison-text {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+:global(html:not(.dark)) .comparison-muted {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .comparison-callout {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Callout Cards - Dark mode (default) */
+.callout-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.callout-amber {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.callout-text {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Callout Cards - Light mode */
+:global(html:not(.dark)) .callout-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+:global(html:not(.dark)) .callout-amber {
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+:global(html:not(.dark)) .callout-text {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+/* Architecture Cards - Dark mode (default) */
+.arch-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.arch-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.arch-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.arch-highlight {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.arch-code {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.arch-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.arch-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.arch-value {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Architecture Cards - Light mode */
+:global(html:not(.dark)) .arch-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+:global(html:not(.dark)) .arch-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .arch-text {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:global(html:not(.dark)) .arch-highlight {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .arch-code {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+:global(html:not(.dark)) .arch-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:global(html:not(.dark)) .arch-label {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .arch-value {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* Badge Glass - Dark mode (default) */
+.badge-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.15),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.badge-glass:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Badge Glass - Light mode */
+:global(html:not(.dark)) .badge-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.6);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.85),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.03),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+:global(html:not(.dark)) .badge-glass:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+/* Hero text - Dark mode (default) */
+.hero-title {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.hero-muted {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.section-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.section-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Hero text - Light mode */
+:global(html:not(.dark)) .hero-title {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+:global(html:not(.dark)) .hero-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:global(html:not(.dark)) .hero-muted {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+:global(html:not(.dark)) .section-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .section-label {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Section icons and footer - Dark mode (default) */
+.section-icon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.footer-note {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Section icons and footer - Light mode */
+:global(html:not(.dark)) .section-icon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .footer-note {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* Package card text - Dark mode (default) */
+.pkg-icon {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pkg-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.glass-container:hover .pkg-title {
+  color: rgba(255, 255, 255, 1);
+}
+
+.pkg-desc {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.glass-container:hover .pkg-desc {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.pkg-meta {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pkg-ring {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+/* Package card text - Light mode */
+:global(html:not(.dark)) .pkg-icon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .pkg-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .glass-container:hover .pkg-title {
+  color: rgba(0, 0, 0, 1);
+}
+
+:global(html:not(.dark)) .pkg-desc {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+:global(html:not(.dark)) .glass-container:hover .pkg-desc {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+:global(html:not(.dark)) .pkg-meta {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+:global(html:not(.dark)) .pkg-ring {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+/* Repository card text - Dark mode (default) */
+.repo-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.repo-subtitle {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.repo-desc {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.repo-features {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.repo-border {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.repo-muted {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.repo-icon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.repo-icon-bg {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Repository card text - Light mode */
+:global(html:not(.dark)) .repo-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+:global(html:not(.dark)) .repo-subtitle {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .repo-desc {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:global(html:not(.dark)) .repo-features {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+:global(html:not(.dark)) .repo-border {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+:global(html:not(.dark)) .repo-muted {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .repo-icon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .repo-icon-bg {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Commits section - Dark mode (default) */
+.commits-section {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.commits-icon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.commits-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.commit-dot {
+  background: rgba(23, 23, 23, 1);
+}
+
+.commit-message {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.commit-meta {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.commits-border {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.commits-link {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Commits section - Light mode */
+:global(html:not(.dark)) .commits-section {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+:global(html:not(.dark)) .commits-icon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .commits-label {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+:global(html:not(.dark)) .commit-dot {
+  background: rgba(250, 250, 250, 1);
+}
+
+:global(html:not(.dark)) .commit-message {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+:global(html:not(.dark)) .commit-meta {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+:global(html:not(.dark)) .commits-border {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:global(html:not(.dark)) .commits-link {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Repo divider and tech stack - Dark mode (default) */
+.repo-divider {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.tech-border {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tech-icon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Repo divider and tech stack - Light mode */
+:global(html:not(.dark)) .repo-divider {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+:global(html:not(.dark)) .tech-border {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+:global(html:not(.dark)) .tech-icon {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Status badges - Dark mode (default) */
+.status-badge-inactive {
+  background: rgba(38, 38, 38, 0.5);
+  color: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.status-dot-inactive {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.status-hint {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.coming-soon-badge {
+  background: rgba(38, 38, 38, 0.8);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Status badges - Light mode */
+:global(html:not(.dark)) .status-badge-inactive {
+  background: rgba(220, 220, 220, 0.5);
+  color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+:global(html:not(.dark)) .status-dot-inactive {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+:global(html:not(.dark)) .status-hint {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+:global(html:not(.dark)) .coming-soon-badge {
+  background: rgba(220, 220, 220, 0.8);
+  color: rgba(0, 0, 0, 0.5);
+}
+</style>
+
+<!-- Estilos globales para light mode (sin scoped para que funcionen correctamente) -->
+<style>
+/* ============================================
+   LIGHT MODE TEXT OVERRIDES
+   Estos estilos DEBEN estar sin scoped para
+   que html:not(.dark) funcione correctamente
+   ============================================ */
+
+/* Hero text */
+html:not(.dark) .hero-title {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+html:not(.dark) .hero-subtitle {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+html:not(.dark) .hero-muted {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Section text */
+html:not(.dark) .section-title {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .section-label {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .section-icon {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .footer-note {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Tool cards */
+html:not(.dark) .tool-title {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .tool-description {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .tool-card:hover .tool-description {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+html:not(.dark) .tool-icon-svg {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .tool-arrow-svg {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Comparison cards */
+html:not(.dark) .comparison-title {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .comparison-text {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
+html:not(.dark) .comparison-muted {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Callout cards */
+html:not(.dark) .callout-text {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Architecture cards */
+html:not(.dark) .arch-title {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .arch-text {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+html:not(.dark) .arch-highlight {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .arch-code {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+html:not(.dark) .arch-label {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .arch-value {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Package cards */
+html:not(.dark) .pkg-icon {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .pkg-title {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .glass-container:hover .pkg-title {
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+html:not(.dark) .pkg-desc {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+
+html:not(.dark) .glass-container:hover .pkg-desc {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
+html:not(.dark) .pkg-meta {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Repo card */
+html:not(.dark) .repo-title {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
+html:not(.dark) .repo-subtitle {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .repo-desc {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+html:not(.dark) .repo-features {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+html:not(.dark) .repo-muted {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .repo-icon {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Commits section */
+html:not(.dark) .commits-icon {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .commits-label {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .commit-message {
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
+html:not(.dark) .commit-meta {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+html:not(.dark) .commits-link {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Tech stack */
+html:not(.dark) .tech-icon {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Status badges */
+html:not(.dark) .status-badge-inactive {
+  background: rgba(220, 220, 220, 0.5) !important;
+  color: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+html:not(.dark) .status-hint {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+html:not(.dark) .coming-soon-badge {
+  background: rgba(220, 220, 220, 0.8) !important;
+  color: rgba(0, 0, 0, 0.5) !important;
 }
 </style>

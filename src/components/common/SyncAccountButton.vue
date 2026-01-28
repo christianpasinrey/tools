@@ -41,7 +41,7 @@ function closePopover() {
       ref="buttonRef"
       @click="handleClick"
       class="flex items-center gap-1.5 px-2 py-1 rounded text-xs transition-colors"
-      :class="!auth.isAuthenticated.value ? 'text-neutral-500 hover:text-neutral-300' :
+      :class="!auth.isAuthenticated.value ? 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300' :
               crypto.isLocked.value ? 'text-amber-400 hover:text-amber-300' :
               sync.syncStatus.value === 'syncing' ? 'text-blue-400' :
               sync.syncStatus.value === 'error' ? 'text-red-400' :
@@ -67,7 +67,7 @@ function closePopover() {
       <!-- Popover -->
       <div
         v-if="showPopover"
-        class="fixed z-[9999] bg-neutral-800 border border-neutral-700 rounded-lg p-3 shadow-xl min-w-[260px]"
+        class="fixed z-[9999] bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-3 shadow-xl min-w-[260px]"
         :style="{ top: popoverPos.top + 'px', left: popoverPos.left + 'px' }"
       >
         <AuthForm v-if="!auth.isAuthenticated.value" />
