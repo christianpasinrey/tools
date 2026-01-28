@@ -3,6 +3,7 @@
 /* Configurar dark mode basado en clase .dark en el html */
 @custom-variant dark (&:where(.dark, .dark *));
 
+@import "./assets/css/theme.css";
 @import "./assets/css/glass.css";
 @import "./assets/css/cheatsheets.css";
 @import "./assets/css/editors.css";

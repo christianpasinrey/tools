@@ -312,18 +312,18 @@ const stopDragAnnotation = () => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-950 text-neutral-300 select-none">
+  <div class="h-full flex flex-col bg-neutral-100 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 select-none">
     <!-- Processing Overlay -->
-    <div v-if="editor.isProcessing.value" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-      <div class="flex items-center gap-3 px-5 py-3 bg-neutral-900 border border-neutral-800 rounded">
+    <div v-if="editor.isProcessing.value" class="fixed inset-0 bg-black/50 dark:bg-black/80 flex items-center justify-center z-50">
+      <div class="flex items-center gap-3 px-5 py-3 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded">
         <div class="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" :style="{ borderColor: editor.themeColor.value, borderTopColor: 'transparent' }"></div>
         <span class="text-sm">Procesando...</span>
       </div>
     </div>
 
     <!-- Loading Progress Overlay -->
-    <div v-if="editor.isLoading.value" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-      <div class="w-80 p-6 bg-neutral-900 border border-neutral-800 rounded-xl">
+    <div v-if="editor.isLoading.value" class="fixed inset-0 bg-black/50 dark:bg-black/80 flex items-center justify-center z-50">
+      <div class="w-80 p-6 bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-xl">
         <PdfProgressBar
           :progress="editor.loadingProgress.value"
           :message="editor.loadingMessage.value"
@@ -382,7 +382,7 @@ const stopDragAnnotation = () => {
     />
 
     <!-- Vault -->
-    <div v-if="editor.hasFile.value" class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+    <div v-if="editor.hasFile.value" class="h-9 bg-neutral-200/50 dark:bg-neutral-900/50 border-b border-neutral-300 dark:border-neutral-800 flex items-center px-3 shrink-0">
       <VaultSaveLoad storeName="pdf-documents" :getData="getPdfData" label="documento" @load="loadPdfData" />
     </div>
 
@@ -395,23 +395,23 @@ const stopDragAnnotation = () => {
         @dragover.prevent="isDragging = true"
         @dragleave="isDragging = false"
         @drop.prevent="handleDrop"
-        :class="['flex-1 flex flex-col items-center justify-center cursor-pointer transition-colors border-2 border-dashed m-4 rounded-lg', isDragging ? 'border-green-500/50 bg-green-500/5' : 'border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50']"
+        :class="['flex-1 flex flex-col items-center justify-center cursor-pointer transition-colors border-2 border-dashed m-4 rounded-lg', isDragging ? 'border-green-500/50 bg-green-500/5' : 'border-neutral-400 dark:border-neutral-700 hover:border-neutral-500 dark:hover:border-neutral-600 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50']"
       >
-        <div class="w-16 h-16 rounded-lg bg-neutral-800 border border-neutral-700 flex items-center justify-center mb-4">
-          <svg class="w-7 h-7 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-16 h-16 rounded-lg bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 flex items-center justify-center mb-4">
+          <svg class="w-7 h-7 text-neutral-400 dark:text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
           </svg>
         </div>
-        <p class="text-neutral-400 text-sm mb-1">Arrastra un PDF aquí</p>
-        <p class="text-neutral-600 text-xs">o haz clic para buscar</p>
+        <p class="text-neutral-600 dark:text-neutral-400 text-sm mb-1">Arrastra un PDF aquí</p>
+        <p class="text-neutral-500 dark:text-neutral-600 text-xs">o haz clic para buscar</p>
       </div>
 
       <!-- PDF Loaded: Pages Sidebar + Preview -->
       <template v-if="editor.hasFile.value && !editor.isLoading.value">
         <!-- Pages Sidebar (Left) -->
-        <div class="w-48 bg-neutral-900 border-r border-neutral-800 flex flex-col">
-          <div class="p-2 border-b border-neutral-800">
-            <span class="text-xs text-neutral-500">{{ editor.pageCount.value }} {{ editor.pageCount.value === 1 ? 'página' : 'páginas' }}</span>
+        <div class="w-48 bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-300 dark:border-neutral-800 flex flex-col">
+          <div class="p-2 border-b border-neutral-300 dark:border-neutral-800">
+            <span class="text-xs text-neutral-600 dark:text-neutral-500">{{ editor.pageCount.value }} {{ editor.pageCount.value === 1 ? 'página' : 'páginas' }}</span>
           </div>
           <div class="flex-1 overflow-y-auto p-2 space-y-2">
             <div
@@ -426,7 +426,7 @@ const stopDragAnnotation = () => {
               @click="selectPreview(index)"
               :class="[
                 'relative cursor-pointer rounded overflow-hidden transition-all group',
-                previewIndex === index ? 'ring-2 ring-offset-2 ring-offset-neutral-900' : 'hover:ring-1 hover:ring-neutral-600',
+                previewIndex === index ? 'ring-2 ring-offset-2 ring-offset-neutral-100 dark:ring-offset-neutral-900' : 'hover:ring-1 hover:ring-neutral-400 dark:hover:ring-neutral-600',
                 dragOverIndex === index ? 'ring-2 ring-dashed' : '',
                 draggedIndex === index ? 'opacity-50' : ''
               ]"
@@ -468,40 +468,40 @@ const stopDragAnnotation = () => {
 
         <!-- Preview Panel (Center) -->
         <div
-          class="flex-1 flex flex-col bg-neutral-950 overflow-hidden"
+          class="flex-1 flex flex-col bg-neutral-200 dark:bg-neutral-950 overflow-hidden"
           @dragover.prevent="isDragging = true"
           @dragleave="isDragging = false"
           @drop.prevent="handleDrop"
         >
           <!-- Zoom Controls Bar -->
-          <div class="flex items-center justify-center gap-2 py-2 border-b border-neutral-800 bg-neutral-900/50">
+          <div class="flex items-center justify-center gap-2 py-2 border-b border-neutral-300 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50">
             <button
               @click="zoomOut"
               :disabled="previewZoom <= 0.01"
-              class="p-1.5 rounded hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              class="p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               title="Reducir zoom (-10%)"
             >
-              <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
               </svg>
             </button>
             <button
               @click="resetZoom"
-              class="px-3 py-1 rounded text-xs font-mono text-neutral-300 hover:bg-neutral-800 transition-colors min-w-[60px]"
+              class="px-3 py-1 rounded text-xs font-mono text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors min-w-[60px]"
               title="Restablecer zoom (40%)"
             >
               {{ Math.round(previewZoom * 100) }}%
             </button>
             <button
               @click="zoomIn"
-              class="p-1.5 rounded hover:bg-neutral-800 transition-colors"
+              class="p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
               title="Aumentar zoom (+10%)"
             >
-              <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
               </svg>
             </button>
-            <span class="text-xs text-neutral-600 ml-4">
+            <span class="text-xs text-neutral-500 dark:text-neutral-600 ml-4">
               Página {{ previewIndex + 1 }} / {{ editor.pageCount.value }}
             </span>
           </div>

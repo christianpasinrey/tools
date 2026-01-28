@@ -34,12 +34,12 @@ const colors = [
 </script>
 
 <template>
-  <div class="h-11 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-1 shrink-0">
+  <div class="editor-toolbar">
     <!-- File Actions -->
-    <div class="flex items-center gap-1 pr-2 border-r border-neutral-800">
+    <div class="flex items-center gap-1 pr-2 border-r border-neutral-300 dark:border-neutral-800">
       <button
         @click="emit('open')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-300 hover:bg-neutral-800 transition-colors"
+        class="editor-toolbar-btn"
         title="Abrir PDF"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@ const colors = [
       <button
         v-if="hasFile"
         @click="emit('add-files')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-300 hover:bg-neutral-800 transition-colors"
+        class="editor-toolbar-btn"
         title="Añadir más PDFs"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

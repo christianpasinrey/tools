@@ -1114,7 +1114,7 @@ const fetchGitHubCommits = async () => {
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
 
               <!-- Traditional model card -->
-              <div class="comparison-card relative rounded-xl p-5 overflow-hidden">
+              <div class="glass-card rounded-xl p-5 overflow-hidden">
                 <div class="flex items-center gap-2.5 mb-4">
                   <div class="comparison-icon w-8 h-8 rounded-lg flex items-center justify-center">
                     <svg class="w-4.5 h-4.5 comparison-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1138,7 +1138,7 @@ const fetchGitHubCommits = async () => {
               </div>
 
               <!-- This app card -->
-              <div class="comparison-card comparison-card-highlight relative rounded-xl p-5 overflow-hidden">
+              <div class="glass-card glass-card-emerald rounded-xl p-5 overflow-hidden">
                 <div class="flex items-center gap-2.5 mb-4">
                   <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
                     <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1163,7 +1163,7 @@ const fetchGitHubCommits = async () => {
             </div>
 
             <!-- Soft delete callout -->
-            <div class="callout-card callout-amber rounded-xl p-5">
+            <div class="glass-card glass-card-amber rounded-xl p-5">
               <div class="flex items-start gap-4">
                 <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
                   <svg class="w-4.5 h-4.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2111,26 +2111,7 @@ const fetchGitHubCommits = async () => {
   color: rgba(0, 0, 0, 0.5);
 }
 
-/* Comparison Cards - Dark mode (default) */
-.comparison-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.06) 100%
-  );
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.2),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.comparison-card-highlight {
-  border-color: rgba(52, 211, 153, 0.4);
-}
+/* Comparison Cards - textos y elementos internos */
 
 .comparison-icon {
   background: rgba(255, 255, 255, 0.08);
@@ -2157,24 +2138,7 @@ const fetchGitHubCommits = async () => {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Comparison Cards - Light mode */
-:global(html:not(.dark)) .comparison-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.75) 50%,
-    rgba(255, 255, 255, 0.85) 100%
-  );
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
-    0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-:global(html:not(.dark)) .comparison-card-highlight {
-  border-color: rgba(52, 211, 153, 0.5);
-}
+/* Comparison Cards - Light mode textos */
 
 :global(html:not(.dark)) .comparison-icon {
   background: rgba(0, 0, 0, 0.05);
@@ -2201,48 +2165,9 @@ const fetchGitHubCommits = async () => {
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* Callout Cards - Dark mode (default) */
-.callout-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.04) 50%,
-    rgba(255, 255, 255, 0.06) 100%
-  );
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  backdrop-filter: blur(20px) saturate(1.8);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.2),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.callout-amber {
-  border-color: rgba(245, 158, 11, 0.3);
-}
-
+/* Callout text colors */
 .callout-text {
   color: rgba(255, 255, 255, 0.75);
-}
-
-/* Callout Cards - Light mode */
-:global(html:not(.dark)) .callout-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.75) 50%,
-    rgba(255, 255, 255, 0.85) 100%
-  );
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.9),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
-    0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-:global(html:not(.dark)) .callout-amber {
-  border-color: rgba(245, 158, 11, 0.4);
 }
 
 :global(html:not(.dark)) .callout-text {

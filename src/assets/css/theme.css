@@ -1,0 +1,375 @@
+/* ============================================
+   THEME CSS - Light/Dark Mode System
+   ============================================ */
+
+/* ============================================
+   BASE BACKGROUNDS
+   ============================================ */
+
+/* Main app background */
+.bg-app {
+  @apply bg-neutral-100;
+}
+
+html.dark .bg-app {
+  @apply bg-neutral-950;
+}
+
+/* Surface backgrounds (panels, sidebars) */
+.bg-surface {
+  @apply bg-white;
+}
+
+html.dark .bg-surface {
+  @apply bg-neutral-900;
+}
+
+/* Elevated surface (cards, modals) */
+.bg-elevated {
+  @apply bg-white;
+}
+
+html.dark .bg-elevated {
+  @apply bg-neutral-800;
+}
+
+/* Subtle background (hover states) */
+.bg-subtle {
+  @apply bg-neutral-100;
+}
+
+html.dark .bg-subtle {
+  @apply bg-neutral-800;
+}
+
+/* ============================================
+   TEXT COLORS
+   ============================================ */
+
+.text-primary {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+html.dark .text-primary {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.text-secondary {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+html.dark .text-secondary {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.text-muted {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+html.dark .text-muted {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.text-subtle {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+html.dark .text-subtle {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ============================================
+   BORDERS
+   ============================================ */
+
+.border-default {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+html.dark .border-default {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.border-subtle {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+html.dark .border-subtle {
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================
+   TOOLBAR / HEADER
+   ============================================ */
+
+.toolbar {
+  @apply bg-white border-b;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+html.dark .toolbar {
+  @apply bg-neutral-900;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+.tabs-container {
+  @apply bg-neutral-100;
+}
+
+html.dark .tabs-container {
+  @apply bg-neutral-900;
+}
+
+.tab-item {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+html.dark .tab-item {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tab-item:hover {
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+html.dark .tab-item:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-item.active {
+  color: rgba(0, 0, 0, 0.9);
+  @apply bg-white;
+}
+
+html.dark .tab-item.active {
+  color: rgba(255, 255, 255, 0.9);
+  @apply bg-neutral-800;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+
+.sidebar {
+  @apply bg-neutral-50 border-r;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+html.dark .sidebar {
+  @apply bg-neutral-900;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================
+   INPUT / FORM ELEMENTS
+   ============================================ */
+
+.input-field {
+  @apply bg-white border rounded-lg;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.9);
+}
+
+html.dark .input-field {
+  @apply bg-neutral-800;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.input-field::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+html.dark .input-field::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.input-field:focus {
+  border-color: rgba(59, 130, 246, 0.5);
+  @apply outline-none ring-2 ring-blue-500/20;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn-ghost {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+html.dark .btn-ghost {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-ghost:hover {
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+html.dark .btn-ghost:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================
+   DROPZONE
+   ============================================ */
+
+.dropzone {
+  border: 2px dashed rgba(0, 0, 0, 0.2);
+  @apply bg-neutral-50;
+}
+
+html.dark .dropzone {
+  border-color: rgba(255, 255, 255, 0.2);
+  @apply bg-neutral-900;
+}
+
+.dropzone:hover,
+.dropzone.active {
+  border-color: rgba(59, 130, 246, 0.5);
+  @apply bg-blue-50/50;
+}
+
+html.dark .dropzone:hover,
+html.dark .dropzone.active {
+  border-color: rgba(34, 197, 94, 0.5);
+  @apply bg-green-950/20;
+}
+
+.dropzone-icon {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+html.dark .dropzone-icon {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.dropzone-text {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+html.dark .dropzone-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dropzone-hint {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+html.dark .dropzone-hint {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ============================================
+   PANELS / CONTENT AREAS
+   ============================================ */
+
+.panel {
+  @apply bg-white;
+}
+
+html.dark .panel {
+  @apply bg-neutral-900;
+}
+
+.panel-header {
+  @apply border-b;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+html.dark .panel-header {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================
+   CODE / EDITOR AREAS
+   ============================================ */
+
+.code-area {
+  @apply bg-neutral-900 text-neutral-100;
+}
+
+/* Code areas are always dark for better readability */
+
+/* ============================================
+   DIVIDERS
+   ============================================ */
+
+.divider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+html.dark .divider {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================
+   ICONS
+   ============================================ */
+
+.icon-default {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+html.dark .icon-default {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.icon-muted {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+html.dark .icon-muted {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   TOOLTIPS
+   ============================================ */
+
+.tooltip {
+  @apply bg-neutral-900 text-white;
+}
+
+html:not(.dark) .tooltip {
+  @apply bg-neutral-800;
+}
+
+/* ============================================
+   MODALS / DIALOGS
+   ============================================ */
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+html.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+  @apply bg-white;
+}
+
+html.dark .modal-content {
+  @apply bg-neutral-900;
+}
+
+/* ============================================
+   PAGE LAYOUT - Full dark/light bg
+   ============================================ */
+
+.page-container {
+  @apply min-h-screen bg-neutral-100;
+}
+
+html.dark .page-container {
+  @apply bg-neutral-950;
+}

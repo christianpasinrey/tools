@@ -33,6 +33,7 @@ defineProps({
 /* Dark mode (default) - igual que MobileDock */
 .glass-badge {
   position: relative;
+  @apply backdrop-blur-xl;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -44,8 +45,8 @@ defineProps({
     rgba(255, 255, 255, 0.03) 50%,
     rgba(255, 255, 255, 0.05) 100%
   );
-  -webkit-backdrop-filter: blur(16px) saturate(1.6);
-  backdrop-filter: blur(16px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(20px) saturate(1.8);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.15),

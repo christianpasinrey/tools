@@ -37,6 +37,7 @@ defineProps({
 /* Dark mode (default) - exactamente igual que MobileDock */
 .glass-card {
   position: relative;
+  @apply backdrop-blur-xl;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1) 0%,

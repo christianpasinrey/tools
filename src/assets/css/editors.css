@@ -1,11 +1,227 @@
-/* ===== MARKDOWN EDITOR STYLES ===== */
+/* ============================================
+   EDITORS CSS - Shared styles for all editors
+   ============================================ */
 
-/* Desktop toolbar button */
+/* ============================================
+   TOOLBAR - Shared across all editors
+   ============================================ */
+
+.editor-toolbar {
+  @apply h-11 flex items-center px-2 gap-1 shrink-0;
+  @apply bg-white border-b border-neutral-300;
+}
+
+html.dark .editor-toolbar {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+.editor-toolbar-btn {
+  @apply flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors;
+  @apply text-neutral-600 hover:text-neutral-900 hover:bg-neutral-200;
+}
+
+html.dark .editor-toolbar-btn {
+  @apply text-neutral-300 hover:text-white hover:bg-neutral-800;
+}
+
+.editor-toolbar-btn:disabled {
+  @apply opacity-40 cursor-not-allowed;
+}
+
+.editor-toolbar-icon-btn {
+  @apply p-1.5 rounded transition-colors;
+  @apply text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200;
+}
+
+html.dark .editor-toolbar-icon-btn {
+  @apply text-neutral-400 hover:text-white hover:bg-neutral-800;
+}
+
+.editor-toolbar-icon-btn:disabled {
+  @apply text-neutral-300 cursor-not-allowed;
+}
+
+html.dark .editor-toolbar-icon-btn:disabled {
+  @apply text-neutral-700;
+}
+
+.editor-toolbar-divider {
+  @apply h-6 w-px mx-1;
+  @apply bg-neutral-300;
+}
+
+html.dark .editor-toolbar-divider {
+  @apply bg-neutral-800;
+}
+
+/* ============================================
+   SIDEBAR - Shared across all editors
+   ============================================ */
+
+.editor-sidebar {
+  @apply flex flex-col;
+  @apply bg-neutral-50 border-r border-neutral-300;
+}
+
+html.dark .editor-sidebar {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+.editor-sidebar-header {
+  @apply p-2 border-b;
+  @apply border-neutral-300;
+}
+
+html.dark .editor-sidebar-header {
+  @apply border-neutral-800;
+}
+
+.editor-sidebar-label {
+  @apply text-xs;
+  @apply text-neutral-600;
+}
+
+html.dark .editor-sidebar-label {
+  @apply text-neutral-500;
+}
+
+/* ============================================
+   CONTENT AREA
+   ============================================ */
+
+.editor-content {
+  @apply flex-1 overflow-auto;
+  @apply bg-neutral-100;
+}
+
+html.dark .editor-content {
+  @apply bg-neutral-950;
+}
+
+.editor-canvas {
+  @apply bg-white shadow-lg;
+}
+
+/* ============================================
+   DROPZONE
+   ============================================ */
+
+.editor-dropzone {
+  @apply flex-1 flex flex-col items-center justify-center cursor-pointer transition-colors;
+  @apply border-2 border-dashed m-4 rounded-lg;
+  @apply border-neutral-400 hover:border-neutral-500 hover:bg-neutral-200/50;
+}
+
+html.dark .editor-dropzone {
+  @apply border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/50;
+}
+
+.editor-dropzone.dragging {
+  @apply border-green-500/50 bg-green-500/5;
+}
+
+.editor-dropzone-icon {
+  @apply w-16 h-16 rounded-lg flex items-center justify-center mb-4;
+  @apply bg-neutral-200 border border-neutral-300;
+}
+
+html.dark .editor-dropzone-icon {
+  @apply bg-neutral-800 border-neutral-700;
+}
+
+.editor-dropzone-icon svg {
+  @apply w-7 h-7;
+  @apply text-neutral-400;
+}
+
+html.dark .editor-dropzone-icon svg {
+  @apply text-neutral-500;
+}
+
+.editor-dropzone-text {
+  @apply text-sm mb-1;
+  @apply text-neutral-600;
+}
+
+html.dark .editor-dropzone-text {
+  @apply text-neutral-400;
+}
+
+.editor-dropzone-hint {
+  @apply text-xs;
+  @apply text-neutral-500;
+}
+
+html.dark .editor-dropzone-hint {
+  @apply text-neutral-600;
+}
+
+/* ============================================
+   MODALS / OVERLAYS
+   ============================================ */
+
+.editor-overlay {
+  @apply fixed inset-0 flex items-center justify-center z-50;
+  @apply bg-black/50;
+}
+
+html.dark .editor-overlay {
+  @apply bg-black/80;
+}
+
+.editor-modal {
+  @apply p-6 rounded-xl;
+  @apply bg-white border border-neutral-300;
+}
+
+html.dark .editor-modal {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+/* ============================================
+   VAULT BAR
+   ============================================ */
+
+.editor-vault-bar {
+  @apply h-9 flex items-center px-3 shrink-0;
+  @apply bg-neutral-200/50 border-b border-neutral-300;
+}
+
+html.dark .editor-vault-bar {
+  @apply bg-neutral-900/50 border-neutral-800;
+}
+
+/* ============================================
+   COLOR PICKER POPOVER
+   ============================================ */
+
+.editor-color-picker {
+  @apply absolute top-full right-0 mt-1 p-2 rounded shadow-xl z-50;
+  @apply bg-white border border-neutral-300;
+}
+
+html.dark .editor-color-picker {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+/* ============================================
+   MARKDOWN EDITOR SPECIFIC
+   ============================================ */
+
 .md-toolbar-btn {
-  @apply w-7 h-7 flex items-center justify-center rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors;
+  @apply w-7 h-7 flex items-center justify-center rounded transition-colors;
+  @apply text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200;
+}
+
+html.dark .md-toolbar-btn {
+  @apply text-neutral-400 hover:text-white hover:bg-neutral-800;
 }
 
 .md-toolbar-btn.active {
+  @apply text-emerald-600 bg-emerald-500/10;
+}
+
+html.dark .md-toolbar-btn.active {
   @apply text-emerald-400 bg-emerald-500/10;
 }
 
@@ -15,16 +231,106 @@
 
 /* Mobile format button */
 .md-mobile-format-btn {
-  @apply w-9 h-9 flex items-center justify-center rounded-lg text-neutral-400 active:bg-neutral-700 active:text-white transition-colors;
+  @apply w-9 h-9 flex items-center justify-center rounded-lg transition-colors;
+  @apply text-neutral-500 active:bg-neutral-300 active:text-neutral-900;
   touch-action: manipulation;
 }
 
-/* ===== DOCX EDITOR STYLES ===== */
+html.dark .md-mobile-format-btn {
+  @apply text-neutral-400 active:bg-neutral-700 active:text-white;
+}
+
+/* ============================================
+   DOCX EDITOR SPECIFIC
+   ============================================ */
 
 .docx-btn {
-  @apply p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-700/50 transition-colors;
+  @apply p-2 rounded-lg transition-colors;
+  @apply text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/50;
+}
+
+html.dark .docx-btn {
+  @apply text-neutral-400 hover:text-white hover:bg-neutral-700/50;
 }
 
 .docx-btn-sm {
-  @apply p-1.5 rounded text-neutral-400 hover:text-white transition-colors;
+  @apply p-1.5 rounded transition-colors;
+  @apply text-neutral-500 hover:text-neutral-900;
+}
+
+html.dark .docx-btn-sm {
+  @apply text-neutral-400 hover:text-white;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+.editor-tabs {
+  @apply flex overflow-x-auto;
+  @apply bg-neutral-200/50 border-b border-neutral-300;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html.dark .editor-tabs {
+  @apply bg-neutral-900/30 border-neutral-800;
+}
+
+.editor-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.editor-tab {
+  @apply flex items-center gap-1.5 px-3 py-2.5 text-xs sm:text-sm font-medium transition-colors relative whitespace-nowrap shrink-0;
+  @apply text-neutral-500 hover:text-neutral-700;
+}
+
+html.dark .editor-tab {
+  @apply text-neutral-500 hover:text-neutral-300;
+}
+
+.editor-tab.active {
+  @apply text-neutral-900;
+}
+
+html.dark .editor-tab.active {
+  @apply text-white;
+}
+
+/* ============================================
+   PANEL / INFO SIDEBAR
+   ============================================ */
+
+.editor-info-panel {
+  @apply flex flex-col;
+  @apply bg-neutral-50 border-l border-neutral-300;
+}
+
+html.dark .editor-info-panel {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+.editor-info-header {
+  @apply p-3 border-b;
+  @apply border-neutral-300;
+}
+
+html.dark .editor-info-header {
+  @apply border-neutral-800;
+}
+
+.editor-info-title {
+  @apply text-sm font-medium;
+  @apply text-neutral-900;
+}
+
+html.dark .editor-info-title {
+  @apply text-white;
+}
+
+.editor-info-subtitle {
+  @apply text-xs;
+  @apply text-neutral-500;
 }
