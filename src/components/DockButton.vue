@@ -111,7 +111,12 @@ const handleClick = (e) => {
     @click="handleClick"
   >
     <div class="dock-icon">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+        style="width: 20px; height: 20px;"
+      >
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="icon" />
       </svg>
 
@@ -191,6 +196,15 @@ const handleClick = (e) => {
   border-radius: 9999px;
 }
 
+.dock-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  filter:
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+}
+
 .dock-item:hover .dock-icon {
   background: linear-gradient(
     135deg,
@@ -244,7 +258,7 @@ const handleClick = (e) => {
     rgba(255, 255, 255, 0.8) 100%
   );
   border: 1px solid rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.75) !important;
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.9),
     inset 0 -1px 1px rgba(0, 0, 0, 0.05),
@@ -256,6 +270,12 @@ const handleClick = (e) => {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
 }
 
+:global(html:not(.dark)) .dock-icon svg {
+  filter:
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.15))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.08));
+}
+
 :global(html:not(.dark)) .dock-item:hover .dock-icon {
   background: linear-gradient(
     135deg,
@@ -263,6 +283,7 @@ const handleClick = (e) => {
     rgba(255, 255, 255, 0.85) 100%
   );
   border-color: rgba(0, 0, 0, 0.12);
+  color: var(--tool-color, #22c55e) !important;
   box-shadow:
     0 0 24px color-mix(in srgb, var(--tool-color, #22c55e) 25%, transparent),
     inset 0 1px 1px rgba(255, 255, 255, 0.9),
@@ -277,6 +298,7 @@ const handleClick = (e) => {
     rgba(255, 255, 255, 0.9) 100%
   );
   border-color: color-mix(in srgb, var(--tool-color, #22c55e) 40%, rgba(0, 0, 0, 0.1));
+  color: var(--tool-color, #22c55e) !important;
 }
 
 :global(html:not(.dark)) .dock-item.submenu-open .dock-icon {
@@ -286,6 +308,7 @@ const handleClick = (e) => {
     rgba(255, 255, 255, 0.92) 100%
   );
   border-color: color-mix(in srgb, var(--tool-color, #22c55e) 50%, rgba(0, 0, 0, 0.1));
+  color: var(--tool-color, #22c55e) !important;
 }
 
 /* Active dot indicator */

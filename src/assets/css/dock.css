@@ -93,8 +93,8 @@
   border-bottom-color: transparent;
 }
 
-/* Individual dock item */
-.dock-item {
+/* Individual dock item - MOBILE ONLY */
+.mobile-dock .dock-item {
   @apply relative w-[42px] h-[42px] rounded-[14px] flex items-center justify-center shrink-0;
   @apply transition-all duration-200 ease-out opacity-0;
   transform: scale(0.8) translateX(-10px);
@@ -117,7 +117,7 @@
   touch-action: manipulation;
 }
 
-.dock-item::before {
+.mobile-dock .dock-item::before {
   @apply absolute top-px rounded-full;
   content: '';
   left: 10%;
@@ -132,7 +132,7 @@
   transition-delay: var(--delay, 0ms);
 }
 
-.dock-item:active {
+.mobile-dock .dock-item:active {
   @apply scale-[0.92];
   background: linear-gradient(
     135deg,
@@ -142,7 +142,7 @@
   );
 }
 
-.dock-item.is-active {
+.mobile-dock .dock-item.is-active {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.15) 0%,
@@ -152,7 +152,7 @@
   color: var(--tool-color);
 }
 
-.dock-item.submenu-open {
+.mobile-dock .dock-item.submenu-open {
   @apply text-white;
   background: linear-gradient(
     135deg,
@@ -162,8 +162,8 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Icon shadows */
-.dock-item svg,
+/* Icon shadows - Mobile dock */
+.mobile-dock .dock-item svg,
 .dock-toggle svg,
 .dock-bottom-btn svg {
   filter:
@@ -177,7 +177,7 @@
   background: rgba(255, 255, 255, 0.4);
 }
 
-.dock-item.is-active .submenu-indicator {
+.mobile-dock .dock-item.is-active .submenu-indicator {
   background: var(--tool-color);
 }
 
@@ -262,4 +262,179 @@
 .sync-slide-leave-to {
   @apply opacity-0;
   transform: translateY(10px) scale(0.95);
+}
+
+/* ============================================
+   LIGHT MODE STYLES
+   ============================================ */
+
+/* Main glass container - Light mode */
+html:not(.dark) .dock-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.75) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+/* Toggle button - Light mode */
+html:not(.dark) .dock-toggle {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.75);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+html:not(.dark) .dock-toggle::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+}
+
+/* Items container - Light mode */
+html:not(.dark) .dock-items {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.75) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+/* Individual dock item - Light mode - MOBILE ONLY */
+html:not(.dark) .mobile-dock .dock-item {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.75);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+html:not(.dark) .mobile-dock .dock-item::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+}
+
+html:not(.dark) .mobile-dock .dock-item:active {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+}
+
+html:not(.dark) .mobile-dock .dock-item.is-active {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.12);
+  color: var(--tool-color);
+}
+
+html:not(.dark) .mobile-dock .dock-item.submenu-open {
+  color: var(--tool-color);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.92) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Icon shadows - Light mode */
+html:not(.dark) .mobile-dock .dock-item svg,
+html:not(.dark) .dock-toggle svg,
+html:not(.dark) .dock-bottom-btn svg {
+  filter:
+    drop-shadow(0 0 1px rgba(0, 0, 0, 0.15))
+    drop-shadow(0 0 2px rgba(0, 0, 0, 0.08));
+}
+
+/* Submenu indicator - Light mode */
+html:not(.dark) .submenu-indicator {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Separator - Light mode */
+html:not(.dark) .dock-separator {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.12) 20%,
+    rgba(0, 0, 0, 0.12) 80%,
+    transparent
+  );
+}
+
+/* Bottom bar - Light mode */
+html:not(.dark) .dock-bottom-bar {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.75) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-top-color: transparent;
+  box-shadow:
+    inset 0 -1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 1px 0 rgba(0, 0, 0, 0.05),
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 0 0 0.5px rgba(0, 0, 0, 0.05);
+}
+
+html:not(.dark) .dock-bottom-btn {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+html:not(.dark) .dock-bottom-btn:active {
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+html:not(.dark) .dock-bottom-divider {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.1) 20%,
+    rgba(0, 0, 0, 0.1) 80%,
+    transparent
+  );
+}
+
+/* Sync panel - Light mode */
+html:not(.dark) .dock-sync-panel {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
 }
