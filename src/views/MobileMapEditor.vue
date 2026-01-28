@@ -366,7 +366,7 @@ const currentTool = computed(() => tools.find(t => t.id === mapEditor.activeTool
 </script>
 
 <template>
-  <div class="h-full w-full flex relative overflow-hidden bg-neutral-950" style="touch-action: pan-x pan-y;">
+  <div class="h-full w-full flex relative overflow-hidden app-bg" style="touch-action: pan-x pan-y;">
     <!-- Map Container -->
     <div ref="mapContainer" class="absolute inset-0 z-0"></div>
 

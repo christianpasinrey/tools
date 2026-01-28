@@ -185,7 +185,7 @@ function clearAll() {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-950">
+  <div class="h-full flex flex-col app-bg">
     <!-- Header -->
     <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900/80 shrink-0">
       <div class="flex items-center gap-2">

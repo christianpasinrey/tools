@@ -195,7 +195,7 @@ function loadPalette(data) {
 </script>
 
 <template>
-  <div class="h-full bg-neutral-950 p-4 overflow-auto">
+  <div class="h-full app-bg p-4 overflow-auto">
     <div class="max-w-[1600px] mx-auto h-full flex flex-col">
       <!-- Compact Header -->
       <div class="flex items-center justify-between mb-4">

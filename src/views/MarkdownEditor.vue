@@ -7,7 +7,7 @@ const { isMobile } = useDevice()
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-950">
+  <div class="min-h-screen app-bg">
     <!-- Mobile version -->
     <MobileMarkdownEditor v-if="isMobile" class="h-screen" />
 

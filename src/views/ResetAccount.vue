@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-neutral-950 flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-neutral-900/80 border border-neutral-700/50 rounded-xl p-6 backdrop-blur-sm">
+  <div class="auth-container">
+    <div class="auth-card">
       <h2 class="text-lg font-semibold text-neutral-100 mb-4">Restablecer Cuenta</h2>
 
       <!-- Loading -->

@@ -373,3 +373,194 @@ html.dark .modal-content {
 html.dark .page-container {
   @apply bg-neutral-950;
 }
+
+/* App container - for views that need full height */
+.app-container {
+  @apply h-screen flex flex-col bg-neutral-100 text-neutral-800;
+}
+
+html.dark .app-container {
+  @apply bg-neutral-950 text-neutral-300;
+}
+
+/* App container variant for non-flex full layouts */
+.app-bg {
+  @apply bg-neutral-100 text-neutral-800;
+}
+
+html.dark .app-bg {
+  @apply bg-neutral-950 text-neutral-300;
+}
+
+/* Card styling for tools panels */
+.tool-card {
+  @apply bg-white border border-neutral-200 rounded-xl;
+}
+
+html.dark .tool-card {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+/* Category button states */
+.category-btn {
+  @apply px-4 py-2 rounded-lg text-sm font-medium border transition-colors;
+  @apply bg-white border-neutral-200 text-neutral-600;
+}
+
+html.dark .category-btn {
+  @apply bg-neutral-900 border-neutral-800 text-neutral-400;
+}
+
+.category-btn:hover {
+  @apply border-neutral-300 text-neutral-700;
+}
+
+html.dark .category-btn:hover {
+  @apply border-neutral-700 text-neutral-300;
+}
+
+.category-btn.active {
+  @apply bg-blue-600 border-blue-600 text-white;
+}
+
+html.dark .category-btn.active {
+  @apply bg-green-600 border-green-600 text-white;
+}
+
+/* Toolbar styling */
+.app-toolbar {
+  @apply bg-white/80 border-b border-neutral-200;
+}
+
+html.dark .app-toolbar {
+  @apply bg-neutral-900/50 border-neutral-800;
+}
+
+/* Sidebar panel */
+.app-sidebar {
+  @apply bg-white border-neutral-200;
+}
+
+html.dark .app-sidebar {
+  @apply bg-neutral-900/30 border-neutral-800;
+}
+
+/* Auth forms container */
+.auth-container {
+  @apply min-h-screen bg-neutral-100 flex items-center justify-center p-4;
+}
+
+html.dark .auth-container {
+  @apply bg-neutral-950;
+}
+
+.auth-card {
+  @apply max-w-md w-full bg-white/80 border border-neutral-200/50 rounded-xl p-6 backdrop-blur-sm;
+}
+
+html.dark .auth-card {
+  @apply bg-neutral-900/80 border-neutral-700/50;
+}
+
+/* ============================================
+   TEXT UTILITIES
+   ============================================ */
+
+/* Primary text - for headings and important text */
+.text-primary {
+  @apply text-neutral-900;
+}
+
+html.dark .text-primary {
+  @apply text-white;
+}
+
+/* Secondary text - for body text and labels */
+.text-secondary {
+  @apply text-neutral-600;
+}
+
+html.dark .text-secondary {
+  @apply text-neutral-300;
+}
+
+/* Muted text - for hints and less important text */
+.text-muted {
+  @apply text-neutral-500;
+}
+
+html.dark .text-muted {
+  @apply text-neutral-400;
+}
+
+/* ============================================
+   INPUT ELEMENTS - THEMED
+   ============================================ */
+
+.themed-input {
+  @apply px-4 py-3 bg-white border border-neutral-200 rounded-lg text-neutral-900 focus:outline-none focus:border-blue-500 transition-colors;
+}
+
+html.dark .themed-input {
+  @apply bg-neutral-800 border-neutral-700 text-white focus:border-emerald-500;
+}
+
+.themed-select {
+  @apply px-4 py-3 bg-white border border-neutral-200 rounded-lg text-neutral-900 focus:outline-none focus:border-blue-500 transition-colors;
+}
+
+html.dark .themed-select {
+  @apply bg-neutral-800 border-neutral-700 text-white focus:border-emerald-500;
+}
+
+/* ============================================
+   BUTTON THEMED
+   ============================================ */
+
+.themed-btn {
+  @apply p-3 bg-neutral-100 hover:bg-neutral-200 rounded-lg text-neutral-600 hover:text-neutral-900 transition-colors;
+}
+
+html.dark .themed-btn {
+  @apply bg-neutral-800 hover:bg-neutral-700 text-neutral-400 hover:text-white;
+}
+
+/* ============================================
+   PROCESSING OVERLAY
+   ============================================ */
+
+.processing-overlay {
+  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50;
+}
+
+html.dark .processing-overlay {
+  @apply bg-black/80;
+}
+
+.processing-box {
+  @apply flex items-center gap-3 px-5 py-3 bg-white border border-neutral-200 rounded;
+}
+
+html.dark .processing-box {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+/* ============================================
+   EXPORT/MODAL STYLING
+   ============================================ */
+
+.modal-box {
+  @apply bg-white border border-neutral-200 rounded-lg p-5;
+}
+
+html.dark .modal-box {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+.modal-title {
+  @apply text-neutral-900 font-medium;
+}
+
+html.dark .modal-title {
+  @apply text-white;
+}

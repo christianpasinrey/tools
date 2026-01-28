@@ -14,7 +14,7 @@ const { isMobile } = useDevice()
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-neutral-950 text-neutral-300">
+  <div class="app-container">
     <AppsTabs
       :active-tab="apps.activeTab.value"
       :theme-color="apps.themeColor.value"

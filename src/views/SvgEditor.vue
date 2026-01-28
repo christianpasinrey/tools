@@ -236,7 +236,7 @@ const handleReorder = (fromIndex, toIndex) => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-950">
+  <div class="h-full flex flex-col app-bg">
     <!-- Hidden file input -->
     <input
       ref="fileInputRef"

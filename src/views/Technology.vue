@@ -13,7 +13,7 @@ const tech = useTechnology()
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-neutral-950 text-neutral-300">
+  <div class="app-container">
     <TechnologyTabs
       :active-tab="tech.activeTab.value"
       :theme-color="tech.themeColor.value"

@@ -110,7 +110,7 @@ const doExport = () => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-950 text-neutral-300 select-none">
+  <div class="h-full flex flex-col app-bg select-none">
     <!-- Processing Overlay -->
     <div v-if="editor.isProcessing.value" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
       <div class="flex items-center gap-3 px-5 py-3 bg-neutral-900 border border-neutral-800 rounded">

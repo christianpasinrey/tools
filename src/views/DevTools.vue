@@ -24,7 +24,7 @@ const loadSnippet = (data) => {
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-neutral-950 text-neutral-300">
+  <div class="app-container">
     <DevToolsToolbar
       :theme-color="editor.themeColor.value"
       :get-data="getSnippetData"

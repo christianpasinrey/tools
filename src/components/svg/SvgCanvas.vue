@@ -263,7 +263,7 @@ const visibleElements = computed(() => {
 <template>
   <div
     ref="canvasRef"
-    class="relative flex-1 overflow-hidden bg-neutral-950"
+    class="relative flex-1 overflow-hidden app-bg"
     :class="cursorClass"
     @mousedown="handleMouseDown"
     @mousemove="handleMouseMove"

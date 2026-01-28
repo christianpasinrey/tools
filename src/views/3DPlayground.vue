@@ -568,7 +568,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-950 text-neutral-300 select-none">
+  <div class="h-full flex flex-col app-bg select-none">
     <!-- Hidden file input -->
     <input
       ref="fileInput"

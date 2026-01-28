@@ -411,7 +411,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-950">
+  <div class="h-full flex flex-col app-bg">
     <!-- Toolbar -->
     <div class="h-10 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-0.5 shrink-0">
       <!-- File actions -->

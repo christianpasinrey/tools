@@ -144,7 +144,7 @@ const tools = [
 </script>
 
 <template>
-  <div class="h-full w-full flex relative overflow-hidden bg-neutral-950">
+  <div class="h-full w-full flex relative overflow-hidden app-bg">
     <!-- Map Container -->
     <div ref="mapContainer" class="absolute inset-0 z-0"></div>
 

@@ -134,7 +134,7 @@ const harmonyOptions = computed(() =>
 </script>
 
 <template>
-  <div class="flex flex-col h-full bg-neutral-950">
+  <div class="flex flex-col h-full app-bg">
     <!-- Header with color strip -->
     <div class="shrink-0">
       <!-- Active color bar -->
