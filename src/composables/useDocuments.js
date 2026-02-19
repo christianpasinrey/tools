@@ -1,6 +1,6 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
 
-const validTabs = ['pdf', 'spreadsheet', 'docx', 'markdown']
+const validTabs = ['pdf', 'spreadsheet', 'docx', 'markdown', 'converter']
 
 // Map hash names to internal tab names
 const hashToTab = {
@@ -12,7 +12,10 @@ const hashToTab = {
   'doc': 'docx',
   'documento': 'docx',
   'markdown': 'markdown',
-  'md': 'markdown'
+  'md': 'markdown',
+  'converter': 'converter',
+  'convertidor': 'converter',
+  'convert': 'converter'
 }
 
 // Map internal tab names to hash names
@@ -20,7 +23,8 @@ const tabToHash = {
   'pdf': 'pdf',
   'spreadsheet': 'spreadsheet',
   'docx': 'docx',
-  'markdown': 'markdown'
+  'markdown': 'markdown',
+  'converter': 'converter'
 }
 
 function getTabFromHash() {

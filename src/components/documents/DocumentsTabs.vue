@@ -30,6 +30,12 @@ const tabs = [
     name: 'Markdown',
     shortName: 'MD',
     icon: 'M4 6h16a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2zm3 8v-4l2 2 2-2v4m4-4v4h2l-3-4-3 4h2'
+  },
+  {
+    id: 'converter',
+    name: 'Convertidor',
+    shortName: 'Conv',
+    icon: 'M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4'
   }
 ]
 </script>

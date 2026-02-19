@@ -67,9 +67,9 @@ const activeSection = ref('config')
 </script>
 
 <template>
-  <div class="phone-tester-container">
+  <div class="phone-tester-container app-bg">
     <!-- Toolbar -->
-    <div class="phone-toolbar">
+    <div class="phone-toolbar app-toolbar">
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
@@ -428,7 +428,6 @@ const activeSection = ref('config')
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: rgb(10, 10, 10);
 }
 
 .phone-toolbar {
@@ -437,8 +436,6 @@ const activeSection = ref('config')
   justify-content: space-between;
   padding: 0 16px;
   height: 48px;
-  border-bottom: 1px solid rgb(38, 38, 38);
-  background: rgba(23, 23, 23, 0.5);
   flex-shrink: 0;
 }
 
@@ -448,19 +445,6 @@ const activeSection = ref('config')
   overflow-y: auto;
   padding-bottom: 80px;
   -webkit-overflow-scrolling: touch;
-}
-
-.mobile-section {
-  border-bottom: 1px solid rgb(38, 38, 38);
-}
-
-.mobile-phone-preview {
-  background: linear-gradient(to bottom right, rgb(23, 23, 23), rgb(10, 10, 10), rgb(23, 23, 23));
-}
-
-.mobile-code-section {
-  background: rgba(23, 23, 23, 0.3);
-  border-bottom: none;
 }
 
 @media (min-width: 769px) {

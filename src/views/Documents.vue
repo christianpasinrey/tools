@@ -9,6 +9,9 @@ import SpreadsheetEditor from '../components/documents/SpreadsheetEditor.vue'
 import DocxEditor from '../components/documents/DocxEditor.vue'
 import MarkdownEditorContent from '../components/documents/MarkdownEditorContent.vue'
 
+// Converter
+import ConverterHome from '../components/converter/ConverterHome.vue'
+
 // Mobile document editors
 import MobileMarkdownEditor from '../components/documents/MobileMarkdownEditor.vue'
 import MobileDocxEditor from '../components/documents/MobileDocxEditor.vue'
@@ -47,6 +50,9 @@ const { isMobile } = useDevice()
         <MobileMarkdownEditor v-if="isMobile" />
         <MarkdownEditorContent v-else :theme-color="docs.themeColor.value" />
       </template>
+
+      <!-- Converter -->
+      <ConverterHome v-if="docs.activeTab.value === 'converter'" :theme-color="docs.themeColor.value" />
     </div>
   </div>
 </template>

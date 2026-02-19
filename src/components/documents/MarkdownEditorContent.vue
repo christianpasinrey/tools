@@ -610,7 +610,7 @@ onUnmounted(() => {
         <!-- Editor pane -->
         <div
           v-show="viewMode !== 'preview'"
-          class="flex flex-col overflow-hidden bg-neutral-950"
+          class="flex flex-col overflow-hidden app-bg"
           :style="viewMode === 'split' ? { width: `${splitRatio}%` } : { width: '100%' }"
         >
           <div class="px-3 py-1.5 border-b border-neutral-800 bg-neutral-900/30 flex items-center justify-between">
@@ -646,7 +646,7 @@ onUnmounted(() => {
         <!-- Preview pane -->
         <div
           v-show="viewMode !== 'editor'"
-          class="flex flex-col overflow-hidden bg-neutral-950"
+          class="flex flex-col overflow-hidden app-bg"
           :style="viewMode === 'split' ? { width: `${100 - splitRatio}%` } : { width: '100%' }"
         >
           <div class="px-3 py-1.5 border-b border-neutral-800 bg-neutral-900/30">

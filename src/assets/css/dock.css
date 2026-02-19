@@ -21,7 +21,13 @@
 
 /* Main dock container */
 .mobile-dock {
-  @apply fixed bottom-4 left-4 z-[100] flex flex-col items-start;
+  @apply fixed bottom-8 right-4 z-[100] flex flex-col items-end;
+}
+
+/* Cuando está expandido, centrar el dock */
+.mobile-dock.expanded {
+  @apply right-1/2;
+  transform: translateX(50%);
 }
 
 /* Toggle button when collapsed */
@@ -70,6 +76,7 @@
   @apply max-w-0 max-h-0 p-0 opacity-0 overflow-hidden pointer-events-none;
   @apply transition-all duration-300 ease-out;
   transform: scale(0.9) translateY(10px);
+  flex-direction: row-reverse;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1) 0%,
@@ -97,7 +104,7 @@
 .mobile-dock .dock-item {
   @apply relative w-[42px] h-[42px] rounded-[14px] flex items-center justify-center shrink-0;
   @apply transition-all duration-200 ease-out opacity-0;
-  transform: scale(0.8) translateX(-10px);
+  transform: scale(0.8) translateX(10px);
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.12) 0%,

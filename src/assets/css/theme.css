@@ -564,3 +564,47 @@ html.dark .modal-box {
 html.dark .modal-title {
   @apply text-white;
 }
+
+/* ============================================
+   DROPDOWN MENUS
+   ============================================ */
+
+.dropdown-menu {
+  @apply bg-white border border-neutral-200 rounded shadow-xl z-50 py-1;
+}
+
+html.dark .dropdown-menu {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+.dropdown-item {
+  @apply px-3 py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors;
+}
+
+html.dark .dropdown-item {
+  @apply text-neutral-300 hover:bg-neutral-800;
+}
+
+/* ============================================
+   EDITOR SIDEBAR
+   ============================================ */
+
+.editor-sidebar {
+  @apply bg-white border-neutral-200;
+}
+
+html.dark .editor-sidebar {
+  @apply bg-neutral-900 border-neutral-800;
+}
+
+/* ============================================
+   TABS CONTAINER
+   ============================================ */
+
+.tabs-container {
+  @apply flex border-b border-neutral-200 bg-neutral-100/50 overflow-x-auto;
+}
+
+html.dark .tabs-container {
+  @apply border-neutral-800 bg-neutral-900/30;
+}

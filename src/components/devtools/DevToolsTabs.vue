@@ -21,7 +21,7 @@ const tabs = [
 </script>
 
 <template>
-  <div class="bg-neutral-900/50 border-b border-neutral-800 px-4 shrink-0">
+  <div class="tabs-container px-4 shrink-0">
     <div class="flex gap-1">
       <button
         v-for="tab in tabs"
@@ -30,8 +30,8 @@ const tabs = [
         :class="[
           'flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-px',
           activeTab === tab.id
-            ? 'text-white border-current'
-            : 'text-neutral-500 border-transparent hover:text-neutral-300'
+            ? 'text-primary border-current'
+            : 'text-muted border-transparent hover:text-secondary'
         ]"
         :style="activeTab === tab.id ? { borderColor: themeColor, color: themeColor } : {}"
       >
