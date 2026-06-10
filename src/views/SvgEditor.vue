@@ -275,7 +275,7 @@ const handleReorder = (fromIndex, toIndex) => {
     />
 
     <!-- Project Save/Load -->
-    <div class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+    <div class="h-9 bg-neutral-200/50 border-b border-neutral-300 dark:bg-neutral-900/50 dark:border-neutral-800 flex items-center px-3 shrink-0">
       <span class="text-xs text-neutral-500 mr-2">Proyecto</span>
       <VaultSaveLoad storeName="svg-projects" :getData="getProjectData" label="proyecto" @load="loadProject" />
     </div>

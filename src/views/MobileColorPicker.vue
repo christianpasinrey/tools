@@ -182,7 +182,7 @@ const harmonyOptions = computed(() =>
     </div>
 
     <!-- Tabs -->
-    <div class="flex border-b border-neutral-800 bg-neutral-900/50 shrink-0">
+    <div class="flex border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900/50 shrink-0">
       <button
         @click="activeTab = 'wheel'"
         class="flex-1 py-3 text-xs font-medium transition-colors relative"

@@ -47,14 +47,14 @@ function updateTo(val) {
 </script>
 
 <template>
-  <div class="flex items-center gap-3 px-4 py-2 border-b border-neutral-800 bg-neutral-900/30 flex-wrap">
+  <div class="flex items-center gap-3 px-4 py-2 border-b border-neutral-200 bg-neutral-100/60 dark:border-neutral-800 dark:bg-neutral-900/30 flex-wrap">
     <!-- Priority -->
     <div class="flex items-center gap-1">
       <span class="text-[10px] text-neutral-500">Prioridad:</span>
       <select
         :value="priority"
         @change="emit('update-priority', $event.target.value || null)"
-        class="bg-neutral-800 border border-neutral-700 rounded px-1.5 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
+        class="bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded px-1.5 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
       >
         <option v-for="opt in priorityOptions" :key="opt.label" :value="opt.value">{{ opt.label }}</option>
       </select>
@@ -87,14 +87,14 @@ function updateTo(val) {
         type="date"
         :value="dateRange.from"
         @input="updateFrom($event.target.value)"
-        class="bg-neutral-800 border border-neutral-700 rounded px-1.5 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
+        class="bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded px-1.5 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
       />
       <span class="text-[10px] text-neutral-500">Hasta:</span>
       <input
         type="date"
         :value="dateRange.to"
         @input="updateTo($event.target.value)"
-        class="bg-neutral-800 border border-neutral-700 rounded px-1.5 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
+        class="bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded px-1.5 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
       />
     </div>
 
@@ -105,12 +105,12 @@ function updateTo(val) {
     >Limpiar</button>
 
     <!-- Tag Manager (inline) -->
-    <div v-if="showTagManager" class="w-full flex items-center gap-2 mt-1 pt-2 border-t border-neutral-800">
+    <div v-if="showTagManager" class="w-full flex items-center gap-2 mt-1 pt-2 border-t border-neutral-200 dark:border-neutral-800">
       <span class="text-[10px] text-neutral-500">Nuevo tag:</span>
       <input
         v-model="newTagName"
         placeholder="Nombre"
-        class="bg-neutral-800 border border-neutral-700 rounded px-2 py-0.5 text-[10px] text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50 w-24"
+        class="bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded px-2 py-0.5 text-[10px] text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50 w-24"
         @keydown.enter="addTag"
       />
       <div class="flex gap-0.5">
@@ -126,7 +126,7 @@ function updateTo(val) {
       <button
         @click="addTag"
         :disabled="!newTagName.trim()"
-        class="px-2 py-0.5 text-[10px] bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-700 text-white rounded"
+        class="px-2 py-0.5 text-[10px] bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-300 dark:disabled:bg-neutral-700 text-white rounded"
       >Crear</button>
 
       <!-- Existing tags with delete -->

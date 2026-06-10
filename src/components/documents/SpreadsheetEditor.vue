@@ -466,8 +466,8 @@ const handleContextAction = (action) => {
           :disabled="!spreadsheet.canUndo.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.canUndo.value
-            ? (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
+            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
           title="Deshacer (Ctrl+Z)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -479,8 +479,8 @@ const handleContextAction = (action) => {
           :disabled="!spreadsheet.canRedo.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.canRedo.value
-            ? (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
+            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
           title="Rehacer (Ctrl+Y)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -496,8 +496,8 @@ const handleContextAction = (action) => {
           :disabled="!spreadsheet.selectedCell.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.selectedCell.value
-            ? (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
+            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
           title="Copiar (Ctrl+C)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -509,8 +509,8 @@ const handleContextAction = (action) => {
           :disabled="!spreadsheet.selectedCell.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.selectedCell.value
-            ? (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
+            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
           title="Cortar (Ctrl+X)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -522,8 +522,8 @@ const handleContextAction = (action) => {
           :disabled="!spreadsheet.selectedCell.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.selectedCell.value
-            ? (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
+            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
           title="Pegar (Ctrl+V)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -537,7 +537,7 @@ const handleContextAction = (action) => {
         <button
           @click.stop="showFontSizeDropdown = !showFontSizeDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
           class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors min-w-[48px] justify-between"
-          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
           title="Tamaño de fuente"
         >
           <span>{{ spreadsheet.currentCellStyle.value.fontSize || 12 }}</span>
@@ -570,7 +570,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.bold
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Negrita (Ctrl+B)"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6V4zm0 8h9a4 4 0 014 4 4 4 0 01-4 4H6v-8z"/></svg>
@@ -580,7 +580,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.italic
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Cursiva (Ctrl+I)"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4h4l-2 16h-4l2-16z"/></svg>
@@ -590,7 +590,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.underline
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Subrayado (Ctrl+U)"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 21h12v-2H6v2zM12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6z"/></svg>
@@ -600,7 +600,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.strikethrough
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Tachado"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19h4v-3h-4v3zM5 4v3h5v3h4V7h5V4H5zM3 14h18v-2H3v2z"/></svg>
@@ -613,7 +613,7 @@ const handleContextAction = (action) => {
         <button
           @click.stop="showTextColorDropdown = !showTextColorDropdown; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
           class="p-1.5 rounded transition-colors flex flex-col items-center"
-          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
           title="Color de texto"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11 2L5.5 16h2.25l1.12-3h6.25l1.12 3h2.25L13 2h-2zm-1.38 9L12 4.67 14.38 11H9.62z"/></svg>
@@ -642,7 +642,7 @@ const handleContextAction = (action) => {
         <button
           @click.stop="showBgColorDropdown = !showBgColorDropdown; showTextColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
           class="p-1.5 rounded transition-colors flex flex-col items-center"
-          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
           title="Color de fondo"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z"/></svg>
@@ -684,7 +684,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignH === 'left'
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Alinear izquierda"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M15 15H3v2h12v-2zm0-8H3v2h12V7zM3 13h18v-2H3v2zm0 8h18v-2H3v2zM3 3v2h18V3H3z"/></svg>
@@ -694,7 +694,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignH === 'center'
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Centrar"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M7 15v2h10v-2H7zm-4 6h18v-2H3v2zm0-8h18v-2H3v2zm4-6v2h10V7H7zM3 3v2h18V3H3z"/></svg>
@@ -704,7 +704,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignH === 'right'
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Alinear derecha"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 21h18v-2H3v2zm6-4h12v-2H9v2zm-6-4h18v-2H3v2zm6-4h12V7H9v2zM3 3v2h18V3H3z"/></svg>
@@ -716,7 +716,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignV === 'top'
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Alinear arriba"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z"/></svg>
@@ -726,7 +726,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignV === 'middle'
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Centrar verticalmente"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"/></svg>
@@ -736,7 +736,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignV === 'bottom'
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Alinear abajo"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z"/></svg>
@@ -750,7 +750,7 @@ const handleContextAction = (action) => {
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.wrapText
             ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
           title="Ajustar texto"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"/></svg>
@@ -758,7 +758,7 @@ const handleContextAction = (action) => {
         <button
           @click.stop="showBorderDropdown = !showBorderDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
           class="p-1.5 rounded transition-colors"
-          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
           title="Bordes"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm8 16H5v-6h6v6zm0-8H5V5h6v6zm8 8h-6v-6h6v6zm0-8h-6V5h6v6z"/></svg>
@@ -820,7 +820,7 @@ const handleContextAction = (action) => {
         <button
           @click.stop="showNumberFormatDropdown = !showNumberFormatDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showRowColDropdown = false"
           class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
-          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
           title="Formato de número"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17h2v-7h-2v7zm12-7v7h2v-4h2v-3h-4zm-6 7h2V7H7v2h2v8zM3 9h4V7H3v2z"/><path d="M17 7v2h2v-2h-2z"/></svg>
@@ -849,7 +849,7 @@ const handleContextAction = (action) => {
         <button
           @click.stop="showRowColDropdown = !showRowColDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false"
           class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
-          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
           title="Insertar/Eliminar filas y columnas"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18M10 3v18M14 3v18"/></svg>
@@ -932,7 +932,7 @@ const handleContextAction = (action) => {
         <button
           @click="spreadsheet.exportCsv"
           class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
-          :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
           title="Exportar como CSV"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -982,7 +982,7 @@ const handleContextAction = (action) => {
       <button
         @click="toggleDark()"
         class="p-1.5 rounded transition-colors"
-        :class="isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+        :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
         :title="isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
       >
         <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

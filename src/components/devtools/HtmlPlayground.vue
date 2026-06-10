@@ -451,7 +451,7 @@ const consoleTypeStyles = {
 
       <!-- Console -->
       <div
-        class="bg-neutral-900 border border-neutral-800 rounded-lg overflow-hidden flex flex-col min-h-0"
+        class="bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded-lg overflow-hidden flex flex-col min-h-0"
         :style="{ height: consoleHeight + '%' }"
       >
         <div class="flex items-center justify-between px-3 py-1.5 bg-neutral-800/50 border-b border-neutral-800 shrink-0">
@@ -505,7 +505,7 @@ const consoleTypeStyles = {
                 </button>
                 <button
                   @click="showPreviewModal = false"
-                  class="p-2 text-neutral-400 hover:text-white hover:bg-neutral-800 rounded-lg transition-colors"
+                  class="p-2 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 rounded-lg transition-colors"
                   title="Close (Esc)"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

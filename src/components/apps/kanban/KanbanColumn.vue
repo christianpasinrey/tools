@@ -50,7 +50,7 @@ function deleteColumn() {
 
 <template>
   <div
-    class="flex flex-col w-72 bg-neutral-900/50 rounded-xl border border-neutral-800 shrink-0 max-h-full transition-all"
+    class="flex flex-col w-72 bg-neutral-100/80 rounded-xl border border-neutral-200 dark:bg-neutral-900/50 dark:border-neutral-800 shrink-0 max-h-full transition-all"
     :class="{
       'border-indigo-500/50 scale-[1.02]': dragOverColumnIndex === colIndex && draggedColumn !== null,
       'opacity-50': draggedColumn === colIndex
@@ -60,7 +60,7 @@ function deleteColumn() {
   >
     <!-- Column Header -->
     <div
-      class="flex items-center justify-between px-3 py-2.5 border-b border-neutral-800 cursor-grab active:cursor-grabbing shrink-0"
+      class="flex items-center justify-between px-3 py-2.5 border-b border-neutral-200 dark:border-neutral-800 cursor-grab active:cursor-grabbing shrink-0"
       draggable="true"
       @dragstart="emit('column-dragstart', $event, colIndex)"
       @dragover="emit('column-dragover-header', $event, colIndex)"
@@ -78,12 +78,12 @@ function deleteColumn() {
             @keydown.escape="editingTitle = false"
             @blur="saveTitle"
             :class="'col-title-input-' + column.id"
-            class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-2 py-0.5 text-xs text-white outline-none focus:border-indigo-500/50"
+            class="flex-1 bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded px-2 py-0.5 text-xs text-neutral-900 dark:text-white outline-none focus:border-indigo-500/50"
           />
         </template>
         <template v-else>
           <span
-            class="text-xs font-medium text-neutral-300 truncate cursor-pointer hover:text-white"
+            class="text-xs font-medium text-neutral-700 truncate cursor-pointer hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
             @dblclick="startEditTitle"
           >
             {{ column.title }}

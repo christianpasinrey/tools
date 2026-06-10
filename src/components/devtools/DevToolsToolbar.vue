@@ -17,12 +17,12 @@ const colors = [
 </script>
 
 <template>
-  <div class="h-11 bg-neutral-900 border-b border-neutral-800 flex items-center px-4 justify-between shrink-0">
+  <div class="h-11 bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 flex items-center px-4 justify-between shrink-0">
     <div class="flex items-center gap-2">
       <svg class="w-5 h-5" :style="{ color: themeColor }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
       </svg>
-      <span class="text-white font-medium">Dev Tools</span>
+      <span class="text-neutral-900 dark:text-white font-medium">Dev Tools</span>
     </div>
 
     <div class="flex items-center gap-2">
@@ -31,7 +31,7 @@ const colors = [
       <div class="relative">
         <button
           @click="showColors = !showColors"
-        class="p-1.5 rounded hover:bg-neutral-800 transition-colors flex items-center gap-2"
+        class="p-1.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors flex items-center gap-2"
         title="Theme color"
       >
         <div class="w-4 h-4 rounded" :style="{ backgroundColor: themeColor }"></div>
@@ -42,7 +42,7 @@ const colors = [
 
       <div
         v-if="showColors"
-        class="absolute right-0 top-full mt-1 p-2 bg-neutral-800 border border-neutral-700 rounded-lg shadow-xl z-50"
+        class="absolute right-0 top-full mt-1 p-2 bg-white border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg shadow-xl z-50"
       >
         <div class="grid grid-cols-4 gap-1.5">
           <button
@@ -50,7 +50,7 @@ const colors = [
             :key="color"
             @click="emit('color-change', color); showColors = false"
             class="w-6 h-6 rounded transition-transform hover:scale-110"
-            :class="{ 'ring-2 ring-white ring-offset-1 ring-offset-neutral-800': color === themeColor }"
+            :class="{ 'ring-2 ring-neutral-900 ring-offset-1 ring-offset-white dark:ring-white dark:ring-offset-neutral-800': color === themeColor }"
             :style="{ backgroundColor: color }"
           ></button>
         </div>

@@ -157,7 +157,7 @@ const visibleCols = computed(() => Math.min(spreadsheet.data.value?.[0]?.length 
 <template>
   <div class="h-full flex flex-col app-bg">
     <!-- Header -->
-    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900/80 shrink-0">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 bg-white/90 dark:border-neutral-800 dark:bg-neutral-900/80 shrink-0">
       <div class="flex items-center gap-2">
         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M10 3v18M14 3v18"/>
@@ -199,7 +199,7 @@ const visibleCols = computed(() => Math.min(spreadsheet.data.value?.[0]?.length 
     <div v-if="showMenu || showFormatSheet" class="fixed inset-0 z-40" @click="showMenu = false; showFormatSheet = false"></div>
 
     <!-- Cell Info Bar -->
-    <div class="flex items-center gap-2 px-3 py-2 bg-neutral-900/50 border-b border-neutral-800">
+    <div class="flex items-center gap-2 px-3 py-2 bg-neutral-200/50 border-b border-neutral-300 dark:bg-neutral-900/50 dark:border-neutral-800">
       <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded min-w-[40px] text-center">
         {{ currentCell?.ref || '-' }}
       </span>

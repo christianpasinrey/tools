@@ -35,7 +35,7 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
 </script>
 
 <template>
-  <div class="h-11 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-1 shrink-0">
+  <div class="h-11 bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 flex items-center px-2 gap-1 shrink-0">
     <!-- File -->
     <div class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button @click="emit('open')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-300 hover:bg-neutral-800 transition-colors">
@@ -54,12 +54,12 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
 
     <!-- History -->
     <div v-if="hasFile" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
-      <button @click="emit('undo')" :disabled="!canUndo" :class="['p-1.5 rounded transition-colors', canUndo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']">
+      <button @click="emit('undo')" :disabled="!canUndo" :class="['p-1.5 rounded transition-colors', canUndo ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
         </svg>
       </button>
-      <button @click="emit('redo')" :disabled="!canRedo" :class="['p-1.5 rounded transition-colors', canRedo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']">
+      <button @click="emit('redo')" :disabled="!canRedo" :class="['p-1.5 rounded transition-colors', canRedo ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"/>
         </svg>
@@ -68,15 +68,15 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
 
     <!-- Edit -->
     <div v-if="hasFile" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
-      <button @click="emit('trim')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']">
+      <button @click="emit('trim')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg>
         Recortar
       </button>
-      <button @click="emit('delete')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']">
+      <button @click="emit('delete')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
         Eliminar
       </button>
-      <button @click="emit('silence')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']">
+      <button @click="emit('silence')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/><path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/></svg>
         Silencio
       </button>
@@ -84,13 +84,13 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
 
     <!-- FX -->
     <div v-if="hasFile" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
-      <button @click="emit('fadeIn')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']">
+      <button @click="emit('fadeIn')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']">
         Fade In
       </button>
-      <button @click="emit('fadeOut')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']">
+      <button @click="emit('fadeOut')" :disabled="!hasSelection" :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', hasSelection ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']">
         Fade Out
       </button>
-      <button @click="emit('normalize')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors">
+      <button @click="emit('normalize')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors">
         Normalizar
       </button>
     </div>
@@ -136,7 +136,7 @@ const handleZoom = (e) => emit('zoom', parseInt(e.target.value))
         <div class="w-4 h-4 rounded" :style="{ backgroundColor: themeColor }"></div>
       </button>
 
-      <div v-if="showColors" class="absolute top-full right-0 mt-1 p-2 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50">
+      <div v-if="showColors" class="absolute top-full right-0 mt-1 p-2 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50">
         <div class="flex gap-1">
           <button
             v-for="color in colors"

@@ -47,7 +47,7 @@ function getLineaTotal(linea) {
 <template>
   <div class="h-full flex flex-col app-bg">
     <!-- Top bar -->
-    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900/50 shrink-0">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900/50 shrink-0">
       <div class="flex items-center gap-2">
         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -66,7 +66,7 @@ function getLineaTotal(linea) {
         </button>
         <button
           @click="resetInvoice"
-          class="p-2 text-neutral-400 active:text-neutral-300"
+          class="p-2 text-neutral-400 active:text-neutral-700 dark:text-neutral-300"
           style="touch-action: manipulation;"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +86,7 @@ function getLineaTotal(linea) {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
             </svg>
             <div class="space-y-1">
-              <p class="text-xs text-neutral-300 font-medium">Conforme a la normativa AEAT</p>
+              <p class="text-xs text-neutral-700 dark:text-neutral-300 font-medium">Conforme a la normativa AEAT</p>
               <p class="text-[11px] text-neutral-500 leading-relaxed">
                 Art. 6 del RD 1619/2012 (Reglamento de Obligaciones de Facturacion).
                 Incluye todos los campos obligatorios.
@@ -97,7 +97,7 @@ function getLineaTotal(linea) {
       </section>
 
       <!-- EMISOR -->
-      <section class="border-b border-neutral-800">
+      <section class="border-b border-neutral-200 dark:border-neutral-800">
         <button
           @click="toggleSection('emisor')"
           class="w-full flex items-center justify-between px-4 py-4 active:bg-neutral-800/50"
@@ -120,7 +120,7 @@ function getLineaTotal(linea) {
             <div class="flex flex-col gap-2">
               <button
                 @click="logoInput?.click()"
-                class="px-4 py-2 text-sm bg-neutral-800 active:bg-neutral-700 text-neutral-300 rounded-lg"
+                class="px-4 py-2 text-sm bg-neutral-800 active:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded-lg"
                 style="touch-action: manipulation;"
               >
                 {{ invoice.emisor.logo ? 'Cambiar logo' : 'Incluir logo' }}
@@ -176,7 +176,7 @@ function getLineaTotal(linea) {
           </div>
 
           <!-- Config save/load -->
-          <div class="pt-4 border-t border-neutral-800 space-y-3">
+          <div class="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
             <div v-if="savedConfigs.length > 0">
               <label class="block text-xs text-neutral-500 mb-1.5">Cargar configuracion</label>
               <select
@@ -205,7 +205,7 @@ function getLineaTotal(linea) {
       </section>
 
       <!-- CLIENTE -->
-      <section class="border-b border-neutral-800">
+      <section class="border-b border-neutral-200 dark:border-neutral-800">
         <button
           @click="toggleSection('cliente')"
           class="w-full flex items-center justify-between px-4 py-4 active:bg-neutral-800/50"
@@ -243,7 +243,7 @@ function getLineaTotal(linea) {
       </section>
 
       <!-- FACTURA -->
-      <section class="border-b border-neutral-800">
+      <section class="border-b border-neutral-200 dark:border-neutral-800">
         <button
           @click="toggleSection('factura')"
           class="w-full flex items-center justify-between px-4 py-4 active:bg-neutral-800/50"
@@ -265,13 +265,13 @@ function getLineaTotal(linea) {
           </div>
           <label class="flex items-center gap-3 py-2">
             <input type="checkbox" v-model="invoice.conVencimiento" class="w-5 h-5 accent-emerald-500" />
-            <span class="text-sm text-neutral-300">Fecha de vencimiento</span>
+            <span class="text-sm text-neutral-700 dark:text-neutral-300">Fecha de vencimiento</span>
           </label>
           <input v-if="invoice.conVencimiento" v-model="invoice.fechaVencimiento" type="date" class="mobile-input" />
 
           <label class="flex items-center gap-3 py-2">
             <input type="checkbox" v-model="invoice.conFechaOperacion" class="w-5 h-5 accent-emerald-500" />
-            <span class="text-sm text-neutral-300">Fecha de operacion</span>
+            <span class="text-sm text-neutral-700 dark:text-neutral-300">Fecha de operacion</span>
           </label>
           <input v-if="invoice.conFechaOperacion" v-model="invoice.fechaOperacion" type="date" class="mobile-input" />
 
@@ -295,7 +295,7 @@ function getLineaTotal(linea) {
       </section>
 
       <!-- LINEAS / CONCEPTOS -->
-      <section class="border-b border-neutral-800">
+      <section class="border-b border-neutral-200 dark:border-neutral-800">
         <button
           @click="toggleSection('lineas')"
           class="w-full flex items-center justify-between px-4 py-4 active:bg-neutral-800/50"
@@ -380,7 +380,7 @@ function getLineaTotal(linea) {
       </section>
 
       <!-- FISCAL -->
-      <section class="border-b border-neutral-800">
+      <section class="border-b border-neutral-200 dark:border-neutral-800">
         <button
           @click="toggleSection('fiscal')"
           class="w-full flex items-center justify-between px-4 py-4 active:bg-neutral-800/50"
@@ -394,15 +394,15 @@ function getLineaTotal(linea) {
         <div v-if="sections.fiscal" class="px-4 pb-4 space-y-4">
           <label class="flex items-center gap-3 py-2">
             <input type="checkbox" v-model="invoice.desglosarIva" class="w-5 h-5 accent-emerald-500" />
-            <span class="text-sm text-neutral-300">Desglosar IVA</span>
+            <span class="text-sm text-neutral-700 dark:text-neutral-300">Desglosar IVA</span>
           </label>
           <label class="flex items-center gap-3 py-2">
             <input type="checkbox" v-model="invoice.aplicarRecargo" class="w-5 h-5 accent-emerald-500" />
-            <span class="text-sm text-neutral-300">Recargo de equivalencia</span>
+            <span class="text-sm text-neutral-700 dark:text-neutral-300">Recargo de equivalencia</span>
           </label>
           <label class="flex items-center gap-3 py-2">
             <input type="checkbox" v-model="invoice.aplicarIrpf" class="w-5 h-5 accent-emerald-500" />
-            <span class="text-sm text-neutral-300">Aplicar retencion IRPF</span>
+            <span class="text-sm text-neutral-700 dark:text-neutral-300">Aplicar retencion IRPF</span>
           </label>
           <div v-if="invoice.aplicarIrpf" class="pl-8 flex items-center gap-4">
             <label class="flex items-center gap-2">
@@ -436,7 +436,7 @@ function getLineaTotal(linea) {
       <!-- TOTALS -->
       <section class="p-4">
         <div class="bg-neutral-800/50 rounded-xl p-4 space-y-2">
-          <div class="flex justify-between text-sm text-neutral-300">
+          <div class="flex justify-between text-sm text-neutral-700 dark:text-neutral-300">
             <span>Subtotal</span>
             <span>{{ totales.subtotal.toFixed(2) }} {{ invoice.moneda }}</span>
           </div>
@@ -475,7 +475,7 @@ function getLineaTotal(linea) {
     </div>
 
     <!-- Bottom action bar -->
-    <div class="fixed bottom-16 left-0 right-0 p-4 bg-neutral-900/95 backdrop-blur-sm border-t border-neutral-800">
+    <div class="fixed bottom-16 left-0 right-0 p-4 bg-neutral-900/95 backdrop-blur-sm border-t border-neutral-200 dark:border-neutral-800">
       <button
         @click="generatePDF"
         class="w-full py-4 bg-emerald-600 active:bg-emerald-500 text-white font-medium rounded-xl flex items-center justify-center gap-2"
@@ -493,7 +493,7 @@ function getLineaTotal(linea) {
       <Transition name="modal">
         <div v-if="showConfigModal" class="fixed inset-0 z-[9999]">
           <div class="absolute inset-0 bg-black/60" @click="dismissConfigModal"></div>
-          <div class="absolute bottom-0 left-0 right-0 bg-neutral-900 rounded-t-2xl border-t border-neutral-800 p-6 pb-8">
+          <div class="absolute bottom-0 left-0 right-0 bg-neutral-900 rounded-t-2xl border-t border-neutral-200 dark:border-neutral-800 p-6 pb-8">
             <div class="w-12 h-1 bg-neutral-700 rounded-full mx-auto mb-4"></div>
             <h3 class="text-lg font-medium text-white mb-2">Guardar configuracion</h3>
             <p class="text-sm text-neutral-400 mb-4">Los datos se guardaran cifrados en tu navegador.</p>

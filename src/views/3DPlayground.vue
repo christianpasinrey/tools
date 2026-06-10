@@ -624,7 +624,7 @@ onUnmounted(() => {
     />
 
     <!-- Scene Save/Load -->
-    <div class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+    <div class="h-9 bg-neutral-200/50 border-b border-neutral-300 dark:bg-neutral-900/50 dark:border-neutral-800 flex items-center px-3 shrink-0">
       <span class="text-xs text-neutral-500 mr-2">Escena</span>
       <VaultSaveLoad storeName="three-scenes" :getData="getSceneData" label="escena" @load="loadSceneData" />
     </div>

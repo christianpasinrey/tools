@@ -42,7 +42,7 @@ const filters = [
 </script>
 
 <template>
-  <div class="h-11 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-1 shrink-0">
+  <div class="h-11 bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 flex items-center px-2 gap-1 shrink-0">
     <!-- File Actions -->
     <div class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
@@ -75,7 +75,7 @@ const filters = [
       <button
         @click="emit('undo')"
         :disabled="!canUndo"
-        :class="['p-1.5 rounded transition-colors', canUndo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']"
+        :class="['p-1.5 rounded transition-colors', canUndo ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']"
         title="Deshacer"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +85,7 @@ const filters = [
       <button
         @click="emit('redo')"
         :disabled="!canRedo"
-        :class="['p-1.5 rounded transition-colors', canRedo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed']"
+        :class="['p-1.5 rounded transition-colors', canRedo ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed']"
         title="Rehacer"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,7 +98,7 @@ const filters = [
     <div v-if="hasFile && !isCropping && !isPainting" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="emit('rotate-left')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Rotar izquierda"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ const filters = [
       </button>
       <button
         @click="emit('rotate-right')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Rotar derecha"
       >
         <svg class="w-4 h-4 scale-x-[-1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ const filters = [
       </button>
       <button
         @click="emit('flip-h')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Voltear horizontal"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,7 +125,7 @@ const filters = [
       </button>
       <button
         @click="emit('flip-v')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Voltear vertical"
       >
         <svg class="w-4 h-4 rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,7 +134,7 @@ const filters = [
       </button>
       <button
         @click="emit('crop')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Recortar"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,7 +143,7 @@ const filters = [
       </button>
       <button
         @click="emit('paint')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Pintar"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,7 +191,7 @@ const filters = [
         </button>
 
         <!-- Brush Settings Dropdown -->
-        <div v-if="showBrushSettings" class="absolute top-full left-0 mt-1 p-3 bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl z-50 w-48">
+        <div v-if="showBrushSettings" class="absolute top-full left-0 mt-1 p-3 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded-lg shadow-xl z-50 w-48">
           <div class="mb-3">
             <label class="text-neutral-400 text-[10px] uppercase tracking-wider mb-2 block">Color</label>
             <input
@@ -218,7 +218,7 @@ const filters = [
 
       <button
         @click="emit('eyedropper')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Cuentagotas - Seleccionar color de la imagen"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,7 +242,7 @@ const filters = [
     <div v-if="hasFile && !isCropping && !isPainting" class="flex items-center gap-1 pr-2 border-r border-neutral-800 relative">
       <button
         @click="showFilters = !showFilters"
-        :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', showFilters ? 'bg-neutral-800 text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800']"
+        :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', showFilters ? 'bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-white' : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800']"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
@@ -251,7 +251,7 @@ const filters = [
       </button>
 
       <!-- Filters Dropdown -->
-      <div v-if="showFilters" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1">
+      <div v-if="showFilters" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1">
         <button
           v-for="filter in filters"
           :key="filter.id"
@@ -267,7 +267,7 @@ const filters = [
     <div v-if="hasFile && !isCropping && !isPainting" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="emit('apply-adjustments')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Aplicar ajustes permanentemente"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -277,7 +277,7 @@ const filters = [
       </button>
       <button
         @click="emit('reset')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Resetear ajustes"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,7 +316,7 @@ const filters = [
         <div class="w-4 h-4 rounded" :style="{ backgroundColor: themeColor }"></div>
       </button>
 
-      <div v-if="showColors" class="absolute top-full right-0 mt-1 p-2 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50">
+      <div v-if="showColors" class="absolute top-full right-0 mt-1 p-2 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50">
         <div class="flex gap-1">
           <button
             v-for="color in colors"

@@ -99,7 +99,7 @@ nextTick(() => {
     <input
       v-model="title"
       placeholder="Título de la tarea"
-      class="task-form-title w-full bg-neutral-900 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50 mb-2"
+      class="task-form-title w-full bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50 mb-2"
       @keydown.enter.prevent="save"
       @keydown.escape="emit('cancel')"
     />
@@ -120,11 +120,11 @@ nextTick(() => {
         v-model="description"
         placeholder="Descripción (opcional, soporta Markdown)"
         rows="2"
-        class="w-full bg-neutral-900 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50 resize-none"
+        class="w-full bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50 resize-none"
       ></textarea>
       <div
         v-else
-        class="w-full bg-neutral-900 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-300 min-h-[3rem] prose-micro"
+        class="w-full bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-700 dark:text-neutral-300 min-h-[3rem] prose-micro"
         v-html="renderedPreview"
       ></div>
     </div>
@@ -138,7 +138,7 @@ nextTick(() => {
         class="px-2 py-0.5 text-[10px] rounded-full border transition-colors"
         :class="priority === key
           ? 'border-current text-white'
-          : 'border-neutral-700 text-neutral-500 hover:text-neutral-300'"
+          : 'border-neutral-700 text-neutral-500 hover:text-neutral-700 dark:text-neutral-300'"
         :style="priority === key ? { color: priorityColors[key], borderColor: priorityColors[key] + '80' } : {}"
       >
         {{ label }}
@@ -151,7 +151,7 @@ nextTick(() => {
       <input
         v-model="dueDate"
         type="date"
-        class="bg-neutral-900 border border-neutral-700 rounded px-2 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
+        class="bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 rounded px-2 py-0.5 text-[10px] text-white outline-none focus:border-indigo-500/50"
       />
       <button
         v-if="dueDate"
@@ -190,7 +190,7 @@ nextTick(() => {
             v-model="sub.done"
             class="w-3 h-3 rounded border-neutral-600 bg-neutral-900 text-indigo-500 focus:ring-0 focus:ring-offset-0"
           />
-          <span class="text-[10px] text-neutral-300 flex-1" :class="{ 'line-through text-neutral-600': sub.done }">
+          <span class="text-[10px] text-neutral-700 dark:text-neutral-300 flex-1" :class="{ 'line-through text-neutral-600': sub.done }">
             {{ sub.title }}
           </span>
           <button
@@ -207,7 +207,7 @@ nextTick(() => {
         <input
           v-model="newSubtask"
           placeholder="+ Subtarea"
-          class="flex-1 bg-neutral-900 border border-neutral-700 rounded px-2 py-0.5 text-[10px] text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50"
+          class="flex-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 rounded px-2 py-0.5 text-[10px] text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50"
           @keydown.enter.prevent="addSubtask"
         />
         <button
@@ -220,13 +220,13 @@ nextTick(() => {
 
     <!-- Actions -->
     <div class="flex items-center justify-end gap-1">
-      <button @click="emit('cancel')" class="px-2 py-1 text-[10px] text-neutral-500 hover:text-white transition-colors">
+      <button @click="emit('cancel')" class="px-2 py-1 text-[10px] text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors">
         Cancelar
       </button>
       <button
         @click="save"
         :disabled="!title.trim()"
-        class="px-2.5 py-1 text-[10px] bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-white rounded transition-colors"
+        class="px-2.5 py-1 text-[10px] bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 text-white rounded transition-colors"
       >
         {{ task ? 'Guardar' : 'Añadir' }}
       </button>

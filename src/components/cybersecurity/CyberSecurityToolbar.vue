@@ -18,7 +18,7 @@ const colors = [
 </script>
 
 <template>
-  <div class="flex items-center justify-between px-4 h-12 border-b border-neutral-800 bg-neutral-900/50">
+  <div class="flex items-center justify-between px-4 h-12 border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900/50">
     <div class="flex items-center gap-3">
       <div
         class="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -35,7 +35,7 @@ const colors = [
         </svg>
       </div>
       <div>
-        <h1 class="text-sm font-semibold text-white leading-tight">CyberSecurity</h1>
+        <h1 class="text-sm font-semibold text-neutral-900 dark:text-white leading-tight">CyberSecurity</h1>
         <p class="text-xs text-neutral-500">JWT, Base64, Hash</p>
       </div>
     </div>
@@ -46,7 +46,7 @@ const colors = [
         :key="color.value"
         @click="emit('color-change', color.value)"
         class="w-5 h-5 rounded-full cursor-pointer transition-transform hover:scale-110"
-        :class="{ 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900': themeColor === color.value }"
+        :class="{ 'ring-2 ring-neutral-900 ring-offset-2 ring-offset-white dark:ring-white dark:ring-offset-neutral-900': themeColor === color.value }"
         :style="{ backgroundColor: color.value }"
         :title="color.name"
       />

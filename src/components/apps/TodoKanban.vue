@@ -276,7 +276,7 @@ const taskCount = computed(() => {
     />
 
     <!-- Vault Save/Load -->
-    <div v-if="currentBoard" class="h-8 bg-neutral-900/30 border-b border-neutral-800/50 flex items-center px-3 shrink-0">
+    <div v-if="currentBoard" class="h-8 bg-neutral-200/50 dark:bg-neutral-900/30 border-b border-neutral-300 dark:border-neutral-800/50 flex items-center px-3 shrink-0">
       <VaultSaveLoad storeName="kanban-boards" :getData="getBoardData" label="tablero" @load="loadBoardData" />
     </div>
 

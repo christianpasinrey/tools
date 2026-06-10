@@ -224,7 +224,7 @@ const tools = [
           class="w-9 h-9 rounded-lg flex items-center justify-center transition-all"
           :class="mapEditor.activeTool.value === tool.id
             ? 'bg-blue-600 text-white'
-            : 'text-neutral-400 hover:text-white hover:bg-neutral-800'"
+            : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800'"
           :title="tool.name"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

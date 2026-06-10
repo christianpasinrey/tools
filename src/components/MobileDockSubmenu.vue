@@ -102,7 +102,7 @@ const handleItemClick = (e, item) => {
         style="height: 100dvh;"
       >
         <!-- Header -->
-        <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
           <button
             v-if="selectedCategory"
             @click="goBack"

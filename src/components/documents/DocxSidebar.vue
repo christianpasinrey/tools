@@ -136,7 +136,7 @@ const executeCommand = (action) => {
             v-for="item in insertItems"
             :key="item.id"
             @click="executeCommand(item.action)"
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors text-left"
+            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors text-left"
           >
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon" />
@@ -154,7 +154,7 @@ const executeCommand = (action) => {
             v-for="item in formatItems"
             :key="item.id"
             @click="executeCommand(item.action)"
-            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors text-left"
+            class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors text-left"
           >
             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon" />
@@ -172,7 +172,7 @@ const executeCommand = (action) => {
             v-for="style in stylePresets"
             :key="style.id"
             @click="executeCommand(style.action)"
-            class="w-full px-3 py-2 rounded-lg text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors text-left"
+            class="w-full px-3 py-2 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors text-left"
             :class="style.class"
           >
             {{ style.name }}

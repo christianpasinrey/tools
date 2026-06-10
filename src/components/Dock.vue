@@ -608,6 +608,24 @@ const activeSubmenu = computed(() => {
   transform: translateX(-50%);
   z-index: 100;
   padding: 8px;
+  animation: dock-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+}
+
+@keyframes dock-rise {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dock-wrapper {
+    animation: none;
+  }
 }
 
 /* Liquid Glass Container - Dark mode (default, same as MobileDock) */

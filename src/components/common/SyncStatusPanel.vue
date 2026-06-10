@@ -84,23 +84,23 @@ function handleLogout() {
 <template>
   <div>
     <div class="flex items-center justify-between mb-2">
-      <span class="text-neutral-400 text-xs">{{ auth.user.value?.email }}</span>
+      <span class="text-neutral-600 dark:text-neutral-400 text-xs">{{ auth.user.value?.email }}</span>
     </div>
 
     <!-- Password re-entry needed (after browser restart) -->
     <div v-if="crypto.isLocked.value" class="space-y-2 mb-3">
-      <p class="text-amber-400 text-xs">Introduce tu password para desbloquear el vault</p>
+      <p class="text-amber-600 dark:text-amber-400 text-xs">Introduce tu password para desbloquear el vault</p>
       <div class="flex gap-2">
         <input
           v-model="unlockPassword"
           type="password"
           placeholder="Password"
-          class="flex-1 bg-neutral-900 border border-neutral-600 rounded px-2 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-amber-500"
+          class="flex-1 bg-white border border-neutral-300 text-neutral-900 placeholder-neutral-400 dark:bg-neutral-900 dark:border-neutral-600 dark:text-neutral-200 dark:placeholder-neutral-500 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-amber-500"
           @keyup.enter="handleUnlock"
         />
         <button @click="handleUnlock" class="px-2 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs">OK</button>
       </div>
-      <p v-if="unlockError" class="text-red-400 text-xs">{{ unlockError }}</p>
+      <p v-if="unlockError" class="text-red-600 dark:text-red-400 text-xs">{{ unlockError }}</p>
     </div>
 
     <!-- Normal sync status (vault unlocked) -->
@@ -108,9 +108,9 @@ function handleLogout() {
       <div class="flex items-center justify-between">
         <span class="text-neutral-500 text-xs">Estado:</span>
         <span class="text-xs" :class="{
-          'text-emerald-400': sync.syncStatus.value === 'idle',
-          'text-blue-400': sync.syncStatus.value === 'syncing',
-          'text-red-400': sync.syncStatus.value === 'error',
+          'text-emerald-600 dark:text-emerald-400': sync.syncStatus.value === 'idle',
+          'text-blue-600 dark:text-blue-400': sync.syncStatus.value === 'syncing',
+          'text-red-600 dark:text-red-400': sync.syncStatus.value === 'error',
           'text-neutral-500': sync.syncStatus.value === 'offline'
         }">
           {{ sync.syncStatus.value === 'idle' ? 'Sincronizado' :
@@ -120,17 +120,17 @@ function handleLogout() {
       </div>
       <div class="flex items-center justify-between">
         <span class="text-neutral-500 text-xs">Ultimo sync:</span>
-        <span class="text-neutral-300 text-xs">{{ lastSyncFormatted }}</span>
+        <span class="text-neutral-700 dark:text-neutral-300 text-xs">{{ lastSyncFormatted }}</span>
       </div>
       <div v-if="sync.pendingChanges.value.length > 0" class="flex items-center justify-between">
         <span class="text-neutral-500 text-xs">Pendientes:</span>
-        <span class="text-amber-400 text-xs">{{ sync.pendingChanges.value.length }}</span>
+        <span class="text-amber-600 dark:text-amber-400 text-xs">{{ sync.pendingChanges.value.length }}</span>
       </div>
     </div>
 
     <!-- Sync progress -->
     <div v-if="sync.syncStatus.value === 'syncing' && sync.syncProgress.value.total > 0" class="mb-2">
-      <div class="w-full h-1 bg-neutral-700 rounded overflow-hidden">
+      <div class="w-full h-1 bg-neutral-200 dark:bg-neutral-700 rounded overflow-hidden">
         <div
           class="h-full bg-blue-500 transition-all"
           :style="{ width: (sync.syncProgress.value.current / sync.syncProgress.value.total * 100) + '%' }"
@@ -141,41 +141,41 @@ function handleLogout() {
 
     <!-- Errors -->
     <div v-if="sync.syncErrors.value.length > 0" class="mb-2 max-h-20 overflow-y-auto">
-      <p v-for="(err, i) in sync.syncErrors.value" :key="i" class="text-red-400 text-xs truncate">
+      <p v-for="(err, i) in sync.syncErrors.value" :key="i" class="text-red-600 dark:text-red-400 text-xs truncate">
         {{ err.type }}: {{ err.error }}
       </p>
     </div>
 
     <!-- Change password section -->
-    <div v-if="showChangePassword && !crypto.isLocked.value" class="mb-3 space-y-2 border-t border-neutral-700 pt-3">
-      <p class="text-neutral-300 text-xs font-medium">Cambiar password</p>
+    <div v-if="showChangePassword && !crypto.isLocked.value" class="mb-3 space-y-2 border-t border-neutral-200 dark:border-neutral-700 pt-3">
+      <p class="text-neutral-700 dark:text-neutral-300 text-xs font-medium">Cambiar password</p>
       <input
         v-model="currentPwd"
         type="password"
         placeholder="Password actual"
-        class="w-full bg-neutral-900 border border-neutral-600 rounded px-2 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-blue-500"
+        class="w-full bg-white border border-neutral-300 text-neutral-900 placeholder-neutral-400 dark:bg-neutral-900 dark:border-neutral-600 dark:text-neutral-200 dark:placeholder-neutral-500 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500"
       />
       <input
         v-model="newPwd"
         type="password"
         placeholder="Nuevo password (min 8)"
-        class="w-full bg-neutral-900 border border-neutral-600 rounded px-2 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-blue-500"
+        class="w-full bg-white border border-neutral-300 text-neutral-900 placeholder-neutral-400 dark:bg-neutral-900 dark:border-neutral-600 dark:text-neutral-200 dark:placeholder-neutral-500 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500"
       />
       <input
         v-model="confirmPwd"
         type="password"
         placeholder="Confirmar nuevo password"
-        class="w-full bg-neutral-900 border border-neutral-600 rounded px-2 py-1.5 text-xs text-neutral-200 focus:outline-none focus:border-blue-500"
+        class="w-full bg-white border border-neutral-300 text-neutral-900 placeholder-neutral-400 dark:bg-neutral-900 dark:border-neutral-600 dark:text-neutral-200 dark:placeholder-neutral-500 rounded px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500"
         @keyup.enter="handleChangePassword"
       />
       <div class="flex items-start gap-2 px-2 py-1.5 rounded bg-amber-500/10 border border-amber-500/20">
-        <svg class="w-3 h-3 text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
         </svg>
-        <p class="text-[10px] text-amber-300/90 leading-relaxed">Todos tus datos se re-cifrarán con el nuevo password.</p>
+        <p class="text-[10px] text-amber-700 dark:text-amber-300/90 leading-relaxed">Todos tus datos se re-cifrarán con el nuevo password.</p>
       </div>
-      <p v-if="changePwdError" class="text-red-400 text-xs">{{ changePwdError }}</p>
-      <p v-if="changePwdSuccess" class="text-emerald-400 text-xs">Password cambiado correctamente</p>
+      <p v-if="changePwdError" class="text-red-600 dark:text-red-400 text-xs">{{ changePwdError }}</p>
+      <p v-if="changePwdSuccess" class="text-emerald-600 dark:text-emerald-400 text-xs">Password cambiado correctamente</p>
       <div class="flex gap-2">
         <button
           @click="handleChangePassword"
@@ -186,7 +186,7 @@ function handleLogout() {
         </button>
         <button
           @click="showChangePassword = false; changePwdError = ''"
-          class="px-2 py-1.5 text-neutral-400 hover:text-neutral-200 border border-neutral-600 rounded text-xs"
+          class="px-2 py-1.5 text-neutral-600 hover:text-neutral-900 border border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-200 dark:border-neutral-600 rounded text-xs"
         >
           Cancelar
         </button>
@@ -205,7 +205,7 @@ function handleLogout() {
       <button
         v-if="!crypto.isLocked.value && !showChangePassword"
         @click="showChangePassword = true"
-        class="px-2 py-1.5 text-neutral-400 hover:text-neutral-200 border border-neutral-600 rounded text-xs"
+        class="px-2 py-1.5 text-neutral-600 hover:text-neutral-900 border border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-200 dark:border-neutral-600 rounded text-xs"
         title="Cambiar password"
       >
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,7 +214,7 @@ function handleLogout() {
       </button>
       <button
         @click="handleLogout"
-        class="px-2 py-1.5 text-neutral-400 hover:text-neutral-200 border border-neutral-600 rounded text-xs"
+        class="px-2 py-1.5 text-neutral-600 hover:text-neutral-900 border border-neutral-300 dark:text-neutral-400 dark:hover:text-neutral-200 dark:border-neutral-600 rounded text-xs"
       >
         Salir
       </button>

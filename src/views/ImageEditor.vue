@@ -113,26 +113,26 @@ const doExport = () => {
   <div class="h-full flex flex-col app-bg select-none">
     <!-- Processing Overlay -->
     <div v-if="editor.isProcessing.value" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-      <div class="flex items-center gap-3 px-5 py-3 bg-neutral-900 border border-neutral-800 rounded">
+      <div class="flex items-center gap-3 px-5 py-3 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded">
         <div class="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" :style="{ borderColor: editor.themeColor.value, borderTopColor: 'transparent' }"></div>
-        <span class="text-sm">Procesando...</span>
+        <span class="text-sm text-neutral-800 dark:text-neutral-200">Procesando...</span>
       </div>
     </div>
 
     <!-- Export Modal -->
     <div v-if="showExportModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50" @click.self="showExportModal = false">
-      <div class="bg-neutral-900 border border-neutral-800 rounded-lg p-5 w-80">
-        <h3 class="text-white font-medium mb-4">Exportar imagen</h3>
+      <div class="bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded-lg p-5 w-80">
+        <h3 class="text-neutral-900 dark:text-white font-medium mb-4">Exportar imagen</h3>
 
         <div class="space-y-4">
           <div>
-            <label class="text-neutral-400 text-xs mb-2 block">Formato</label>
+            <label class="text-neutral-600 dark:text-neutral-400 text-xs mb-2 block">Formato</label>
             <div class="flex gap-2">
               <button
                 v-for="fmt in ['png', 'jpg', 'webp']"
                 :key="fmt"
                 @click="exportFormat = fmt"
-                :class="['px-3 py-1.5 rounded text-xs font-medium transition-colors', exportFormat === fmt ? 'text-white' : 'bg-neutral-800 text-neutral-400 hover:text-white']"
+                :class="['px-3 py-1.5 rounded text-xs font-medium transition-colors', exportFormat === fmt ? 'text-white' : 'bg-neutral-200 text-neutral-600 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:text-white']"
                 :style="exportFormat === fmt ? { backgroundColor: editor.themeColor.value } : {}"
               >
                 {{ fmt.toUpperCase() }}
@@ -141,13 +141,13 @@ const doExport = () => {
           </div>
 
           <div v-if="exportFormat !== 'png'">
-            <label class="text-neutral-400 text-xs mb-2 block">Calidad: {{ exportQuality }}%</label>
+            <label class="text-neutral-600 dark:text-neutral-400 text-xs mb-2 block">Calidad: {{ exportQuality }}%</label>
             <input
               type="range"
               min="10"
               max="100"
               v-model="exportQuality"
-              class="w-full h-1 bg-neutral-700 rounded appearance-none cursor-pointer"
+              class="w-full h-1 bg-neutral-300 dark:bg-neutral-700 rounded appearance-none cursor-pointer"
               :style="{ accentColor: editor.themeColor.value }"
             />
           </div>
@@ -155,7 +155,7 @@ const doExport = () => {
           <div class="flex gap-2 pt-2">
             <button
               @click="showExportModal = false"
-              class="flex-1 px-3 py-2 rounded text-sm font-medium text-neutral-400 hover:bg-neutral-800 transition-colors"
+              class="flex-1 px-3 py-2 rounded text-sm font-medium text-neutral-600 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:bg-neutral-800 transition-colors"
             >
               Cancelar
             </button>
@@ -206,7 +206,7 @@ const doExport = () => {
     />
 
     <!-- Presets -->
-    <div class="h-9 bg-neutral-900/50 border-b border-neutral-800 flex items-center px-3 shrink-0">
+    <div class="h-9 bg-neutral-200/50 dark:bg-neutral-900/50 border-b border-neutral-300 dark:border-neutral-800 flex items-center px-3 shrink-0">
       <span class="text-xs text-neutral-500 mr-2">Presets</span>
       <VaultSaveLoad storeName="image-presets" :getData="getPresetData" label="preset" @load="loadPreset" />
     </div>

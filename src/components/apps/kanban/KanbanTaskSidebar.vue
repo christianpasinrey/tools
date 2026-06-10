@@ -170,7 +170,7 @@ function onDelete() {
     <!-- Sidebar -->
     <div class="relative w-96 max-w-[90vw] h-full bg-neutral-900 border-l border-neutral-700 shadow-2xl flex flex-col overflow-hidden animate-slide-in">
       <!-- Header -->
-      <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 shrink-0">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         <div class="flex items-center gap-2">
           <span class="text-[10px] text-neutral-500 px-1.5 py-0.5 bg-neutral-800 rounded">{{ columnName }}</span>
           <span v-if="mode === 'create'" class="text-xs text-indigo-400">Nueva tarea</span>
@@ -196,7 +196,7 @@ function onDelete() {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
             </svg>
           </button>
-          <button @click="emit('close')" class="p-1.5 text-neutral-500 hover:text-white transition-colors">
+          <button @click="emit('close')" class="p-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
@@ -227,7 +227,7 @@ function onDelete() {
               :key="key"
               @click="priority = key"
               class="px-3 py-1 text-xs rounded-md border transition-all"
-              :class="priority === key ? 'text-white font-medium' : 'border-neutral-700 text-neutral-500 hover:text-neutral-300'"
+              :class="priority === key ? 'text-white font-medium' : 'border-neutral-700 text-neutral-500 hover:text-neutral-700 dark:text-neutral-300'"
               :style="priority === key ? { color: '#fff', backgroundColor: priorityColors[key] + '25', borderColor: priorityColors[key] + '80' } : {}"
             >
               {{ label }}
@@ -250,7 +250,7 @@ function onDelete() {
             <input
               v-model="dueDate"
               type="date"
-              class="bg-neutral-800 border border-neutral-700 rounded-md px-2.5 py-1.5 text-xs text-white outline-none focus:border-indigo-500/50"
+              class="bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded-md px-2.5 py-1.5 text-xs text-neutral-900 dark:text-white outline-none focus:border-indigo-500/50"
             />
             <button v-if="dueDate" @click="dueDate = ''" class="text-xs text-neutral-500 hover:text-red-400">Quitar</button>
           </div>
@@ -319,12 +319,12 @@ function onDelete() {
               v-model="description"
               placeholder="Descripcion (Markdown soportado)"
               rows="4"
-              class="w-full bg-neutral-800 border border-neutral-700 rounded-md px-3 py-2 text-xs text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50 resize-none font-mono"
+              class="w-full bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded-md px-3 py-2 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50 resize-none font-mono"
             ></textarea>
           </div>
           <div
             v-else-if="description"
-            class="text-xs text-neutral-300 leading-relaxed prose-sidebar"
+            class="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed prose-sidebar"
             v-html="renderedDescription"
           ></div>
           <span v-else class="text-xs text-neutral-600 italic">Sin descripcion</span>
@@ -355,7 +355,7 @@ function onDelete() {
             <div
               v-for="sub in subtasks"
               :key="sub.id"
-              class="flex items-center gap-2 group/sub py-1 px-2 rounded hover:bg-neutral-800/50 -mx-2"
+              class="flex items-center gap-2 group/sub py-1 px-2 rounded hover:bg-neutral-200 dark:hover:bg-neutral-800/50 -mx-2"
             >
               <button
                 @click="toggleSubtask(sub)"
@@ -366,7 +366,7 @@ function onDelete() {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
                 </svg>
               </button>
-              <span class="text-xs flex-1" :class="sub.done ? 'line-through text-neutral-600' : 'text-neutral-300'">
+              <span class="text-xs flex-1" :class="sub.done ? 'line-through text-neutral-600' : 'text-neutral-700 dark:text-neutral-300'">
                 {{ sub.title }}
               </span>
               <button
@@ -386,7 +386,7 @@ function onDelete() {
             <input
               v-model="newSubtask"
               placeholder="+ Añadir subtarea"
-              class="flex-1 bg-neutral-800 border border-neutral-700 rounded-md px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50"
+              class="flex-1 bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded-md px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50"
               @keydown.enter.prevent="addSubtask"
             />
             <button
@@ -398,7 +398,7 @@ function onDelete() {
         </div>
 
         <!-- Created at -->
-        <div v-if="task && task.createdAt" class="pt-2 border-t border-neutral-800">
+        <div v-if="task && task.createdAt" class="pt-2 border-t border-neutral-200 dark:border-neutral-800">
           <span class="text-[10px] text-neutral-600">
             Creada {{ new Date(task.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) }}
           </span>
@@ -406,14 +406,14 @@ function onDelete() {
       </div>
 
       <!-- Footer actions -->
-      <div v-if="editing" class="shrink-0 px-4 py-3 border-t border-neutral-800 flex items-center justify-between">
-        <button @click="cancel" class="px-3 py-1.5 text-xs text-neutral-500 hover:text-white transition-colors">
+      <div v-if="editing" class="shrink-0 px-4 py-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+        <button @click="cancel" class="px-3 py-1.5 text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors">
           Cancelar
         </button>
         <button
           @click="save"
           :disabled="!title.trim()"
-          class="px-4 py-1.5 text-xs bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-white rounded-md font-medium transition-colors"
+          class="px-4 py-1.5 text-xs bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-300 dark:disabled:bg-neutral-700 disabled:text-neutral-500 text-white rounded-md font-medium transition-colors"
         >
           {{ mode === 'create' ? 'Crear tarea' : 'Guardar' }}
         </button>

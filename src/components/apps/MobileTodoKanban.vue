@@ -182,7 +182,7 @@ const priorityLabels = {
 <template>
   <div class="flex flex-col h-full app-bg">
     <!-- Header -->
-    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
       <div class="flex items-center gap-2">
         <h1 class="text-sm font-semibold text-white">{{ currentBoard?.name }}</h1>
         <span class="text-xs text-neutral-500">{{ columns.length }} columnas</span>
@@ -198,7 +198,7 @@ const priorityLabels = {
     </div>
 
     <!-- Column tabs / indicators -->
-    <div class="flex items-center gap-1 px-4 py-2 border-b border-neutral-800/50 bg-neutral-900/50 overflow-x-auto">
+    <div class="flex items-center gap-1 px-4 py-2 border-b border-neutral-200 dark:border-neutral-800/50 bg-neutral-900/50 overflow-x-auto">
       <button
         v-for="(col, index) in columns"
         :key="col.id"
@@ -206,7 +206,7 @@ const priorityLabels = {
         class="px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-all"
         :class="index === currentColumnIndex
           ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
-          : 'text-neutral-500 hover:text-neutral-300'"
+          : 'text-neutral-500 hover:text-neutral-700 dark:text-neutral-300'"
       >
         {{ col.title }}
         <span class="ml-1 text-neutral-600">({{ col.tasks.length }})</span>
@@ -214,14 +214,14 @@ const priorityLabels = {
     </div>
 
     <!-- Column controls -->
-    <div v-if="currentColumn" class="flex items-center justify-between px-4 py-2 border-b border-neutral-800/50">
+    <div v-if="currentColumn" class="flex items-center justify-between px-4 py-2 border-b border-neutral-200 dark:border-neutral-800/50">
       <div class="flex items-center gap-2">
         <template v-if="editingColumnTitle">
           <input
             v-model="columnTitleInput"
             @blur="saveColumnTitle"
             @keyup.enter="saveColumnTitle"
-            class="px-2 py-1 text-sm bg-neutral-800 border border-neutral-700 rounded text-white focus:outline-none focus:border-indigo-500"
+            class="px-2 py-1 text-sm bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded text-white focus:outline-none focus:border-indigo-500"
             autofocus
           />
         </template>
@@ -233,7 +233,7 @@ const priorityLabels = {
       <div class="flex items-center gap-2">
         <button
           @click="startEditColumnTitle"
-          class="p-1.5 text-neutral-500 hover:text-white rounded"
+          class="p-1.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white rounded"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -336,7 +336,7 @@ const priorityLabels = {
                 <input
                   v-model="taskForm.title"
                   type="text"
-                  class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500"
+                  class="w-full px-3 py-2.5 bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500"
                   placeholder="¿Qué necesitas hacer?"
                 />
               </div>
@@ -346,7 +346,7 @@ const priorityLabels = {
                 <textarea
                   v-model="taskForm.description"
                   rows="3"
-                  class="w-full px-3 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 resize-none"
+                  class="w-full px-3 py-2.5 bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded-lg text-white text-sm focus:outline-none focus:border-indigo-500 resize-none"
                   placeholder="Detalles adicionales..."
                 ></textarea>
               </div>

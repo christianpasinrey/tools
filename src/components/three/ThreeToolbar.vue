@@ -90,7 +90,7 @@ const toggleMenu = (menu) => {
 </script>
 
 <template>
-  <div class="h-11 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-1 shrink-0">
+  <div class="h-11 bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 flex items-center px-2 gap-1 shrink-0">
     <!-- Presets / Escenas -->
     <div class="relative">
       <button
@@ -106,7 +106,7 @@ const toggleMenu = (menu) => {
         </svg>
       </button>
 
-      <div v-if="showPresets" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[180px]">
+      <div v-if="showPresets" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[180px]">
         <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Plantillas</div>
         <button
           v-for="preset in presets"
@@ -179,7 +179,7 @@ const toggleMenu = (menu) => {
           <span class="bg-blue-500/30 text-blue-300 text-[10px] px-1.5 rounded-full">{{ savedScenes.length }}</span>
         </button>
 
-        <div v-if="showSavedScenes" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[200px]">
+        <div v-if="showSavedScenes" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[200px]">
           <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Escenas Guardadas</div>
           <div
             v-for="scene in savedScenes"
@@ -226,7 +226,7 @@ const toggleMenu = (menu) => {
         </svg>
       </button>
 
-      <div v-if="showShapes" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[180px] max-h-[70vh] overflow-y-auto">
+      <div v-if="showShapes" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[180px] max-h-[70vh] overflow-y-auto">
         <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Geometrias</div>
         <button
           v-for="shape in shapes"
@@ -309,7 +309,7 @@ const toggleMenu = (menu) => {
       <button
         @click="emit('import')"
         :disabled="isImporting"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors disabled:opacity-50"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors disabled:opacity-50"
         title="Importar modelo 3D"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,7 +322,7 @@ const toggleMenu = (menu) => {
     <div class="relative">
       <button
         @click="toggleMenu('export')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
@@ -333,7 +333,7 @@ const toggleMenu = (menu) => {
         </svg>
       </button>
 
-      <div v-if="showExport" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
+      <div v-if="showExport" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
         <button
           @click="emit('screenshot'); closeAllMenus()"
           class="w-full px-3 py-1.5 text-left text-xs text-neutral-300 hover:bg-neutral-800 transition-colors flex items-center gap-2"
@@ -368,7 +368,7 @@ const toggleMenu = (menu) => {
     <div v-if="hasSelection" class="relative">
       <button
         @click="toggleMenu('materials')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
@@ -379,7 +379,7 @@ const toggleMenu = (menu) => {
         </svg>
       </button>
 
-      <div v-if="showMaterials" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
+      <div v-if="showMaterials" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
         <button
           v-for="(preset, key) in materialPresets"
           :key="key"
@@ -396,7 +396,7 @@ const toggleMenu = (menu) => {
     <div v-if="hasSelection" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="emit('duplicate-selected')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Duplicar (Ctrl+D)"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -416,7 +416,7 @@ const toggleMenu = (menu) => {
 
       <button
         @click="emit('deselect')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Deseleccionar (Esc)"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -431,7 +431,7 @@ const toggleMenu = (menu) => {
     <div class="relative">
       <button
         @click="toggleMenu('environment')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -442,7 +442,7 @@ const toggleMenu = (menu) => {
         </svg>
       </button>
 
-      <div v-if="showEnvironment" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
+      <div v-if="showEnvironment" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[160px]">
         <button
           v-for="(preset, key) in environmentPresets"
           :key="key"
@@ -473,7 +473,7 @@ const toggleMenu = (menu) => {
         </svg>
       </button>
 
-      <div v-if="showLighting" class="absolute top-full left-0 mt-1 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[200px] max-h-[400px] overflow-y-auto">
+      <div v-if="showLighting" class="absolute top-full left-0 mt-1 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50 py-1 min-w-[200px] max-h-[400px] overflow-y-auto">
         <div class="px-2 py-1 text-[10px] uppercase tracking-wider text-neutral-500">Esquemas Cinematograficos</div>
         <button
           v-for="(preset, key) in lightingPresets"
@@ -496,7 +496,7 @@ const toggleMenu = (menu) => {
     <!-- Bloom Toggle -->
     <button
       @click="emit('toggle-bloom')"
-      :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', bloomEnabled ? 'text-purple-400 bg-purple-500/20' : 'text-neutral-400 hover:text-white hover:bg-neutral-800']"
+      :class="['flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors', bloomEnabled ? 'text-purple-400 bg-purple-500/20' : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800']"
       title="Efecto Bloom"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -511,7 +511,7 @@ const toggleMenu = (menu) => {
     <div class="flex items-center gap-1">
       <button
         @click="emit('reset-camera')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Resetear camara"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

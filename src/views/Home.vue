@@ -31,6 +31,32 @@ const getCurrentColorPalette = () => isDark.value ? darkModeColors : lightModeCo
 const isVisible = ref(false)
 const threeCanvas = ref(null)
 
+// Efecto "descifrado" del titular: las letras se resuelven desde glifos
+// aleatorios, en línea con la identidad de cifrado de la app
+const HERO_WORD = 'tus datos'
+const scrambledTitle = ref(HERO_WORD)
+const SCRAMBLE_GLYPHS = '█▓▒░<>/\\{}[]#*+='
+
+const runTitleDecode = () => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  const total = 900
+  const start = performance.now()
+  const tick = (now) => {
+    const progress = Math.min(1, (now - start) / total)
+    const settled = Math.floor(progress * HERO_WORD.length)
+    scrambledTitle.value = HERO_WORD
+      .split('')
+      .map((ch, i) => {
+        if (ch === ' ' || i < settled) return ch
+        return SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)]
+      })
+      .join('')
+    if (progress < 1) requestAnimationFrame(tick)
+    else scrambledTitle.value = HERO_WORD
+  }
+  requestAnimationFrame(tick)
+}
+
 // Scroll tracking
 const scrollY = ref(0)
 const windowHeight = ref(0)
@@ -334,6 +360,7 @@ onMounted(() => {
   setTimeout(() => {
     isVisible.value = true
   }, 100)
+  setTimeout(runTitleDecode, 450)
   initThree()
   fetchGitHubCommits()
   fetchPackageStars()
@@ -521,6 +548,19 @@ const hiddenToolsCount = computed(() => {
   if (!isMobile.value) return 0
   return allTools.filter(t => t.mobileSupport === false).length
 })
+
+// Color hex por herramienta para el tinte del borde al hacer hover
+const toolColorHex = {
+  purple: '#a855f7',
+  blue: '#3b82f6',
+  red: '#ef4444',
+  green: '#22c55e',
+  cyan: '#06b6d4',
+  orange: '#f97316',
+  emerald: '#10b981',
+  pink: '#ec4899',
+  indigo: '#6366f1'
+}
 
 const colorClasses = {
   purple: {
@@ -979,7 +1019,7 @@ const fetchGitHubCommits = async () => {
 </script>
 
 <template>
-  <div class="home-view min-h-screen relative overflow-x-clip">
+  <div class="home-view min-h-screen relative overflow-x-clip pb-28">
     <!-- Three.js Canvas Background -->
     <canvas ref="threeCanvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0;"></canvas>
 
@@ -1033,7 +1073,7 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            Tu navegador, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="auth.isAuthenticated.value && !appCrypto.isLocked.value ? 'from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400' : 'from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400'">tus datos</span>
+            Tu navegador, <span class="text-transparent bg-clip-text bg-gradient-to-r whitespace-nowrap" :class="auth.isAuthenticated.value && !appCrypto.isLocked.value ? 'from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400' : 'from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400'">{{ scrambledTitle }}</span>
           </h1>
 
           <!-- Subtitle -->
@@ -1076,7 +1116,7 @@ const fetchGitHubCommits = async () => {
                   {{ appCrypto.isLocked.value ? 'Bloqueado' : 'Conectado' }}
                 </div>
               </div>
-              <p class="status-hint text-xs">{{ appCrypto.isLocked.value ? 'Inicia sesion para acceder a tus datos' : 'Sesion activa — datos cifrados y sincronizados' }}</p>
+              <p class="status-hint text-xs">{{ appCrypto.isLocked.value ? 'Inicia sesión para acceder a tus datos' : 'Sesión activa — datos cifrados y sincronizados' }}</p>
             </div>
           </div>
 
@@ -1107,7 +1147,7 @@ const fetchGitHubCommits = async () => {
             <!-- Section title -->
             <div class="text-center mb-10">
               <p class="text-xs uppercase tracking-[0.2em] section-label mb-2">Modelo de confianza</p>
-              <h2 class="text-xl sm:text-2xl font-bold section-title">Quien puede leer tus datos?</h2>
+              <h2 class="text-xl sm:text-2xl font-bold section-title">¿Quién puede leer tus datos?</h2>
             </div>
 
             <!-- Comparison cards -->
@@ -1126,10 +1166,10 @@ const fetchGitHubCommits = async () => {
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-neutral-500 dark:bg-neutral-500 shrink-0"></span>
-                    <span class="text-xs comparison-text">Tu, la empresa, y quien ella autorice</span>
+                    <span class="text-xs comparison-text">Tú, la empresa y quien ella autorice</span>
                   </div>
                   <p class="text-[11px] comparison-muted leading-relaxed pl-4">
-                    Las apps cifran correctamente tu conexion y sus servidores. Pero la empresa gestiona las claves de cifrado — es su infraestructura. Pueden cumplir ordenes judiciales, sufrir brechas, o cambiar sus politicas de privacidad.
+                    Las apps cifran correctamente tu conexión y sus servidores. Pero la empresa gestiona las claves de cifrado — es su infraestructura. Pueden cumplir órdenes judiciales, sufrir brechas o cambiar sus políticas de privacidad.
                   </p>
                   <div class="mt-4 px-3 py-2.5 rounded-lg comparison-callout">
                     <p class="text-[11px] comparison-muted leading-relaxed">Tu privacidad depende de la confianza en un tercero.</p>
@@ -1150,13 +1190,13 @@ const fetchGitHubCommits = async () => {
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-                    <span class="text-xs comparison-text">Solo tu</span>
+                    <span class="text-xs comparison-text">Solo tú</span>
                   </div>
                   <p class="text-[11px] comparison-muted leading-relaxed pl-4">
                     Tus datos se cifran con tu clave en el navegador antes de salir. El servidor sincroniza blobs cifrados entre tus dispositivos, pero no puede descifrarlos — nunca recibe tu password ni la clave de cifrado.
                   </p>
                   <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-50 border border-emerald-600/30 dark:bg-emerald-950/60 dark:border-emerald-500/30">
-                    <p class="text-[11px] text-emerald-800 dark:text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografia. No de la confianza.</p>
+                    <p class="text-[11px] text-emerald-800 dark:text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografía. No de la confianza.</p>
                   </div>
                 </div>
               </div>
@@ -1173,7 +1213,7 @@ const fetchGitHubCommits = async () => {
                 <div>
                   <h3 class="text-sm font-bold text-amber-700 dark:text-amber-300 mb-2">Cuando "borras" no borras</h3>
                   <p class="text-xs callout-text leading-relaxed">
-                    La mayoria de apps usan <span class="text-amber-700 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">soft delete</span>: al pulsar "eliminar", solo marcan tus datos con una fecha (<span class="text-amber-700 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">deleted_at</span>) y los ocultan de tu vista. Siguen en sus servidores, accesibles para la empresa, indefinidamente.
+                    La mayoría de apps usan <span class="text-amber-700 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">soft delete</span>: al pulsar "eliminar", solo marcan tus datos con una fecha (<span class="text-amber-700 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">deleted_at</span>) y los ocultan de tu vista. Siguen en sus servidores, accesibles para la empresa, indefinidamente.
                   </p>
                 </div>
               </div>
@@ -1217,7 +1257,7 @@ const fetchGitHubCommits = async () => {
             tool.status === 'active' ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
             'scroll-animated'
           ]"
-          :style="getToolCardStyle(index)"
+          :style="[getToolCardStyle(index), { '--tool-color': toolColorHex[tool.color] }]"
         >
           <!-- Glow effect on hover -->
           <div
@@ -1582,7 +1622,7 @@ const fetchGitHubCommits = async () => {
 
         <!-- How it works card -->
         <div class="arch-card rounded-2xl p-6">
-          <h3 class="arch-title font-semibold text-base mb-4">Como se guardan tus datos</h3>
+          <h3 class="arch-title font-semibold text-base mb-4">Cómo se guardan tus datos</h3>
           <div class="space-y-3">
             <div class="flex items-start gap-3">
               <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 text-xs font-bold shrink-0 mt-0.5">1</span>
@@ -1605,7 +1645,7 @@ const fetchGitHubCommits = async () => {
 
         <!-- Technical details card -->
         <div class="arch-card rounded-2xl p-6">
-          <h3 class="arch-title font-semibold text-base mb-4">Detalles tecnicos</h3>
+          <h3 class="arch-title font-semibold text-base mb-4">Detalles técnicos</h3>
           <div class="space-y-2.5">
             <div class="flex items-center justify-between py-1.5 arch-row">
               <span class="arch-label text-xs">Cifrado</span>
@@ -2109,6 +2149,15 @@ const fetchGitHubCommits = async () => {
 
 :global(html:not(.dark) .home-view .tool-arrow-svg) {
   color: rgba(0, 0, 0, 0.5);
+}
+
+/* Tinte del borde con el color de cada herramienta al hacer hover */
+.tool-card:hover {
+  border-color: color-mix(in srgb, var(--tool-color, #ffffff) 40%, rgba(255, 255, 255, 0.1));
+}
+
+:global(html:not(.dark) .home-view .tool-card:hover) {
+  border-color: color-mix(in srgb, var(--tool-color, #000000) 40%, rgba(0, 0, 0, 0.04));
 }
 
 /* Comparison Cards - textos y elementos internos */

@@ -187,7 +187,7 @@ function clearAll() {
 <template>
   <div class="h-full flex flex-col app-bg">
     <!-- Header -->
-    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-900/80 shrink-0">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 bg-white/90 dark:border-neutral-800 dark:bg-neutral-900/80 shrink-0">
       <div class="flex items-center gap-2">
         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -242,7 +242,7 @@ function clearAll() {
     <div v-if="showExportMenu" class="fixed inset-0 z-40" @click="showExportMenu = false"></div>
 
     <!-- Mode Toggle -->
-    <div class="flex items-center gap-2 px-4 py-2 bg-neutral-900/50 border-b border-neutral-800">
+    <div class="flex items-center gap-2 px-4 py-2 bg-neutral-200/50 border-b border-neutral-300 dark:bg-neutral-900/50 dark:border-neutral-800">
       <button
         @click="mode = 'edit'"
         :class="[

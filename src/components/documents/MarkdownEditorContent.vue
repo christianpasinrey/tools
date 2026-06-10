@@ -413,7 +413,7 @@ onUnmounted(() => {
 <template>
   <div class="h-full flex flex-col app-bg">
     <!-- Toolbar -->
-    <div class="h-10 bg-neutral-900 border-b border-neutral-800 flex items-center px-2 gap-0.5 shrink-0">
+    <div class="h-10 bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 flex items-center px-2 gap-0.5 shrink-0">
       <!-- File actions -->
       <div class="flex items-center gap-0.5 pr-2 border-r border-neutral-700/50">
         <button @click="openFile" class="md-toolbar-btn" title="Abrir archivo">
@@ -596,7 +596,7 @@ onUnmounted(() => {
               v-for="(heading, i) in outline"
               :key="i"
               @click="goToLine(heading.line)"
-              class="w-full text-left px-3 py-1.5 text-xs text-neutral-400 hover:text-white hover:bg-neutral-800/50 truncate transition-colors"
+              class="w-full text-left px-3 py-1.5 text-xs text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800/50 truncate transition-colors"
               :style="{ paddingLeft: `${8 + (heading.level - 1) * 12}px` }"
             >
               {{ heading.text }}
@@ -613,7 +613,7 @@ onUnmounted(() => {
           class="flex flex-col overflow-hidden app-bg"
           :style="viewMode === 'split' ? { width: `${splitRatio}%` } : { width: '100%' }"
         >
-          <div class="px-3 py-1.5 border-b border-neutral-800 bg-neutral-900/30 flex items-center justify-between">
+          <div class="px-3 py-1.5 border-b border-neutral-200 bg-neutral-100/60 dark:border-neutral-800 dark:bg-neutral-900/30 flex items-center justify-between">
             <span class="text-[10px] font-medium text-neutral-500 uppercase tracking-wide">Editor</span>
             <span class="text-[10px] text-neutral-600">Linea {{ stats.lines }}</span>
           </div>
@@ -649,7 +649,7 @@ onUnmounted(() => {
           class="flex flex-col overflow-hidden app-bg"
           :style="viewMode === 'split' ? { width: `${100 - splitRatio}%` } : { width: '100%' }"
         >
-          <div class="px-3 py-1.5 border-b border-neutral-800 bg-neutral-900/30">
+          <div class="px-3 py-1.5 border-b border-neutral-200 bg-neutral-100/60 dark:border-neutral-800 dark:bg-neutral-900/30">
             <span class="text-[10px] font-medium text-neutral-500 uppercase tracking-wide">Preview</span>
           </div>
           <div ref="previewRef" class="flex-1 p-6 overflow-y-auto prose-container">

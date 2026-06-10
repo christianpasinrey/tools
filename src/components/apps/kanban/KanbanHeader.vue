@@ -32,12 +32,12 @@ function onCreateBoard() {
 </script>
 
 <template>
-  <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 shrink-0">
+  <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
     <!-- Left: Board selector -->
     <div class="flex items-center gap-3 relative">
       <button
         @click="showBoardMenu = !showBoardMenu"
-        class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-white hover:bg-neutral-800 rounded transition-colors"
+        class="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-neutral-900 hover:bg-neutral-200 dark:text-white dark:hover:bg-neutral-800 rounded transition-colors"
       >
         {{ boardName }}
         <svg class="w-3 h-3 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,14 +49,14 @@ function onCreateBoard() {
       <!-- Board dropdown -->
       <div
         v-if="showBoardMenu"
-        class="absolute top-full left-0 mt-1 w-56 bg-neutral-900 border border-neutral-700 rounded-lg shadow-xl z-50 overflow-hidden"
+        class="absolute top-full left-0 mt-1 w-56 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-700 rounded-lg shadow-xl z-50 overflow-hidden"
       >
         <div class="py-1">
           <button
             v-for="board in boards"
             :key="board.id"
             @click="onSelectBoard(board.id)"
-            class="w-full text-left px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors flex items-center justify-between"
+            class="w-full text-left px-3 py-2 text-xs text-neutral-700 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white transition-colors flex items-center justify-between"
           >
             <span>{{ board.name }}</span>
           </button>
@@ -66,13 +66,13 @@ function onCreateBoard() {
             <input
               v-model="newBoardName"
               placeholder="Nuevo tablero..."
-              class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-[10px] text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50"
+              class="flex-1 bg-white border border-neutral-300 dark:bg-neutral-800 dark:border-neutral-700 rounded px-2 py-1 text-[10px] text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50"
               @keydown.enter="onCreateBoard"
             />
             <button
               @click="onCreateBoard"
               :disabled="!newBoardName.trim()"
-              class="px-2 py-1 text-[10px] bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-700 text-white rounded"
+              class="px-2 py-1 text-[10px] bg-indigo-500 hover:bg-indigo-400 disabled:bg-neutral-300 dark:disabled:bg-neutral-700 text-white rounded"
             >+</button>
           </div>
         </div>
@@ -89,7 +89,7 @@ function onCreateBoard() {
           @focus="searchFocused = true"
           @blur="searchFocused = false"
           placeholder="Buscar..."
-          class="bg-neutral-800/50 border border-neutral-700 rounded px-2 py-1 text-[10px] text-white placeholder-neutral-600 outline-none focus:border-indigo-500/50 transition-all"
+          class="bg-white border border-neutral-300 dark:bg-neutral-800/50 dark:border-neutral-700 rounded px-2 py-1 text-[10px] text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-indigo-500/50 transition-all"
           :class="searchFocused || searchQuery ? 'w-32' : 'w-20'"
         />
       </div>

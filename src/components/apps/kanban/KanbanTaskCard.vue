@@ -79,7 +79,7 @@ function onDragEnd(e) {
 
 <template>
   <div
-    class="group relative bg-neutral-800/60 hover:bg-neutral-800 rounded-lg p-2.5 border border-neutral-700/50 hover:border-neutral-600 cursor-grab active:cursor-grabbing transition-all"
+    class="group relative bg-neutral-800/60 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded-lg p-2.5 border border-neutral-700/50 hover:border-neutral-600 cursor-grab active:cursor-grabbing transition-all"
     draggable="true"
     @dragstart="onDragStart"
     @dragend="onDragEnd"

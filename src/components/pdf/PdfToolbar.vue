@@ -80,7 +80,7 @@ const colors = [
         @click="emit('undo')"
         :disabled="!canUndo"
         class="p-1.5 rounded transition-colors"
-        :class="canUndo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed'"
+        :class="canUndo ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed'"
         :title="canUndo ? `Deshacer: ${undoActionName}` : 'Nada que deshacer'"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,7 +91,7 @@ const colors = [
         @click="emit('redo')"
         :disabled="!canRedo"
         class="p-1.5 rounded transition-colors"
-        :class="canRedo ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-neutral-700 cursor-not-allowed'"
+        :class="canRedo ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed'"
         :title="canRedo ? `Rehacer: ${redoActionName}` : 'Nada que rehacer'"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +104,7 @@ const colors = [
     <div v-if="hasFile" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="allSelected ? emit('deselect-all') : emit('select-all')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -121,7 +121,7 @@ const colors = [
     <div v-if="hasFile && hasSelection" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="emit('rotate-left')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Rotar izquierda"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +130,7 @@ const colors = [
       </button>
       <button
         @click="emit('rotate-right')"
-        class="p-1.5 rounded text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="p-1.5 rounded text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Rotar derecha"
       >
         <svg class="w-4 h-4 scale-x-[-1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +148,7 @@ const colors = [
       </button>
       <button
         @click="emit('extract')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Extraer páginas seleccionadas"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,7 +162,7 @@ const colors = [
     <div v-if="hasFile && pageCount > 1" class="flex items-center gap-1 pr-2 border-r border-neutral-800">
       <button
         @click="emit('split-all')"
-        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-400 hover:text-white hover:bg-neutral-800 transition-colors"
+        class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800 transition-colors"
         title="Dividir en páginas individuales"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,7 +177,7 @@ const colors = [
       <button
         @click="emit('toggle-annotations')"
         class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
-        :class="showAnnotations ? 'text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800'"
+        :class="showAnnotations ? 'text-white' : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800'"
         :style="showAnnotations ? { backgroundColor: themeColor + '20', color: themeColor } : {}"
         title="Panel de anotaciones"
       >
@@ -213,7 +213,7 @@ const colors = [
         <div class="w-4 h-4 rounded" :style="{ backgroundColor: themeColor }"></div>
       </button>
 
-      <div v-if="showColors" class="absolute top-full right-0 mt-1 p-2 bg-neutral-900 border border-neutral-800 rounded shadow-xl z-50">
+      <div v-if="showColors" class="absolute top-full right-0 mt-1 p-2 bg-white border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 rounded shadow-xl z-50">
         <div class="flex gap-1">
           <button
             v-for="color in colors"
