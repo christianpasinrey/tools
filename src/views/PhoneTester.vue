@@ -78,28 +78,28 @@ const activeSection = ref('config')
             </svg>
           </div>
           <div v-if="!isMobile">
-            <h1 class="text-sm font-semibold text-white leading-tight">Phone Tester</h1>
-            <p class="text-xs text-neutral-500">SIP WebRTC Component</p>
+            <h1 class="text-sm font-semibold text-primary leading-tight">Phone Tester</h1>
+            <p class="text-xs text-muted">SIP WebRTC Component</p>
           </div>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <div class="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-lg" :class="tester.isConfigValid.value ? 'bg-emerald-500/20' : 'bg-neutral-800'">
-          <div class="w-2 h-2 rounded-full" :class="tester.isConfigValid.value ? 'bg-emerald-500 animate-pulse' : 'bg-neutral-600'"></div>
-          <span class="text-xs" :class="tester.isConfigValid.value ? 'text-emerald-400' : 'text-neutral-500'">
+        <div class="flex items-center gap-1.5 px-2 md:px-3 py-1.5 rounded-lg" :class="tester.isConfigValid.value ? 'bg-emerald-500/15 dark:bg-emerald-500/20' : 'bg-neutral-200 dark:bg-neutral-800'">
+          <div class="w-2 h-2 rounded-full" :class="tester.isConfigValid.value ? 'bg-emerald-500 animate-pulse' : 'bg-neutral-400 dark:bg-neutral-600'"></div>
+          <span class="text-xs" :class="tester.isConfigValid.value ? 'text-emerald-700 dark:text-emerald-400' : 'text-neutral-500'">
             {{ tester.isConfigValid.value ? 'Ready' : 'Config' }}
           </span>
         </div>
         <button
           @click="tester.loadExample"
-          class="px-2 md:px-3 py-1.5 text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 rounded-lg transition-colors"
+          class="px-2 md:px-3 py-1.5 text-xs bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-700 dark:bg-emerald-500/20 dark:hover:bg-emerald-500/30 dark:text-emerald-400 rounded-lg transition-colors"
         >
           Demo
         </button>
         <button
           @click="tester.resetConfig"
-          class="hidden md:block px-3 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-400 rounded-lg transition-colors"
+          class="hidden md:block px-3 py-1.5 text-xs bg-neutral-200 hover:bg-neutral-300 text-neutral-600 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-400 rounded-lg transition-colors"
         >
           Reset
         </button>

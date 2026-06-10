@@ -11,6 +11,7 @@ import { isDark, toggleDark } from '../../composables/useSpreadsheet'
            text-neutral-600 dark:text-neutral-400
            hover:text-amber-500 dark:hover:text-amber-400"
     :title="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+    :aria-label="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
   >
     <!-- Sol (mostrar en dark mode) -->
     <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

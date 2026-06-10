@@ -181,7 +181,7 @@ const goBack = () => {
 }
 
 /* Light mode */
-:global(html:not(.dark)) .dock-submenu {
+:global(html:not(.dark) .dock-submenu) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -196,7 +196,7 @@ const goBack = () => {
     0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .dock-submenu::before {
+:global(html:not(.dark) .dock-submenu::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
 }
 
@@ -229,7 +229,7 @@ const goBack = () => {
   margin-bottom: 12px;
 }
 
-:global(html:not(.dark)) .submenu-header {
+:global(html:not(.dark) .submenu-header) {
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -255,13 +255,13 @@ const goBack = () => {
 }
 
 /* Back button - Light mode */
-:global(html:not(.dark)) .submenu-back {
+:global(html:not(.dark) .submenu-back) {
   background: rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.6);
 }
 
-:global(html:not(.dark)) .submenu-back:hover {
+:global(html:not(.dark) .submenu-back:hover) {
   background: rgba(0, 0, 0, 0.1);
   color: black;
 }
@@ -301,7 +301,7 @@ const goBack = () => {
 }
 
 /* Light mode */
-:global(html:not(.dark)) .submenu-arrow {
+:global(html:not(.dark) .submenu-arrow) {
   border-top-color: rgba(255, 255, 255, 0.85);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }

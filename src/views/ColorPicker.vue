@@ -201,8 +201,8 @@ function loadPalette(data) {
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-3">
           <div>
-            <h1 class="text-xl font-bold text-white">Color Picker</h1>
-            <p class="text-neutral-500 text-sm">Crea paletas de colores armónicas</p>
+            <h1 class="text-xl font-bold text-primary">Color Picker</h1>
+            <p class="text-muted text-sm">Crea paletas de colores armónicas</p>
           </div>
           <VaultSaveLoad storeName="color-palettes" :getData="getPaletteData" label="paleta" @load="loadPalette" />
         </div>
@@ -215,8 +215,8 @@ function loadPalette(data) {
             class="px-3 py-1 text-xs rounded-full border transition-all"
             :class="[
               colorWheel.currentMode.value === key
-                ? 'bg-pink-500/20 border-pink-500 text-pink-400'
-                : 'bg-neutral-900 border-neutral-700 text-neutral-400 hover:border-neutral-600'
+                ? 'bg-pink-500/15 border-pink-600 text-pink-700 dark:bg-pink-500/20 dark:border-pink-500 dark:text-pink-400'
+                : 'bg-white border-neutral-200 text-neutral-500 hover:border-neutral-300 hover:text-neutral-700 dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:text-neutral-300'
             ]"
           >
             {{ mode.name }}
@@ -225,12 +225,12 @@ function loadPalette(data) {
       </div>
 
       <!-- Main Content - 3 Column Layout -->
-      <div class="flex-1 grid grid-cols-[300px,1fr,320px] gap-4 min-h-0">
+      <div class="flex-1 grid grid-cols-[300px_1fr_320px] gap-4 min-h-0">
 
         <!-- Left Column: Color Wheel -->
         <div class="flex flex-col gap-3">
           <!-- Wheel Container -->
-          <div class="bg-neutral-900/50 rounded-xl border border-neutral-800 p-4">
+          <div class="bg-white border-neutral-200 dark:bg-neutral-900/50 rounded-xl border dark:border-neutral-800 p-4">
             <div
               ref="wheelContainerRef"
               class="relative touch-none mx-auto"
@@ -305,12 +305,12 @@ function loadPalette(data) {
           </div>
 
           <!-- Controls -->
-          <div class="bg-neutral-900/50 rounded-xl border border-neutral-800 p-3 space-y-3">
+          <div class="bg-white border-neutral-200 dark:bg-neutral-900/50 rounded-xl border dark:border-neutral-800 p-3 space-y-3">
             <!-- Lightness Slider -->
             <div>
               <div class="flex justify-between text-xs mb-1.5">
-                <span class="text-neutral-500">Luminosidad</span>
-                <span class="text-neutral-300">{{ colorWheel.baseLightness.value }}%</span>
+                <span class="text-muted">Luminosidad</span>
+                <span class="text-secondary">{{ colorWheel.baseLightness.value }}%</span>
               </div>
               <input
                 type="range"
@@ -326,7 +326,7 @@ function loadPalette(data) {
             <div class="grid grid-cols-2 gap-2">
               <button
                 @click="colorWheel.applyHarmony()"
-                class="py-1.5 bg-pink-500/20 hover:bg-pink-500/30 text-pink-400 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
+                class="py-1.5 bg-pink-500/15 hover:bg-pink-500/25 text-pink-700 dark:bg-pink-500/20 dark:hover:bg-pink-500/30 dark:text-pink-400 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
               >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -335,7 +335,7 @@ function loadPalette(data) {
               </button>
               <button
                 @click="colorWheel.randomize()"
-                class="py-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
+                class="py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-300 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
               >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
@@ -349,7 +349,7 @@ function loadPalette(data) {
             <button
               @click="imageInputRef?.click()"
               :disabled="isExtractingColors"
-              class="w-full py-1.5 bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+              class="w-full py-1.5 bg-violet-500/15 hover:bg-violet-500/25 text-violet-700 dark:bg-violet-500/20 dark:hover:bg-violet-500/30 dark:text-violet-400 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
               <svg v-if="!isExtractingColors" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -363,10 +363,11 @@ function loadPalette(data) {
 
             <!-- Extracted Image Preview -->
             <div v-if="extractedImagePreview" class="relative">
-              <img :src="extractedImagePreview" alt="Imagen" class="w-full h-16 object-cover rounded-lg border border-neutral-700" />
+              <img :src="extractedImagePreview" alt="Imagen de la que se extrajeron los colores" class="w-full h-16 object-cover rounded-lg border border-neutral-300 dark:border-neutral-700" />
               <button
                 @click="clearExtractedImage"
-                class="absolute top-1 right-1 p-0.5 bg-black/70 hover:bg-black rounded-full text-neutral-400 hover:text-white"
+                aria-label="Quitar imagen"
+                class="absolute top-1 right-1 p-0.5 bg-black/70 hover:bg-black rounded-full text-neutral-300 hover:text-white"
               >
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -376,12 +377,12 @@ function loadPalette(data) {
           </div>
 
           <!-- Harmony Info - Compact -->
-          <div class="p-3 bg-neutral-900/30 rounded-xl border border-neutral-800">
+          <div class="p-3 bg-white border-neutral-200 dark:bg-neutral-900/30 rounded-xl border dark:border-neutral-800">
             <div class="flex items-center gap-2 mb-1">
               <div class="w-1.5 h-1.5 rounded-full bg-pink-500"></div>
-              <span class="text-white text-sm font-medium">{{ colorWheel.harmonyModes[colorWheel.currentMode.value].name }}</span>
+              <span class="text-primary text-sm font-medium">{{ colorWheel.harmonyModes[colorWheel.currentMode.value].name }}</span>
             </div>
-            <p class="text-neutral-500 text-xs leading-relaxed">
+            <p class="text-muted text-xs leading-relaxed">
               {{ colorWheel.harmonyModes[colorWheel.currentMode.value].description }}
             </p>
           </div>
@@ -398,7 +399,7 @@ function loadPalette(data) {
               class="rounded-xl cursor-pointer transition-all relative group flex flex-col"
               :class="[
                 colorWheel.activeColorIndex.value === index
-                  ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-950 scale-[1.02]'
+                  ? 'ring-2 ring-neutral-900 ring-offset-2 ring-offset-neutral-100 dark:ring-white dark:ring-offset-neutral-950 scale-[1.02]'
                   : 'hover:scale-[1.01]'
               ]"
               :style="{ backgroundColor: color.hex }"
@@ -441,7 +442,7 @@ function loadPalette(data) {
           </div>
 
           <!-- Palette Strip Preview -->
-          <div class="h-12 flex rounded-xl overflow-hidden border border-neutral-800">
+          <div class="h-12 flex rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-800">
             <div
               v-for="(color, index) in colorWheel.palette.value"
               :key="'strip-' + index"
@@ -471,27 +472,27 @@ function loadPalette(data) {
           </div>
 
           <!-- All Color Values - Compact Table -->
-          <div class="bg-neutral-900/50 rounded-xl border border-neutral-800 p-3 flex-1 overflow-auto">
-            <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-2">Valores</h3>
+          <div class="bg-white border-neutral-200 dark:bg-neutral-900/50 rounded-xl border dark:border-neutral-800 p-3 flex-1 overflow-auto">
+            <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-2">Valores</h3>
             <div class="space-y-1.5">
               <div
                 v-for="(color, index) in colorWheel.palette.value"
                 :key="index"
                 @click="colorWheel.activeColorIndex.value = index"
                 class="flex items-center gap-2 p-1.5 rounded-lg cursor-pointer transition-colors"
-                :class="colorWheel.activeColorIndex.value === index ? 'bg-neutral-800' : 'hover:bg-neutral-800/50'"
+                :class="colorWheel.activeColorIndex.value === index ? 'bg-neutral-100 dark:bg-neutral-800' : 'hover:bg-neutral-100/70 dark:hover:bg-neutral-800/50'"
               >
                 <div class="w-5 h-5 rounded shrink-0" :style="{ backgroundColor: color.hex }"></div>
-                <span class="text-neutral-400 text-xs w-4">{{ index + 1 }}</span>
+                <span class="text-muted text-xs w-4">{{ index + 1 }}</span>
                 <button
                   @click.stop="copyColor(color, 'hex', index)"
-                  class="flex-1 text-left text-xs font-mono text-neutral-300 hover:text-white truncate"
+                  class="flex-1 text-left text-xs font-mono text-neutral-700 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white truncate"
                 >
                   {{ color.hex }}
                 </button>
                 <button
                   @click.stop="copyColor(color, 'rgb', index)"
-                  class="text-xs font-mono text-neutral-500 hover:text-neutral-300 hidden xl:block"
+                  class="text-xs font-mono text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 hidden xl:block"
                 >
                   {{ color.rgb.r }},{{ color.rgb.g }},{{ color.rgb.b }}
                 </button>
@@ -500,12 +501,13 @@ function loadPalette(data) {
           </div>
 
           <!-- Export -->
-          <div class="bg-neutral-900/50 rounded-xl border border-neutral-800 p-3 shrink-0">
+          <div class="bg-white border-neutral-200 dark:bg-neutral-900/50 rounded-xl border dark:border-neutral-800 p-3 shrink-0">
             <div class="flex items-center justify-between mb-2">
-              <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Exportar</h3>
+              <h3 class="text-xs font-semibold text-muted uppercase tracking-wider">Exportar</h3>
               <select
                 v-model="exportFormat"
-                class="px-2 py-0.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none"
+                aria-label="Formato de exportación"
+                class="px-2 py-0.5 bg-white border-neutral-200 text-neutral-700 dark:bg-neutral-800 border dark:border-neutral-700 rounded text-xs dark:text-neutral-300 focus:outline-none"
               >
                 <option value="css">CSS</option>
                 <option value="scss">SCSS</option>
@@ -516,11 +518,11 @@ function loadPalette(data) {
               </select>
             </div>
 
-            <pre class="p-2 bg-neutral-800 rounded-lg text-[10px] text-neutral-300 font-mono overflow-x-auto max-h-28 mb-2">{{ exportContent }}</pre>
+            <pre class="p-2 bg-neutral-900 dark:bg-neutral-800 rounded-lg text-[10px] text-neutral-200 dark:text-neutral-300 font-mono overflow-x-auto max-h-28 mb-2">{{ exportContent }}</pre>
 
             <button
               @click="copyExport"
-              class="w-full py-1.5 bg-pink-500/20 hover:bg-pink-500/30 text-pink-400 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
+              class="w-full py-1.5 bg-pink-500/15 hover:bg-pink-500/25 text-pink-700 dark:bg-pink-500/20 dark:hover:bg-pink-500/30 dark:text-pink-400 rounded-lg text-xs transition-colors flex items-center justify-center gap-1.5"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />

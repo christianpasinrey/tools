@@ -550,19 +550,21 @@ const activeSubmenu = computed(() => {
       <div class="dock-glass-specular"></div>
 
       <!-- Dock Content -->
-      <div class="dock-content">
+      <nav class="dock-content" aria-label="Navegación principal">
         <!-- Home button -->
         <router-link
           to="/"
           class="dock-item dock-home"
           :class="{ 'is-active': route.path === '/' }"
+          aria-label="Inicio"
         >
           <div class="dock-icon home-icon">
-            <svg 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
               style="width: 20px; height: 20px;"
+              aria-hidden="true"
             >
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
@@ -592,7 +594,7 @@ const activeSubmenu = computed(() => {
           @submenu-leave="onSubmenuLeave(index)"
           @submenu-toggle="onSubmenuToggle(index)"
         />
-      </div>
+      </nav>
     </div>
   </div>
 </template>
@@ -642,7 +644,7 @@ const activeSubmenu = computed(() => {
 }
 
 /* Light mode */
-:global(html:not(.dark)) .dock-glass {
+:global(html:not(.dark) .dock-glass) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.8) 0%,
@@ -657,7 +659,7 @@ const activeSubmenu = computed(() => {
     0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .dock-glass::before {
+:global(html:not(.dark) .dock-glass::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
 }
 
@@ -694,7 +696,7 @@ const activeSubmenu = computed(() => {
 }
 
 /* Light mode */
-:global(html:not(.dark)) .dock-separator {
+:global(html:not(.dark) .dock-separator) {
   background: linear-gradient(
     to bottom,
     transparent,
@@ -718,6 +720,13 @@ const activeSubmenu = computed(() => {
 }
 
 .dock-item:hover {
+  z-index: 10;
+}
+
+.dock-item:focus-visible {
+  outline: 2px solid var(--tool-color, #22c55e);
+  outline-offset: 3px;
+  border-radius: 14px;
   z-index: 10;
 }
 
@@ -799,7 +808,7 @@ const activeSubmenu = computed(() => {
 }
 
 /* Dock Icon - Light mode */
-:global(html:not(.dark)) .dock-icon {
+:global(html:not(.dark) .dock-icon) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -815,18 +824,18 @@ const activeSubmenu = computed(() => {
     0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .dock-icon svg {
+:global(html:not(.dark) .dock-icon svg) {
   stroke: currentColor;
   filter:
     drop-shadow(0 0 1px rgba(0, 0, 0, 0.15))
     drop-shadow(0 0 2px rgba(0, 0, 0, 0.08));
 }
 
-:global(html:not(.dark)) .dock-icon::before {
+:global(html:not(.dark) .dock-icon::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
 }
 
-:global(html:not(.dark)) .dock-item:hover .dock-icon {
+:global(html:not(.dark) .dock-item:hover .dock-icon) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -841,7 +850,7 @@ const activeSubmenu = computed(() => {
     0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-:global(html:not(.dark)) .dock-item.is-active .dock-icon {
+:global(html:not(.dark) .dock-item.is-active .dock-icon) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,

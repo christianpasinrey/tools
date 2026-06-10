@@ -979,7 +979,7 @@ const fetchGitHubCommits = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen relative overflow-x-clip">
+  <div class="home-view min-h-screen relative overflow-x-clip">
     <!-- Three.js Canvas Background -->
     <canvas ref="threeCanvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0;"></canvas>
 
@@ -1017,7 +1017,7 @@ const fetchGitHubCommits = async () => {
             </div>
             <!-- Center lock icon -->
             <div class="w-20 h-20 rounded-2xl flex items-center justify-center relative transition-colors duration-700" :class="appCrypto.isLocked.value ? 'bg-amber-500/10' : 'bg-emerald-500/10'">
-              <svg class="w-9 h-9 transition-all duration-700" :class="appCrypto.isLocked.value ? 'text-amber-400' : 'text-emerald-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-9 h-9 transition-all duration-700" :class="appCrypto.isLocked.value ? 'text-amber-500 dark:text-amber-400' : 'text-emerald-500 dark:text-emerald-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path v-if="appCrypto.isLocked.value || !auth.isAuthenticated.value" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
               </svg>
@@ -1033,7 +1033,7 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             ]"
           >
-            Tu navegador, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="auth.isAuthenticated.value && !appCrypto.isLocked.value ? 'from-emerald-400 to-teal-400' : 'from-amber-400 to-orange-400'">tus datos</span>
+            Tu navegador, <span class="text-transparent bg-clip-text bg-gradient-to-r" :class="auth.isAuthenticated.value && !appCrypto.isLocked.value ? 'from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-400' : 'from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400'">tus datos</span>
           </h1>
 
           <!-- Subtitle -->
@@ -1068,7 +1068,7 @@ const fetchGitHubCommits = async () => {
             <div v-else class="flex flex-col items-center gap-4">
               <div class="flex items-center gap-3">
                 <SyncAccountButton />
-                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border" :class="appCrypto.isLocked.value ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border" :class="appCrypto.isLocked.value ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'">
                   <span class="relative flex h-1.5 w-1.5">
                     <span v-if="!appCrypto.isLocked.value" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span class="relative inline-flex rounded-full h-1.5 w-1.5" :class="appCrypto.isLocked.value ? 'bg-amber-400' : 'bg-emerald-400'"></span>
@@ -1087,15 +1087,15 @@ const fetchGitHubCommits = async () => {
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             ]"
           >
-            <router-link to="/apps#invoice" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-emerald-400 transition-all">
+            <router-link to="/apps#invoice" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-emerald-600 dark:hover:text-emerald-400 transition-all">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
               Facturas
             </router-link>
-            <router-link to="/apps#todo" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-indigo-400 transition-all">
+            <router-link to="/apps#todo" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-indigo-600 dark:hover:text-indigo-400 transition-all">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
               Kanban
             </router-link>
-            <router-link to="/technology#browser-storage" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-purple-400 transition-all">
+            <router-link to="/technology#browser-storage" class="badge-glass flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs hover:text-purple-600 dark:hover:text-purple-400 transition-all">
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
               Storage
             </router-link>
@@ -1141,11 +1141,11 @@ const fetchGitHubCommits = async () => {
               <div class="glass-card glass-card-emerald rounded-xl p-5 overflow-hidden">
                 <div class="flex items-center gap-2.5 mb-4">
                   <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                    <svg class="w-4.5 h-4.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                     </svg>
                   </div>
-                  <h3 class="text-sm font-bold text-emerald-400 dark:text-emerald-300">Zero-Knowledge</h3>
+                  <h3 class="text-sm font-bold text-emerald-700 dark:text-emerald-300">Zero-Knowledge</h3>
                 </div>
                 <div class="space-y-3">
                   <div class="flex items-center gap-2.5">
@@ -1155,8 +1155,8 @@ const fetchGitHubCommits = async () => {
                   <p class="text-[11px] comparison-muted leading-relaxed pl-4">
                     Tus datos se cifran con tu clave en el navegador antes de salir. El servidor sincroniza blobs cifrados entre tus dispositivos, pero no puede descifrarlos — nunca recibe tu password ni la clave de cifrado.
                   </p>
-                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-950/60 dark:bg-emerald-950/60 border border-emerald-500/30">
-                    <p class="text-[11px] text-emerald-400 dark:text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografia. No de la confianza.</p>
+                  <div class="mt-4 px-3 py-2.5 rounded-lg bg-emerald-50 border border-emerald-600/30 dark:bg-emerald-950/60 dark:border-emerald-500/30">
+                    <p class="text-[11px] text-emerald-800 dark:text-emerald-300 leading-relaxed">Tu privacidad depende de la criptografia. No de la confianza.</p>
                   </div>
                 </div>
               </div>
@@ -1166,14 +1166,14 @@ const fetchGitHubCommits = async () => {
             <div class="glass-card glass-card-amber rounded-xl p-5">
               <div class="flex items-start gap-4">
                 <div class="w-9 h-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <svg class="w-4.5 h-4.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4.5 h-4.5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-sm font-bold text-amber-400 dark:text-amber-300 mb-2">Cuando "borras" no borras</h3>
+                  <h3 class="text-sm font-bold text-amber-700 dark:text-amber-300 mb-2">Cuando "borras" no borras</h3>
                   <p class="text-xs callout-text leading-relaxed">
-                    La mayoria de apps usan <span class="text-amber-400 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">soft delete</span>: al pulsar "eliminar", solo marcan tus datos con una fecha (<span class="text-amber-400 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">deleted_at</span>) y los ocultan de tu vista. Siguen en sus servidores, accesibles para la empresa, indefinidamente.
+                    La mayoria de apps usan <span class="text-amber-700 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">soft delete</span>: al pulsar "eliminar", solo marcan tus datos con una fecha (<span class="text-amber-700 dark:text-amber-300 font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[11px]">deleted_at</span>) y los ocultan de tu vista. Siguen en sus servidores, accesibles para la empresa, indefinidamente.
                   </p>
                 </div>
               </div>
@@ -1316,7 +1316,7 @@ const fetchGitHubCommits = async () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 class="repo-title font-semibold text-lg group-hover:text-green-400 transition-colors">Web Tools</h3>
+                    <h3 class="repo-title font-semibold text-lg group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">Web Tools</h3>
                     <p class="repo-subtitle text-sm">christianpasinrey/tools</p>
                   </div>
                 </div>
@@ -1330,7 +1330,7 @@ const fetchGitHubCommits = async () => {
               <!-- Description -->
               <p class="repo-desc text-base leading-relaxed mb-6">
                 Herramientas útiles que funcionan
-                <span class="text-green-400 font-medium">100% en tu navegador</span>.
+                <span class="text-green-600 dark:text-green-400 font-medium">100% en tu navegador</span>.
                 Sin servidores, sin uploads, privacidad total.
               </p>
 
@@ -1359,7 +1359,7 @@ const fetchGitHubCommits = async () => {
               <!-- Repository Stats -->
               <div class="grid grid-cols-2 gap-4 py-6 repo-border my-6">
                 <div class="text-center">
-                  <div class="text-2xl font-bold text-green-400">{{ tools.length }}</div>
+                  <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ tools.length }}</div>
                   <div class="text-xs repo-muted mt-1">Herramientas</div>
                 </div>
                 <a
@@ -1369,10 +1369,10 @@ const fetchGitHubCommits = async () => {
                   class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 hover:bg-green-500/20 hover:border-green-500/50 transition-all group"
                   @click.stop
                 >
-                  <svg class="w-4 h-4 text-green-400 group-hover:text-green-300 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4 text-green-600 group-hover:text-green-700 dark:text-green-400 dark:group-hover:text-green-300 transition-colors" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                   </svg>
-                  <span class="text-sm font-medium text-green-400 group-hover:text-green-300 transition-colors">Star</span>
+                  <span class="text-sm font-medium text-green-600 group-hover:text-green-700 dark:text-green-400 dark:group-hover:text-green-300 transition-colors">Star</span>
                 </a>
               </div>
 
@@ -1443,9 +1443,9 @@ const fetchGitHubCommits = async () => {
                   </div>
                   <!-- Content -->
                   <div class="pb-3">
-                    <p class="commit-message text-sm leading-snug mb-1 group-hover/commit:text-green-400 transition-colors">{{ commit.message }}</p>
+                    <p class="commit-message text-sm leading-snug mb-1 group-hover/commit:text-green-600 dark:group-hover/commit:text-green-400 transition-colors">{{ commit.message }}</p>
                     <div class="flex items-center gap-2 text-[10px] commit-meta">
-                      <span class="font-mono text-green-500/70 group-hover/commit:text-green-400 transition-colors">{{ commit.hash }}</span>
+                      <span class="font-mono text-green-700/70 dark:text-green-500/70 group-hover/commit:text-green-600 dark:group-hover/commit:text-green-400 transition-colors">{{ commit.hash }}</span>
                       <span>·</span>
                       <span>{{ commit.time }}</span>
                     </div>
@@ -1461,7 +1461,7 @@ const fetchGitHubCommits = async () => {
                 class="mt-3 pt-3 commits-border block group/all"
                 @click.stop
               >
-                <span class="text-xs commits-link group-hover/all:text-green-400 transition-colors flex items-center gap-1">
+                <span class="text-xs commits-link group-hover/all:text-green-600 dark:group-hover/all:text-green-400 transition-colors flex items-center gap-1">
                   View all commits
                   <svg class="w-3 h-3 group-hover/all:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -1585,20 +1585,20 @@ const fetchGitHubCommits = async () => {
           <h3 class="arch-title font-semibold text-base mb-4">Como se guardan tus datos</h3>
           <div class="space-y-3">
             <div class="flex items-start gap-3">
-              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">1</span>
-              <p class="arch-text text-sm">Tu password genera una <span class="text-emerald-400 font-mono text-xs">AES-256-GCM key</span> via PBKDF2 (100k iteraciones)</p>
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 text-xs font-bold shrink-0 mt-0.5">1</span>
+              <p class="arch-text text-sm">Tu password genera una <span class="text-emerald-600 dark:text-emerald-400 font-mono text-xs">AES-256-GCM key</span> via PBKDF2 (100k iteraciones)</p>
             </div>
             <div class="flex items-start gap-3">
-              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">2</span>
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 text-xs font-bold shrink-0 mt-0.5">2</span>
               <p class="arch-text text-sm">Los datos se cifran <span class="arch-highlight font-medium">en el navegador</span> antes de guardarse en IndexedDB</p>
             </div>
             <div class="flex items-start gap-3">
-              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">3</span>
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 text-xs font-bold shrink-0 mt-0.5">3</span>
               <p class="arch-text text-sm">Los blobs cifrados <span class="arch-code font-mono text-xs">{salt, iv, data}</span> se sincronizan al servidor</p>
             </div>
             <div class="flex items-start gap-3">
-              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold shrink-0 mt-0.5">4</span>
-              <p class="arch-text text-sm">El servidor <span class="text-amber-400 font-medium">nunca</span> recibe tu password ni puede descifrar nada</p>
+              <span class="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 text-xs font-bold shrink-0 mt-0.5">4</span>
+              <p class="arch-text text-sm">El servidor <span class="text-amber-600 dark:text-amber-400 font-medium">nunca</span> recibe tu password ni puede descifrar nada</p>
             </div>
           </div>
         </div>
@@ -1807,7 +1807,7 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Light mode */
-:global(html:not(.dark)) .glass-container {
+:global(html:not(.dark) .home-view .glass-container) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -1822,11 +1822,11 @@ const fetchGitHubCommits = async () => {
     0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .glass-container::before {
+:global(html:not(.dark) .home-view .glass-container::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
 }
 
-:global(html:not(.dark)) .glass-container:hover {
+:global(html:not(.dark) .home-view .glass-container:hover) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -1877,18 +1877,18 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Text colors - Light mode */
-:global(html:not(.dark)) .glass-container .text-white\/90,
-:global(html:not(.dark)) .glass-container .text-white\/80,
-:global(html:not(.dark)) .glass-container .text-white {
+:global(html:not(.dark) .home-view .glass-container .text-white\/90),
+:global(html:not(.dark) .home-view .glass-container .text-white\/80),
+:global(html:not(.dark) .home-view .glass-container .text-white) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .glass-container .text-white\/60,
-:global(html:not(.dark)) .glass-container .text-white\/50 {
+:global(html:not(.dark) .home-view .glass-container .text-white\/60),
+:global(html:not(.dark) .home-view .glass-container .text-white\/50) {
   color: rgba(0, 0, 0, 0.6);
 }
 
-:global(html:not(.dark)) .glass-container .text-white\/40 {
+:global(html:not(.dark) .home-view .glass-container .text-white\/40) {
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -2045,7 +2045,7 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Tool Cards - Light mode */
-:global(html:not(.dark)) .tool-card {
+:global(html:not(.dark) .home-view .tool-card) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -2060,11 +2060,11 @@ const fetchGitHubCommits = async () => {
     0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .tool-card::before {
+:global(html:not(.dark) .home-view .tool-card::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
 }
 
-:global(html:not(.dark)) .tool-card:hover {
+:global(html:not(.dark) .home-view .tool-card:hover) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -2078,36 +2078,36 @@ const fetchGitHubCommits = async () => {
     0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
-:global(html:not(.dark)) .tool-icon {
+:global(html:not(.dark) .home-view .tool-icon) {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-:global(html:not(.dark)) .tool-icon-svg {
+:global(html:not(.dark) .home-view .tool-icon-svg) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .tool-title {
+:global(html:not(.dark) .home-view .tool-title) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .tool-description {
+:global(html:not(.dark) .home-view .tool-description) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .tool-card:hover .tool-description {
+:global(html:not(.dark) .home-view .tool-card:hover .tool-description) {
   color: rgba(0, 0, 0, 0.7);
 }
 
-:global(html:not(.dark)) .tool-arrow {
+:global(html:not(.dark) .home-view .tool-arrow) {
   background: rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .tool-card:hover .tool-arrow {
+:global(html:not(.dark) .home-view .tool-card:hover .tool-arrow) {
   background: rgba(0, 0, 0, 0.08);
 }
 
-:global(html:not(.dark)) .tool-arrow-svg {
+:global(html:not(.dark) .home-view .tool-arrow-svg) {
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -2140,27 +2140,27 @@ const fetchGitHubCommits = async () => {
 
 /* Comparison Cards - Light mode textos */
 
-:global(html:not(.dark)) .comparison-icon {
+:global(html:not(.dark) .home-view .comparison-icon) {
   background: rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .comparison-icon-svg {
+:global(html:not(.dark) .home-view .comparison-icon-svg) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .comparison-title {
+:global(html:not(.dark) .home-view .comparison-title) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .comparison-text {
+:global(html:not(.dark) .home-view .comparison-text) {
   color: rgba(0, 0, 0, 0.75);
 }
 
-:global(html:not(.dark)) .comparison-muted {
+:global(html:not(.dark) .home-view .comparison-muted) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .comparison-callout {
+:global(html:not(.dark) .home-view .comparison-callout) {
   background: rgba(0, 0, 0, 0.03);
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -2170,7 +2170,7 @@ const fetchGitHubCommits = async () => {
   color: rgba(255, 255, 255, 0.75);
 }
 
-:global(html:not(.dark)) .callout-text {
+:global(html:not(.dark) .home-view .callout-text) {
   color: rgba(0, 0, 0, 0.75);
 }
 
@@ -2220,7 +2220,7 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Architecture Cards - Light mode */
-:global(html:not(.dark)) .arch-card {
+:global(html:not(.dark) .home-view .arch-card) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -2234,31 +2234,31 @@ const fetchGitHubCommits = async () => {
     0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-:global(html:not(.dark)) .arch-title {
+:global(html:not(.dark) .home-view .arch-title) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .arch-text {
+:global(html:not(.dark) .home-view .arch-text) {
   color: rgba(0, 0, 0, 0.6);
 }
 
-:global(html:not(.dark)) .arch-highlight {
+:global(html:not(.dark) .home-view .arch-highlight) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .arch-code {
+:global(html:not(.dark) .home-view .arch-code) {
   color: rgba(0, 0, 0, 0.7);
 }
 
-:global(html:not(.dark)) .arch-row {
+:global(html:not(.dark) .home-view .arch-row) {
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-:global(html:not(.dark)) .arch-label {
+:global(html:not(.dark) .home-view .arch-label) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .arch-value {
+:global(html:not(.dark) .home-view .arch-value) {
   color: rgba(0, 0, 0, 0.7);
 }
 
@@ -2291,7 +2291,7 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Badge Glass - Light mode */
-:global(html:not(.dark)) .badge-glass {
+:global(html:not(.dark) .home-view .badge-glass) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.85) 0%,
@@ -2306,7 +2306,7 @@ const fetchGitHubCommits = async () => {
     0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-:global(html:not(.dark)) .badge-glass:hover {
+:global(html:not(.dark) .home-view .badge-glass:hover) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -2338,23 +2338,23 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Hero text - Light mode */
-:global(html:not(.dark)) .hero-title {
+:global(html:not(.dark) .home-view .hero-title) {
   color: rgba(0, 0, 0, 0.9);
 }
 
-:global(html:not(.dark)) .hero-subtitle {
+:global(html:not(.dark) .home-view .hero-subtitle) {
   color: rgba(0, 0, 0, 0.6);
 }
 
-:global(html:not(.dark)) .hero-muted {
+:global(html:not(.dark) .home-view .hero-muted) {
   color: rgba(0, 0, 0, 0.45);
 }
 
-:global(html:not(.dark)) .section-title {
+:global(html:not(.dark) .home-view .section-title) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .section-label {
+:global(html:not(.dark) .home-view .section-label) {
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -2368,11 +2368,11 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Section icons and footer - Light mode */
-:global(html:not(.dark)) .section-icon {
+:global(html:not(.dark) .home-view .section-icon) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .footer-note {
+:global(html:not(.dark) .home-view .footer-note) {
   color: rgba(0, 0, 0, 0.45);
 }
 
@@ -2406,31 +2406,31 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Package card text - Light mode */
-:global(html:not(.dark)) .pkg-icon {
+:global(html:not(.dark) .home-view .pkg-icon) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .pkg-title {
+:global(html:not(.dark) .home-view .pkg-title) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .glass-container:hover .pkg-title {
+:global(html:not(.dark) .home-view .glass-container:hover .pkg-title) {
   color: rgba(0, 0, 0, 1);
 }
 
-:global(html:not(.dark)) .pkg-desc {
+:global(html:not(.dark) .home-view .pkg-desc) {
   color: rgba(0, 0, 0, 0.55);
 }
 
-:global(html:not(.dark)) .glass-container:hover .pkg-desc {
+:global(html:not(.dark) .home-view .glass-container:hover .pkg-desc) {
   color: rgba(0, 0, 0, 0.75);
 }
 
-:global(html:not(.dark)) .pkg-meta {
+:global(html:not(.dark) .home-view .pkg-meta) {
   color: rgba(0, 0, 0, 0.45);
 }
 
-:global(html:not(.dark)) .pkg-ring {
+:global(html:not(.dark) .home-view .pkg-ring) {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
 }
 
@@ -2469,36 +2469,36 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Repository card text - Light mode */
-:global(html:not(.dark)) .repo-title {
+:global(html:not(.dark) .home-view .repo-title) {
   color: rgba(0, 0, 0, 0.85);
 }
 
-:global(html:not(.dark)) .repo-subtitle {
+:global(html:not(.dark) .home-view .repo-subtitle) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .repo-desc {
+:global(html:not(.dark) .home-view .repo-desc) {
   color: rgba(0, 0, 0, 0.6);
 }
 
-:global(html:not(.dark)) .repo-features {
+:global(html:not(.dark) .home-view .repo-features) {
   color: rgba(0, 0, 0, 0.6);
 }
 
-:global(html:not(.dark)) .repo-border {
+:global(html:not(.dark) .home-view .repo-border) {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-:global(html:not(.dark)) .repo-muted {
+:global(html:not(.dark) .home-view .repo-muted) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .repo-icon {
+:global(html:not(.dark) .home-view .repo-icon) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .repo-icon-bg {
+:global(html:not(.dark) .home-view .repo-icon-bg) {
   background: rgba(0, 0, 0, 0.06);
 }
 
@@ -2536,35 +2536,35 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Commits section - Light mode */
-:global(html:not(.dark)) .commits-section {
+:global(html:not(.dark) .home-view .commits-section) {
   background: rgba(0, 0, 0, 0.02);
 }
 
-:global(html:not(.dark)) .commits-icon {
+:global(html:not(.dark) .home-view .commits-icon) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .commits-label {
+:global(html:not(.dark) .home-view .commits-label) {
   color: rgba(0, 0, 0, 0.5);
 }
 
-:global(html:not(.dark)) .commit-dot {
+:global(html:not(.dark) .home-view .commit-dot) {
   background: rgba(250, 250, 250, 1);
 }
 
-:global(html:not(.dark)) .commit-message {
+:global(html:not(.dark) .home-view .commit-message) {
   color: rgba(0, 0, 0, 0.75);
 }
 
-:global(html:not(.dark)) .commit-meta {
+:global(html:not(.dark) .home-view .commit-meta) {
   color: rgba(0, 0, 0, 0.45);
 }
 
-:global(html:not(.dark)) .commits-border {
+:global(html:not(.dark) .home-view .commits-border) {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-:global(html:not(.dark)) .commits-link {
+:global(html:not(.dark) .home-view .commits-link) {
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -2582,15 +2582,15 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Repo divider and tech stack - Light mode */
-:global(html:not(.dark)) .repo-divider {
+:global(html:not(.dark) .home-view .repo-divider) {
   border-color: rgba(0, 0, 0, 0.08);
 }
 
-:global(html:not(.dark)) .tech-border {
+:global(html:not(.dark) .home-view .tech-border) {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-:global(html:not(.dark)) .tech-icon {
+:global(html:not(.dark) .home-view .tech-icon) {
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -2615,217 +2615,22 @@ const fetchGitHubCommits = async () => {
 }
 
 /* Status badges - Light mode */
-:global(html:not(.dark)) .status-badge-inactive {
+:global(html:not(.dark) .home-view .status-badge-inactive) {
   background: rgba(220, 220, 220, 0.5);
   color: rgba(0, 0, 0, 0.5);
   border-color: rgba(0, 0, 0, 0.15);
 }
 
-:global(html:not(.dark)) .status-dot-inactive {
+:global(html:not(.dark) .home-view .status-dot-inactive) {
   background: rgba(0, 0, 0, 0.4);
 }
 
-:global(html:not(.dark)) .status-hint {
+:global(html:not(.dark) .home-view .status-hint) {
   color: rgba(0, 0, 0, 0.45);
 }
 
-:global(html:not(.dark)) .coming-soon-badge {
+:global(html:not(.dark) .home-view .coming-soon-badge) {
   background: rgba(220, 220, 220, 0.8);
   color: rgba(0, 0, 0, 0.5);
-}
-</style>
-
-<!-- Estilos globales para light mode (sin scoped para que funcionen correctamente) -->
-<style>
-/* ============================================
-   LIGHT MODE TEXT OVERRIDES
-   Estos estilos DEBEN estar sin scoped para
-   que html:not(.dark) funcione correctamente
-   ============================================ */
-
-/* Hero text */
-html:not(.dark) .hero-title {
-  color: rgba(0, 0, 0, 0.9) !important;
-}
-
-html:not(.dark) .hero-subtitle {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
-html:not(.dark) .hero-muted {
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-/* Section text */
-html:not(.dark) .section-title {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-html:not(.dark) .section-label {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .section-icon {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .footer-note {
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-/* Tool cards */
-html:not(.dark) .tool-title {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-html:not(.dark) .tool-description {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .tool-card:hover .tool-description {
-  color: rgba(0, 0, 0, 0.7) !important;
-}
-
-html:not(.dark) .tool-icon-svg {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .tool-arrow-svg {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Comparison cards */
-html:not(.dark) .comparison-title {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-html:not(.dark) .comparison-text {
-  color: rgba(0, 0, 0, 0.75) !important;
-}
-
-html:not(.dark) .comparison-muted {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Callout cards */
-html:not(.dark) .callout-text {
-  color: rgba(0, 0, 0, 0.75) !important;
-}
-
-/* Architecture cards */
-html:not(.dark) .arch-title {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-html:not(.dark) .arch-text {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
-html:not(.dark) .arch-highlight {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-html:not(.dark) .arch-code {
-  color: rgba(0, 0, 0, 0.7) !important;
-}
-
-html:not(.dark) .arch-label {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .arch-value {
-  color: rgba(0, 0, 0, 0.7) !important;
-}
-
-/* Package cards */
-html:not(.dark) .pkg-icon {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .pkg-title {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-html:not(.dark) .glass-container:hover .pkg-title {
-  color: rgba(0, 0, 0, 1) !important;
-}
-
-html:not(.dark) .pkg-desc {
-  color: rgba(0, 0, 0, 0.55) !important;
-}
-
-html:not(.dark) .glass-container:hover .pkg-desc {
-  color: rgba(0, 0, 0, 0.75) !important;
-}
-
-html:not(.dark) .pkg-meta {
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-/* Repo card */
-html:not(.dark) .repo-title {
-  color: rgba(0, 0, 0, 0.85) !important;
-}
-
-html:not(.dark) .repo-subtitle {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .repo-desc {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
-html:not(.dark) .repo-features {
-  color: rgba(0, 0, 0, 0.6) !important;
-}
-
-html:not(.dark) .repo-muted {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .repo-icon {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Commits section */
-html:not(.dark) .commits-icon {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .commits-label {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-html:not(.dark) .commit-message {
-  color: rgba(0, 0, 0, 0.75) !important;
-}
-
-html:not(.dark) .commit-meta {
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-html:not(.dark) .commits-link {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Tech stack */
-html:not(.dark) .tech-icon {
-  color: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Status badges */
-html:not(.dark) .status-badge-inactive {
-  background: rgba(220, 220, 220, 0.5) !important;
-  color: rgba(0, 0, 0, 0.5) !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-}
-
-html:not(.dark) .status-hint {
-  color: rgba(0, 0, 0, 0.45) !important;
-}
-
-html:not(.dark) .coming-soon-badge {
-  background: rgba(220, 220, 220, 0.8) !important;
-  color: rgba(0, 0, 0, 0.5) !important;
 }
 </style>

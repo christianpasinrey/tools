@@ -205,11 +205,20 @@ html.dark .cheatsheet-page {
 }
 
 .sheet-title {
-  @apply text-2xl font-bold text-white m-0;
+  @apply text-2xl font-bold m-0;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+html.dark .sheet-title {
+  @apply text-white;
 }
 
 .sheet-description {
   @apply text-sm;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+html.dark .sheet-description {
   color: rgba(255, 255, 255, 0.4);
 }
 

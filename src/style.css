@@ -15,6 +15,16 @@ body {
   min-height: 100vh;
 }
 
+/* Accesibilidad: indicador de foco visible para navegación por teclado */
+:where(a, button, [role="button"], input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.dark :where(a, button, [role="button"], input, select, textarea, [tabindex]):focus-visible {
+  outline-color: #34d399;
+}
+
 #app {
   min-height: 100vh;
 }

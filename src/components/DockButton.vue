@@ -106,16 +106,24 @@ const handleClick = (e) => {
       '--scale': scale,
       '--tool-color': color
     }"
+    :role="hasSubmenu ? 'button' : undefined"
+    :tabindex="hasSubmenu ? 0 : undefined"
+    :aria-label="name"
+    :aria-haspopup="hasSubmenu ? 'menu' : undefined"
+    :aria-expanded="hasSubmenu ? submenuOpen : undefined"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @click="handleClick"
+    @keydown.enter.prevent="handleClick"
+    @keydown.space.prevent="handleClick"
   >
     <div class="dock-icon">
-      <svg 
-        fill="none" 
-        stroke="currentColor" 
+      <svg
+        fill="none"
+        stroke="currentColor"
         viewBox="0 0 24 24"
         style="width: 20px; height: 20px;"
+        aria-hidden="true"
       >
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="icon" />
       </svg>
@@ -149,6 +157,13 @@ const handleClick = (e) => {
 }
 
 .dock-item:hover {
+  z-index: 10;
+}
+
+.dock-item:focus-visible {
+  outline: 2px solid var(--tool-color, #22c55e);
+  outline-offset: 3px;
+  border-radius: 14px;
   z-index: 10;
 }
 
@@ -250,7 +265,7 @@ const handleClick = (e) => {
 }
 
 /* Dock Icon - Light mode */
-:global(html:not(.dark)) .dock-icon {
+:global(html:not(.dark) .dock-icon) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -266,17 +281,17 @@ const handleClick = (e) => {
     0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .dock-icon::before {
+:global(html:not(.dark) .dock-icon::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
 }
 
-:global(html:not(.dark)) .dock-icon svg {
+:global(html:not(.dark) .dock-icon svg) {
   filter:
     drop-shadow(0 0 1px rgba(0, 0, 0, 0.15))
     drop-shadow(0 0 2px rgba(0, 0, 0, 0.08));
 }
 
-:global(html:not(.dark)) .dock-item:hover .dock-icon {
+:global(html:not(.dark) .dock-item:hover .dock-icon) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -291,7 +306,7 @@ const handleClick = (e) => {
     0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-:global(html:not(.dark)) .dock-item.is-active .dock-icon {
+:global(html:not(.dark) .dock-item.is-active .dock-icon) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -301,7 +316,7 @@ const handleClick = (e) => {
   color: var(--tool-color, #22c55e) !important;
 }
 
-:global(html:not(.dark)) .dock-item.submenu-open .dock-icon {
+:global(html:not(.dark) .dock-item.submenu-open .dock-icon) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.98) 0%,
@@ -376,7 +391,7 @@ const handleClick = (e) => {
 }
 
 /* Tooltip - Light mode */
-:global(html:not(.dark)) .dock-tooltip {
+:global(html:not(.dark) .dock-tooltip) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.9) 0%,
@@ -392,11 +407,11 @@ const handleClick = (e) => {
     0 0 0 0.5px rgba(0, 0, 0, 0.05);
 }
 
-:global(html:not(.dark)) .dock-tooltip::before {
+:global(html:not(.dark) .dock-tooltip::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
 }
 
-:global(html:not(.dark)) .dock-tooltip::after {
+:global(html:not(.dark) .dock-tooltip::after) {
   border-top-color: rgba(255, 255, 255, 0.85);
 }
 

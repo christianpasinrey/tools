@@ -194,7 +194,7 @@ const gridStyle = computed(() => ({
 }
 
 /* Light mode */
-:global(html:not(.dark)) .bento-item {
+:global(html:not(.dark) .bento-item) {
   color: rgba(0, 0, 0, 0.85);
   background: linear-gradient(
     135deg,
@@ -210,7 +210,7 @@ const gridStyle = computed(() => ({
     0 0 0 0.5px rgba(0, 0, 0, 0.03);
 }
 
-:global(html:not(.dark)) .bento-item::before {
+:global(html:not(.dark) .bento-item::before) {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
 }
 
@@ -410,7 +410,7 @@ const gridStyle = computed(() => ({
 }
 
 /* Light mode */
-:global(html:not(.dark)) .bento-item:hover {
+:global(html:not(.dark) .bento-item:hover) {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95) 0%,
@@ -475,7 +475,7 @@ const gridStyle = computed(() => ({
 }
 
 /* Light mode */
-:global(html:not(.dark)) .bento-icon {
+:global(html:not(.dark) .bento-icon) {
   background: rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.6);
@@ -503,7 +503,7 @@ const gridStyle = computed(() => ({
 }
 
 /* Name - Light mode */
-:global(html:not(.dark)) .bento-name {
+:global(html:not(.dark) .bento-name) {
   color: rgba(0, 0, 0, 0.85);
 }
 
@@ -515,7 +515,7 @@ const gridStyle = computed(() => ({
 }
 
 /* Description - Light mode */
-:global(html:not(.dark)) .bento-description {
+:global(html:not(.dark) .bento-description) {
   color: rgba(0, 0, 0, 0.55);
 }
 
