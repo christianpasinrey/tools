@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { useSpreadsheet, TEXT_COLORS, BG_COLORS, BORDER_PRESETS, FONT_SIZES, NUMBER_FORMATS, isDark, toggleDark } from '../../composables/useSpreadsheet'
+import { useSpreadsheet, TEXT_COLORS, BG_COLORS, BORDER_PRESETS, FONT_SIZES, NUMBER_FORMATS, TABLE_PRESETS, isDark, toggleDark } from '../../composables/useSpreadsheet'
 import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 
 // Dropdown state for toolbar menus
@@ -10,6 +10,7 @@ const showTextColorDropdown = ref(false)
 const showBgColorDropdown = ref(false)
 const showBorderDropdown = ref(false)
 const showRowColDropdown = ref(false)
+const showTableDropdown = ref(false)
 
 const closeAllDropdowns = () => {
   showFontSizeDropdown.value = false
@@ -18,6 +19,13 @@ const closeAllDropdowns = () => {
   showBgColorDropdown.value = false
   showBorderDropdown.value = false
   showRowColDropdown.value = false
+  showTableDropdown.value = false
+}
+
+const toggleTableDropdown = () => {
+  const next = !showTableDropdown.value
+  closeAllDropdowns()
+  showTableDropdown.value = next
 }
 
 const props = defineProps({
@@ -46,16 +54,56 @@ onMounted(() => {
   spreadsheet.initEmptySheet()
   document.addEventListener('keydown', handleGlobalKeydown)
   document.addEventListener('click', handleGlobalClick)
+  document.addEventListener('mouseup', handleGlobalMouseUp)
 })
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleGlobalKeydown)
   document.removeEventListener('click', handleGlobalClick)
+  document.removeEventListener('mouseup', handleGlobalMouseUp)
   document.removeEventListener('mousemove', handleColumnResize)
   document.removeEventListener('mouseup', stopColumnResize)
   document.removeEventListener('mousemove', handleRowResize)
   document.removeEventListener('mouseup', stopRowResize)
 })
+
+// ===== Selección por rango (arrastre) =====
+const handleCellMouseDown = (e, row, col) => {
+  if (e.button !== 0) return // solo botón izquierdo
+  // No interferir con la celda que se está editando
+  if (spreadsheet.editingCell.value?.row === row && spreadsheet.editingCell.value?.col === col) return
+  if (spreadsheet.editingCell.value) spreadsheet.finishEdit()
+  spreadsheet.startSelection(row, col, e.shiftKey)
+  updateFormulaBarValue()
+}
+
+const handleCellMouseOver = (row, col) => {
+  if (spreadsheet.isSelecting.value) {
+    spreadsheet.extendSelection(row, col)
+  }
+}
+
+const handleGlobalMouseUp = () => {
+  spreadsheet.endSelection()
+}
+
+// Click derecho: si está fuera de la selección, selecciona esa celda
+const handleCellContextMenu = (e, row, col) => {
+  if (!spreadsheet.isCellInSelection(row, col)) {
+    spreadsheet.selectCell(row, col)
+    updateFormulaBarValue()
+  }
+  e.preventDefault()
+  spreadsheet.contextMenu.visible = true
+  spreadsheet.contextMenu.x = e.clientX
+  spreadsheet.contextMenu.y = e.clientY
+}
+
+// Formateo de números para la barra de estadísticas
+const formatStat = (n) => {
+  if (n === null || n === undefined) return ''
+  return Number.isInteger(n) ? String(n) : n.toFixed(2)
+}
 
 // Global click handler
 const handleGlobalClick = () => {
@@ -198,16 +246,16 @@ const finishFormulaBarEdit = () => {
   spreadsheet.saveToHistory()
 
   if (value.startsWith('=')) {
-    // It's a formula
+    // Fórmula: guardar y evaluar (igual que la edición en celda)
     spreadsheet.setCellFormula(row, col, value)
-    // For now, store the formula text as display (Excel would calculate)
-    spreadsheet.data.value[row][col] = value
+    spreadsheet.data.value[row][col] = String(spreadsheet.evaluateCellFormula(row, col))
   } else {
     // Regular value - remove any existing formula
     spreadsheet.setCellFormula(row, col, null)
     spreadsheet.data.value[row][col] = value
   }
 
+  spreadsheet.recalculateFormulas()
   isEditingFormulaBar.value = false
 }
 
@@ -308,7 +356,9 @@ const newDocument = () => {
 const startEditCell = async (row, col) => {
   spreadsheet.startEdit(row, col)
   await nextTick()
-  editTextareaRef.value?.focus()
+  // El ref está dentro de un v-for: Vue lo expone como array
+  const el = Array.isArray(editTextareaRef.value) ? editTextareaRef.value[0] : editTextareaRef.value
+  el?.focus()
 }
 
 const handleCellKeydown = (e) => {
@@ -384,22 +434,22 @@ const handleGlobalKeydown = (e) => {
       spreadsheet.clearCell()
     }
 
-    // Navigation
-    if (e.key === 'ArrowUp') {
+    // Navigation (con Shift extiende la selección)
+    const arrowDirs = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' }
+    if (arrowDirs[e.key]) {
       e.preventDefault()
-      spreadsheet.moveSelection('up')
-    }
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      spreadsheet.moveSelection('down')
-    }
-    if (e.key === 'ArrowLeft') {
-      e.preventDefault()
-      spreadsheet.moveSelection('left')
-    }
-    if (e.key === 'ArrowRight') {
-      e.preventDefault()
-      spreadsheet.moveSelection('right')
+      if (e.shiftKey) {
+        const end = spreadsheet.selectionEnd.value || spreadsheet.selectedCell.value
+        const maxRow = spreadsheet.data.value.length - 1
+        const maxCol = (spreadsheet.data.value[0]?.length || 1) - 1
+        const delta = { up: [-1, 0], down: [1, 0], left: [0, -1], right: [0, 1] }[arrowDirs[e.key]]
+        const row = Math.max(0, Math.min(maxRow, end.row + delta[0]))
+        const col = Math.max(0, Math.min(maxCol, end.col + delta[1]))
+        spreadsheet.extendSelectionTo(row, col)
+      } else {
+        spreadsheet.moveSelection(arrowDirs[e.key])
+        updateFormulaBarValue()
+      }
     }
 
     // Enter or F2 to edit
@@ -916,6 +966,61 @@ const handleContextAction = (action) => {
         </div>
       </div>
 
+      <!-- Tabla y Filtros -->
+      <div class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+        <!-- Formatear como tabla -->
+        <button
+          @click.stop="toggleTableDropdown"
+          :disabled="!spreadsheet.hasMultiSelection.value"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
+          :class="spreadsheet.hasMultiSelection.value
+            ? (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
+            : (isDark ? 'text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+          :title="spreadsheet.hasMultiSelection.value ? 'Formatear selección como tabla' : 'Selecciona un rango (cabecera + filas) para formatear como tabla'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18M9 4v16M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6z"/></svg>
+          <span>Tabla</span>
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- Table Presets Dropdown -->
+        <div
+          v-if="showTableDropdown"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[170px] border"
+          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          @click.stop
+        >
+          <div class="px-3 py-1 text-[10px] uppercase font-medium" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Estilo de tabla</div>
+          <button
+            v-for="preset in TABLE_PRESETS"
+            :key="preset.id"
+            @click="spreadsheet.formatAsTable(preset.id); showTableDropdown = false"
+            class="w-full px-3 py-1.5 text-xs text-left flex items-center gap-2.5"
+            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <span class="flex flex-col w-7 rounded-sm overflow-hidden border" :class="isDark ? 'border-neutral-600' : 'border-gray-300'">
+              <span class="h-1.5" :style="{ backgroundColor: preset.header }"></span>
+              <span class="h-1" :class="isDark ? 'bg-neutral-100' : 'bg-white'"></span>
+              <span class="h-1" :style="{ backgroundColor: preset.zebra }"></span>
+            </span>
+            {{ preset.name }}
+          </button>
+          <div class="px-3 pt-1 pb-0.5 text-[10px]" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">La 1ª fila del rango será la cabecera</div>
+        </div>
+
+        <!-- Filtros -->
+        <button
+          @click="spreadsheet.toggleFilters()"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors relative"
+          :class="spreadsheet.filtersEnabled.value
+            ? (isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-700')
+            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+          :title="spreadsheet.filtersEnabled.value ? 'Ocultar filtros' : 'Mostrar filtros por columna (la fila 1 se trata como cabecera)'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          <span>Filtros</span>
+        </button>
+      </div>
+
       <!-- Export -->
       <div class="flex items-center gap-1 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
         <button
@@ -957,10 +1062,28 @@ const handleContextAction = (action) => {
         </span>
       </div>
 
+      <!-- Estadísticas de la selección (como Excel) -->
+      <div
+        v-if="spreadsheet.selectionStats.value"
+        class="flex items-center gap-2.5 px-2 text-[10px] font-mono"
+        :class="isDark ? 'text-neutral-400' : 'text-gray-500'"
+      >
+        <span v-if="spreadsheet.selectionStats.value.sum !== null">
+          Suma: <span class="font-semibold" :style="{ color: themeColor }">{{ formatStat(spreadsheet.selectionStats.value.sum) }}</span>
+        </span>
+        <span v-if="spreadsheet.selectionStats.value.avg !== null">
+          Media: <span class="font-semibold">{{ formatStat(spreadsheet.selectionStats.value.avg) }}</span>
+        </span>
+        <span>{{ spreadsheet.selectionStats.value.count }} con datos</span>
+      </div>
+
       <div class="flex-1"></div>
 
       <!-- Dimensions info -->
       <div class="flex items-center gap-2 px-2 text-[10px]" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">
+        <span v-if="spreadsheet.hasActiveFilters.value" :class="isDark ? 'text-emerald-400' : 'text-emerald-600'">
+          {{ spreadsheet.visibleRowCount.value }} de
+        </span>
         <span>{{ spreadsheet.data.value.length }} filas</span>
         <span>×</span>
         <span>{{ spreadsheet.data.value[0]?.length || 0 }} cols</span>
@@ -1025,7 +1148,7 @@ const handleContextAction = (action) => {
             ? 'text-blue-500'
             : ''
         ]"
-        :placeholder="spreadsheet.selectedCell.value ? 'Introduce valor o fórmula (=SUM, =IF...)' : 'Selecciona una celda'"
+        :placeholder="spreadsheet.selectedCell.value ? 'Introduce valor o fórmula (=SUMA, =SUM, =SI, =PROMEDIO...)' : 'Selecciona una celda'"
         :disabled="!spreadsheet.selectedCell.value"
         @focus="startFormulaBarEdit"
         @blur="finishFormulaBarEdit"
@@ -1170,9 +1293,38 @@ const handleContextAction = (action) => {
               ></div>
             </th>
           </tr>
+          <!-- Fila de filtros por columna -->
+          <tr v-if="spreadsheet.filtersEnabled.value">
+            <th class="h-7 border p-0" style="width: 80px; min-width: 80px;" :class="isDark ? 'bg-neutral-800/80 border-neutral-700' : 'bg-gray-50 border-gray-300'">
+              <svg class="w-3.5 h-3.5 mx-auto" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+              </svg>
+            </th>
+            <th
+              v-for="(col, colIndex) in spreadsheet.columns.value"
+              :key="'filter-' + colIndex"
+              class="h-7 border p-0.5"
+              :class="isDark ? 'bg-neutral-800/80 border-neutral-700' : 'bg-gray-50 border-gray-300'"
+              :style="{ width: spreadsheet.getColumnWidth(colIndex) + 'px', minWidth: spreadsheet.getColumnWidth(colIndex) + 'px' }"
+            >
+              <input
+                :value="spreadsheet.columnFilters.value[colIndex] || ''"
+                @input="spreadsheet.setColumnFilter(colIndex, $event.target.value)"
+                type="text"
+                placeholder="Filtrar..."
+                class="w-full h-full px-1.5 text-[11px] font-normal rounded outline-none border"
+                :class="[
+                  isDark
+                    ? 'bg-neutral-900 border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:border-neutral-500'
+                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-300 focus:border-gray-400',
+                  spreadsheet.columnFilters.value[colIndex] ? (isDark ? 'border-emerald-600' : 'border-emerald-500') : ''
+                ]"
+              />
+            </th>
+          </tr>
         </thead>
         <tbody>
-          <tr v-for="(row, rowIndex) in spreadsheet.data.value" :key="rowIndex">
+          <tr v-for="(row, rowIndex) in spreadsheet.data.value" :key="rowIndex" v-show="spreadsheet.isRowVisible(rowIndex)">
             <td
               class="border text-xs text-center font-medium sticky left-0 z-[5] relative group/row select-none"
               :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-500' : 'bg-gray-100 border-gray-300 text-gray-500'"
@@ -1189,10 +1341,11 @@ const handleContextAction = (action) => {
             <td
               v-for="(cell, colIndex) in row"
               :key="colIndex"
-              @click="spreadsheet.selectCell(rowIndex, colIndex)"
+              @mousedown="handleCellMouseDown($event, rowIndex, colIndex)"
+              @mouseover="handleCellMouseOver(rowIndex, colIndex)"
               @dblclick="startEditCell(rowIndex, colIndex)"
-              @contextmenu="spreadsheet.openContextMenu($event, rowIndex, colIndex)"
-              class="h-7 border text-xs px-2 cursor-cell transition-colors"
+              @contextmenu="handleCellContextMenu($event, rowIndex, colIndex)"
+              class="h-7 border text-xs px-2 cursor-cell transition-colors select-none"
               :class="[
                 isDark ? 'border-neutral-800' : 'border-gray-200',
                 {
@@ -1206,6 +1359,9 @@ const handleContextAction = (action) => {
                 height: spreadsheet.getRowHeight(rowIndex) + 'px',
                 ...(spreadsheet.selectedCell.value?.row === rowIndex && spreadsheet.selectedCell.value?.col === colIndex
                   ? { outline: `2px solid ${themeColor}`, outlineOffset: '-1px' }
+                  : {}),
+                ...(spreadsheet.hasMultiSelection.value && spreadsheet.isCellInSelection(rowIndex, colIndex)
+                  ? { boxShadow: `inset 0 0 0 999px ${themeColor}1f` }
                   : {}),
                 ...spreadsheet.getCellComputedStyle(rowIndex, colIndex)
               }"

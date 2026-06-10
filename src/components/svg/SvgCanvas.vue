@@ -449,7 +449,7 @@ const visibleElements = computed(() => {
     </div>
 
     <!-- Zoom indicator -->
-    <div class="absolute bottom-4 right-4 px-3 py-1.5 bg-neutral-900/90 rounded-lg text-xs text-neutral-400 backdrop-blur-sm">
+    <div class="absolute bottom-4 right-4 px-3 py-1.5 bg-white/90 dark:bg-neutral-900/90 rounded-lg text-xs text-neutral-600 dark:text-neutral-400 backdrop-blur-sm">
       {{ Math.round(zoom * 100) }}%
     </div>
 

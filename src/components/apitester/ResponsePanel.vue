@@ -16,7 +16,7 @@ const emit = defineEmits(['update:activeResponseTab', 'copyResponse'])
 <template>
   <div class="flex flex-col h-full">
     <!-- Response Header -->
-    <div class="flex items-center gap-3 px-3 py-2 border-b border-neutral-800">
+    <div class="flex items-center gap-3 px-3 py-2 border-b border-neutral-200 dark:border-neutral-800">
       <template v-if="response">
         <span
           class="px-2 py-0.5 text-xs font-bold rounded"
@@ -48,11 +48,11 @@ const emit = defineEmits(['update:activeResponseTab', 'copyResponse'])
     </div>
 
     <!-- Response Tabs -->
-    <div v-if="response" class="flex border-b border-neutral-800">
+    <div v-if="response" class="flex border-b border-neutral-200 dark:border-neutral-800">
       <button
         @click="emit('update:activeResponseTab', 'body')"
         class="px-4 py-2 text-xs font-medium transition-colors relative"
-        :class="activeResponseTab === 'body' ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'"
+        :class="activeResponseTab === 'body' ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'"
       >
         Body
         <div v-if="activeResponseTab === 'body'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500"/>
@@ -60,7 +60,7 @@ const emit = defineEmits(['update:activeResponseTab', 'copyResponse'])
       <button
         @click="emit('update:activeResponseTab', 'headers')"
         class="px-4 py-2 text-xs font-medium transition-colors relative"
-        :class="activeResponseTab === 'headers' ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'"
+        :class="activeResponseTab === 'headers' ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'"
       >
         Headers
         <span class="ml-1 text-amber-500">({{ Object.keys(response.headers).length }})</span>
@@ -94,7 +94,7 @@ const emit = defineEmits(['update:activeResponseTab', 'copyResponse'])
 
       <!-- Response Body -->
       <div v-else-if="response && activeResponseTab === 'body'">
-        <pre class="text-xs text-neutral-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ response.body }}</pre>
+        <pre class="text-xs text-neutral-700 dark:text-neutral-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ response.body }}</pre>
       </div>
 
       <!-- Response Headers -->
@@ -102,10 +102,10 @@ const emit = defineEmits(['update:activeResponseTab', 'copyResponse'])
         <div
           v-for="(value, key) in response.headers"
           :key="key"
-          class="flex gap-2 py-1.5 border-b border-neutral-800/50 last:border-0"
+          class="flex gap-2 py-1.5 border-b border-neutral-200 dark:border-neutral-800/50 last:border-0"
         >
           <span class="text-xs text-amber-400 font-medium shrink-0">{{ key }}</span>
-          <span class="text-xs text-neutral-400 break-all">{{ value }}</span>
+          <span class="text-xs text-neutral-600 dark:text-neutral-400 break-all">{{ value }}</span>
         </div>
       </div>
 

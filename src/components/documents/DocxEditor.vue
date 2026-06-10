@@ -72,7 +72,7 @@ const getDocumentData = () => serialize()
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-900 docx-editor-wrapper">
+  <div class="h-full flex flex-col bg-neutral-100 dark:bg-neutral-900 docx-editor-wrapper">
     <!-- Top bar: File actions -->
     <DocxToolbar
       :file-name="currentFileName"
@@ -95,7 +95,7 @@ const getDocumentData = () => serialize()
     <!-- Main content area with editor and sidebar -->
     <div class="flex-1 flex overflow-hidden">
       <!-- Editor area with centered document -->
-      <div class="docx-editor-scroll flex-1 overflow-auto bg-neutral-800/50">
+      <div class="docx-editor-scroll flex-1 overflow-auto">
         <div class="docx-editor-container" :style="{ '--docx-zoom': zoom / 100 }">
           <div
             ref="editorContainerRef"
@@ -123,17 +123,35 @@ const getDocumentData = () => serialize()
 </template>
 
 <style>
-/* Global SuperDoc overrides (no scoped) */
+/* Global SuperDoc overrides (no scoped) — tema claro por defecto */
 .docx-editor-wrapper {
+  --sd-toolbar-bg: #ffffff;
+  --sd-toolbar-border: #e5e5e5;
+  --sd-editor-bg: #ebebeb;
+  --sd-btn-color: #525252;
+  --sd-btn-hover-bg: #e5e5e5;
+  --sd-btn-hover-color: #171717;
+  --sd-dropdown-bg: #ffffff;
+  --sd-dropdown-border: #d4d4d4;
+  --sd-page-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --docx-zoom: 1;
+}
+
+html.dark .docx-editor-wrapper {
   --sd-toolbar-bg: #1a1a1a;
   --sd-toolbar-border: #2a2a2a;
   --sd-editor-bg: #262626;
-  --docx-zoom: 1;
+  --sd-btn-color: #a3a3a3;
+  --sd-btn-hover-bg: #333333;
+  --sd-btn-hover-color: #ffffff;
+  --sd-dropdown-bg: #1a1a1a;
+  --sd-dropdown-border: #3a3a3a;
+  --sd-page-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Scroll container */
 .docx-editor-scroll {
-  background: #262626;
+  background: var(--sd-editor-bg);
 }
 
 /* Zoom container - centers content */
@@ -153,19 +171,19 @@ const getDocumentData = () => serialize()
 
 /* Toolbar styling */
 .docx-editor-wrapper .superdoc-toolbar {
-  background: #1a1a1a !important;
-  border-bottom: 1px solid #2a2a2a !important;
+  background: var(--sd-toolbar-bg) !important;
+  border-bottom: 1px solid var(--sd-toolbar-border) !important;
   padding: 4px 8px !important;
 }
 
 .docx-editor-wrapper .superdoc-toolbar button {
-  color: #a3a3a3 !important;
+  color: var(--sd-btn-color) !important;
   border-radius: 4px !important;
 }
 
 .docx-editor-wrapper .superdoc-toolbar button:hover {
-  background: #333 !important;
-  color: #fff !important;
+  background: var(--sd-btn-hover-bg) !important;
+  color: var(--sd-btn-hover-color) !important;
 }
 
 .docx-editor-wrapper .superdoc-toolbar button.active,
@@ -184,7 +202,7 @@ const getDocumentData = () => serialize()
   max-width: 816px !important;
   margin: 0 auto !important;
   padding: 72px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: var(--sd-page-shadow) !important;
   border-radius: 2px !important;
   min-height: 1056px !important;
 }
@@ -194,7 +212,7 @@ const getDocumentData = () => serialize()
 .docx-editor-wrapper [class*="superdoc-page"],
 .docx-editor-wrapper [class*="page-container"] {
   background: #fff !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: var(--sd-page-shadow) !important;
   margin: 0 auto 20px auto !important;
   width: 816px !important;
 }
@@ -226,23 +244,23 @@ const getDocumentData = () => serialize()
 /* Dropdowns */
 .docx-editor-wrapper .superdoc-toolbar select,
 .docx-editor-wrapper .superdoc-toolbar .dropdown-trigger {
-  background: #2a2a2a !important;
-  border: 1px solid #3a3a3a !important;
-  color: #d4d4d4 !important;
+  background: var(--sd-dropdown-bg) !important;
+  border: 1px solid var(--sd-dropdown-border) !important;
+  color: var(--sd-btn-color) !important;
   border-radius: 4px !important;
 }
 
 .docx-editor-wrapper .superdoc-toolbar .dropdown-menu,
 .docx-editor-wrapper .superdoc-toolbar [class*="dropdown"] {
-  background: #1a1a1a !important;
-  border: 1px solid #3a3a3a !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+  background: var(--sd-dropdown-bg) !important;
+  border: 1px solid var(--sd-dropdown-border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* Color pickers and popovers */
 .docx-editor-wrapper [class*="popover"],
 .docx-editor-wrapper [class*="picker"] {
-  background: #1a1a1a !important;
-  border: 1px solid #3a3a3a !important;
+  background: var(--sd-dropdown-bg) !important;
+  border: 1px solid var(--sd-dropdown-border) !important;
 }
 </style>

@@ -103,17 +103,17 @@ const executeCommand = (action) => {
 </script>
 
 <template>
-  <div class="w-56 bg-neutral-900 border-l border-neutral-800 flex flex-col shrink-0">
+  <div class="w-56 bg-neutral-50 dark:bg-neutral-900 border-l border-neutral-200 dark:border-neutral-800 flex flex-col shrink-0">
     <!-- Section tabs -->
-    <div class="flex border-b border-neutral-800">
+    <div class="flex border-b border-neutral-200 dark:border-neutral-800">
       <button
         v-for="section in sections"
         :key="section.id"
         @click="activeSection = section.id"
         class="flex-1 p-2 text-center transition-colors"
         :class="activeSection === section.id
-          ? 'bg-neutral-800 text-white border-b-2 border-emerald-500'
-          : 'text-neutral-500 hover:text-neutral-300'"
+          ? 'bg-neutral-200 text-neutral-900 dark:bg-neutral-800 dark:text-white border-b-2 border-emerald-500'
+          : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'"
         :title="section.name"
       >
         <svg class="w-4 h-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +130,7 @@ const executeCommand = (action) => {
 
       <!-- Insert section -->
       <template v-else-if="activeSection === 'insert'">
-        <h3 class="text-xs font-medium text-neutral-400 uppercase tracking-wider mb-3">Insertar</h3>
+        <h3 class="text-xs font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-3">Insertar</h3>
         <div class="space-y-1">
           <button
             v-for="item in insertItems"
@@ -148,7 +148,7 @@ const executeCommand = (action) => {
 
       <!-- Format section -->
       <template v-else-if="activeSection === 'format'">
-        <h3 class="text-xs font-medium text-neutral-400 uppercase tracking-wider mb-3">Formato</h3>
+        <h3 class="text-xs font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-3">Formato</h3>
         <div class="space-y-1">
           <button
             v-for="item in formatItems"
@@ -166,7 +166,7 @@ const executeCommand = (action) => {
 
       <!-- Styles section -->
       <template v-else-if="activeSection === 'styles'">
-        <h3 class="text-xs font-medium text-neutral-400 uppercase tracking-wider mb-3">Estilos rápidos</h3>
+        <h3 class="text-xs font-medium text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-3">Estilos rápidos</h3>
         <div class="space-y-1">
           <button
             v-for="style in stylePresets"
@@ -182,7 +182,7 @@ const executeCommand = (action) => {
     </div>
 
     <!-- Quick tips -->
-    <div class="p-3 border-t border-neutral-800 bg-neutral-900/50">
+    <div class="p-3 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50">
       <p class="text-[10px] text-neutral-600 leading-relaxed">
         <span class="text-neutral-500">Tip:</span> Usa Ctrl+B para negrita, Ctrl+I para cursiva
       </p>

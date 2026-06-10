@@ -39,18 +39,18 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
         <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
-        <span class="text-sm font-medium text-white">Generador de Facturas</span>
+        <span class="text-sm font-medium text-neutral-900 dark:text-white">Generador de Facturas</span>
       </div>
       <div class="flex items-center gap-2">
         <button
           @click="fillDemo"
-          class="px-3 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-amber-400 rounded border border-neutral-700 transition-colors"
+          class="px-3 py-1.5 text-xs bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-amber-700 dark:text-amber-400 rounded border border-neutral-300 dark:border-neutral-700 transition-colors"
         >
           Ejemplo
         </button>
         <button
           @click="resetInvoice"
-          class="px-3 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded border border-neutral-700 transition-colors"
+          class="px-3 py-1.5 text-xs bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded border border-neutral-300 dark:border-neutral-700 transition-colors"
         >
           Limpiar
         </button>
@@ -69,7 +69,7 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
     <!-- Form -->
     <div class="flex-1 overflow-y-auto p-4 space-y-4">
       <!-- LEGAL COMPLIANCE -->
-      <section class="rounded-lg border border-neutral-800/50 p-3 bg-neutral-900/30">
+      <section class="rounded-lg border border-neutral-200 dark:border-neutral-800/50 p-3 bg-neutral-100/60 dark:bg-neutral-900/30">
         <div class="flex items-start gap-3">
           <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
@@ -77,7 +77,7 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
           <div class="space-y-1">
             <p class="text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">Conforme a la normativa AEAT</p>
             <p class="text-[10px] text-neutral-500 leading-relaxed">
-              Art. 6 del <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2012-14696" target="_blank" class="text-emerald-500/80 hover:text-emerald-400 underline">RD 1619/2012</a>
+              Art. 6 del <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2012-14696" target="_blank" class="text-emerald-700 hover:text-emerald-600 dark:text-emerald-500/80 dark:hover:text-emerald-400 underline">RD 1619/2012</a>
               (Reglamento de Obligaciones de Facturacion).
               Incluye todos los campos obligatorios: identificacion emisor/receptor, NIF, numeracion correlativa,
               fecha, descripcion, base imponible, tipo impositivo y cuota tributaria.
@@ -87,9 +87,9 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
       </section>
 
       <!-- EMISOR -->
-      <section class="bg-neutral-900/50 rounded-lg border border-neutral-800">
+      <section class="bg-neutral-100/80 dark:bg-neutral-900/50 rounded-lg border border-neutral-200 dark:border-neutral-800">
         <button @click="toggleSection('emisor')" class="w-full flex items-center justify-between px-4 py-2.5 text-left">
-          <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Datos del Emisor</span>
+          <span class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Datos del Emisor</span>
           <svg class="w-4 h-4 text-neutral-500 transition-transform" :class="{ 'rotate-180': sections.emisor }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
@@ -99,27 +99,27 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
           <div class="flex items-center gap-3">
             <div
               v-if="invoice.emisor.logo"
-              class="w-16 h-16 rounded border border-neutral-700 overflow-hidden bg-neutral-800 flex items-center justify-center"
+              class="w-16 h-16 rounded border border-neutral-300 dark:border-neutral-700 overflow-hidden bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center"
             >
               <img :src="invoice.emisor.logo" class="max-w-full max-h-full object-contain" />
             </div>
             <div class="flex items-center gap-2">
               <button
                 @click="logoInput?.click()"
-                class="px-2.5 py-1 text-[11px] bg-neutral-800 hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded border border-neutral-700 transition-colors"
+                class="px-2.5 py-1 text-[11px] bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded border border-neutral-300 dark:border-neutral-700 transition-colors"
               >
                 {{ invoice.emisor.logo ? 'Cambiar logo' : 'Incluir logo' }}
               </button>
               <button
                 v-if="invoice.emisor.logo"
                 @click="removeLogo"
-                class="px-2.5 py-1 text-[11px] text-red-400 hover:text-red-300 transition-colors"
+                class="px-2.5 py-1 text-[11px] text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
               >
                 Quitar
               </button>
               <input ref="logoInput" type="file" accept="image/png,image/jpeg" class="hidden" @change="handleLogoUpload" />
             </div>
-            <p v-if="logoError" class="text-[10px] text-red-400">{{ logoError }}</p>
+            <p v-if="logoError" class="text-[10px] text-red-600 dark:text-red-400">{{ logoError }}</p>
           </div>
 
           <div class="grid grid-cols-2 gap-3">
@@ -187,21 +187,21 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
               :disabled="vault.isLocked.value"
               class="px-3 py-1.5 text-[11px] border rounded transition-colors"
               :class="vault.isLocked.value
-                ? 'bg-neutral-800/50 text-neutral-500 border-neutral-700 cursor-not-allowed'
+                ? 'bg-neutral-200 dark:bg-neutral-800/50 text-neutral-500 border-neutral-300 dark:border-neutral-700 cursor-not-allowed'
                 : 'bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border-emerald-600/30'"
             >
               Guardar configuración
             </button>
             <span v-if="emisorSaved" class="text-[10px] text-emerald-400">Guardado</span>
-            <span v-if="configError" class="text-[10px] text-red-400">{{ configError }}</span>
+            <span v-if="configError" class="text-[10px] text-red-600 dark:text-red-400">{{ configError }}</span>
           </div>
         </div>
       </section>
 
       <!-- CLIENTE -->
-      <section class="bg-neutral-900/50 rounded-lg border border-neutral-800">
+      <section class="bg-neutral-100/80 dark:bg-neutral-900/50 rounded-lg border border-neutral-200 dark:border-neutral-800">
         <button @click="toggleSection('cliente')" class="w-full flex items-center justify-between px-4 py-2.5 text-left">
-          <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Datos del Cliente</span>
+          <span class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Datos del Cliente</span>
           <svg class="w-4 h-4 text-neutral-500 transition-transform" :class="{ 'rotate-180': sections.cliente }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
@@ -235,9 +235,9 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
       </section>
 
       <!-- FACTURA -->
-      <section class="bg-neutral-900/50 rounded-lg border border-neutral-800">
+      <section class="bg-neutral-100/80 dark:bg-neutral-900/50 rounded-lg border border-neutral-200 dark:border-neutral-800">
         <button @click="toggleSection('factura')" class="w-full flex items-center justify-between px-4 py-2.5 text-left">
-          <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Datos de la Factura</span>
+          <span class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Datos de la Factura</span>
           <svg class="w-4 h-4 text-neutral-500 transition-transform" :class="{ 'rotate-180': sections.factura }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
@@ -291,9 +291,9 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
       </section>
 
       <!-- LINEAS / CONCEPTOS -->
-      <section class="bg-neutral-900/50 rounded-lg border border-neutral-800">
+      <section class="bg-neutral-100/80 dark:bg-neutral-900/50 rounded-lg border border-neutral-200 dark:border-neutral-800">
         <button @click="toggleSection('lineas')" class="w-full flex items-center justify-between px-4 py-2.5 text-left">
-          <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Conceptos</span>
+          <span class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Conceptos</span>
           <svg class="w-4 h-4 text-neutral-500 transition-transform" :class="{ 'rotate-180': sections.lineas }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
@@ -328,7 +328,7 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
             <select v-model.number="linea.iva" class="invoice-input text-[11px]">
               <option v-for="opt in ivaOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
             </select>
-            <span v-if="invoice.aplicarRecargo" class="text-[10px] text-neutral-400 text-center">
+            <span v-if="invoice.aplicarRecargo" class="text-[10px] text-neutral-600 dark:text-neutral-400 text-center">
               {{ RECARGO_MAP[linea.iva] || 0 }}%
             </span>
             <span class="text-[11px] text-neutral-700 dark:text-neutral-300 text-right pr-1">
@@ -356,9 +356,9 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
       </section>
 
       <!-- FISCAL CONFIG -->
-      <section class="bg-neutral-900/50 rounded-lg border border-neutral-800">
+      <section class="bg-neutral-100/80 dark:bg-neutral-900/50 rounded-lg border border-neutral-200 dark:border-neutral-800">
         <button @click="toggleSection('fiscal')" class="w-full flex items-center justify-between px-4 py-2.5 text-left">
-          <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Configuración Fiscal</span>
+          <span class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Configuración Fiscal</span>
           <svg class="w-4 h-4 text-neutral-500 transition-transform" :class="{ 'rotate-180': sections.fiscal }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
@@ -379,11 +379,11 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
           <div v-if="invoice.aplicarIrpf" class="flex items-center gap-3 pl-5">
             <label class="flex items-center gap-1.5">
               <input type="radio" v-model.number="invoice.irpfPorcentaje" :value="15" class="accent-emerald-500" />
-              <span class="text-xs text-neutral-400">15%</span>
+              <span class="text-xs text-neutral-600 dark:text-neutral-400">15%</span>
             </label>
             <label class="flex items-center gap-1.5">
               <input type="radio" v-model.number="invoice.irpfPorcentaje" :value="7" class="accent-emerald-500" />
-              <span class="text-xs text-neutral-400">7% (nuevo autónomo)</span>
+              <span class="text-xs text-neutral-600 dark:text-neutral-400">7% (nuevo autónomo)</span>
             </label>
           </div>
 
@@ -409,8 +409,8 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
       </section>
 
       <!-- TOTALS SUMMARY -->
-      <section class="bg-neutral-900/80 rounded-lg border border-neutral-700 p-4">
-        <h3 class="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-3">Resumen</h3>
+      <section class="bg-white/90 dark:bg-neutral-900/80 rounded-lg border border-neutral-300 dark:border-neutral-700 p-4">
+        <h3 class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider mb-3">Resumen</h3>
         <div class="space-y-1.5">
           <div class="flex justify-between text-xs text-neutral-700 dark:text-neutral-300">
             <span>Subtotal</span>
@@ -418,22 +418,22 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
           </div>
           <template v-if="invoice.desglosarIva">
             <template v-for="d in totales.desglose" :key="d.tipoIva + '-' + d.tipoRecargo">
-              <div v-if="d.cuotaIva > 0" class="flex justify-between text-xs text-neutral-400">
+              <div v-if="d.cuotaIva > 0" class="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
                 <span>IVA {{ d.tipoIva }}% (base {{ d.base.toFixed(2) }})</span>
                 <span>{{ d.cuotaIva.toFixed(2) }} {{ invoice.moneda }}</span>
               </div>
-              <div v-if="d.cuotaRecargo > 0" class="flex justify-between text-xs text-neutral-400">
+              <div v-if="d.cuotaRecargo > 0" class="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
                 <span>R.E. {{ d.tipoRecargo }}% (base {{ d.base.toFixed(2) }})</span>
                 <span>{{ d.cuotaRecargo.toFixed(2) }} {{ invoice.moneda }}</span>
               </div>
             </template>
           </template>
           <template v-else>
-            <div v-if="totales.totalIva > 0" class="flex justify-between text-xs text-neutral-400">
+            <div v-if="totales.totalIva > 0" class="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
               <span>IVA</span>
               <span>{{ totales.totalIva.toFixed(2) }} {{ invoice.moneda }}</span>
             </div>
-            <div v-if="totales.totalRecargo > 0" class="flex justify-between text-xs text-neutral-400">
+            <div v-if="totales.totalRecargo > 0" class="flex justify-between text-xs text-neutral-600 dark:text-neutral-400">
               <span>Recargo equiv.</span>
               <span>{{ totales.totalRecargo.toFixed(2) }} {{ invoice.moneda }}</span>
             </div>
@@ -442,7 +442,7 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
             <span>IRPF -{{ invoice.irpfPorcentaje }}%</span>
             <span>-{{ totales.cuotaIrpf.toFixed(2) }} {{ invoice.moneda }}</span>
           </div>
-          <div class="border-t border-neutral-700 pt-2 mt-2 flex justify-between text-sm font-semibold text-white">
+          <div class="border-t border-neutral-300 dark:border-neutral-700 pt-2 mt-2 flex justify-between text-sm font-semibold text-neutral-900 dark:text-white">
             <span>TOTAL</span>
             <span>{{ totales.total.toFixed(2) }} {{ invoice.moneda }}</span>
           </div>
@@ -458,9 +458,9 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
           <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
           </svg>
-          <h3 class="text-sm font-medium text-white">Guardar configuración</h3>
+          <h3 class="text-sm font-medium text-neutral-900 dark:text-white">Guardar configuración</h3>
         </div>
-        <p class="text-[11px] text-neutral-400">Los datos se guardarán cifrados en tu navegador.</p>
+        <p class="text-[11px] text-neutral-600 dark:text-neutral-400">Los datos se guardarán cifrados en tu navegador.</p>
         <div class="space-y-3">
           <div>
             <label class="block text-[10px] text-neutral-500 mb-1">Nombre</label>
@@ -472,12 +472,12 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
               @keyup.enter="confirmSave"
             />
           </div>
-          <p v-if="configError" class="text-[10px] text-red-400">{{ configError }}</p>
+          <p v-if="configError" class="text-[10px] text-red-600 dark:text-red-400">{{ configError }}</p>
         </div>
         <div class="flex items-center justify-end gap-2">
           <button
             @click="dismissConfigModal"
-            class="px-3 py-1.5 text-xs text-neutral-400 hover:text-neutral-700 dark:text-neutral-300 transition-colors"
+            class="px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:text-neutral-700 dark:text-neutral-300 transition-colors"
           >
             Cancelar
           </button>
@@ -496,19 +496,33 @@ const formasPago = ['Transferencia', 'Efectivo', 'Tarjeta', 'PayPal', 'Otro']
 <style scoped>
 .invoice-input {
   width: 100%;
-  background: rgba(38, 38, 38, 0.8);
-  border: 1px solid #404040;
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
   border-radius: 0.25rem;
   padding: 0.375rem 0.625rem;
   font-size: 0.75rem;
-  color: white;
+  color: #171717;
   outline: none;
   transition: border-color 0.15s;
 }
 .invoice-input:focus {
-  border-color: rgba(16, 185, 129, 0.5);
+  border-color: rgba(16, 185, 129, 0.6);
 }
 .invoice-input::placeholder {
+  color: #a3a3a3;
+}
+
+:global(html.dark .invoice-input) {
+  background: rgba(38, 38, 38, 0.8);
+  border-color: #404040;
+  color: white;
+}
+
+:global(html.dark .invoice-input:focus) {
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+:global(html.dark .invoice-input::placeholder) {
   color: #525252;
 }
 </style>

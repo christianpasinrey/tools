@@ -53,6 +53,15 @@ export const BORDER_PRESETS = [
 // Font sizes
 export const FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 72]
 
+// Presets de "Formatear como tabla" (cabecera + zebra)
+export const TABLE_PRESETS = [
+  { id: 'emerald', name: 'Esmeralda', header: '#059669', headerText: '#ffffff', zebra: '#d1fae5' },
+  { id: 'blue', name: 'Azul', header: '#2563eb', headerText: '#ffffff', zebra: '#dbeafe' },
+  { id: 'slate', name: 'Neutro', header: '#404040', headerText: '#ffffff', zebra: '#e5e5e5' },
+  { id: 'amber', name: 'Ámbar', header: '#d97706', headerText: '#ffffff', zebra: '#fef3c7' },
+  { id: 'rose', name: 'Rosa', header: '#e11d48', headerText: '#ffffff', zebra: '#ffe4e6' }
+]
+
 // Number formats
 export const NUMBER_FORMATS = [
   { id: 'general', name: 'General', format: 'General' },
@@ -107,6 +116,95 @@ export function useSpreadsheet() {
   const selectedCell = ref(null)
   const editingCell = ref(null)
   const editValue = ref('')
+
+  // Range selection (drag / shift+click / shift+arrows)
+  const selectionAnchor = ref(null)
+  const selectionEnd = ref(null)
+  const isSelecting = ref(false)
+
+  const selectionBounds = computed(() => {
+    if (!selectionAnchor.value || !selectionEnd.value) return null
+    return {
+      r1: Math.min(selectionAnchor.value.row, selectionEnd.value.row),
+      r2: Math.max(selectionAnchor.value.row, selectionEnd.value.row),
+      c1: Math.min(selectionAnchor.value.col, selectionEnd.value.col),
+      c2: Math.max(selectionAnchor.value.col, selectionEnd.value.col)
+    }
+  })
+
+  const hasMultiSelection = computed(() => {
+    const b = selectionBounds.value
+    return !!b && (b.r1 !== b.r2 || b.c1 !== b.c2)
+  })
+
+  function startSelection(row, col, extend = false) {
+    if (extend && selectedCell.value) {
+      selectionAnchor.value = { ...selectedCell.value }
+      selectionEnd.value = { row, col }
+    } else {
+      selectedCell.value = { row, col }
+      selectionAnchor.value = { row, col }
+      selectionEnd.value = { row, col }
+      isSelecting.value = true
+    }
+  }
+
+  function extendSelection(row, col) {
+    if (!isSelecting.value) return
+    selectionEnd.value = { row, col }
+  }
+
+  function endSelection() {
+    isSelecting.value = false
+  }
+
+  function extendSelectionTo(row, col) {
+    if (!selectionAnchor.value) {
+      selectionAnchor.value = selectedCell.value ? { ...selectedCell.value } : { row, col }
+    }
+    selectionEnd.value = { row, col }
+  }
+
+  function isCellInSelection(row, col) {
+    const b = selectionBounds.value
+    if (!b) return false
+    return row >= b.r1 && row <= b.r2 && col >= b.c1 && col <= b.c2
+  }
+
+  // Itera todas las celdas seleccionadas (rango o celda única)
+  function forEachSelectedCell(fn) {
+    const b = selectionBounds.value
+    if (b) {
+      for (let r = b.r1; r <= b.r2; r++) {
+        for (let c = b.c1; c <= b.c2; c++) fn(r, c)
+      }
+    } else if (selectedCell.value) {
+      fn(selectedCell.value.row, selectedCell.value.col)
+    }
+  }
+
+  // Estadísticas de la selección (como la barra de estado de Excel)
+  const selectionStats = computed(() => {
+    const b = selectionBounds.value
+    if (!b || !hasMultiSelection.value) return null
+    let count = 0, numCount = 0, sum = 0
+    for (let r = b.r1; r <= b.r2; r++) {
+      for (let c = b.c1; c <= b.c2; c++) {
+        const val = data.value[r]?.[c]
+        if (val !== '' && val !== undefined && val !== null) {
+          count++
+          const num = parseFloat(val)
+          if (!isNaN(num) && isFinite(num)) { numCount++; sum += num }
+        }
+      }
+    }
+    return {
+      cells: (b.r2 - b.r1 + 1) * (b.c2 - b.c1 + 1),
+      count,
+      sum: numCount > 0 ? sum : null,
+      avg: numCount > 0 ? sum / numCount : null
+    }
+  })
 
   // UI state
   const isDragging = ref(false)
@@ -933,136 +1031,224 @@ export function useSpreadsheet() {
     return args
   }
 
-  // Evaluate a formula expression
-  function evaluateFormula(formula, visitedCells = new Set()) {
-    if (!formula) return ''
+  // Alias de funciones en español → inglés
+  const FUNC_ALIASES = {
+    SUMA: 'SUM',
+    PROMEDIO: 'AVERAGE',
+    MEDIA: 'AVERAGE',
+    CONTAR: 'COUNT',
+    CONTARA: 'COUNTA',
+    SI: 'IF',
+    REDONDEAR: 'ROUND',
+    RAIZ: 'SQRT',
+    POTENCIA: 'POWER',
+    PRODUCTO: 'PRODUCT',
+    CONCATENAR: 'CONCAT',
+    CONCATENATE: 'CONCAT',
+    MINIMO: 'MIN',
+    MAXIMO: 'MAX'
+  }
 
-    let expr = formula.trim()
-    if (expr.startsWith('=')) expr = expr.slice(1)
+  // Get raw cell value by reference (string, sin coerción numérica)
+  function getCellRawByRef(ref) {
+    const parsed = parseCellRef(ref)
+    if (!parsed) return ''
+    const val = data.value[parsed.row]?.[parsed.col]
+    return val === undefined || val === null ? '' : String(val)
+  }
 
-    // Handle functions
-    const funcMatch = expr.match(/^([A-Z]+)\((.*)\)$/i)
-    if (funcMatch) {
-      const funcName = funcMatch[1].toUpperCase()
-      const argsStr = funcMatch[2]
-      const args = parseArgs(argsStr)
-
-      // Get all values from args (handles ranges and single cells)
-      const getAllValues = () => {
-        const values = []
-        for (const arg of args) {
-          if (arg.includes(':')) {
-            values.push(...parseRange(arg))
-          } else if (/^[A-Z]+\d+$/i.test(arg)) {
-            values.push(getCellValueByRef(arg))
-          } else if (/^[A-Z]+\(/i.test(arg)) {
-            const result = evaluateFormula(arg, visitedCells)
-            const num = parseFloat(result)
-            if (!isNaN(num)) values.push(num)
-          } else {
-            const num = parseFloat(arg)
-            if (!isNaN(num)) values.push(num)
-          }
-        }
-        return values
-      }
-
-      switch (funcName) {
-        case 'SUM': {
-          const values = getAllValues()
-          return values.reduce((a, b) => a + b, 0)
-        }
-        case 'AVERAGE':
-        case 'AVG': {
-          const values = getAllValues()
-          return values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
-        }
-        case 'MIN': {
-          const values = getAllValues()
-          return values.length > 0 ? Math.min(...values) : 0
-        }
-        case 'MAX': {
-          const values = getAllValues()
-          return values.length > 0 ? Math.max(...values) : 0
-        }
-        case 'COUNT': {
-          const values = getAllValues()
-          return values.length
-        }
-        case 'ABS': {
-          const values = getAllValues()
-          return values.length > 0 ? Math.abs(values[0]) : 0
-        }
-        case 'ROUND': {
-          const values = getAllValues()
-          const num = values[0] || 0
-          const decimals = values[1] || 0
-          return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals)
-        }
-        case 'SQRT': {
-          const values = getAllValues()
-          return values.length > 0 ? Math.sqrt(values[0]) : 0
-        }
-        case 'POWER':
-        case 'POW': {
-          const values = getAllValues()
-          return values.length >= 2 ? Math.pow(values[0], values[1]) : 0
-        }
-        case 'IF': {
-          // IF(condition, true_value, false_value)
-          if (args.length >= 2) {
-            const condition = evaluateFormula(args[0], visitedCells)
-            const isTrue = condition && condition !== 0 && condition !== '0' && condition !== 'FALSE'
-            if (isTrue) {
-              return evaluateFormula(args[1], visitedCells)
-            } else {
-              return args.length >= 3 ? evaluateFormula(args[2], visitedCells) : 0
-            }
-          }
-          return 0
-        }
-        default:
-          return '#NAME?'
+  // Cuenta celdas no vacías de un rango o referencia
+  function countNonEmpty(arg) {
+    const parts = arg.split(':')
+    if (parts.length !== 2) {
+      return getCellRawByRef(arg).trim() !== '' ? 1 : 0
+    }
+    const start = parseCellRef(parts[0])
+    const end = parseCellRef(parts[1])
+    if (!start || !end) return 0
+    let count = 0
+    for (let r = Math.min(start.row, end.row); r <= Math.max(start.row, end.row); r++) {
+      for (let c = Math.min(start.col, end.col); c <= Math.max(start.col, end.col); c++) {
+        const val = data.value[r]?.[c]
+        if (val !== '' && val !== undefined && val !== null) count++
       }
     }
+    return count
+  }
 
-    // Handle cell references in expressions
-    expr = expr.replace(/([A-Z]+)(\d+)/gi, (match) => {
+  // Resuelve un argumento a lista de valores numéricos
+  function argToValues(arg, visitedCells) {
+    if (arg.includes(':')) return parseRange(arg)
+    if (/^[A-Z]+\d+$/i.test(arg)) return [getCellValueByRef(arg)]
+    const num = parseFloat(arg)
+    if (!isNaN(num) && /^-?[\d.]+$/.test(arg.trim())) return [num]
+    // Expresión (las funciones anidadas ya fueron sustituidas)
+    const result = evaluateExpression(arg, visitedCells)
+    const n = parseFloat(result)
+    return isNaN(n) ? [] : [n]
+  }
+
+  // Resuelve un argumento a string (para CONCAT)
+  function argToString(arg, visitedCells) {
+    const trimmed = arg.trim()
+    if (/^"(.*)"$/.test(trimmed)) return trimmed.slice(1, -1)
+    if (/^[A-Z]+\d+$/i.test(trimmed)) return getCellRawByRef(trimmed)
+    const result = evaluateExpression(trimmed, visitedCells)
+    return String(result)
+  }
+
+  // Ejecuta una función de hoja de cálculo (args sin paréntesis anidados)
+  function callFunction(name, argsStr, visitedCells) {
+    const funcName = FUNC_ALIASES[name.toUpperCase()] || name.toUpperCase()
+    const args = parseArgs(argsStr)
+    const allValues = () => args.flatMap(a => argToValues(a, visitedCells))
+
+    switch (funcName) {
+      case 'SUM':
+        return allValues().reduce((a, b) => a + b, 0)
+      case 'AVERAGE':
+      case 'AVG': {
+        const values = allValues()
+        return values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
+      }
+      case 'MIN': {
+        const values = allValues()
+        return values.length > 0 ? Math.min(...values) : 0
+      }
+      case 'MAX': {
+        const values = allValues()
+        return values.length > 0 ? Math.max(...values) : 0
+      }
+      case 'COUNT':
+        return allValues().length
+      case 'COUNTA':
+        return args.reduce((acc, a) => acc + countNonEmpty(a), 0)
+      case 'PRODUCT': {
+        const values = allValues()
+        return values.length > 0 ? values.reduce((a, b) => a * b, 1) : 0
+      }
+      case 'ABS': {
+        const values = allValues()
+        return values.length > 0 ? Math.abs(values[0]) : 0
+      }
+      case 'ROUND': {
+        const values = allValues()
+        const num = values[0] || 0
+        const decimals = values[1] || 0
+        return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals)
+      }
+      case 'SQRT': {
+        const values = allValues()
+        return values.length > 0 ? Math.sqrt(values[0]) : 0
+      }
+      case 'POWER':
+      case 'POW': {
+        const values = allValues()
+        return values.length >= 2 ? Math.pow(values[0], values[1]) : 0
+      }
+      case 'CONCAT':
+        return args.map(a => argToString(a, visitedCells)).join('')
+      case 'IF': {
+        if (args.length >= 2) {
+          const condition = evaluateExpression(args[0], visitedCells)
+          const isTrue = condition === true || (condition !== false && condition && condition !== 0 && condition !== '0' && condition !== 'FALSE')
+          if (isTrue) return evaluateExpression(args[1], visitedCells)
+          return args.length >= 3 ? evaluateExpression(args[2], visitedCells) : 0
+        }
+        return 0
+      }
+      default:
+        return '#NAME?'
+    }
+  }
+
+  // Sustituye referencias de celda por sus valores
+  function substituteRefs(expr, visitedCells) {
+    return expr.replace(/\b([A-Z]+\d+)\b/gi, (match) => {
       const cellKey = match.toUpperCase()
       const parsed = parseCellRef(cellKey)
       if (!parsed) return '0'
 
-      // Circular reference check
       if (visitedCells.has(cellKey)) return '#REF!'
-      visitedCells.add(cellKey)
 
-      // Check if referenced cell has a formula
       const refFormula = getCellFormula(parsed.row, parsed.col)
       if (refFormula) {
-        return evaluateFormula(refFormula, visitedCells)
+        const branch = new Set(visitedCells)
+        branch.add(cellKey)
+        const result = evaluateExpression(refFormula, branch)
+        const num = parseFloat(result)
+        return isNaN(num) ? '0' : String(num)
       }
 
-      return getCellValueByRef(match)
+      return String(getCellValueByRef(match))
     })
+  }
 
-    // Evaluate mathematical expression safely
+  // Evalúa una expresión: funciones (de dentro hacia fuera), refs,
+  // aritmética y comparaciones (=, <>, <=, >=, <, >)
+  function evaluateExpression(formula, visitedCells = new Set()) {
+    if (formula === null || formula === undefined) return ''
+
+    let expr = String(formula).trim()
+    if (expr.startsWith('=')) expr = expr.slice(1)
+    if (expr === '') return ''
+
+    // Resolver funciones de la más interna hacia fuera
+    const fnRe = /([A-Za-z]+)\(([^()]*)\)/
+    let guard = 0
+    let m
+    while ((m = expr.match(fnRe)) && guard++ < 100) {
+      const result = callFunction(m[1], m[2], visitedCells)
+      if (result === '#NAME?') return '#NAME?'
+      expr = expr.slice(0, m.index) + String(result) + expr.slice(m.index + m[0].length)
+    }
+
+    // Sustituir referencias de celda
+    expr = substituteRefs(expr, visitedCells)
+    if (expr.includes('#REF!')) return '#REF!'
+
+    // Comparaciones estilo Excel → JS
+    let jsExpr = expr
+      .replace(/<>/g, '!==')
+      .replace(/(?<![<>!=])=(?!=)/g, '===')
+
     try {
-      // Only allow numbers, operators, parentheses, and spaces
-      if (/^[\d\s+\-*/().]+$/.test(expr)) {
-        const result = Function('"use strict"; return (' + expr + ')')()
+      if (/^[\d\s+\-*/().<>=!&|]+$/.test(jsExpr)) {
+        const result = Function('"use strict"; return (' + jsExpr + ')')()
+        if (typeof result === 'boolean') return result
         return isNaN(result) || !isFinite(result) ? '#ERROR!' : result
       }
+      // Literal de texto entre comillas: devolver sin comillas
+      const strMatch = expr.trim().match(/^"(.*)"$/)
+      if (strMatch) return strMatch[1]
       return expr
     } catch (e) {
       return '#ERROR!'
     }
   }
 
+  // API pública (mantiene el nombre histórico)
+  function evaluateFormula(formula, visitedCells = new Set()) {
+    const result = evaluateExpression(formula, visitedCells)
+    if (result === true) return 'TRUE'
+    if (result === false) return 'FALSE'
+    return result
+  }
+
+  // Evalúa la fórmula de una celda protegiendo contra auto-referencia
+  function evaluateCellFormula(row, col) {
+    const formula = cellFormulas.value[`${row}-${col}`]
+    if (!formula) return ''
+    const visited = new Set([`${getColumnLabel(col)}${row + 1}`])
+    return evaluateFormula(formula, visited)
+  }
+
   // Recalculate all formulas
   function recalculateFormulas() {
-    Object.entries(cellFormulas.value).forEach(([key, formula]) => {
+    Object.keys(cellFormulas.value).forEach((key) => {
       const [row, col] = key.split('-').map(Number)
-      const result = evaluateFormula(formula)
+      if (!data.value[row]) return
+      const result = evaluateCellFormula(row, col)
       data.value[row][col] = String(result)
     })
   }
@@ -1070,6 +1256,8 @@ export function useSpreadsheet() {
   // Cell selection and editing
   function selectCell(row, col) {
     selectedCell.value = { row, col }
+    selectionAnchor.value = { row, col }
+    selectionEnd.value = { row, col }
   }
 
   function startEdit(row, col) {
@@ -1097,9 +1285,8 @@ export function useSpreadsheet() {
       if (newValue && newValue.toString().trim().startsWith('=')) {
         const formula = newValue.trim().slice(1) // Remove leading =
         setCellFormula(row, col, formula)
-        // Evaluate and store result
-        const result = evaluateFormula(formula)
-        data.value[row][col] = String(result)
+        // Evaluate (protegido contra auto-referencia) and store result
+        data.value[row][col] = String(evaluateCellFormula(row, col))
       } else {
         // Clear any existing formula
         setCellFormula(row, col, null)
@@ -1118,116 +1305,172 @@ export function useSpreadsheet() {
     editValue.value = ''
   }
 
-  // Clipboard operations
-  function copyCell() {
-    if (!selectedCell.value) return
+  // Clipboard operations (soportan rangos: se copia como TSV)
+  function snapshotSelection(isCut) {
+    const b = selectionBounds.value ||
+      (selectedCell.value ? { r1: selectedCell.value.row, r2: selectedCell.value.row, c1: selectedCell.value.col, c2: selectedCell.value.col } : null)
+    if (!b) return null
 
-    const { row, col } = selectedCell.value
-    clipboard.value = {
-      value: data.value[row][col],
-      style: JSON.parse(JSON.stringify(getCellStyle(row, col))),
-      isCut: false
+    const matrix = []
+    const styles = []
+    const formulas = []
+    for (let r = b.r1; r <= b.r2; r++) {
+      const rowVals = [], rowStyles = [], rowFormulas = []
+      for (let c = b.c1; c <= b.c2; c++) {
+        rowVals.push(data.value[r]?.[c] ?? '')
+        rowStyles.push(JSON.parse(JSON.stringify(getCellStyle(r, c))))
+        rowFormulas.push(cellFormulas.value[`${r}-${c}`] || null)
+      }
+      matrix.push(rowVals)
+      styles.push(rowStyles)
+      formulas.push(rowFormulas)
     }
-    navigator.clipboard?.writeText(clipboard.value.value)
+
+    clipboard.value = { matrix, styles, formulas, bounds: { ...b }, isCut }
+    const tsv = matrix.map(r => r.join('\t')).join('\n')
+    navigator.clipboard?.writeText(tsv).catch(() => {})
+    return clipboard.value
+  }
+
+  function copyCell() {
+    snapshotSelection(false)
   }
 
   function cutCell() {
-    if (!selectedCell.value) return
-
-    const { row, col } = selectedCell.value
-    clipboard.value = {
-      value: data.value[row][col],
-      style: JSON.parse(JSON.stringify(getCellStyle(row, col))),
-      sourceRow: row,
-      sourceCol: col,
-      isCut: true
-    }
-    navigator.clipboard?.writeText(clipboard.value.value)
+    snapshotSelection(true)
   }
 
   async function pasteCell() {
     if (!selectedCell.value) return
 
-    saveToHistory()
-    const { row, col } = selectedCell.value
+    const { row: startRow, col: startCol } = selectedCell.value
 
-    let textToPaste = clipboard.value?.value || ''
+    // Leer texto del portapapeles del sistema (puede venir de Excel como TSV)
+    let text = null
     try {
-      textToPaste = await navigator.clipboard.readText()
+      text = await navigator.clipboard.readText()
     } catch (e) {
-      // Use internal clipboard
+      // Sin permiso: usar portapapeles interno
     }
 
-    data.value[row][col] = textToPaste
+    let matrix
+    const internal = clipboard.value
+    const internalTsv = internal?.matrix ? internal.matrix.map(r => r.join('\t')).join('\n') : null
 
-    // Copy style if from internal clipboard
-    if (clipboard.value?.style) {
-      const key = getCellStyleKey(row, col)
-      cellStyles.value[key] = JSON.parse(JSON.stringify(clipboard.value.style))
+    if (text !== null && text !== internalTsv) {
+      // Texto externo: parsear TSV/multilínea
+      const rows = text.replace(/\r\n?/g, '\n').split('\n')
+      if (rows.length > 1 && rows[rows.length - 1] === '') rows.pop()
+      matrix = rows.map(r => r.split('\t'))
+    } else if (internal?.matrix) {
+      matrix = internal.matrix
+    } else if (text !== null) {
+      matrix = [[text]]
+    } else {
+      return
     }
 
-    // Clear source if cut
-    if (clipboard.value?.isCut && clipboard.value.sourceRow !== undefined) {
-      data.value[clipboard.value.sourceRow][clipboard.value.sourceCol] = ''
-      const sourceKey = getCellStyleKey(clipboard.value.sourceRow, clipboard.value.sourceCol)
-      delete cellStyles.value[sourceKey]
+    saveToHistory()
+
+    // Expandir la hoja si hace falta
+    const neededRows = startRow + matrix.length
+    const neededCols = startCol + Math.max(...matrix.map(r => r.length))
+    if (neededRows > data.value.length) addRows(neededRows - data.value.length)
+    if (neededCols > (data.value[0]?.length || 0)) addColumns(neededCols - (data.value[0]?.length || 0))
+
+    const sameAsInternal = internal?.matrix &&
+      matrix.length === internal.matrix.length &&
+      matrix[0]?.length === internal.matrix[0]?.length &&
+      (text === null || text === internalTsv)
+
+    matrix.forEach((rowVals, dr) => {
+      rowVals.forEach((val, dc) => {
+        const r = startRow + dr
+        const c = startCol + dc
+        if (!data.value[r] || c >= data.value[r].length) return
+
+        const key = getCellStyleKey(r, c)
+        if (sameAsInternal) {
+          const style = internal.styles?.[dr]?.[dc]
+          if (style && Object.keys(style).length > 0) {
+            cellStyles.value[key] = JSON.parse(JSON.stringify(style))
+          }
+          const formula = internal.formulas?.[dr]?.[dc]
+          if (formula) {
+            cellFormulas.value[`${r}-${c}`] = formula
+            data.value[r][c] = String(evaluateCellFormula(r, c))
+            return
+          }
+          delete cellFormulas.value[`${r}-${c}`]
+        } else {
+          delete cellFormulas.value[`${r}-${c}`]
+        }
+        data.value[r][c] = val
+      })
+    })
+
+    // Vaciar origen si era cortar
+    if (sameAsInternal && internal.isCut && internal.bounds) {
+      const b = internal.bounds
+      for (let r = b.r1; r <= b.r2; r++) {
+        for (let c = b.c1; c <= b.c2; c++) {
+          if (data.value[r]) data.value[r][c] = ''
+          delete cellStyles.value[getCellStyleKey(r, c)]
+          delete cellFormulas.value[`${r}-${c}`]
+        }
+      }
       clipboard.value = null
     }
+
+    recalculateFormulas()
   }
 
   function clearCell() {
-    if (!selectedCell.value) return
+    if (!selectedCell.value && !selectionBounds.value) return
 
     saveToHistory()
-    const { row, col } = selectedCell.value
-    data.value[row][col] = ''
+    forEachSelectedCell((r, c) => {
+      if (data.value[r]) data.value[r][c] = ''
+      delete cellFormulas.value[`${r}-${c}`]
+    })
+    recalculateFormulas()
   }
 
-  // Style operations
-  function setCellStyle(property, value) {
+  // Style operations — se aplican a toda la selección (rango o celda única)
+  function applyToSelection(fn) {
     const cell = editingCell.value || selectedCell.value
-    if (!cell) return
+    if (!cell && !selectionBounds.value) return false
 
     saveToHistory()
-    const key = getCellStyleKey(cell.row, cell.col)
+    forEachSelectedCell((r, c) => {
+      const key = getCellStyleKey(r, c)
+      if (!cellStyles.value[key]) cellStyles.value[key] = {}
+      fn(cellStyles.value[key], r, c)
+    })
+    return true
+  }
 
-    if (!cellStyles.value[key]) {
-      cellStyles.value[key] = {}
-    }
-
-    if (value === null || value === undefined) {
-      delete cellStyles.value[key][property]
-    } else {
-      cellStyles.value[key][property] = value
-    }
+  function setCellStyle(property, value) {
+    applyToSelection((style) => {
+      if (value === null || value === undefined) {
+        delete style[property]
+      } else {
+        style[property] = value
+      }
+    })
   }
 
   function toggleCellStyle(property) {
     const cell = editingCell.value || selectedCell.value
     if (!cell) return
-
-    saveToHistory()
-    const key = getCellStyleKey(cell.row, cell.col)
-
-    if (!cellStyles.value[key]) {
-      cellStyles.value[key] = {}
-    }
-
-    cellStyles.value[key][property] = !cellStyles.value[key][property]
+    // El estado objetivo se decide por la celda activa para uniformar el rango
+    const target = !getCellStyle(cell.row, cell.col)[property]
+    applyToSelection((style) => {
+      style[property] = target
+    })
   }
 
   function setBorders(preset) {
-    const cell = editingCell.value || selectedCell.value
-    if (!cell) return
-
-    saveToHistory()
-    const key = getCellStyleKey(cell.row, cell.col)
-
-    if (!cellStyles.value[key]) {
-      cellStyles.value[key] = {}
-    }
-
-    // Define border configurations
     const borderConfigs = {
       'none': { top: false, right: false, bottom: false, left: false },
       'all': { top: true, right: true, bottom: true, left: true },
@@ -1235,73 +1478,128 @@ export function useSpreadsheet() {
       'top-bottom': { top: true, right: false, bottom: true, left: false },
       'left-right': { top: false, right: true, bottom: false, left: true }
     }
-
-    cellStyles.value[key].borders = borderConfigs[preset] || borderConfigs['none']
+    const config = borderConfigs[preset] || borderConfigs['none']
+    applyToSelection((style) => {
+      style.borders = { ...config }
+    })
   }
 
   function setAlignment(type, value) {
-    const cell = editingCell.value || selectedCell.value
-    if (!cell) return
-
-    saveToHistory()
-    const key = getCellStyleKey(cell.row, cell.col)
-
-    if (!cellStyles.value[key]) {
-      cellStyles.value[key] = {}
-    }
-
-    if (type === 'horizontal') {
-      cellStyles.value[key].alignH = value
-    } else if (type === 'vertical') {
-      cellStyles.value[key].alignV = value
-    }
+    applyToSelection((style) => {
+      if (type === 'horizontal') style.alignH = value
+      else if (type === 'vertical') style.alignV = value
+    })
   }
 
   function setFontSize(size) {
-    const cell = editingCell.value || selectedCell.value
-    if (!cell) return
-
-    saveToHistory()
-    const key = getCellStyleKey(cell.row, cell.col)
-
-    if (!cellStyles.value[key]) {
-      cellStyles.value[key] = {}
-    }
-
-    cellStyles.value[key].fontSize = size
+    applyToSelection((style) => {
+      style.fontSize = size
+    })
   }
 
   function setNumberFormat(format) {
-    const cell = editingCell.value || selectedCell.value
-    if (!cell) return
-
-    saveToHistory()
-    const key = getCellStyleKey(cell.row, cell.col)
-
-    if (!cellStyles.value[key]) {
-      cellStyles.value[key] = {}
-    }
-
-    if (format === 'General') {
-      delete cellStyles.value[key].numFmt
-    } else {
-      cellStyles.value[key].numFmt = format
-    }
+    applyToSelection((style) => {
+      if (format === 'General') delete style.numFmt
+      else style.numFmt = format
+    })
   }
 
   function toggleWrapText() {
     const cell = editingCell.value || selectedCell.value
     if (!cell) return
+    const target = !getCellStyle(cell.row, cell.col).wrapText
+    applyToSelection((style) => {
+      style.wrapText = target
+    })
+  }
+
+  // ============ FORMATO COMO TABLA ============
+  function formatAsTable(presetId, options = {}) {
+    const b = selectionBounds.value
+    if (!b || b.r1 === b.r2) return false // requiere al menos cabecera + 1 fila
+
+    const preset = TABLE_PRESETS.find(p => p.id === presetId) || TABLE_PRESETS[0]
+    const { zebra = true } = options
 
     saveToHistory()
-    const key = getCellStyleKey(cell.row, cell.col)
 
-    if (!cellStyles.value[key]) {
-      cellStyles.value[key] = {}
+    for (let r = b.r1; r <= b.r2; r++) {
+      for (let c = b.c1; c <= b.c2; c++) {
+        const key = getCellStyleKey(r, c)
+        const style = { ...(cellStyles.value[key] || {}) }
+
+        if (r === b.r1) {
+          // Fila de cabecera
+          style.bold = true
+          style.bgColor = preset.header
+          style.textColor = preset.headerText
+        } else {
+          // Filas de datos: zebra en filas alternas
+          const dataIndex = r - b.r1 - 1
+          if (zebra && dataIndex % 2 === 1) {
+            style.bgColor = preset.zebra
+          } else {
+            delete style.bgColor
+          }
+          if (style.textColor === preset.headerText) delete style.textColor
+          style.bold = false
+        }
+
+        // Separadores horizontales sutiles
+        style.borders = { ...(style.borders || {}), bottom: true }
+
+        cellStyles.value[key] = style
+      }
     }
-
-    cellStyles.value[key].wrapText = !cellStyles.value[key].wrapText
+    return true
   }
+
+  // ============ FILTROS POR COLUMNA ============
+  const filtersEnabled = ref(false)
+  const columnFilters = ref({})
+
+  const hasActiveFilters = computed(() =>
+    filtersEnabled.value && Object.keys(columnFilters.value).length > 0
+  )
+
+  function toggleFilters() {
+    filtersEnabled.value = !filtersEnabled.value
+    if (!filtersEnabled.value) columnFilters.value = {}
+  }
+
+  function setColumnFilter(col, text) {
+    const next = { ...columnFilters.value }
+    if (text && text.trim() !== '') {
+      next[col] = text
+    } else {
+      delete next[col]
+    }
+    columnFilters.value = next
+  }
+
+  function clearFilters() {
+    columnFilters.value = {}
+  }
+
+  // La fila 1 se trata como cabecera y nunca se oculta
+  function isRowVisible(rowIndex) {
+    if (!hasActiveFilters.value) return true
+    if (rowIndex === 0) return true
+    for (const [col, text] of Object.entries(columnFilters.value)) {
+      const val = String(data.value[rowIndex]?.[col] ?? '').toLowerCase()
+      if (!val.includes(String(text).toLowerCase())) return false
+    }
+    return true
+  }
+
+  const visibleRowCount = computed(() => {
+    if (!hasActiveFilters.value) return data.value.length
+    let n = 0
+    for (let i = 0; i < data.value.length; i++) {
+      if (isRowVisible(i)) n++
+    }
+    return n
+  })
 
   // Helper to determine if a color is light
   function isLightColor(hexColor) {
@@ -1535,16 +1833,16 @@ export function useSpreadsheet() {
 
     switch (direction) {
       case 'up':
-        if (row > 0) selectedCell.value = { row: row - 1, col }
+        if (row > 0) selectCell(row - 1, col)
         break
       case 'down':
-        if (row < maxRow) selectedCell.value = { row: row + 1, col }
+        if (row < maxRow) selectCell(row + 1, col)
         break
       case 'left':
-        if (col > 0) selectedCell.value = { row, col: col - 1 }
+        if (col > 0) selectCell(row, col - 1)
         break
       case 'right':
-        if (col < maxCol) selectedCell.value = { row, col: col + 1 }
+        if (col < maxCol) selectCell(row, col + 1)
         break
     }
   }
@@ -1647,6 +1945,34 @@ export function useSpreadsheet() {
     hasFormula,
     getCellDisplayValue,
     evaluateFormula,
-    recalculateFormulas
+    evaluateCellFormula,
+    recalculateFormulas,
+
+    // Range selection
+    selectionAnchor,
+    selectionEnd,
+    isSelecting,
+    selectionBounds,
+    hasMultiSelection,
+    selectionStats,
+    startSelection,
+    extendSelection,
+    extendSelectionTo,
+    endSelection,
+    isCellInSelection,
+    forEachSelectedCell,
+
+    // Table formatting
+    formatAsTable,
+
+    // Column filters
+    filtersEnabled,
+    columnFilters,
+    hasActiveFilters,
+    toggleFilters,
+    setColumnFilter,
+    clearFilters,
+    isRowVisible,
+    visibleRowCount
   }
 }

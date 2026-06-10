@@ -68,9 +68,16 @@ export function useDocxEditor() {
   const createSuperdoc = (file = null) => {
     if (!editorContainerRef.value) return null
 
+    // SuperDoc espera selectores CSS (string); con un elemento DOM la
+    // SuperToolbar lanza "selector.startsWith is not a function" y la
+    // toolbar nativa nunca se monta
+    if (toolbarRef.value && !toolbarRef.value.id) {
+      toolbarRef.value.id = 'superdoc-toolbar-' + Math.random().toString(36).slice(2, 8)
+    }
+
     const config = {
       selector: editorContainerRef.value,
-      toolbar: toolbarRef.value,
+      toolbar: toolbarRef.value ? '#' + toolbarRef.value.id : undefined,
       documentMode: documentMode.value,
       role: 'editor',
       pagination: true,

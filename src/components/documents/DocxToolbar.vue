@@ -21,7 +21,7 @@ const emit = defineEmits([
 </script>
 
 <template>
-  <div class="h-11 bg-neutral-900 border-b border-neutral-800 flex items-center px-4 gap-3 shrink-0">
+  <div class="h-11 bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 flex items-center px-4 gap-3 shrink-0">
     <!-- File actions -->
     <div class="flex items-center gap-1">
       <button
@@ -69,14 +69,14 @@ const emit = defineEmits([
       </button>
     </div>
 
-    <div class="w-px h-5 bg-neutral-700"></div>
+    <div class="w-px h-5 bg-neutral-300 dark:bg-neutral-700"></div>
 
     <!-- Document name -->
     <div class="flex items-center gap-2 min-w-0">
       <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
-      <span class="text-sm text-neutral-300 truncate max-w-[200px]" :title="fileName">
+      <span class="text-sm text-neutral-700 dark:text-neutral-300 truncate max-w-[200px]" :title="fileName">
         {{ fileName }}
       </span>
       <span v-if="isReady" class="text-[10px] text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">
@@ -87,13 +87,13 @@ const emit = defineEmits([
     <div class="flex-1"></div>
 
     <!-- Zoom controls -->
-    <div class="flex items-center gap-1 bg-neutral-800 rounded-lg px-1">
+    <div class="flex items-center gap-1 bg-neutral-200 dark:bg-neutral-800 rounded-lg px-1">
       <button @click="emit('zoom-change', -10)" class="docx-btn-sm" title="Reducir zoom">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
         </svg>
       </button>
-      <span class="text-xs text-neutral-400 w-10 text-center">{{ zoom }}%</span>
+      <span class="text-xs text-neutral-600 dark:text-neutral-400 w-10 text-center">{{ zoom }}%</span>
       <button @click="emit('zoom-change', 10)" class="docx-btn-sm" title="Aumentar zoom">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -101,14 +101,14 @@ const emit = defineEmits([
       </button>
     </div>
 
-    <div class="w-px h-5 bg-neutral-700"></div>
+    <div class="w-px h-5 bg-neutral-300 dark:bg-neutral-700"></div>
 
     <!-- Mode toggle -->
-    <div class="flex items-center bg-neutral-800 rounded-lg p-0.5">
+    <div class="flex items-center bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
       <button
         @click="emit('mode-change', 'editing')"
         class="px-2.5 py-1 text-xs rounded-md transition-colors"
-        :class="documentMode === 'editing' ? 'bg-emerald-600 text-white' : 'text-neutral-400 hover:text-white'"
+        :class="documentMode === 'editing' ? 'bg-emerald-600 text-white' : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'"
         title="Modo edición"
       >
         Editar
@@ -116,14 +116,14 @@ const emit = defineEmits([
       <button
         @click="emit('mode-change', 'viewing')"
         class="px-2.5 py-1 text-xs rounded-md transition-colors"
-        :class="documentMode === 'viewing' ? 'bg-blue-600 text-white' : 'text-neutral-400 hover:text-white'"
+        :class="documentMode === 'viewing' ? 'bg-blue-600 text-white' : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'"
         title="Modo vista"
       >
         Ver
       </button>
     </div>
 
-    <div class="w-px h-5 bg-neutral-700"></div>
+    <div class="w-px h-5 bg-neutral-300 dark:bg-neutral-700"></div>
 
     <!-- Vault -->
     <VaultSaveLoad

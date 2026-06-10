@@ -65,9 +65,9 @@ const strokeDashOptions = [
 </script>
 
 <template>
-  <div class="w-64 bg-neutral-900 border-l border-neutral-800 flex flex-col overflow-hidden">
+  <div class="w-64 bg-neutral-50 dark:bg-neutral-900 border-l border-neutral-200 dark:border-neutral-800 flex flex-col overflow-hidden">
     <!-- Artboard Settings -->
-    <div class="p-4 border-b border-neutral-800">
+    <div class="p-4 border-b border-neutral-200 dark:border-neutral-800">
       <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Artboard</h3>
 
       <div class="grid grid-cols-2 gap-2 mb-3">
@@ -77,7 +77,7 @@ const strokeDashOptions = [
             type="number"
             :value="artboardWidth"
             @input="emit('update:artboardWidth', parseInt($event.target.value) || 100)"
-            class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+            class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           />
         </div>
         <div>
@@ -86,7 +86,7 @@ const strokeDashOptions = [
             type="number"
             :value="artboardHeight"
             @input="emit('update:artboardHeight', parseInt($event.target.value) || 100)"
-            class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+            class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           />
         </div>
       </div>
@@ -97,7 +97,7 @@ const strokeDashOptions = [
           v-for="preset in sizePresets"
           :key="preset.name"
           @click="emit('apply-preset', preset)"
-          class="px-2 py-1 text-xs rounded bg-neutral-800 text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200 transition-colors"
+          class="px-2 py-1 text-xs rounded bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-700 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
         >
           {{ preset.name }}
         </button>
@@ -116,7 +116,7 @@ const strokeDashOptions = [
             type="text"
             :value="selectedElement.name"
             @input="updateProperty('name', $event.target.value)"
-            class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+            class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           />
         </div>
 
@@ -128,7 +128,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.x"
               @input="updateNumberProperty('x', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
           <div>
@@ -137,7 +137,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.y"
               @input="updateNumberProperty('y', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
         </div>
@@ -150,7 +150,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.width"
               @input="updateNumberProperty('width', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
           <div>
@@ -159,7 +159,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.height"
               @input="updateNumberProperty('height', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
         </div>
@@ -172,7 +172,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.cx"
               @input="updateNumberProperty('cx', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
           <div>
@@ -181,7 +181,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.cy"
               @input="updateNumberProperty('cy', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
         </div>
@@ -193,7 +193,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.rx"
               @input="updateNumberProperty('rx', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
           <div>
@@ -202,7 +202,7 @@ const strokeDashOptions = [
               type="number"
               :value="selectedElement.ry"
               @input="updateNumberProperty('ry', $event)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
         </div>
@@ -215,7 +215,7 @@ const strokeDashOptions = [
             :value="selectedElement.rx || 0"
             @input="updateNumberProperty('rx', $event)"
             min="0"
-            class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+            class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           />
         </div>
 
@@ -226,7 +226,7 @@ const strokeDashOptions = [
             type="number"
             :value="selectedElement.rotation || 0"
             @input="updateNumberProperty('rotation', $event)"
-            class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+            class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           />
         </div>
 
@@ -244,11 +244,11 @@ const strokeDashOptions = [
               type="text"
               :value="selectedElement.fill || 'none'"
               @input="updateProperty('fill', $event.target.value)"
-              class="flex-1 px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="flex-1 px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
             <button
               @click="updateProperty('fill', 'none')"
-              class="px-2 py-1.5 text-xs bg-neutral-800 text-neutral-400 rounded hover:bg-neutral-700"
+              class="px-2 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700"
               title="No fill"
             >
               None
@@ -270,7 +270,7 @@ const strokeDashOptions = [
               type="text"
               :value="selectedElement.stroke || 'none'"
               @input="updateProperty('stroke', $event.target.value)"
-              class="flex-1 px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="flex-1 px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
         </div>
@@ -284,7 +284,7 @@ const strokeDashOptions = [
             @input="updateNumberProperty('strokeWidth', $event)"
             min="0"
             step="0.5"
-            class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+            class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           />
         </div>
 
@@ -294,7 +294,7 @@ const strokeDashOptions = [
           <select
             :value="selectedElement.strokeDasharray || ''"
             @change="updateProperty('strokeDasharray', $event.target.value || null)"
-            class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+            class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
           >
             <option v-for="opt in strokeDashOptions" :key="opt.label" :value="opt.value || ''">
               {{ opt.label }}
@@ -322,7 +322,7 @@ const strokeDashOptions = [
             <textarea
               v-model="localText"
               rows="3"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600 resize-none"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600 resize-none"
             ></textarea>
           </div>
           <div>
@@ -332,7 +332,7 @@ const strokeDashOptions = [
               :value="selectedElement.fontSize"
               @input="updateNumberProperty('fontSize', $event)"
               min="1"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             />
           </div>
           <div>
@@ -340,7 +340,7 @@ const strokeDashOptions = [
             <select
               :value="selectedElement.fontFamily"
               @change="updateProperty('fontFamily', $event.target.value)"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-xs text-neutral-300 focus:outline-none focus:border-neutral-600"
+              class="w-full px-2 py-1.5 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded text-xs text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-neutral-400 dark:focus:border-neutral-600"
             >
               <option value="sans-serif">Sans Serif</option>
               <option value="serif">Serif</option>

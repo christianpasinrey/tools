@@ -437,13 +437,13 @@ onMounted(() => {
 <template>
   <div class="h-full flex">
     <!-- Left Panel: List -->
-    <div class="flex-1 flex flex-col border-r border-neutral-800 min-w-0">
+    <div class="flex-1 flex flex-col border-r border-neutral-200 dark:border-neutral-800 min-w-0">
       <!-- Storage Tabs -->
-      <div class="flex border-b border-neutral-800 shrink-0">
+      <div class="flex border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         <button
           @click="activeStorageTab = 'local'; selectedEntry = null"
           class="flex-1 px-4 py-2.5 text-xs font-medium transition-colors relative"
-          :class="activeStorageTab === 'local' ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'"
+          :class="activeStorageTab === 'local' ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'"
         >
           localStorage
           <span class="ml-1 text-neutral-600">({{ localEntries.length }})</span>
@@ -452,7 +452,7 @@ onMounted(() => {
         <button
           @click="activeStorageTab = 'indexed'; selectedEntry = null"
           class="flex-1 px-4 py-2.5 text-xs font-medium transition-colors relative"
-          :class="activeStorageTab === 'indexed' ? 'text-white' : 'text-neutral-500 hover:text-neutral-300'"
+          :class="activeStorageTab === 'indexed' ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'"
         >
           IndexedDB
           <span class="ml-1 text-neutral-600">({{ idbDatabases.length }})</span>
@@ -462,11 +462,11 @@ onMounted(() => {
 
       <!-- localStorage Panel -->
       <div v-if="activeStorageTab === 'local'" class="flex-1 flex flex-col min-h-0">
-        <div class="flex items-center gap-2 p-2 border-b border-neutral-800 shrink-0">
+        <div class="flex items-center gap-2 p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
           <input
             v-model="localSearch"
             placeholder="Filter..."
-            class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-neutral-500"
+            class="flex-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500"
           />
           <button
             @click="addingLocal = !addingLocal"
@@ -475,7 +475,7 @@ onMounted(() => {
           >
             + Add
           </button>
-          <button @click="loadLocalStorage" class="px-2 py-1.5 text-xs text-neutral-500 hover:text-neutral-300 transition-colors" title="Refresh">
+          <button @click="loadLocalStorage" class="px-2 py-1.5 text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors" title="Refresh">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>
@@ -490,23 +490,23 @@ onMounted(() => {
           </button>
         </div>
 
-        <div v-if="addingLocal" class="p-2 border-b border-neutral-800 shrink-0">
-          <input v-model="newLocalKey" placeholder="Key" class="w-full bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-neutral-500 mb-1.5" />
-          <textarea v-model="newLocalValue" placeholder="Value (text or JSON)" class="w-full bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white font-mono placeholder-neutral-600 outline-none focus:border-neutral-500 resize-none h-16 mb-1.5" />
+        <div v-if="addingLocal" class="p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
+          <input v-model="newLocalKey" placeholder="Key" class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500 mb-1.5" />
+          <textarea v-model="newLocalValue" placeholder="Value (text or JSON)" class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 font-mono placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500 resize-none h-16 mb-1.5" />
           <div class="flex gap-1.5">
             <button @click="addLocalEntry" class="px-2.5 py-1 text-xs rounded" :style="{ backgroundColor: themeColor + '20', color: themeColor }">Save</button>
-            <button @click="addingLocal = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-300">Cancel</button>
+            <button @click="addingLocal = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">Cancel</button>
           </div>
         </div>
 
-        <div v-if="editingLocal" class="p-2 border-b border-neutral-800 shrink-0">
+        <div v-if="editingLocal" class="p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
           <div class="flex items-center justify-between mb-1.5">
             <span class="text-xs font-mono" :style="{ color: themeColor }">{{ editingLocal }}</span>
           </div>
-          <textarea v-model="editLocalValue" class="w-full bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white font-mono outline-none focus:border-neutral-500 resize-y h-32 mb-1.5" />
+          <textarea v-model="editLocalValue" class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 dark:text-white font-mono outline-none focus:border-neutral-400 dark:focus:border-neutral-500 resize-y h-32 mb-1.5" />
           <div class="flex gap-1.5">
             <button @click="saveLocalEdit" class="px-2.5 py-1 text-xs rounded" :style="{ backgroundColor: themeColor + '20', color: themeColor }">Save</button>
-            <button @click="editingLocal = null" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-300">Cancel</button>
+            <button @click="editingLocal = null" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">Cancel</button>
           </div>
         </div>
 
@@ -515,11 +515,11 @@ onMounted(() => {
             v-for="entry in filteredLocalEntries"
             :key="entry.key"
             @click="viewLocalEntry(entry)"
-            class="flex items-center gap-2 px-3 py-2 border-b border-neutral-800/50 cursor-pointer transition-colors group"
-            :class="selectedEntry?.key === entry.key && selectedEntry?.source === 'localStorage' ? 'bg-neutral-800/50' : 'hover:bg-neutral-800/30'"
+            class="flex items-center gap-2 px-3 py-2 border-b border-neutral-200 dark:border-neutral-800/50 cursor-pointer transition-colors group"
+            :class="selectedEntry?.key === entry.key && selectedEntry?.source === 'localStorage' ? 'bg-neutral-100 dark:bg-neutral-800/50' : 'hover:bg-neutral-100 dark:hover:bg-neutral-800/30'"
           >
             <div class="flex-1 min-w-0">
-              <div class="text-xs font-mono text-neutral-200 truncate">{{ entry.key }}</div>
+              <div class="text-xs font-mono text-neutral-800 dark:text-neutral-200 truncate">{{ entry.key }}</div>
               <div class="text-xs text-neutral-500 font-mono truncate mt-0.5">{{ previewValue(entry.value) }}</div>
             </div>
             <span class="text-xs px-1.5 py-0.5 rounded shrink-0" :style="{ backgroundColor: getTypeColor(entry.type) + '15', color: getTypeColor(entry.type) }">
@@ -544,7 +544,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="flex items-center justify-between px-3 py-1.5 border-t border-neutral-800 text-xs text-neutral-600 shrink-0">
+        <div class="flex items-center justify-between px-3 py-1.5 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 shrink-0">
           <span>{{ filteredLocalEntries.length }} entries</span>
           <span>Total: {{ formatSize(localTotalSize) }}</span>
         </div>
@@ -552,11 +552,11 @@ onMounted(() => {
 
       <!-- IndexedDB Panel -->
       <div v-if="activeStorageTab === 'indexed'" class="flex-1 flex flex-col min-h-0">
-        <div class="flex items-center gap-2 p-2 border-b border-neutral-800 shrink-0">
+        <div class="flex items-center gap-2 p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
           <select
             :value="idbSelectedDb || ''"
             @change="selectDatabase(idbDatabases.find(d => d.name === $event.target.value))"
-            class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white outline-none focus:border-neutral-500 cursor-pointer"
+            class="flex-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 dark:text-white outline-none focus:border-neutral-400 dark:focus:border-neutral-500 cursor-pointer"
           >
             <option value="" disabled>Select database...</option>
             <option v-for="db in idbDatabases" :key="db.name" :value="db.name">{{ db.name }} (v{{ db.version }})</option>
@@ -568,7 +568,7 @@ onMounted(() => {
           >
             + DB
           </button>
-          <button @click="loadDatabases" class="px-2 py-1.5 text-xs text-neutral-500 hover:text-neutral-300 transition-colors" title="Refresh">
+          <button @click="loadDatabases" class="px-2 py-1.5 text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors" title="Refresh">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>
@@ -582,28 +582,28 @@ onMounted(() => {
           </button>
         </div>
 
-        <div v-if="creatingDb" class="p-2 border-b border-neutral-800 shrink-0">
-          <input v-model="newDbName" placeholder="Database name" class="w-full bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-neutral-500 mb-1.5" />
-          <input v-model="newDbStores" placeholder="Object stores (comma separated)" class="w-full bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-neutral-500 mb-1.5" />
+        <div v-if="creatingDb" class="p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
+          <input v-model="newDbName" placeholder="Database name" class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500 mb-1.5" />
+          <input v-model="newDbStores" placeholder="Object stores (comma separated)" class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500 mb-1.5" />
           <div class="flex gap-1.5">
             <button @click="createDatabase" class="px-2.5 py-1 text-xs rounded" :style="{ backgroundColor: themeColor + '20', color: themeColor }">Create</button>
-            <button @click="creatingDb = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-300">Cancel</button>
+            <button @click="creatingDb = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">Cancel</button>
           </div>
         </div>
 
-        <div v-if="idbSelectedDb" class="flex items-center gap-2 p-2 border-b border-neutral-800 shrink-0">
+        <div v-if="idbSelectedDb" class="flex items-center gap-2 p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
           <div class="flex flex-wrap gap-1 flex-1">
             <button
               v-for="store in idbStores"
               :key="store"
               @click="selectStore(store)"
               class="px-2.5 py-1 text-xs rounded transition-colors"
-              :class="idbSelectedStore === store ? 'text-white' : 'text-neutral-400 bg-neutral-800 border border-neutral-700 hover:border-neutral-600'"
+              :class="idbSelectedStore === store ? 'text-neutral-900 dark:text-white' : 'text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600'"
               :style="idbSelectedStore === store ? { backgroundColor: themeColor + '25', color: themeColor, border: '1px solid ' + themeColor + '50' } : {}"
             >
               {{ store }}
             </button>
-            <button v-if="!creatingStore" @click="creatingStore = true" class="px-2 py-1 text-xs text-neutral-600 hover:text-neutral-400 transition-colors">+ store</button>
+            <button v-if="!creatingStore" @click="creatingStore = true" class="px-2 py-1 text-xs text-neutral-600 hover:text-neutral-700 dark:hover:text-neutral-400 transition-colors">+ store</button>
           </div>
           <button
             v-if="idbSelectedStore && idbEntries.length"
@@ -614,30 +614,30 @@ onMounted(() => {
           </button>
         </div>
 
-        <div v-if="creatingStore" class="p-2 border-b border-neutral-800 shrink-0">
+        <div v-if="creatingStore" class="p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
           <div class="flex gap-1.5">
-            <input v-model="newStoreName" placeholder="Store name" class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-neutral-500" @keydown.enter="createObjectStore" />
+            <input v-model="newStoreName" placeholder="Store name" class="flex-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500" @keydown.enter="createObjectStore" />
             <button @click="createObjectStore" class="px-2.5 py-1 text-xs rounded" :style="{ backgroundColor: themeColor + '20', color: themeColor }">Create</button>
-            <button @click="creatingStore = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-300">Cancel</button>
+            <button @click="creatingStore = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">Cancel</button>
           </div>
         </div>
 
-        <div v-if="addingIdbEntry" class="p-2 border-b border-neutral-800 shrink-0">
-          <input v-model="newIdbKey" placeholder="Key (leave empty for auto-increment)" class="w-full bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white placeholder-neutral-600 outline-none focus:border-neutral-500 mb-1.5" />
-          <textarea v-model="newIdbValue" placeholder='Value (JSON or text)' class="w-full bg-neutral-800 border border-neutral-700 rounded px-2.5 py-1.5 text-xs text-white font-mono placeholder-neutral-600 outline-none focus:border-neutral-500 resize-none h-16 mb-1.5" />
+        <div v-if="addingIdbEntry" class="p-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
+          <input v-model="newIdbKey" placeholder="Key (leave empty for auto-increment)" class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500 mb-1.5" />
+          <textarea v-model="newIdbValue" placeholder='Value (JSON or text)' class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2.5 py-1.5 text-xs text-neutral-900 font-mono placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-neutral-400 dark:focus:border-neutral-500 resize-none h-16 mb-1.5" />
           <div class="flex gap-1.5">
             <button @click="addIdbEntry" class="px-2.5 py-1 text-xs rounded" :style="{ backgroundColor: themeColor + '20', color: themeColor }">Add</button>
-            <button @click="addingIdbEntry = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-300">Cancel</button>
+            <button @click="addingIdbEntry = false" class="px-2.5 py-1 text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300">Cancel</button>
           </div>
         </div>
 
         <div class="flex-1 overflow-y-auto">
-          <div v-if="idbSelectedStore && !addingIdbEntry" class="px-3 py-1.5 border-b border-neutral-800/50">
+          <div v-if="idbSelectedStore && !addingIdbEntry" class="px-3 py-1.5 border-b border-neutral-200 dark:border-neutral-800/50">
             <button @click="addingIdbEntry = true" class="text-xs transition-colors" :style="{ color: themeColor }">+ Add entry</button>
           </div>
 
           <div v-if="idbLoading" class="flex items-center justify-center py-12">
-            <div class="w-4 h-4 border-2 border-neutral-700 border-t-neutral-400 rounded-full animate-spin"/>
+            <div class="w-4 h-4 border-2 border-neutral-300 dark:border-neutral-700 border-t-neutral-400 rounded-full animate-spin"/>
           </div>
 
           <template v-else-if="idbSelectedStore">
@@ -645,11 +645,11 @@ onMounted(() => {
               v-for="entry in idbEntries"
               :key="entry.key"
               @click="viewIdbEntry(entry)"
-              class="flex items-center gap-2 px-3 py-2 border-b border-neutral-800/50 cursor-pointer transition-colors group"
-              :class="selectedEntry?.key === entry.key && selectedEntry?.source === 'IndexedDB' ? 'bg-neutral-800/50' : 'hover:bg-neutral-800/30'"
+              class="flex items-center gap-2 px-3 py-2 border-b border-neutral-200 dark:border-neutral-800/50 cursor-pointer transition-colors group"
+              :class="selectedEntry?.key === entry.key && selectedEntry?.source === 'IndexedDB' ? 'bg-neutral-100 dark:bg-neutral-800/50' : 'hover:bg-neutral-100 dark:hover:bg-neutral-800/30'"
             >
               <div class="flex-1 min-w-0">
-                <div class="text-xs font-mono text-neutral-200">{{ entry.key }}</div>
+                <div class="text-xs font-mono text-neutral-800 dark:text-neutral-200">{{ entry.key }}</div>
                 <div class="text-xs text-neutral-500 font-mono truncate mt-0.5">{{ previewValue(entry.value) }}</div>
               </div>
               <span v-if="hasEncryptedData(entry.value)" class="text-[10px] px-1.5 py-0.5 rounded shrink-0 bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -671,7 +671,7 @@ onMounted(() => {
           <div v-else-if="!idbSelectedDb" class="text-center py-12 text-neutral-600 text-xs">{{ idbDatabases.length ? 'Select a database' : 'No IndexedDB databases found' }}</div>
         </div>
 
-        <div v-if="idbSelectedStore" class="flex items-center justify-between px-3 py-1.5 border-t border-neutral-800 text-xs text-neutral-600 shrink-0">
+        <div v-if="idbSelectedStore" class="flex items-center justify-between px-3 py-1.5 border-t border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 shrink-0">
           <span>{{ idbEntries.length }} entries</span>
           <span>{{ idbSelectedDb }} / {{ idbSelectedStore }}</span>
         </div>
@@ -680,7 +680,7 @@ onMounted(() => {
 
     <!-- Right Panel: Value Viewer -->
     <div class="w-[45%] flex flex-col min-w-0 shrink-0">
-      <div class="flex items-center justify-between px-3 py-2 border-b border-neutral-800 shrink-0">
+      <div class="flex items-center justify-between px-3 py-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
         <div class="flex items-center gap-2 min-w-0">
           <span v-if="selectedEntry" class="text-xs text-neutral-500 truncate">
             <span class="text-neutral-600">{{ selectedEntry.source }}</span>
@@ -698,7 +698,7 @@ onMounted(() => {
             :class="selectedEntry.decryptedValue
               ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-600/30'
               : appCrypto.isLocked.value
-                ? 'bg-neutral-800 text-neutral-500 border border-neutral-700 cursor-not-allowed'
+                ? 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border border-neutral-300 dark:border-neutral-700 cursor-not-allowed'
                 : 'bg-amber-500/10 text-amber-400 border border-amber-500/20 hover:bg-amber-500/20'"
             :disabled="appCrypto.isLocked.value && !selectedEntry.decryptedValue"
             :title="appCrypto.isLocked.value ? 'Desbloquea primero para descifrar' : (selectedEntry.decryptedValue ? 'Ocultar descifrado' : 'Mostrar descifrado')"
@@ -709,11 +709,11 @@ onMounted(() => {
             </svg>
             {{ selectedEntry.decryptedValue ? 'Cifrado' : 'Descifrar' }}
           </button>
-          <div class="flex bg-neutral-800 rounded overflow-hidden border border-neutral-700">
-            <button @click="viewMode = 'pretty'" class="px-2 py-1 text-xs transition-colors" :class="viewMode === 'pretty' ? 'text-white bg-neutral-700' : 'text-neutral-500 hover:text-neutral-300'">Pretty</button>
-            <button @click="viewMode = 'raw'" class="px-2 py-1 text-xs transition-colors" :class="viewMode === 'raw' ? 'text-white bg-neutral-700' : 'text-neutral-500 hover:text-neutral-300'">Raw</button>
+          <div class="flex bg-neutral-100 dark:bg-neutral-800 rounded overflow-hidden border border-neutral-300 dark:border-neutral-700">
+            <button @click="viewMode = 'pretty'" class="px-2 py-1 text-xs transition-colors" :class="viewMode === 'pretty' ? 'text-neutral-900 bg-neutral-300 dark:text-white dark:bg-neutral-700' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'">Pretty</button>
+            <button @click="viewMode = 'raw'" class="px-2 py-1 text-xs transition-colors" :class="viewMode === 'raw' ? 'text-neutral-900 bg-neutral-300 dark:text-white dark:bg-neutral-700' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'">Raw</button>
           </div>
-          <button @click="copyValue(selectedEntry.decryptedValue || formatValue(selectedEntry.value))" class="p-1.5 text-neutral-500 hover:text-neutral-300 transition-colors" title="Copy">
+          <button @click="copyValue(selectedEntry.decryptedValue || formatValue(selectedEntry.value))" class="p-1.5 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors" title="Copy">
             <svg v-if="!copied" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
             </svg>
@@ -727,13 +727,13 @@ onMounted(() => {
       <div class="flex-1 overflow-auto p-3">
         <!-- Decrypting spinner -->
         <div v-if="decryptingEntry" class="flex items-center justify-center py-8">
-          <div class="w-4 h-4 border-2 border-neutral-700 border-t-amber-400 rounded-full animate-spin"/>
-          <span class="ml-2 text-xs text-neutral-400">Descifrando...</span>
+          <div class="w-4 h-4 border-2 border-neutral-300 dark:border-neutral-700 border-t-amber-400 rounded-full animate-spin"/>
+          <span class="ml-2 text-xs text-neutral-600 dark:text-neutral-400">Descifrando...</span>
         </div>
         <!-- Decrypted value -->
         <pre v-else-if="selectedEntry?.decryptedValue" class="text-xs text-emerald-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ selectedEntry.decryptedValue }}</pre>
         <!-- Normal value -->
-        <pre v-else-if="selectedEntry" class="text-xs text-neutral-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ formatValue(selectedEntry.value) }}</pre>
+        <pre v-else-if="selectedEntry" class="text-xs text-neutral-700 dark:text-neutral-300 font-mono whitespace-pre-wrap break-all leading-relaxed">{{ formatValue(selectedEntry.value) }}</pre>
         <div v-else class="flex items-center justify-center h-full">
           <div class="text-center text-neutral-700">
             <svg class="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

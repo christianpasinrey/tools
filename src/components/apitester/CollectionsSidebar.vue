@@ -56,20 +56,20 @@ function truncateUrl(url) {
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-900/50 border-r border-neutral-800">
+  <div class="h-full flex flex-col bg-neutral-100/60 dark:bg-neutral-900/50 border-r border-neutral-200 dark:border-neutral-800">
     <!-- Sidebar Tabs -->
-    <div class="flex border-b border-neutral-800">
+    <div class="flex border-b border-neutral-200 dark:border-neutral-800">
       <button
         @click="emit('update:sidebarTab', 'collections')"
         class="flex-1 px-3 py-2 text-xs font-medium transition-colors"
-        :class="sidebarTab === 'collections' ? 'text-white border-b-2 border-amber-500' : 'text-neutral-500 hover:text-neutral-300'"
+        :class="sidebarTab === 'collections' ? 'text-neutral-900 dark:text-white border-b-2 border-amber-500' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'"
       >
         Collections
       </button>
       <button
         @click="emit('update:sidebarTab', 'history')"
         class="flex-1 px-3 py-2 text-xs font-medium transition-colors"
-        :class="sidebarTab === 'history' ? 'text-white border-b-2 border-amber-500' : 'text-neutral-500 hover:text-neutral-300'"
+        :class="sidebarTab === 'history' ? 'text-neutral-900 dark:text-white border-b-2 border-amber-500' : 'text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'"
       >
         History
       </button>
@@ -85,7 +85,7 @@ function truncateUrl(url) {
           class="mb-2"
         >
           <!-- Collection Header -->
-          <div class="flex items-center gap-1 px-2 py-1.5 rounded hover:bg-neutral-800/50 group">
+          <div class="flex items-center gap-1 px-2 py-1.5 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800/50 group">
             <button @click="emit('toggleCollection', col.id)" class="text-neutral-500">
               <svg class="w-3 h-3 transition-transform" :class="col.expanded ? 'rotate-90' : ''" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M6 6l8 4-8 4V6z"/>
@@ -97,12 +97,12 @@ function truncateUrl(url) {
                 v-model="editingName"
                 @keydown.enter="finishRename(col.id)"
                 @blur="finishRename(col.id)"
-                class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-2 py-0.5 text-xs text-white outline-none"
+                class="flex-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2 py-0.5 text-xs text-neutral-900 dark:text-white outline-none"
                 autofocus
               />
             </template>
             <template v-else>
-              <span class="flex-1 text-xs text-neutral-300 truncate cursor-pointer" @dblclick="startRename(col)">
+              <span class="flex-1 text-xs text-neutral-700 dark:text-neutral-300 truncate cursor-pointer" @dblclick="startRename(col)">
                 {{ col.name }}
               </span>
             </template>
@@ -124,7 +124,7 @@ function truncateUrl(url) {
               v-for="req in col.requests"
               :key="req.id"
               @click="emit('loadRequest', req)"
-              class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800/50 cursor-pointer group"
+              class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800/50 cursor-pointer group"
             >
               <span
                 class="text-xs font-mono font-bold shrink-0"
@@ -132,7 +132,7 @@ function truncateUrl(url) {
               >
                 {{ req.method.slice(0, 3) }}
               </span>
-              <span class="text-xs text-neutral-400 truncate flex-1">{{ req.name }}</span>
+              <span class="text-xs text-neutral-600 dark:text-neutral-400 truncate flex-1">{{ req.name }}</span>
               <button
                 @click.stop="emit('deleteRequest', col.id, req.id)"
                 class="opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-400"
@@ -157,7 +157,7 @@ function truncateUrl(url) {
           v-for="entry in history"
           :key="entry.id"
           @click="emit('loadHistory', entry)"
-          class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-neutral-800/50 cursor-pointer"
+          class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800/50 cursor-pointer"
         >
           <span
             class="text-xs font-mono font-bold shrink-0 w-7"
@@ -166,7 +166,7 @@ function truncateUrl(url) {
             {{ entry.method.slice(0, 3) }}
           </span>
           <div class="flex-1 min-w-0">
-            <div class="text-xs text-neutral-400 truncate">{{ truncateUrl(entry.url) }}</div>
+            <div class="text-xs text-neutral-600 dark:text-neutral-400 truncate">{{ truncateUrl(entry.url) }}</div>
           </div>
           <div class="flex items-center gap-1.5 shrink-0">
             <span
@@ -187,24 +187,24 @@ function truncateUrl(url) {
     </div>
 
     <!-- Bottom Actions -->
-    <div class="p-2 border-t border-neutral-800 flex flex-col gap-1">
+    <div class="p-2 border-t border-neutral-200 dark:border-neutral-800 flex flex-col gap-1">
       <div v-if="sidebarTab === 'collections'" class="flex gap-1">
         <button
           @click="emit('createCollection')"
-          class="flex-1 px-2 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded transition-colors"
+          class="flex-1 px-2 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded transition-colors"
         >
           + New
         </button>
         <button
           @click="emit('exportPostman')"
-          class="px-2 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded transition-colors"
+          class="px-2 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded transition-colors"
           title="Export Postman"
         >
           PM
         </button>
         <button
           @click="emit('exportHoppscotch')"
-          class="px-2 py-1.5 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded transition-colors"
+          class="px-2 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-300 rounded transition-colors"
           title="Export Hoppscotch"
         >
           HS
@@ -213,7 +213,7 @@ function truncateUrl(url) {
       <div v-else class="flex gap-1">
         <button
           @click="emit('clearHistory')"
-          class="flex-1 px-2 py-1.5 text-xs bg-neutral-800 hover:bg-red-900/30 text-neutral-400 hover:text-red-400 rounded transition-colors"
+          class="flex-1 px-2 py-1.5 text-xs bg-neutral-100 dark:bg-neutral-800 hover:bg-red-900/30 text-neutral-600 dark:text-neutral-400 hover:text-red-400 rounded transition-colors"
           :disabled="history.length === 0"
         >
           Clear History

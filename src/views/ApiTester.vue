@@ -48,11 +48,11 @@ function openSaveModal() {
     <!-- Main Content -->
     <div class="flex-1 flex flex-col min-w-0">
       <!-- URL Bar -->
-      <div class="flex items-center gap-2 p-3 border-b border-neutral-800">
+      <div class="flex items-center gap-2 p-3 border-b border-neutral-200 dark:border-neutral-800">
         <!-- Toggle Sidebar -->
         <button
           @click="api.showSidebar.value = !api.showSidebar.value"
-          class="text-neutral-500 hover:text-neutral-300 transition-colors shrink-0"
+          class="text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 transition-colors shrink-0"
           title="Toggle sidebar"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@ function openSaveModal() {
         <select
           :value="api.method.value"
           @change="api.method.value = $event.target.value"
-          class="bg-neutral-800 border border-neutral-700 rounded px-2 py-2 text-sm font-bold outline-none focus:border-amber-500/50 shrink-0 cursor-pointer"
+          class="bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-2 py-2 text-sm font-bold outline-none focus:border-amber-500/50 shrink-0 cursor-pointer"
           :style="{ color: api.getMethodColor(api.method.value) }"
         >
           <option
@@ -82,13 +82,13 @@ function openSaveModal() {
           v-model="api.url.value"
           placeholder="https://api.example.com/endpoint"
           @keydown.enter="api.sendRequest()"
-          class="flex-1 bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white placeholder-neutral-600 outline-none focus:border-amber-500/50 font-mono"
+          class="flex-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-3 py-2 text-sm text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-amber-500/50 font-mono"
         />
 
         <!-- Save Button -->
         <button
           @click="openSaveModal"
-          class="px-3 py-2 text-xs bg-neutral-800 hover:bg-neutral-700 text-neutral-400 rounded border border-neutral-700 transition-colors shrink-0"
+          class="px-3 py-2 text-xs bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-600 dark:text-neutral-400 rounded border border-neutral-300 dark:border-neutral-700 transition-colors shrink-0"
           title="Save to collection"
           :disabled="!api.url.value"
         >
@@ -110,7 +110,7 @@ function openSaveModal() {
         <button
           @click="api.sendRequest()"
           :disabled="!api.url.value || api.isLoading.value"
-          class="px-5 py-2 text-sm font-medium bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-700 disabled:text-neutral-500 text-neutral-900 rounded transition-colors shrink-0"
+          class="px-5 py-2 text-sm font-medium bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-300 dark:bg-neutral-700 disabled:text-neutral-500 text-neutral-900 rounded transition-colors shrink-0"
         >
           {{ api.isLoading.value ? 'Sending...' : 'Send' }}
         </button>
@@ -119,7 +119,7 @@ function openSaveModal() {
       <!-- Request/Response Split -->
       <div class="flex-1 flex flex-col min-h-0">
         <!-- Request Panel -->
-        <div class="h-[45%] border-b border-neutral-800 overflow-hidden">
+        <div class="h-[45%] border-b border-neutral-200 dark:border-neutral-800 overflow-hidden">
           <RequestPanel
             :active-config-tab="api.activeConfigTab.value"
             :params="api.params.value"
@@ -160,12 +160,12 @@ function openSaveModal() {
 
     <!-- Save to Collection Modal -->
     <div v-if="saveModalOpen" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50" @click.self="saveModalOpen = false">
-      <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-4 w-80 shadow-xl">
-        <h3 class="text-sm font-medium text-white mb-3">Save to Collection</h3>
+      <div class="bg-neutral-50 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 rounded-lg p-4 w-80 shadow-xl">
+        <h3 class="text-sm font-medium text-neutral-900 dark:text-white mb-3">Save to Collection</h3>
         <input
           v-model="saveRequestName"
           placeholder="Request name"
-          class="w-full bg-neutral-800 border border-neutral-700 rounded px-3 py-2 text-sm text-white placeholder-neutral-600 outline-none focus:border-amber-500/50 mb-3"
+          class="w-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 rounded px-3 py-2 text-sm text-neutral-900 placeholder-neutral-400 dark:text-white dark:placeholder-neutral-600 outline-none focus:border-amber-500/50 mb-3"
           @keydown.enter="api.collections.value.length && handleSaveToCollection(api.collections.value[0].id)"
         />
         <div class="space-y-1 max-h-40 overflow-y-auto mb-3">
@@ -176,7 +176,7 @@ function openSaveModal() {
             v-for="col in api.collections.value"
             :key="col.id"
             @click="handleSaveToCollection(col.id)"
-            class="w-full text-left px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 rounded transition-colors"
+            class="w-full text-left px-3 py-2 text-xs text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-800 rounded transition-colors"
           >
             {{ col.name }}
           </button>
@@ -184,7 +184,7 @@ function openSaveModal() {
         <div class="flex justify-end gap-2">
           <button
             @click="saveModalOpen = false"
-            class="px-3 py-1.5 text-xs text-neutral-400 hover:text-white transition-colors"
+            class="px-3 py-1.5 text-xs text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors"
           >
             Cancel
           </button>

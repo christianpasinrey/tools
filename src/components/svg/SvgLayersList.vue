@@ -63,8 +63,8 @@ const getOriginalIndex = (reversedIndex) => {
 </script>
 
 <template>
-  <div class="w-56 bg-neutral-900 border-r border-neutral-800 flex flex-col overflow-hidden">
-    <div class="p-3 border-b border-neutral-800 flex items-center justify-between">
+  <div class="w-56 bg-neutral-50 dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-800 flex flex-col overflow-hidden">
+    <div class="p-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
       <h3 class="text-xs font-semibold text-neutral-500 uppercase tracking-wider">Layers</h3>
       <span class="text-xs text-neutral-600">{{ elements.length }}</span>
     </div>
@@ -81,15 +81,15 @@ const getOriginalIndex = (reversedIndex) => {
         class="group flex items-center gap-2 px-3 py-2 cursor-pointer border-l-2 transition-colors"
         :class="[
           selectedIds.includes(element.id)
-            ? 'bg-neutral-800 border-l-current'
-            : 'border-l-transparent hover:bg-neutral-800/50'
+            ? 'bg-neutral-100 dark:bg-neutral-800 border-l-current'
+            : 'border-l-transparent hover:bg-neutral-200 dark:hover:bg-neutral-800/50'
         ]"
         :style="selectedIds.includes(element.id) ? { borderLeftColor: themeColor } : {}"
       >
         <!-- Type Icon -->
         <svg
           class="w-4 h-4 shrink-0"
-          :class="element.visible ? 'text-neutral-400' : 'text-neutral-600'"
+          :class="element.visible ? 'text-neutral-600 dark:text-neutral-400' : 'text-neutral-600'"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ const getOriginalIndex = (reversedIndex) => {
         <!-- Name -->
         <span
           class="flex-1 text-xs truncate"
-          :class="element.visible ? 'text-neutral-300' : 'text-neutral-500 line-through'"
+          :class="element.visible ? 'text-neutral-700 dark:text-neutral-300' : 'text-neutral-500 line-through'"
         >
           {{ element.name }}
         </span>
@@ -111,12 +111,12 @@ const getOriginalIndex = (reversedIndex) => {
           <!-- Visibility -->
           <button
             @click.stop="emit('toggle-visibility', element.id)"
-            class="p-1 rounded hover:bg-neutral-700 transition-colors"
+            class="p-1 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
             :title="element.visible ? 'Hide' : 'Show'"
           >
             <svg
               class="w-3.5 h-3.5"
-              :class="element.visible ? 'text-neutral-400' : 'text-neutral-600'"
+              :class="element.visible ? 'text-neutral-600 dark:text-neutral-400' : 'text-neutral-600'"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -148,12 +148,12 @@ const getOriginalIndex = (reversedIndex) => {
           <!-- Lock -->
           <button
             @click.stop="emit('toggle-lock', element.id)"
-            class="p-1 rounded hover:bg-neutral-700 transition-colors"
+            class="p-1 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
             :title="element.locked ? 'Unlock' : 'Lock'"
           >
             <svg
               class="w-3.5 h-3.5"
-              :class="element.locked ? 'text-amber-500' : 'text-neutral-400'"
+              :class="element.locked ? 'text-amber-500' : 'text-neutral-600 dark:text-neutral-400'"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -178,7 +178,7 @@ const getOriginalIndex = (reversedIndex) => {
           <!-- Delete -->
           <button
             @click.stop="emit('delete-element', element.id)"
-            class="p-1 rounded hover:bg-red-500/20 text-neutral-400 hover:text-red-400 transition-colors"
+            class="p-1 rounded hover:bg-red-500/20 text-neutral-600 dark:text-neutral-400 hover:text-red-400 transition-colors"
             title="Delete"
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

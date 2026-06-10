@@ -653,7 +653,21 @@ const mockSpreadsheet = {
   getRowHeight: vi.fn(() => 24), addSheet: vi.fn(), renameSheet: vi.fn(),
   deleteSheet: vi.fn(), duplicateSheet: vi.fn(),
   getCellFormula: vi.fn(), setCellFormula: vi.fn(), hasFormula: vi.fn(() => false),
-  getCellDisplayValue: vi.fn(v => v), evaluateFormula: vi.fn(), recalculateFormulas: vi.fn()
+  getCellDisplayValue: vi.fn(v => v), evaluateFormula: vi.fn(), recalculateFormulas: vi.fn(),
+  evaluateCellFormula: vi.fn(() => ''),
+  // Range selection
+  selectionAnchor: ref(null), selectionEnd: ref(null), isSelecting: ref(false),
+  selectionBounds: computed(() => null), hasMultiSelection: computed(() => false),
+  selectionStats: computed(() => null),
+  startSelection: vi.fn(), extendSelection: vi.fn(), extendSelectionTo: vi.fn(),
+  endSelection: vi.fn(), isCellInSelection: vi.fn(() => false), forEachSelectedCell: vi.fn(),
+  // Table formatting
+  formatAsTable: vi.fn(),
+  // Column filters
+  filtersEnabled: ref(false), columnFilters: ref({}),
+  hasActiveFilters: computed(() => false),
+  toggleFilters: vi.fn(), setColumnFilter: vi.fn(), clearFilters: vi.fn(),
+  isRowVisible: vi.fn(() => true), visibleRowCount: computed(() => 2)
 }
 vi.mock('@/composables/useSpreadsheet', () => ({
   useSpreadsheet: () => mockSpreadsheet,
@@ -663,7 +677,8 @@ vi.mock('@/composables/useSpreadsheet', () => ({
   BG_COLORS: ['#fff', '#f00'],
   BORDER_PRESETS: [],
   FONT_SIZES: [10, 12, 14],
-  NUMBER_FORMATS: []
+  NUMBER_FORMATS: [],
+  TABLE_PRESETS: []
 }))
 
 describe('SpreadsheetEditor — VaultSaveLoad controls', () => {
