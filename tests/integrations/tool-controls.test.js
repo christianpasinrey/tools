@@ -16,6 +16,8 @@ const mockVault = {
   hasKey: vi.fn(() => true)
 }
 vi.mock('@/composables/useVault', () => ({ useVault: () => mockVault }))
+// Cargar desde la bóveda sobre un borrador propio pide confirmación: aquí se acepta
+vi.mock('@/composables/useConfirm', () => ({ confirmAction: vi.fn(async () => true) }))
 
 // ============================================================
 // 1. IMAGE EDITOR
@@ -577,7 +579,7 @@ describe('MarkdownEditorContent — VaultSaveLoad controls', () => {
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
 
     await vaultSaveLoad.vm.$emit('load', { content: '# New Document\n\nLoaded from vault' })
-    await nextTick()
+    await flushPromises()
 
     // Verify the component's internal state changed
     const data = vaultSaveLoad.props('getData')()
@@ -589,7 +591,7 @@ describe('MarkdownEditorContent — VaultSaveLoad controls', () => {
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
 
     await vaultSaveLoad.vm.$emit('load', { content: '' })
-    await nextTick()
+    await flushPromises()
 
     const data = vaultSaveLoad.props('getData')()
     expect(data.content).toBe('')
@@ -600,7 +602,7 @@ describe('MarkdownEditorContent — VaultSaveLoad controls', () => {
     const vaultSaveLoad = wrapper.findComponent({ name: 'VaultSaveLoad' })
 
     await vaultSaveLoad.vm.$emit('load', {})
-    await nextTick()
+    await flushPromises()
 
     const data = vaultSaveLoad.props('getData')()
     expect(data.content).toBe('')
