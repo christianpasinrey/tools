@@ -1,27 +1,30 @@
-import { toHref } from '@/config/catalog'
+import { useDevice } from '@/composables/useDevice'
 import { setPendingLaunch, LAUNCH_EVENT } from './pendingLaunch'
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
-async function navigate(router, to) {
-  const before = router.currentRoute.value
-  await router.push(to)
-  const after = router.currentRoute.value
-  // router.push usa pushState: las secciones escuchan hashchange para cambiar de pestaña
-  if (before.path === after.path && before.hash !== after.hash) {
-    window.dispatchEvent(new HashChangeEvent('hashchange'))
-  }
+async function navigate(router, entry, file) {
+  const { path, hash } = entry.route
+  // Las secciones cambian de pestaña con history.replaceState, así que el hash que
+  // recuerda el router puede estar desfasado: en la misma sección se fuerza el push
+  // y se avisa con hashchange para que la sección lea el hash real.
+  const sameSection = router.currentRoute.value.path === path
+  await router.push({ path, hash: hash ? `#${hash}` : '', force: sameSection })
+  if (sameSection) window.dispatchEvent(new HashChangeEvent('hashchange'))
+
+  // La entrega se deja al llegar (la caducidad cuenta desde que la herramienta ha
+  // cargado) y solo si la navegación no acabó en otra ruta.
+  if (entry.launch && router.currentRoute.value.path === path) setPendingLaunch(entry.launch, file)
   window.dispatchEvent(new Event(LAUNCH_EVENT))
 }
 
 export async function openTool(router, entry, { file = null, sourceEl = null, recordVisit = null } = {}) {
+  if (useDevice().isMobile.value && entry.mobile === false) return
   recordVisit?.(entry.id)
-  if (entry.launch) setPendingLaunch(entry.launch, file)
-  const to = toHref(entry)
 
   if (typeof document === 'undefined' || !document.startViewTransition || prefersReducedMotion()) {
-    await navigate(router, to)
+    await navigate(router, entry, file)
     return
   }
 
@@ -29,7 +32,7 @@ export async function openTool(router, entry, { file = null, sourceEl = null, re
   if (sourceEl) sourceEl.style.viewTransitionName = 'tool-open'
   const transition = document.startViewTransition(async () => {
     if (sourceEl) sourceEl.style.viewTransitionName = ''
-    await navigate(router, to)
+    await navigate(router, entry, file)
     main?.style.setProperty('view-transition-name', 'tool-open')
   })
   try {
@@ -38,3 +41,4 @@ export async function openTool(router, entry, { file = null, sourceEl = null, re
     main?.style.removeProperty('view-transition-name')
   }
 }
+

@@ -45,3 +45,53 @@ describe('openTool', () => {
     expect(takePendingLaunch('')).toBeNull()
   })
 })
+
+describe('openTool — correcciones de la revisión final', () => {
+  beforeEach(() => clearPendingLaunch())
+
+  it('fuerza el cambio de pestaña aunque el hash del router esté desfasado (replaceState de las secciones)', async () => {
+    const router = makeRouter()
+    await router.push('/documents#pdf')
+    // La pestaña cambió con history.replaceState: el router sigue creyendo que está en #pdf
+    const onHash = vi.fn()
+    window.addEventListener('hashchange', onHash)
+    await openTool(router, getEntry('pdf-editor'))
+    window.removeEventListener('hashchange', onHash)
+    expect(onHash).toHaveBeenCalledTimes(1)
+  })
+
+  it('en móvil no abre herramientas de escritorio ni registra nada', async () => {
+    const router = makeRouter()
+    await router.push('/')
+    const width = window.innerWidth
+    window.innerWidth = 375; window.dispatchEvent(new Event('resize'))
+    const recordVisit = vi.fn()
+    await openTool(router, getEntry('image-editor'), { file: new File(['x'], 'a.png', { type: 'image/png' }), recordVisit })
+    window.innerWidth = width; window.dispatchEvent(new Event('resize'))
+    expect(router.currentRoute.value.fullPath).toBe('/')
+    expect(recordVisit).not.toHaveBeenCalled()
+    expect(takePendingLaunch('')).toBeNull()
+  })
+
+  it('no deja entrega pendiente si la navegación acaba en otra ruta', async () => {
+    const router = makeRouter()
+    router.addRoute({ path: '/multimedia', component: Stub })
+    router.beforeEach(to => (to.path === '/multimedia' ? '/' : true))
+    await router.push('/')
+    await openTool(router, getEntry('image-editor'), { file: new File(['x'], 'a.png', { type: 'image/png' }) })
+    expect(router.currentRoute.value.path).toBe('/')
+    expect(takePendingLaunch('image')).toBeNull()
+  })
+
+  it('la caducidad cuenta desde que la herramienta ha cargado', async () => {
+    let now = 0
+    const spy = vi.spyOn(Date, 'now').mockImplementation(() => now)
+    const router = makeRouter()
+    router.addRoute({ path: '/multimedia', component: () => { now = 20000; return Promise.resolve(Stub) } })
+    await router.push('/')
+    const file = new File(['x'], 'a.png', { type: 'image/png' })
+    await openTool(router, getEntry('image-editor'), { file })
+    expect(takePendingLaunch('image')).toEqual({ target: 'image', file })
+    spy.mockRestore()
+  })
+})
