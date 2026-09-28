@@ -1,5 +1,5 @@
 <script setup>
-import { isDark, toggleDark } from '../../composables/useSpreadsheet'
+import { isDark, toggleDark } from '../../composables/useTheme'
 </script>
 
 <template>

@@ -8,7 +8,7 @@ import { useDevice } from '@/composables/useDevice'
 import { searchTools, normalize } from '@/lib/toolSearch'
 import { getCategory } from '@/config/catalog'
 import { openTool } from '@/lib/openTool'
-import { toggleDark } from '@/composables/useSpreadsheet'
+import { toggleDark } from '@/composables/useTheme'
 
 const router = useRouter()
 const { isOpen, open, close, toggle } = usePalette()

@@ -1,10 +1,9 @@
 import { ref, computed, reactive } from 'vue'
-import { useDark, useToggle } from '@vueuse/core'
 import ExcelJS from 'exceljs'
+import { isDark, toggleDark } from './useTheme'
 
-// Global dark mode (persists to localStorage)
-export const isDark = useDark()
-export const toggleDark = useToggle(isDark)
+// El estado del tema vive en useTheme (ligero); se reexporta por compatibilidad
+export { isDark, toggleDark }
 
 // Constants
 const DEFAULT_ROWS = 50
