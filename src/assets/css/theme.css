@@ -46,30 +46,6 @@ html.dark .bg-subtle {
    TEXT COLORS
    ============================================ */
 
-.text-primary {
-  color: rgba(0, 0, 0, 0.9);
-}
-
-html.dark .text-primary {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.text-secondary {
-  color: rgba(0, 0, 0, 0.7);
-}
-
-html.dark .text-secondary {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.text-muted {
-  color: rgba(0, 0, 0, 0.5);
-}
-
-html.dark .text-muted {
-  color: rgba(255, 255, 255, 0.5);
-}
-
 .text-subtle {
   color: rgba(0, 0, 0, 0.4);
 }
@@ -115,14 +91,6 @@ html.dark .toolbar {
 /* ============================================
    TABS
    ============================================ */
-
-.tabs-container {
-  @apply bg-neutral-100;
-}
-
-html.dark .tabs-container {
-  @apply bg-neutral-900;
-}
 
 .tab-item {
   color: rgba(0, 0, 0, 0.6);
