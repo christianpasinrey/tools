@@ -1,5 +1,6 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { SuperDoc } from '@harbour-enterprises/superdoc'
+import { fixSuperdocA11y } from '../lib/superdocA11y'
 import '@harbour-enterprises/superdoc/style.css'
 
 // Toolbar configuration
@@ -87,6 +88,7 @@ export function useDocxEditor() {
       },
       onReady: () => {
         isReady.value = true
+        fixSuperdocA11y()
       },
       onEditorUpdate: () => {
         isModified.value = true

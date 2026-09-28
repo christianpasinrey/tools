@@ -6,6 +6,7 @@ import TbIconButton from '../ui/TbIconButton.vue'
 import TbMenu from '../ui/TbMenu.vue'
 import { toast } from '../../composables/useToast'
 import { SuperDoc } from '@harbour-enterprises/superdoc'
+import { fixSuperdocA11y } from '../../lib/superdocA11y'
 import '@harbour-enterprises/superdoc/style.css'
 
 const editorContainerRef = ref(null)
@@ -28,6 +29,7 @@ const createSuperdoc = (file = null) => {
     rulers: false,
     onReady: () => {
       isReady.value = true
+      fixSuperdocA11y()
     }
   }
 
