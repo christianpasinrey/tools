@@ -66,6 +66,19 @@ html.dark {
   --color-cat-apps: var(--cat-apps);
   --color-cat-cheatsheets: var(--cat-cheatsheets);
 
+  /* Escala neutra cálida: todo el código que usa neutral-* hereda la paleta de El Taller */
+  --color-neutral-50: #faf8f4;
+  --color-neutral-100: #f3efe7;
+  --color-neutral-200: #e9e3d7;
+  --color-neutral-300: #d6cfc2;
+  --color-neutral-400: #a9a193;
+  --color-neutral-500: #6f685b;
+  --color-neutral-600: #585247;
+  --color-neutral-700: #423d35;
+  --color-neutral-800: #2a2723;
+  --color-neutral-900: #1b1a18;
+  --color-neutral-950: #121110;
+
   --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
   --font-ui: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   --font-code: 'Geist Mono Variable', ui-monospace, SFMono-Regular, monospace;

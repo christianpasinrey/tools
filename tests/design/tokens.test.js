@@ -34,3 +34,28 @@ describe.each([[':root'], ['html.dark']])('tokens %s', (sel) => {
     expect(contrast(hex(b, 'tb-accent'), hex(b, 'tb-accent-ink'))).toBeGreaterThanOrEqual(4.5)
   })
 })
+
+describe('escala neutral cálida', () => {
+  const theme = css.slice(css.indexOf('@theme inline {'))
+  const neutral = (n) => {
+    const m = theme.match(new RegExp(`--color-neutral-${n}:\\s*(#[0-9a-fA-F]{6})`))
+    if (!m) throw new Error(`No --color-neutral-${n}`)
+    return m[1]
+  }
+  it('define toda la escala 50–950', () => {
+    for (const n of [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]) expect(neutral(n)).toMatch(/^#/)
+  })
+  it('pares de texto habituales cumplen AA', () => {
+    expect(contrast(neutral(500), neutral(100))).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(neutral(600), neutral(50))).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(neutral(800), neutral(100))).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(neutral(400), neutral(900))).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(neutral(300), neutral(950))).toBeGreaterThanOrEqual(4.5)
+  })
+  it('es cálida: rojo ≥ azul en los tonos medios', () => {
+    for (const n of [200, 400, 600, 800]) {
+      const h = neutral(n)
+      expect(parseInt(h.slice(1, 3), 16)).toBeGreaterThanOrEqual(parseInt(h.slice(5, 7), 16))
+    }
+  })
+})
