@@ -13,7 +13,6 @@ export function usePdfEditor() {
   const fileName = ref('')
   const isLoading = ref(false)
   const isProcessing = ref(false)
-  const themeColor = ref('#22c55e')
 
   // Pages state
   const pages = ref([]) // Array of { id, pageIndex, rotation, thumbnail }
@@ -617,11 +616,6 @@ export function usePdfEditor() {
     }
   }
 
-  // Theme
-  const setThemeColor = (color) => {
-    themeColor.value = color
-  }
-
   // Clear
   const clearFile = () => {
     pdfDoc.value = null
@@ -639,7 +633,6 @@ export function usePdfEditor() {
     fileName,
     isLoading,
     isProcessing,
-    themeColor,
     pages,
     selectedPages,
     pageCount,
@@ -682,7 +675,6 @@ export function usePdfEditor() {
     extractSelected,
     exportPdf,
     splitAll,
-    setThemeColor,
     clearFile,
 
     // History methods

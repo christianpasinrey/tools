@@ -40,11 +40,6 @@ function setHashFromTab(tab) {
 
 export function useDocuments() {
   const activeTab = ref(getTabFromHash())
-  const themeColor = ref('#22c55e')
-
-  const setThemeColor = (color) => {
-    themeColor.value = color
-  }
 
   // Update hash when tab changes
   watch(activeTab, (newTab) => {
@@ -67,8 +62,6 @@ export function useDocuments() {
   })
 
   return {
-    activeTab,
-    themeColor,
-    setThemeColor
+    activeTab
   }
 }
