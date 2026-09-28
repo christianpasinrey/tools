@@ -1,0 +1,80 @@
+/* ============================================
+   EL TALLER — tokens de diseño (aditivos)
+   ============================================ */
+:root {
+  --tb-bg: #f3efe7;
+  --tb-surface: #fbf9f4;
+  --tb-surface-2: #e9e3d7;
+  --tb-ink: #1c1a16;
+  --tb-muted: #5b554a;
+  --tb-line: rgb(28 26 22 / 0.12);
+  --tb-line-strong: rgb(28 26 22 / 0.24);
+  --tb-accent: #c2410c;
+  --tb-accent-ink: #ffffff;
+  --tb-dot: rgb(28 26 22 / 0.18);
+
+  --cat-documents: #d63031;
+  --cat-multimedia: #6f42e5;
+  --cat-technology: #0b7f92;
+  --cat-tools: #c2255c;
+  --cat-apps: #2b8a3e;
+  --cat-cheatsheets: #1971c2;
+
+  --tb-shadow: 0 1px 0 rgb(28 26 22 / 0.05), 0 10px 30px -18px rgb(28 26 22 / 0.35);
+  --tb-shadow-lift: 0 1px 0 rgb(28 26 22 / 0.06), 0 24px 48px -20px rgb(28 26 22 / 0.45);
+  --tb-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --tb-spring: linear(0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1);
+}
+
+html.dark {
+  --tb-bg: #121110;
+  --tb-surface: #1b1a18;
+  --tb-surface-2: #26241f;
+  --tb-ink: #efeae0;
+  --tb-muted: #a8a194;
+  --tb-line: rgb(239 234 224 / 0.1);
+  --tb-line-strong: rgb(239 234 224 / 0.22);
+  --tb-accent: #ff8a4c;
+  --tb-accent-ink: #1c1a16;
+  --tb-dot: rgb(239 234 224 / 0.14);
+
+  --cat-documents: #ff7675;
+  --cat-multimedia: #a88bfa;
+  --cat-technology: #3bc9db;
+  --cat-tools: #f783ac;
+  --cat-apps: #69db7c;
+  --cat-cheatsheets: #74c0fc;
+
+  --tb-shadow: 0 1px 0 rgb(0 0 0 / 0.4), 0 10px 30px -18px rgb(0 0 0 / 0.8);
+  --tb-shadow-lift: 0 1px 0 rgb(0 0 0 / 0.4), 0 24px 48px -20px rgb(0 0 0 / 0.9);
+}
+
+@theme inline {
+  --color-tb-bg: var(--tb-bg);
+  --color-tb-surface: var(--tb-surface);
+  --color-tb-surface-2: var(--tb-surface-2);
+  --color-tb-ink: var(--tb-ink);
+  --color-tb-muted: var(--tb-muted);
+  --color-tb-line: var(--tb-line);
+  --color-tb-line-strong: var(--tb-line-strong);
+  --color-tb-accent: var(--tb-accent);
+  --color-tb-accent-ink: var(--tb-accent-ink);
+  --color-cat-documents: var(--cat-documents);
+  --color-cat-multimedia: var(--cat-multimedia);
+  --color-cat-technology: var(--cat-technology);
+  --color-cat-tools: var(--cat-tools);
+  --color-cat-apps: var(--cat-apps);
+  --color-cat-cheatsheets: var(--cat-cheatsheets);
+
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-ui: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-code: 'Geist Mono Variable', ui-monospace, SFMono-Regular, monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tb-motion, .tb-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

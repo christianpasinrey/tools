@@ -1,5 +1,8 @@
 import { createApp } from 'vue'
 import './style.css'
+import '@fontsource-variable/bricolage-grotesque'
+import '@fontsource-variable/geist'
+import '@fontsource-variable/geist-mono'
 import App from './App.vue'
 import router from './router'
 import { useAuth } from './composables/useAuth'
