@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useConverter } from '../../composables/useConverter'
 import { usePendingLaunch } from '../../composables/usePendingLaunch'
 import ConverterJpgToPdf from './ConverterJpgToPdf.vue'
@@ -18,6 +18,10 @@ const launchFile = ref(null)
 usePendingLaunch('converter:', ({ target, file }) => {
   launchFile.value = file
   converter.selectConversion(target.slice('converter:'.length))
+})
+// El archivo entregado solo vale para esa conversión: al salir de ella se olvida
+watch(() => converter.activeConversion.value, (_, previous) => {
+  if (previous) launchFile.value = null
 })
 
 const conversions = [
