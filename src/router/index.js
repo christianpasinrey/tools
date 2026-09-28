@@ -116,12 +116,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  scrollBehavior(to, from, savedPosition) {
-    if (savedPosition) {
-      return savedPosition
-    }
-    return { top: 0 }
+  // El scroll vive en #app-main, no en window
+  scrollBehavior() {
+    return false
   }
+})
+
+router.afterEach((to, from) => {
+  if (to.path !== from.path) document.getElementById('app-main')?.scrollTo({ top: 0 })
 })
 
 // Navigation guard para dispositivos móviles

@@ -2,7 +2,7 @@
 
 /* Page Layout */
 .cheatsheet-page {
-  @apply min-h-screen relative overflow-x-hidden;
+  @apply min-h-full relative overflow-x-hidden;
   background: #f5f5f5;
   padding: 0 0 80px 0;
 }

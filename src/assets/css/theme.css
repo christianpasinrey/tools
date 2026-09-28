@@ -367,7 +367,7 @@ html.dark .modal-content {
    ============================================ */
 
 .page-container {
-  @apply min-h-screen bg-neutral-100;
+  @apply min-h-full bg-neutral-100;
 }
 
 html.dark .page-container {
@@ -376,7 +376,7 @@ html.dark .page-container {
 
 /* App container - for views that need full height */
 .app-container {
-  @apply h-screen flex flex-col bg-neutral-100 text-neutral-800;
+  @apply h-full flex flex-col bg-neutral-100 text-neutral-800;
 }
 
 html.dark .app-container {
@@ -447,7 +447,7 @@ html.dark .app-sidebar {
 
 /* Auth forms container */
 .auth-container {
-  @apply min-h-screen bg-neutral-100 flex items-center justify-center p-4;
+  @apply min-h-full bg-neutral-100 flex items-center justify-center p-4;
 }
 
 html.dark .auth-container {

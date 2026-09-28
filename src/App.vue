@@ -1,23 +1,22 @@
 <script setup>
-import { useRoute } from 'vue-router'
-import Dock from './components/Dock.vue'
-import MobileDock from './components/MobileDock.vue'
-import SyncAccountButton from './components/common/SyncAccountButton.vue'
-import ThemeToggleButton from './components/common/ThemeToggleButton.vue'
+import { defineAsyncComponent } from 'vue'
+import TopBar from './components/shell/TopBar.vue'
 import { useDevice } from './composables/useDevice'
 
-const route = useRoute()
+const MobileTabBar = defineAsyncComponent(() => import('./components/shell/MobileTabBar.vue'))
+const CommandPalette = defineAsyncComponent(() => import('./components/shell/CommandPalette.vue'))
 const { isMobile } = useDevice()
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-neutral-950 transition-colors duration-300">
-    <MobileDock v-if="isMobile" />
-    <Dock v-else />
-    <div v-if="!isMobile" class="fixed top-2 right-3 z-[100] flex items-center gap-2">
-      <ThemeToggleButton />
-      <SyncAccountButton />
-    </div>
-    <router-view />
+  <div class="h-dvh flex flex-col bg-tb-bg text-tb-ink transition-colors duration-300">
+    <a href="#app-main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[300] focus:px-3 focus:py-2 focus:rounded-lg focus:bg-tb-surface">Saltar al contenido</a>
+    <TopBar />
+    <main id="app-main" tabindex="-1" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative outline-none"
+          :class="isMobile && 'pb-[calc(60px+env(safe-area-inset-bottom))]'">
+      <router-view />
+    </main>
+    <MobileTabBar v-if="isMobile" />
+    <CommandPalette />
   </div>
 </template>
