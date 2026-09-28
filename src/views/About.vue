@@ -1,35 +1,18 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import * as THREE from 'three'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useAppCrypto } from '../composables/useAppCrypto'
 import { useAuth } from '../composables/useAuth'
 import { useDevice } from '../composables/useDevice'
-import { isDark } from '../composables/useSpreadsheet'
 import SyncAccountButton from '../components/common/SyncAccountButton.vue'
+import { TASKS } from '../config/catalog'
+
+const toolCount = TASKS.length
 
 const appCrypto = useAppCrypto()
 const auth = useAuth()
 const { isMobile, platform } = useDevice()
 
-// Color palettes for particles
-const darkModeColors = [
-  new THREE.Color(0x22c55e), // green-500
-  new THREE.Color(0x10b981), // emerald-500
-  new THREE.Color(0x14b8a6), // teal-500
-  new THREE.Color(0x059669), // emerald-600
-]
-
-const lightModeColors = [
-  new THREE.Color(0x3b82f6), // blue-500
-  new THREE.Color(0x06b6d4), // cyan-500
-  new THREE.Color(0x0ea5e9), // sky-500
-  new THREE.Color(0x2563eb), // blue-600
-]
-
-const getCurrentColorPalette = () => isDark.value ? darkModeColors : lightModeColors
-
 const isVisible = ref(false)
-const threeCanvas = ref(null)
 
 // Efecto "descifrado" del titular: las letras se resuelven desde glifos
 // aleatorios, en línea con la identidad de cifrado de la app
@@ -63,13 +46,17 @@ const windowHeight = ref(0)
 
 // Section refs
 const heroSection = ref(null)
-const toolsSection = ref(null)
 const repoSection = ref(null)
 const packagesSection = ref(null)
 const backendSection = ref(null)
 
+// El scroll de la app vive en #app-main, no en window
+let scroller = null
 const onScroll = () => {
-  scrollY.value = window.scrollY
+  scrollY.value = scroller ? scroller.scrollTop : 0
+}
+const onResize = () => {
+  windowHeight.value = window.innerHeight
 }
 
 // Get scroll progress for an element (0 = not visible, 1 = fully scrolled past)
@@ -88,28 +75,6 @@ const getScrollProgress = (el) => {
 const heroStyle = computed(() => ({
   transform: `translateY(${scrollY.value * 0.1}px)`
 }))
-
-// Tool card style - alternates left/right by row, linked to scroll
-const getToolCardStyle = (index) => {
-  const progress = getScrollProgress(toolsSection.value)
-  const row = Math.floor(index / 2)
-  const isRowFromRight = row % 2 === 0 // Fila 0, 2, 4... desde derecha; 1, 3... desde izquierda
-  
-  // Stagger by row - balanced delay
-  const rowDelay = row * 0.1
-  const cardProgress = Math.max(0, Math.min(1, (progress - rowDelay) * 5))
-
-  // Direction: right rows slide from +500px, left rows slide from -500px (from screen edges)
-  // Starts invisible and fades in while sliding
-  const direction = isRowFromRight ? 1 : -1
-  const translateX = (1 - cardProgress) * 500 * direction
-
-  return {
-    opacity: cardProgress,
-    transform: `translateX(${translateX}px)`,
-    transition: 'none' // No transition, smooth via scroll
-  }
-}
 
 // Repo card style - simple fade + slide (no rotation)
 const repoStyle = computed(() => {
@@ -211,422 +176,26 @@ const onPackagesSectionMouseLeave = () => {
   })
 }
 
-let scene, camera, renderer, particles, animationId
-
-const createCircleTexture = () => {
-  const canvas = document.createElement('canvas')
-  canvas.width = 64
-  canvas.height = 64
-  const ctx = canvas.getContext('2d')
-
-  const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32)
-  gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
-  gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)')
-  gradient.addColorStop(0.7, 'rgba(255, 255, 255, 0.3)')
-  gradient.addColorStop(1, 'rgba(255, 255, 255, 0)')
-
-  ctx.fillStyle = gradient
-  ctx.beginPath()
-  ctx.arc(32, 32, 32, 0, Math.PI * 2)
-  ctx.fill()
-
-  const texture = new THREE.CanvasTexture(canvas)
-  return texture
-}
-
-const initThree = () => {
-  if (!threeCanvas.value) return
-
-  // Scene
-  scene = new THREE.Scene()
-
-  // Camera
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-  camera.position.z = 30
-
-  // Renderer
-  renderer = new THREE.WebGLRenderer({
-    canvas: threeCanvas.value,
-    alpha: true,
-    antialias: true
-  })
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-  // Circle texture for round particles
-  const circleTexture = createCircleTexture()
-
-  // Particles
-  const particleCount = 300
-  const positions = new Float32Array(particleCount * 3)
-  const colors = new Float32Array(particleCount * 3)
-  const sizes = new Float32Array(particleCount)
-
-  const colorPalette = getCurrentColorPalette()
-
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 200
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 150
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 100
-
-    const color = colorPalette[Math.floor(Math.random() * colorPalette.length)]
-    colors[i * 3] = color.r
-    colors[i * 3 + 1] = color.g
-    colors[i * 3 + 2] = color.b
-
-    sizes[i] = Math.random() * 2 + 0.5
-  }
-
-  const geometry = new THREE.BufferGeometry()
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-  geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1))
-
-  const material = new THREE.PointsMaterial({
-    size: 1.5,
-    map: circleTexture,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.7,
-    sizeAttenuation: true,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false
-  })
-
-  particles = new THREE.Points(geometry, material)
-  scene.add(particles)
-
-  // Animation
-  const animate = () => {
-    animationId = requestAnimationFrame(animate)
-
-    // Particles animate smoothly
-    particles.rotation.y += 0.0003
-    particles.rotation.x += 0.0001
-
-    // Move camera based on scroll for parallax effect
-    camera.position.y = -scrollY.value * 0.01
-    camera.position.z = 30 + scrollY.value * 0.005
-
-    // Subtle vertical bob animation
-    const positions = particles.geometry.attributes.position.array
-    const positionAttribute = particles.geometry.attributes.position
-    
-    for (let i = 0; i < positions.length; i += 3) {
-      positions[i + 1] += Math.sin(Date.now() * 0.001 + i) * 0.002
-    }
-    positionAttribute.needsUpdate = true
-
-    renderer.render(scene, camera)
-  }
-
-  animate()
-
-  // Resize handler
-  window.addEventListener('resize', onResize)
-}
-
-const onResize = () => {
-  if (!camera || !renderer) return
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
-}
-
-// Update particle colors when theme changes
-const updateParticleColors = () => {
-  if (!particles) return
-
-  const colorPalette = getCurrentColorPalette()
-  const colors = particles.geometry.attributes.color.array
-  const particleCount = colors.length / 3
-
-  for (let i = 0; i < particleCount; i++) {
-    const color = colorPalette[Math.floor(Math.random() * colorPalette.length)]
-    colors[i * 3] = color.r
-    colors[i * 3 + 1] = color.g
-    colors[i * 3 + 2] = color.b
-  }
-
-  particles.geometry.attributes.color.needsUpdate = true
-}
-
-// Watch for theme changes
-watch(isDark, () => {
-  updateParticleColors()
-})
-
 onMounted(() => {
   setTimeout(() => {
     isVisible.value = true
   }, 100)
   setTimeout(runTitleDecode, 450)
-  initThree()
   fetchGitHubCommits()
   fetchPackageStars()
   fetchBackendStars()
 
   // Scroll tracking setup
   windowHeight.value = window.innerHeight
-  window.addEventListener('scroll', onScroll, { passive: true })
-  window.addEventListener('resize', () => {
-    windowHeight.value = window.innerHeight
-  })
+  scroller = document.getElementById('app-main')
+  scroller?.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onResize)
 })
 
 onUnmounted(() => {
-  if (animationId) cancelAnimationFrame(animationId)
   window.removeEventListener('resize', onResize)
-  window.removeEventListener('scroll', onScroll)
-  if (renderer) renderer.dispose()
+  scroller?.removeEventListener('scroll', onScroll)
 })
-
-const allTools = [
-  {
-    path: '/multimedia#image',
-    name: 'Image Editor',
-    description: 'Edita imágenes con filtros, recortes, ajustes de color y más herramientas profesionales.',
-    icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
-    color: 'blue',
-    status: 'active',
-    mobileSupport: false
-  },
-  {
-    path: '/multimedia#audio',
-    name: 'Audio Editor',
-    description: 'Corta, une y aplica efectos a archivos de audio. Visualización de ondas en tiempo real.',
-    icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3',
-    color: 'purple',
-    status: 'active',
-    mobileSupport: false
-  },
-  {
-    path: '/documents#pdf',
-    name: 'PDF Editor',
-    description: 'Combina, divide, rota y anota documentos PDF directamente en el navegador.',
-    icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9.5 8.5c0 .83-.67 1.5-1.5 1.5H7v2H5.5V9H8c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V9H13c.83 0 1.5.67 1.5 1.5v3zm4-3H17v1h1.5V13H17v2h-1.5V9h3v1.5zM7 10.5h1v1H7v-1zm4 0h1v3h-1v-3z',
-    color: 'red',
-    status: 'active',
-    mobileSupport: false
-  },
-  {
-    path: '/documents#spreadsheet',
-    name: 'Spreadsheet Editor',
-    description: 'Editor de hojas de cálculo con estilos, fórmulas y exportación a Excel.',
-    icon: 'M3 3h18v18H3V3zm16 4H5v12h14V7zM7 9h2v2H7V9zm0 4h2v2H7v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2z',
-    color: 'green',
-    status: 'active',
-    mobileSupport: false
-  },
-  {
-    path: '/multimedia#3d',
-    name: '3D Playground',
-    description: 'Experimenta con gráficos 3D, shaders y visualizaciones interactivas.',
-    icon: 'M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9',
-    color: 'green',
-    status: 'active',
-    mobileSupport: false
-  },
-  {
-    path: '/technology#dev',
-    name: 'Dev Tools',
-    description: 'Formatea, valida y convierte JSON/YAML. Playground HTML/CSS/JS con preview en vivo.',
-    icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
-    color: 'cyan',
-    status: 'active',
-    mobileSupport: false
-  },
-  {
-    path: '/multimedia#svg',
-    name: 'SVG Editor',
-    description: 'Crea y edita gráficos vectoriales SVG con herramientas profesionales de dibujo.',
-    icon: 'M4 5a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 7.414V10a1 1 0 01-2 0V6a1 1 0 011-1zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V7.414l-2.293 2.293a1 1 0 01-1.414-1.414L16.586 6H14a1 1 0 010-2zM5 14a1 1 0 011 1v2.586l2.293-2.293a1 1 0 011.414 1.414L7.414 19H10a1 1 0 010 2H6a1 1 0 01-1-1v-4a1 1 0 011-1zm14 0a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h2.586l-2.293-2.293a1 1 0 011.414-1.414L19 16.586V15a1 1 0 011-1z',
-    color: 'orange',
-    status: 'active',
-    mobileSupport: false
-  },
-  {
-    path: '/tools#converter',
-    name: 'Unit Converter',
-    description: 'Convierte unidades de longitud, peso, temperatura, moneda y más. Tasas de cambio en tiempo real.',
-    icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
-    color: 'emerald',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/tools#color',
-    name: 'Color Picker',
-    description: 'Rueda de colores con armonías, paletas y exportación en múltiples formatos. Inspirado en Adobe Color.',
-    icon: 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01',
-    color: 'pink',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/cheatsheets',
-    name: 'CheatSheets',
-    description: 'Guías rápidas y cheatsheets de lenguajes, frameworks y herramientas de desarrollo.',
-    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-    color: 'green',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/documents#markdown',
-    name: 'Markdown Editor',
-    description: 'Editor de Markdown con preview en vivo. Exporta a HTML o descarga como .md',
-    icon: 'M20.56 18H3.44C2.65 18 2 17.37 2 16.59V7.41C2 6.63 2.65 6 3.44 6h17.12c.79 0 1.44.63 1.44 1.41v9.18c0 .78-.65 1.41-1.44 1.41zM6.81 15.19v-3.66l1.92 2.35 1.92-2.35v3.66h1.93V8.81h-1.93l-1.92 2.35-1.92-2.35H4.89v6.38h1.92zm8.56-1.98V8.81h-1.93v6.38h4.55v-1.98h-2.62z',
-    color: 'blue',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/technology#phone',
-    name: 'Phone Tester',
-    description: 'Configura y prueba el componente de telefono SIP WebRTC. Genera codigo para Vue y React.',
-    icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z',
-    color: 'emerald',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/technology#security',
-    name: 'CyberSecurity',
-    description: 'JWT Debugger, Base64 Encoder/Decoder y Hash Generator. Herramientas de seguridad.',
-    icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
-    color: 'red',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/apps#todo',
-    name: 'TODO Kanban',
-    description: 'Tablero de tareas tipo Trello con columnas, drag & drop y persistencia en IndexedDB.',
-    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
-    color: 'indigo',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/apps#map',
-    name: 'Map Editor',
-    description: 'Mapas interactivos con marcadores, formas y capas personalizadas usando Leaflet.',
-    icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
-    color: 'blue',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/apps#invoice',
-    name: 'Facturas',
-    description: 'Generador de facturas profesionales con exportación a PDF y gestión de clientes.',
-    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-    color: 'emerald',
-    status: 'active',
-    mobileSupport: true
-  },
-  {
-    path: '/technology#storage',
-    name: 'Browser Storage',
-    description: 'Visualiza y gestiona LocalStorage, SessionStorage e IndexedDB del navegador.',
-    icon: 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4',
-    color: 'purple',
-    status: 'active',
-    mobileSupport: true
-  }
-]
-
-// Computed para filtrar herramientas según plataforma
-const tools = computed(() => {
-  if (!isMobile.value) return allTools
-  return allTools.filter(tool => tool.mobileSupport === true)
-})
-
-// Contador de herramientas ocultas para mostrar mensaje
-const hiddenToolsCount = computed(() => {
-  if (!isMobile.value) return 0
-  return allTools.filter(t => t.mobileSupport === false).length
-})
-
-// Color hex por herramienta para el tinte del borde al hacer hover
-const toolColorHex = {
-  purple: '#a855f7',
-  blue: '#3b82f6',
-  red: '#ef4444',
-  green: '#22c55e',
-  cyan: '#06b6d4',
-  orange: '#f97316',
-  emerald: '#10b981',
-  pink: '#ec4899',
-  indigo: '#6366f1'
-}
-
-const colorClasses = {
-  purple: {
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/20',
-    text: 'text-purple-400',
-    glow: 'group-hover:shadow-purple-500/20',
-    icon: 'group-hover:text-purple-400'
-  },
-  blue: {
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-500/20',
-    text: 'text-blue-400',
-    glow: 'group-hover:shadow-blue-500/20',
-    icon: 'group-hover:text-blue-400'
-  },
-  red: {
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/20',
-    text: 'text-red-400',
-    glow: 'group-hover:shadow-red-500/20',
-    icon: 'group-hover:text-red-400'
-  },
-  green: {
-    bg: 'bg-green-500/10',
-    border: 'border-green-500/20',
-    text: 'text-green-400',
-    glow: 'group-hover:shadow-green-500/20',
-    icon: 'group-hover:text-green-400'
-  },
-  cyan: {
-    bg: 'bg-cyan-500/10',
-    border: 'border-cyan-500/20',
-    text: 'text-cyan-400',
-    glow: 'group-hover:shadow-cyan-500/20',
-    icon: 'group-hover:text-cyan-400'
-  },
-  orange: {
-    bg: 'bg-orange-500/10',
-    border: 'border-orange-500/20',
-    text: 'text-orange-400',
-    glow: 'group-hover:shadow-orange-500/20',
-    icon: 'group-hover:text-orange-400'
-  },
-  emerald: {
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/20',
-    text: 'text-emerald-400',
-    glow: 'group-hover:shadow-emerald-500/20',
-    icon: 'group-hover:text-emerald-400'
-  },
-  pink: {
-    bg: 'bg-pink-500/10',
-    border: 'border-pink-500/20',
-    text: 'text-pink-400',
-    glow: 'group-hover:shadow-pink-500/20',
-    icon: 'group-hover:text-pink-400'
-  },
-  indigo: {
-    bg: 'bg-indigo-500/10',
-    border: 'border-indigo-500/20',
-    text: 'text-indigo-400',
-    glow: 'group-hover:shadow-indigo-500/20',
-    icon: 'group-hover:text-indigo-400'
-  }
-}
 
 const packages = ref([
   // Build & tooling
@@ -1019,14 +588,18 @@ const fetchGitHubCommits = async () => {
 </script>
 
 <template>
-  <div class="home-view min-h-screen relative overflow-x-clip pb-28">
-    <!-- Three.js Canvas Background -->
-    <canvas ref="threeCanvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0;"></canvas>
+  <div class="home-view about-view min-h-full relative overflow-x-clip pb-16 bg-tb-bg">
 
     <!-- Gradient Orbs with subtle parallax - fixed position so they don't get clipped -->
     <div class="fixed top-20 left-1/4 w-96 h-96 bg-blue-500/20 dark:bg-green-500/20 rounded-full blur-[120px] animate-pulse-slow pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.08}px)` }"></div>
     <div class="fixed top-40 right-1/4 w-80 h-80 bg-cyan-500/15 dark:bg-emerald-500/15 rounded-full blur-[100px] animate-float pointer-events-none" style="z-index: 0;" :style="{ transform: `translateY(${scrollY * 0.12}px)` }"></div>
     <div class="fixed top-1/2 left-1/2 w-72 h-72 bg-sky-500/10 dark:bg-teal-500/10 rounded-full blur-[80px] animate-pulse-slow pointer-events-none" style="z-index: 0; animation-delay: 1s;" :style="{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.15}px)` }"></div>
+
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6" style="z-index: 1;">
+      <router-link to="/" class="inline-flex items-center gap-2 text-sm font-ui text-tb-muted hover:text-tb-ink transition-colors">
+        <span aria-hidden="true">←</span> Volver a las herramientas
+      </router-link>
+    </div>
 
     <!-- Hero Section -->
     <div ref="heroSection" class="relative" style="z-index: 1;">
@@ -1221,114 +794,10 @@ const fetchGitHubCommits = async () => {
 
           </div>
 
-          <!-- Scroll hint -->
-          <div
-            :class="[
-              'mt-12 transition-all duration-700 delay-[600ms]',
-              isVisible ? 'opacity-100' : 'opacity-0'
-            ]"
-          >
-            <div class="flex flex-col items-center gap-2 hero-muted">
-              <span class="text-[10px] uppercase tracking-widest">Explorar herramientas</span>
-              <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-              </svg>
-            </div>
-          </div>
 
         </div>
       </div>
 
-    </div>
-
-    <!-- Tools Grid -->
-    <div ref="toolsSection" class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-40" style="z-index: 1;">
-      <h2 class="text-xs font-semibold section-label uppercase tracking-widest mb-8">
-        Herramientas disponibles
-      </h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <router-link
-          v-for="(tool, index) in tools"
-          :key="tool.path"
-          :to="tool.status === 'active' ? tool.path : '#'"
-          :class="[
-            'group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 tool-card',
-            tool.status === 'active' ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
-            'scroll-animated'
-          ]"
-          :style="[getToolCardStyle(index), { '--tool-color': toolColorHex[tool.color] }]"
-        >
-          <!-- Glow effect on hover -->
-          <div
-            :class="[
-              'absolute -inset-1 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none',
-              `bg-${tool.color}-500/10`
-            ]"
-          ></div>
-
-          <!-- Status Badge -->
-          <div v-if="tool.status === 'coming'" class="absolute top-4 right-4 z-10">
-            <span class="px-2.5 py-1 coming-soon-badge text-[10px] font-medium rounded-full backdrop-blur-sm">Próximamente</span>
-          </div>
-
-          <div class="relative flex items-start gap-5">
-            <!-- Icon -->
-            <div
-              :class="[
-                'w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 tool-icon',
-                'group-hover:scale-110',
-                colorClasses[tool.color].bg
-              ]"
-            >
-              <svg
-                :class="[
-                  'w-6 h-6 tool-icon-svg transition-colors duration-300',
-                  colorClasses[tool.color].icon
-                ]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" :d="tool.icon" />
-              </svg>
-            </div>
-
-            <!-- Content -->
-            <div class="flex-1 min-w-0">
-              <h3
-                :class="[
-                  'tool-title font-semibold text-lg mb-2 transition-colors duration-300',
-                  `group-hover:${colorClasses[tool.color].text}`
-                ]"
-              >
-                {{ tool.name }}
-              </h3>
-              <p class="tool-description text-sm leading-relaxed transition-colors duration-300">
-                {{ tool.description }}
-              </p>
-            </div>
-
-            <!-- Arrow -->
-            <div
-              v-if="tool.status === 'active'"
-              class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-300 tool-arrow group-hover:translate-x-1"
-            >
-              <svg
-                :class="[
-                  'w-4 h-4 tool-arrow-svg transition-colors duration-300',
-                  colorClasses[tool.color].icon
-                ]"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </div>
-          </div>
-        </router-link>
-      </div>
     </div>
 
     <!-- Repository Section -->
@@ -1399,7 +868,7 @@ const fetchGitHubCommits = async () => {
               <!-- Repository Stats -->
               <div class="grid grid-cols-2 gap-4 py-6 repo-border my-6">
                 <div class="text-center">
-                  <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ tools.length }}</div>
+                  <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ toolCount }}</div>
                   <div class="text-xs repo-muted mt-1">Herramientas</div>
                 </div>
                 <a
