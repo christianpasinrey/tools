@@ -1,5 +1,10 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import TbToolbar from '../ui/TbToolbar.vue'
+import TbToolbarGroup from '../ui/TbToolbarGroup.vue'
+import TbIconButton from '../ui/TbIconButton.vue'
+import TbMenu from '../ui/TbMenu.vue'
+import { toast } from '../../composables/useToast'
 import { SuperDoc } from '@harbour-enterprises/superdoc'
 import '@harbour-enterprises/superdoc/style.css'
 
@@ -8,17 +13,9 @@ let superdoc = null
 
 const isReady = ref(false)
 const currentFileName = ref('documento.docx')
-const showMenu = ref(false)
-const showFormatBar = ref(false)
-const toastMessage = ref('')
-const toastVisible = ref(false)
 const fileInputRef = ref(null)
 
-function showToast(msg) {
-  toastMessage.value = msg
-  toastVisible.value = true
-  setTimeout(() => { toastVisible.value = false }, 2000)
-}
+const showToast = (msg, tone = 'info') => toast(msg, { tone })
 
 const createSuperdoc = (file = null) => {
   if (!editorContainerRef.value) return null
@@ -41,11 +38,23 @@ const createSuperdoc = (file = null) => {
   return new SuperDoc(config)
 }
 
+// SuperDoc maqueta páginas de ancho fijo (8,5" = 816 px): en el móvil se escalan al ancho disponible
+const PAGE_WIDTH = 816
+const paperRef = ref(null)
+const fit = ref(1)
+let resizeObserver = null
+
 onMounted(() => {
   superdoc = createSuperdoc()
+  if (typeof ResizeObserver === 'undefined' || !paperRef.value) return
+  resizeObserver = new ResizeObserver(([entry]) => {
+    fit.value = Math.min(1, (entry.contentRect.width - 16) / PAGE_WIDTH)
+  })
+  resizeObserver.observe(paperRef.value)
 })
 
 onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
   superdoc?.destroy()
   superdoc = null
 })
@@ -55,19 +64,19 @@ const newDocument = () => {
   superdoc?.destroy()
   superdoc = createSuperdoc()
   currentFileName.value = 'documento.docx'
-  showMenu.value = false
   showToast('Nuevo documento')
 }
 
 const openFile = () => {
   fileInputRef.value?.click()
-  showMenu.value = false
 }
 
 const handleFileSelect = (e) => {
   const file = e.target.files?.[0]
-  if (!file || !file.name.match(/\.docx?$/i)) {
-    showToast('Archivo no válido')
+  if (!file) return
+  if (!file.name.match(/\.docx?$/i)) {
+    e.target.value = ''
+    showToast('Solo se pueden abrir archivos .docx', 'error')
     return
   }
 
@@ -76,7 +85,7 @@ const handleFileSelect = (e) => {
   superdoc?.destroy()
   superdoc = createSuperdoc(file)
   e.target.value = ''
-  showToast('Archivo cargado')
+  showToast('Documento abierto', 'success')
 }
 
 const downloadDocument = async () => {
@@ -85,7 +94,9 @@ const downloadDocument = async () => {
   try {
     const blob = await superdoc.export({
       isFinalDoc: true,
-      commentsType: 'clean'
+      commentsType: 'clean',
+      // Solo queremos el Blob: la descarga la hacemos nosotros con el nombre del archivo
+      triggerDownload: false
     })
 
     if (blob) {
@@ -95,12 +106,11 @@ const downloadDocument = async () => {
       a.download = currentFileName.value
       a.click()
       URL.revokeObjectURL(url)
-      showToast('Descargado')
+      showToast('Documento descargado', 'success')
     }
   } catch (err) {
-    showToast('Error al descargar')
+    showToast('No se pudo descargar el documento', 'error')
   }
-  showMenu.value = false
 }
 
 // Format commands
@@ -144,140 +154,58 @@ const execCommand = (cmd, value = null) => {
       break
   }
 }
+
+const menuItems = [
+  { label: 'Nuevo documento', icon: 'file-plus', action: () => newDocument() },
+  { label: 'Abrir .docx', icon: 'folder', action: () => openFile() },
+  { label: 'Descargar .docx', icon: 'download', action: () => downloadDocument() }
+]
+
+const formatGroups = [
+  { label: 'Texto', items: [
+    { cmd: 'bold', label: 'Negrita', icon: 'bold' },
+    { cmd: 'italic', label: 'Cursiva', icon: 'italic' },
+    { cmd: 'underline', label: 'Subrayado', icon: 'underline' },
+    { cmd: 'strike', label: 'Tachado', icon: 'strike' }
+  ] },
+  { label: 'Listas', items: [
+    { cmd: 'bulletList', label: 'Lista', icon: 'list' },
+    { cmd: 'orderedList', label: 'Lista numerada', icon: 'list-ordered' }
+  ] },
+  { label: 'Alineación', items: [
+    { cmd: 'alignLeft', label: 'Alinear a la izquierda', icon: 'align-left' },
+    { cmd: 'alignCenter', label: 'Centrar', icon: 'align-center' },
+    { cmd: 'alignRight', label: 'Alinear a la derecha', icon: 'align-right' }
+  ] }
+]
 </script>
 
 <template>
-  <div class="h-full flex flex-col app-bg mobile-docx-editor">
-    <!-- Header -->
-    <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-200 bg-white/90 dark:border-neutral-800 dark:bg-neutral-900/80 shrink-0">
-      <div class="flex items-center gap-2 min-w-0">
-        <svg class="w-5 h-5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-        <span class="text-sm font-medium text-white truncate">{{ currentFileName }}</span>
-        <span v-if="isReady" class="text-[10px] text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded shrink-0">
-          Listo
-        </span>
-      </div>
-      <button @click="showMenu = !showMenu" class="p-2 text-neutral-400 active:text-white" style="touch-action: manipulation;">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-        </svg>
-      </button>
+  <div class="h-full flex flex-col bg-tb-bg text-tb-ink font-ui mobile-docx-editor" style="--cat: var(--cat-documents)">
+    <div class="shrink-0 flex items-center gap-1 pl-4 pr-2 py-2 border-b border-tb-line bg-tb-surface">
+      <p class="flex-1 min-w-0 text-sm font-medium text-tb-ink truncate" :title="currentFileName">
+        {{ currentFileName }}<span v-if="!isReady" class="ml-2 text-xs font-normal text-tb-muted">cargando…</span>
+      </p>
+      <TbIconButton icon="undo" label="Deshacer" size="lg" :disabled="!isReady" @click="execCommand('undo')" />
+      <TbIconButton icon="redo" label="Rehacer" size="lg" :disabled="!isReady" @click="execCommand('redo')" />
+      <TbMenu label="Más opciones" icon="more-vertical" icon-only align="end" :items="menuItems" />
     </div>
 
-    <!-- Menu Dropdown -->
-    <Transition name="fade">
-      <div v-if="showMenu" class="absolute top-14 right-4 z-50 bg-neutral-800 border border-neutral-700 rounded-xl shadow-xl overflow-hidden">
-        <button @click="newDocument" class="w-full px-4 py-3 text-left text-sm text-white flex items-center gap-3 active:bg-neutral-700">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-          </svg>
-          Nuevo
-        </button>
-        <button @click="openFile" class="w-full px-4 py-3 text-left text-sm text-white flex items-center gap-3 active:bg-neutral-700 border-t border-neutral-700">
-          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
-          </svg>
-          Abrir archivo
-        </button>
-        <button @click="downloadDocument" :disabled="!isReady" class="w-full px-4 py-3 text-left text-sm flex items-center gap-3 active:bg-neutral-700 border-t border-neutral-700" :class="isReady ? 'text-white' : 'text-neutral-500'">
-          <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          Descargar .docx
-        </button>
-      </div>
-    </Transition>
+    <TbToolbar label="Formato" class="shrink-0 px-2 py-1.5 border-b border-tb-line bg-tb-surface">
+      <TbToolbarGroup v-for="group in formatGroups" :key="group.label" :label="group.label">
+        <TbIconButton v-for="b in group.items" :key="b.cmd" :icon="b.icon" :label="b.label" size="lg" :disabled="!isReady" @click="execCommand(b.cmd)" />
+      </TbToolbarGroup>
+    </TbToolbar>
 
-    <!-- Click outside to close menu -->
-    <div v-if="showMenu" class="fixed inset-0 z-40" @click="showMenu = false"></div>
-
-    <!-- Editor Area -->
-    <div class="flex-1 overflow-auto bg-white">
-      <div ref="editorContainerRef" class="mobile-superdoc-container"></div>
+    <!-- El papel es blanco en ambos temas: su texto lleva color propio -->
+    <div ref="paperRef" class="flex-1 overflow-auto bg-white" data-test="docx-paper" style="color: #1c1a16">
+      <div ref="editorContainerRef" class="mobile-superdoc-container" :style="{ zoom: fit }"></div>
     </div>
 
-    <!-- Bottom Format Bar -->
-    <div class="bg-neutral-900 border-t border-neutral-800 px-2 py-2 mb-14">
-      <!-- Undo/Redo row -->
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-1">
-          <button @click="execCommand('undo')" class="mobile-docx-btn" :disabled="!isReady">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-            </svg>
-          </button>
-          <button @click="execCommand('redo')" class="mobile-docx-btn" :disabled="!isReady">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"/>
-            </svg>
-          </button>
-        </div>
-        <button @click="showFormatBar = !showFormatBar" class="px-3 py-1.5 text-xs rounded-lg" :class="showFormatBar ? 'bg-emerald-500/20 text-emerald-400' : 'bg-neutral-800 text-neutral-400'">
-          {{ showFormatBar ? 'Ocultar' : 'Formato' }}
-        </button>
-      </div>
-
-      <!-- Format buttons (expandable) -->
-      <Transition name="slide">
-        <div v-if="showFormatBar" class="flex flex-wrap gap-1">
-          <!-- Text format -->
-          <button @click="execCommand('bold')" class="mobile-docx-btn" :disabled="!isReady" title="Negrita">
-            <span class="font-bold text-sm">B</span>
-          </button>
-          <button @click="execCommand('italic')" class="mobile-docx-btn" :disabled="!isReady" title="Cursiva">
-            <span class="italic text-sm">I</span>
-          </button>
-          <button @click="execCommand('underline')" class="mobile-docx-btn" :disabled="!isReady" title="Subrayado">
-            <span class="underline text-sm">U</span>
-          </button>
-          <button @click="execCommand('strike')" class="mobile-docx-btn" :disabled="!isReady" title="Tachado">
-            <span class="line-through text-sm">S</span>
-          </button>
-
-          <div class="w-px h-8 bg-neutral-700 mx-1"></div>
-
-          <!-- Lists -->
-          <button @click="execCommand('bulletList')" class="mobile-docx-btn" :disabled="!isReady" title="Lista">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
-          <button @click="execCommand('orderedList')" class="mobile-docx-btn" :disabled="!isReady" title="Lista numerada">
-            <span class="text-xs font-mono">1.</span>
-          </button>
-
-          <div class="w-px h-8 bg-neutral-700 mx-1"></div>
-
-          <!-- Alignment -->
-          <button @click="execCommand('alignLeft')" class="mobile-docx-btn" :disabled="!isReady" title="Izquierda">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16"/>
-            </svg>
-          </button>
-          <button @click="execCommand('alignCenter')" class="mobile-docx-btn" :disabled="!isReady" title="Centro">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M4 18h16"/>
-            </svg>
-          </button>
-          <button @click="execCommand('alignRight')" class="mobile-docx-btn" :disabled="!isReady" title="Derecha">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M4 18h16"/>
-            </svg>
-          </button>
-        </div>
-      </Transition>
-    </div>
-
-    <!-- Hidden file input -->
     <input ref="fileInputRef" type="file" accept=".docx,.doc" class="hidden" @change="handleFileSelect" />
-
-    <!-- Toast -->
-    <Transition name="toast">
-      <div v-if="toastVisible" class="fixed bottom-32 left-1/2 -translate-x-1/2 px-4 py-2 bg-neutral-800 text-white text-sm rounded-full shadow-lg z-50">
-        {{ toastMessage }}
-      </div>
-    </Transition>
   </div>
 </template>
+
+<style>
+.mobile-docx-editor .ProseMirror { color: #1c1a16; }
+</style>

@@ -133,7 +133,9 @@ export function useDocxEditor() {
 
     const blob = await superdoc.export({
       isFinalDoc: true,
-      commentsType: 'clean'
+      commentsType: 'clean',
+      // Solo queremos el Blob: la descarga la hacemos nosotros con el nombre del archivo
+      triggerDownload: false
     })
     return blob
   }

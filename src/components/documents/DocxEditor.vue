@@ -5,10 +5,6 @@ import { useDocxEditor } from '../../composables/useDocxEditor'
 import DocxToolbar from './DocxToolbar.vue'
 import DocxSidebar from './DocxSidebar.vue'
 
-defineProps({
-  themeColor: { type: String, default: '#22c55e' }
-})
-
 const {
   editorContainerRef,
   toolbarRef,
@@ -28,8 +24,8 @@ const {
   getActiveEditor
 } = useDocxEditor()
 
-// Computed for sidebar
-const activeEditor = computed(() => getActiveEditor())
+// El editor de SuperDoc no es reactivo: se relee cada vez que cambia isReady
+const activeEditor = computed(() => (isReady.value ? getActiveEditor() : null))
 
 // File input ref (local to this component)
 const fileInputRef = ref(null)
@@ -72,7 +68,7 @@ const getDocumentData = () => serialize()
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-100 dark:bg-neutral-900 docx-editor-wrapper">
+  <div class="h-full flex flex-col bg-tb-bg docx-editor-wrapper">
     <!-- Top bar: File actions -->
     <DocxToolbar
       :file-name="currentFileName"
@@ -123,30 +119,18 @@ const getDocumentData = () => serialize()
 </template>
 
 <style>
-/* Global SuperDoc overrides (no scoped) — tema claro por defecto */
+/* Global SuperDoc overrides (no scoped): los colores salen de los tokens de El Taller */
 .docx-editor-wrapper {
-  --sd-toolbar-bg: #ffffff;
-  --sd-toolbar-border: #e5e5e5;
-  --sd-editor-bg: #ebebeb;
-  --sd-btn-color: #525252;
-  --sd-btn-hover-bg: #e5e5e5;
-  --sd-btn-hover-color: #171717;
-  --sd-dropdown-bg: #ffffff;
-  --sd-dropdown-border: #d4d4d4;
-  --sd-page-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --sd-toolbar-bg: var(--tb-surface);
+  --sd-toolbar-border: var(--tb-line);
+  --sd-editor-bg: var(--tb-bg);
+  --sd-btn-color: var(--tb-muted);
+  --sd-btn-hover-bg: var(--tb-surface-2);
+  --sd-btn-hover-color: var(--tb-ink);
+  --sd-dropdown-bg: var(--tb-surface);
+  --sd-dropdown-border: var(--tb-line);
+  --sd-page-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 18px 40px -16px rgb(0 0 0 / .35);
   --docx-zoom: 1;
-}
-
-html.dark .docx-editor-wrapper {
-  --sd-toolbar-bg: #1a1a1a;
-  --sd-toolbar-border: #2a2a2a;
-  --sd-editor-bg: #262626;
-  --sd-btn-color: #a3a3a3;
-  --sd-btn-hover-bg: #333333;
-  --sd-btn-hover-color: #ffffff;
-  --sd-dropdown-bg: #1a1a1a;
-  --sd-dropdown-border: #3a3a3a;
-  --sd-page-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Scroll container */
@@ -176,27 +160,36 @@ html.dark .docx-editor-wrapper {
   padding: 4px 8px !important;
 }
 
-.docx-editor-wrapper .superdoc-toolbar button {
+.docx-editor-wrapper .superdoc-toolbar .toolbar-button,
+.docx-editor-wrapper .superdoc-toolbar button,
+.docx-editor-wrapper .superdoc-toolbar input {
   color: var(--sd-btn-color) !important;
-  border-radius: 4px !important;
+  border-radius: 8px !important;
 }
 
+.docx-editor-wrapper .superdoc-toolbar .toolbar-button:not(.disabled):hover,
 .docx-editor-wrapper .superdoc-toolbar button:hover {
   background: var(--sd-btn-hover-bg) !important;
   color: var(--sd-btn-hover-color) !important;
 }
 
-.docx-editor-wrapper .superdoc-toolbar button.active,
-.docx-editor-wrapper .superdoc-toolbar button[data-active="true"] {
-  background: rgba(34, 197, 94, 0.15) !important;
-  color: #22c55e !important;
+.docx-editor-wrapper .superdoc-toolbar .toolbar-button.disabled { opacity: .45; }
+
+.docx-editor-wrapper .superdoc-toolbar .toolbar-button.active:not(.disabled),
+.docx-editor-wrapper .superdoc-toolbar .toolbar-button[data-active="true"],
+.docx-editor-wrapper .superdoc-toolbar button.active {
+  background: color-mix(in srgb, var(--cat) 14%, transparent) !important;
+  color: var(--cat) !important;
 }
+
+.docx-editor-wrapper .superdoc-toolbar .toolbar-separator { background: transparent !important; }
+.docx-editor-wrapper .superdoc-toolbar .separator-inner { background: var(--tb-line-strong) !important; }
 
 /* Document pages - white background */
 .docx-editor-wrapper .superdoc-editor .ProseMirror,
 .docx-editor-wrapper .superdoc-editor [class*="ProseMirror"] {
   background: #fff !important;
-  color: #1a1a1a !important;
+  color: #1c1a16 !important;
   width: 816px !important;
   min-width: 816px !important;
   max-width: 816px !important;

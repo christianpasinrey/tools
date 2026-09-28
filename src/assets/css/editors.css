@@ -241,28 +241,6 @@ html.dark .md-mobile-format-btn {
 }
 
 /* ============================================
-   DOCX EDITOR SPECIFIC
-   ============================================ */
-
-.docx-btn {
-  @apply p-2 rounded-lg transition-colors;
-  @apply text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/50;
-}
-
-html.dark .docx-btn {
-  @apply text-neutral-400 hover:text-white hover:bg-neutral-700/50;
-}
-
-.docx-btn-sm {
-  @apply p-1.5 rounded transition-colors;
-  @apply text-neutral-500 hover:text-neutral-900;
-}
-
-html.dark .docx-btn-sm {
-  @apply text-neutral-400 hover:text-white;
-}
-
-/* ============================================
    TABS
    ============================================ */
 

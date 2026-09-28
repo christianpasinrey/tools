@@ -30,24 +30,9 @@
   @apply opacity-40;
 }
 
-/* Mobile docx button */
-.mobile-docx-btn {
-  @apply w-10 h-10 flex items-center justify-center rounded-lg;
-  @apply text-neutral-400 bg-neutral-800 transition-all;
-  touch-action: manipulation;
-}
-
-.mobile-docx-btn:active:not(:disabled) {
-  @apply bg-neutral-700 text-white;
-}
-
-.mobile-docx-btn:disabled {
-  @apply opacity-40;
-}
-
 /* Mobile DOCX Editor specific */
 .mobile-docx-editor .mobile-superdoc-container {
-  @apply min-h-full p-4;
+  @apply min-h-full p-2;
 }
 
 .mobile-docx-editor .mobile-superdoc-container .ProseMirror {

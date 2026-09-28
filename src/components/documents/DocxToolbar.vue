@@ -1,5 +1,10 @@
 <script setup>
+import { computed } from 'vue'
 import VaultSaveLoad from '../common/VaultSaveLoad.vue'
+import TbToolbar from '../ui/TbToolbar.vue'
+import TbToolbarGroup from '../ui/TbToolbarGroup.vue'
+import TbIconButton from '../ui/TbIconButton.vue'
+import TbSegmented from '../ui/TbSegmented.vue'
 
 const props = defineProps({
   fileName: { type: String, default: 'documento.docx' },
@@ -9,128 +14,42 @@ const props = defineProps({
   getData: { type: Function, required: true }
 })
 
-const emit = defineEmits([
-  'new',
-  'open',
-  'download',
-  'print',
-  'mode-change',
-  'zoom-change',
-  'load'
-])
+const emit = defineEmits(['new', 'open', 'download', 'print', 'mode-change', 'zoom-change', 'load'])
+
+const modes = [
+  { value: 'editing', label: 'Editar', icon: 'edit' },
+  { value: 'viewing', label: 'Ver', icon: 'eye' }
+]
+const mode = computed({
+  get: () => props.documentMode,
+  set: (value) => emit('mode-change', value)
+})
 </script>
 
 <template>
-  <div class="h-11 bg-white border-b border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800 flex items-center px-4 gap-3 shrink-0">
-    <!-- File actions -->
-    <div class="flex items-center gap-1">
-      <button
-        @click="emit('new')"
-        class="docx-btn"
-        title="Nuevo documento"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      </button>
+  <header class="h-12 shrink-0 flex items-center gap-2 px-3 border-b border-tb-line bg-tb-surface">
+    <TbToolbar label="Documento Word" class="min-w-0">
+      <TbToolbarGroup label="Archivo">
+        <TbIconButton icon="file-plus" label="Nuevo documento" @click="emit('new')" />
+        <TbIconButton icon="folder" label="Abrir .docx" @click="emit('open')" />
+        <TbIconButton icon="download" label="Descargar .docx" :disabled="!isReady" @click="emit('download')" />
+        <TbIconButton icon="printer" label="Imprimir" :disabled="!isReady" @click="emit('print')" />
+      </TbToolbarGroup>
+    </TbToolbar>
 
-      <button
-        @click="emit('open')"
-        class="docx-btn"
-        title="Abrir archivo"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
-        </svg>
-      </button>
+    <p class="min-w-0 flex items-center gap-2 text-sm text-tb-ink">
+      <span class="truncate max-w-56" :title="fileName">{{ fileName }}</span>
+      <span v-if="!isReady" class="text-xs text-tb-muted">cargando…</span>
+    </p>
 
-      <button
-        @click="emit('download')"
-        :disabled="!isReady"
-        class="docx-btn"
-        :class="{ 'text-blue-400 hover:text-blue-300': isReady, 'opacity-40 cursor-not-allowed': !isReady }"
-        title="Descargar DOCX"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        </svg>
-      </button>
-
-      <button
-        @click="emit('print')"
-        :disabled="!isReady"
-        class="docx-btn"
-        :class="{ 'opacity-40 cursor-not-allowed': !isReady }"
-        title="Imprimir"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-        </svg>
-      </button>
+    <div class="ml-auto flex items-center gap-2 shrink-0">
+      <div class="flex items-center" role="group" aria-label="Zoom">
+        <TbIconButton size="sm" icon="zoom-out" label="Reducir" @click="emit('zoom-change', -10)" />
+        <span class="w-12 text-center text-xs font-code text-tb-ink">{{ zoom }} %</span>
+        <TbIconButton size="sm" icon="zoom-in" label="Ampliar" @click="emit('zoom-change', 10)" />
+      </div>
+      <TbSegmented v-model="mode" :options="modes" label="Modo" size="sm" />
+      <VaultSaveLoad storeName="docx-documents" :getData="getData" label="documento DOCX" @load="(data) => emit('load', data)" />
     </div>
-
-    <div class="w-px h-5 bg-neutral-300 dark:bg-neutral-700"></div>
-
-    <!-- Document name -->
-    <div class="flex items-center gap-2 min-w-0">
-      <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-      <span class="text-sm text-neutral-700 dark:text-neutral-300 truncate max-w-[200px]" :title="fileName">
-        {{ fileName }}
-      </span>
-      <span v-if="isReady" class="text-[10px] text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">
-        Listo
-      </span>
-    </div>
-
-    <div class="flex-1"></div>
-
-    <!-- Zoom controls -->
-    <div class="flex items-center gap-1 bg-neutral-200 dark:bg-neutral-800 rounded-lg px-1">
-      <button @click="emit('zoom-change', -10)" class="docx-btn-sm" title="Reducir zoom">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-        </svg>
-      </button>
-      <span class="text-xs text-neutral-600 dark:text-neutral-400 w-10 text-center">{{ zoom }}%</span>
-      <button @click="emit('zoom-change', 10)" class="docx-btn-sm" title="Aumentar zoom">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-      </button>
-    </div>
-
-    <div class="w-px h-5 bg-neutral-300 dark:bg-neutral-700"></div>
-
-    <!-- Mode toggle -->
-    <div class="flex items-center bg-neutral-200 dark:bg-neutral-800 rounded-lg p-0.5">
-      <button
-        @click="emit('mode-change', 'editing')"
-        class="px-2.5 py-1 text-xs rounded-md transition-colors"
-        :class="documentMode === 'editing' ? 'bg-emerald-600 text-white' : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'"
-        title="Modo edición"
-      >
-        Editar
-      </button>
-      <button
-        @click="emit('mode-change', 'viewing')"
-        class="px-2.5 py-1 text-xs rounded-md transition-colors"
-        :class="documentMode === 'viewing' ? 'bg-blue-600 text-white' : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'"
-        title="Modo vista"
-      >
-        Ver
-      </button>
-    </div>
-
-    <div class="w-px h-5 bg-neutral-300 dark:bg-neutral-700"></div>
-
-    <!-- Vault -->
-    <VaultSaveLoad
-      storeName="docx-documents"
-      :getData="getData"
-      label="documento DOCX"
-      @load="(data) => emit('load', data)"
-    />
-  </div>
+  </header>
 </template>

@@ -69,4 +69,9 @@ export const ICONS = {
   'zoom-in': 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5M11 8v6M8 11h6',
   'zoom-out': 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5M8 11h6',
   'select-all': 'M4 4h16v16H4zM8 12l3 3 5-6',
+  printer: 'M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z',
+  underline: 'M7 4v7a5 5 0 0 0 10 0V4M5 20h14',
+  'align-left': 'M4 6h16M4 10h10M4 14h16M4 18h10',
+  'align-center': 'M4 6h16M7 10h10M4 14h16M7 18h10',
+  'align-right': 'M4 6h16M10 10h10M4 14h16M10 18h10',
 }
