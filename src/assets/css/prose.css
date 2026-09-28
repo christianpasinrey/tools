@@ -1,0 +1,40 @@
+/* ============================================
+   EL TALLER — lectura de Markdown (.tb-prose)
+   Acento: color de la categoría (--cat)
+   ============================================ */
+.tb-prose { color: var(--tb-ink); font-size: 16px; line-height: 1.75; }
+.tb-prose > :first-child { margin-top: 0; }
+.tb-prose h1, .tb-prose h2, .tb-prose h3, .tb-prose h4, .tb-prose h5, .tb-prose h6 {
+  font-family: var(--font-display); font-weight: 750; letter-spacing: -.015em; line-height: 1.2;
+  margin: 1.6em 0 .55em; color: var(--tb-ink);
+}
+.tb-prose h1 { font-size: 2.1em; letter-spacing: -.025em; }
+.tb-prose h2 { font-size: 1.5em; padding-bottom: .25em; border-bottom: 1px solid var(--tb-line); }
+.tb-prose h3 { font-size: 1.2em; }
+.tb-prose p { margin: .9em 0; }
+.tb-prose a { color: var(--cat, var(--tb-accent)); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+.tb-prose strong { font-weight: 650; color: var(--tb-ink); }
+.tb-prose code { font-family: var(--font-code); font-size: .88em; background: var(--tb-surface-2); padding: .12em .4em; border-radius: 5px; }
+.tb-prose pre {
+  font-family: var(--font-code); font-size: .88em; line-height: 1.6;
+  background: color-mix(in srgb, var(--tb-surface-2) 55%, var(--tb-bg)); border: 1px solid var(--tb-line);
+  padding: 14px 16px; border-radius: 12px; overflow-x: auto; margin: 1.3em 0;
+}
+.tb-prose pre code { background: none; padding: 0; font-size: 1em; }
+.tb-prose blockquote {
+  margin: 1.3em 0; padding: .5em 1em; border-left: 3px solid var(--cat, var(--tb-accent));
+  background: color-mix(in srgb, var(--cat, var(--tb-accent)) 6%, transparent); border-radius: 0 10px 10px 0; color: var(--tb-muted);
+}
+.tb-prose blockquote p { margin: .3em 0; }
+.tb-prose ul, .tb-prose ol { padding-left: 1.4em; margin: .9em 0; }
+.tb-prose ul { list-style: disc; }
+.tb-prose ol { list-style: decimal; }
+.tb-prose li { margin: .3em 0; }
+.tb-prose li::marker { color: var(--tb-muted); }
+.tb-prose li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.4em; }
+.tb-prose input[type="checkbox"] { accent-color: var(--cat, var(--tb-accent)); margin-right: .5em; transform: translateY(1px); }
+.tb-prose hr { border: 0; border-top: 1px solid var(--tb-line-strong); margin: 2em 0; }
+.tb-prose table { width: 100%; border-collapse: collapse; margin: 1.3em 0; font-size: .95em; }
+.tb-prose th, .tb-prose td { border: 1px solid var(--tb-line); padding: 8px 12px; text-align: left; }
+.tb-prose th { background: var(--tb-surface-2); font-weight: 600; }
+.tb-prose img { max-width: 100%; border-radius: 10px; }
