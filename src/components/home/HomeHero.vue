@@ -6,7 +6,7 @@ import HeroCluster from './HeroCluster.vue'
 import { useTypewriter } from '@/composables/useTypewriter'
 import { useRecentTools } from '@/composables/useRecentTools'
 import { useDevice } from '@/composables/useDevice'
-import { getEntry, TASKS } from '@/config/catalog'
+import { getEntry } from '@/config/catalog'
 import { openTool } from '@/lib/openTool'
 
 const query = defineModel({ type: String, default: '' })
@@ -20,7 +20,6 @@ const { text: placeholder, start, stop } = useTypewriter(PHRASES)
 onMounted(start)
 
 const CHIPS = ['pdf-to-word', 'image-editor', 'color', 'unit-converter', 'pdf-to-jpg', 'todo'].map(getEntry)
-const count = TASKS.length
 
 function onFocus() { stop() }
 function onBlur() { if (!query.value) start() }
@@ -30,11 +29,7 @@ function onKeydown(e) { if (e.key === 'Enter') emit('submit') }
 <template>
   <section class="relative max-w-6xl mx-auto px-4 sm:px-6 pt-14 sm:pt-20 pb-10 grid lg:grid-cols-[1.25fr_1fr] gap-10 items-center">
     <div>
-      <p class="tb-rise inline-flex items-center gap-2 px-3 py-1 rounded-full border border-tb-line bg-tb-surface/70 font-code text-xs text-tb-muted">
-        <span class="w-1.5 h-1.5 rounded-full bg-cat-apps tb-pulse"></span>
-        {{ count }} herramientas · gratis · sin registro
-      </p>
-      <h1 class="tb-rise [animation-delay:80ms] mt-5 font-display font-extrabold tracking-[-0.035em] leading-[0.92] text-[clamp(2.9rem,7.5vw,6.2rem)] text-tb-ink">
+      <h1 class="tb-rise font-display font-extrabold tracking-[-0.035em] leading-[0.92] text-[clamp(2.9rem,7.5vw,6.2rem)] text-tb-ink">
         ¿Qué necesitas
         <span class="relative inline-block">
           hacer
