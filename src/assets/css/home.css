@@ -107,3 +107,8 @@
 .tb-drop-option:hover { border-color: var(--cat); background: color-mix(in srgb, var(--cat) 6%, var(--tb-surface)); transform: translateX(3px); }
 .tb-drop-option[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .tb-drop-frame, .tb-drop-icon { animation: none; } }
+
+/* ---------- Confianza ---------- */
+@supports (animation-timeline: view()) {
+  .tb-trust-item { animation: tb-rise linear both; animation-timeline: view(); animation-range: entry calc(var(--i) * 6%) entry calc(50% + var(--i) * 6%); }
+}
