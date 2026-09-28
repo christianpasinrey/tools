@@ -112,3 +112,4 @@
 @supports (animation-timeline: view()) {
   .tb-trust-item { animation: tb-rise linear both; animation-timeline: view(); animation-range: entry calc(var(--i) * 6%) entry calc(50% + var(--i) * 6%); }
 }
+.tb-chip[aria-disabled="true"] { opacity: .5; cursor: not-allowed; transform: none; }

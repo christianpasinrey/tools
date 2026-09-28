@@ -5,6 +5,7 @@ import Icon from '../icons/Icon.vue'
 import HeroCluster from './HeroCluster.vue'
 import { useTypewriter } from '@/composables/useTypewriter'
 import { useRecentTools } from '@/composables/useRecentTools'
+import { useDevice } from '@/composables/useDevice'
 import { getEntry, TASKS } from '@/config/catalog'
 import { openTool } from '@/lib/openTool'
 
@@ -12,6 +13,7 @@ const query = defineModel({ type: String, default: '' })
 const emit = defineEmits(['submit', 'pick-file'])
 const router = useRouter()
 const { recordVisit } = useRecentTools()
+const { isMobile } = useDevice()
 
 const PHRASES = ['pasar un PDF a Word…', 'recortar una foto…', 'convertir km a millas…', 'sacar el HEX de un color…', 'cortar un audio…', 'crear una factura…', 'probar una API…']
 const { text: placeholder, start, stop } = useTypewriter(PHRASES)
@@ -59,6 +61,7 @@ function onKeydown(e) { if (e.key === 'Enter') emit('submit') }
       <div class="tb-rise [animation-delay:320ms] mt-4 flex flex-wrap items-center gap-2">
         <button v-for="entry in CHIPS" :key="entry.id" type="button"
                 class="tb-chip" :style="{ '--cat': `var(--cat-${entry.category})` }"
+                :aria-disabled="isMobile && !entry.mobile" :title="isMobile && !entry.mobile ? 'Disponible en escritorio' : undefined"
                 @click="openTool(router, entry, { recordVisit })">{{ entry.name }}</button>
         <button type="button" class="tb-chip tb-chip-ghost" @click="emit('pick-file')">
           <Icon name="upload" :size="15" /> o suelta un archivo
