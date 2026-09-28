@@ -1,35 +1,5 @@
 /* Mobile Editors Shared Styles */
 
-/* Mobile sheet button */
-.mobile-sheet-btn {
-  @apply flex items-center justify-center px-4 py-2.5 rounded-lg text-sm;
-  @apply text-neutral-400 bg-neutral-800 transition-all;
-  touch-action: manipulation;
-}
-
-.mobile-sheet-btn:active:not(:disabled) {
-  @apply bg-neutral-700 text-white;
-}
-
-.mobile-sheet-btn:disabled {
-  @apply opacity-40;
-}
-
-/* Mobile sheet button small */
-.mobile-sheet-btn-sm {
-  @apply w-9 h-9 flex items-center justify-center rounded-md;
-  @apply text-neutral-400 bg-neutral-800 transition-all;
-  touch-action: manipulation;
-}
-
-.mobile-sheet-btn-sm:active:not(:disabled) {
-  @apply bg-neutral-700 text-white;
-}
-
-.mobile-sheet-btn-sm:disabled {
-  @apply opacity-40;
-}
-
 /* Mobile DOCX Editor specific */
 .mobile-docx-editor .mobile-superdoc-container {
   @apply min-h-full p-2;

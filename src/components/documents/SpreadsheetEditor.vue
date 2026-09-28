@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { useSpreadsheet, TEXT_COLORS, BG_COLORS, BORDER_PRESETS, FONT_SIZES, NUMBER_FORMATS, TABLE_PRESETS, isDark, toggleDark } from '../../composables/useSpreadsheet'
+import { useSpreadsheet, TEXT_COLORS, BG_COLORS, BORDER_PRESETS, FONT_SIZES, NUMBER_FORMATS, TABLE_PRESETS } from '../../composables/useSpreadsheet'
+import TbToolbarGroup from '../ui/TbToolbarGroup.vue'
+import TbIconButton from '../ui/TbIconButton.vue'
+import TbMenu from '../ui/TbMenu.vue'
 import VaultSaveLoad from '../common/VaultSaveLoad.vue'
 
 // Dropdown state for toolbar menus
@@ -28,14 +31,12 @@ const toggleTableDropdown = () => {
   showTableDropdown.value = next
 }
 
-const props = defineProps({
-  themeColor: {
-    type: String,
-    default: '#22c55e'
-  }
-})
-
 const spreadsheet = useSpreadsheet()
+
+const exportItems = [
+  { label: 'Exportar .xlsx', icon: 'table', action: () => spreadsheet.exportXlsx() },
+  { label: 'Exportar .csv', icon: 'file', action: () => spreadsheet.exportCsv() }
+]
 const fileInputRef = ref(null)
 const editTextareaRef = ref(null)
 const gridContainerRef = ref(null)
@@ -479,75 +480,29 @@ const handleContextAction = (action) => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col" :class="isDark ? 'bg-neutral-950' : 'bg-gray-100'">
+  <div class="h-full flex flex-col bg-tb-bg">
     <!-- Toolbar -->
-    <div class="h-11 border-b flex items-center px-2 gap-1 shrink-0" :class="isDark ? 'bg-neutral-900 border-neutral-800' : 'bg-white border-gray-200'">
-      <!-- File actions -->
-      <div class="flex items-center gap-1 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
-        <button
-          @click="newDocument"
-          class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
-          :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-600 hover:bg-gray-100'"
-          title="Nuevo documento"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          <span>Nuevo</span>
-        </button>
-
-        <button
-          @click="openFilePicker"
-          class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
-          :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-600 hover:bg-gray-100'"
-          title="Abrir archivo"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
-          </svg>
-          <span>Abrir</span>
-        </button>
-      </div>
-
-      <!-- Undo/Redo -->
-      <div class="flex items-center gap-1 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
-        <button
-          @click="spreadsheet.undo"
-          :disabled="!spreadsheet.canUndo.value"
-          class="p-1.5 rounded transition-colors"
-          :class="spreadsheet.canUndo.value
-            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
-          title="Deshacer (Ctrl+Z)"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-          </svg>
-        </button>
-        <button
-          @click="spreadsheet.redo"
-          :disabled="!spreadsheet.canRedo.value"
-          class="p-1.5 rounded transition-colors"
-          :class="spreadsheet.canRedo.value
-            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
-          title="Rehacer (Ctrl+Y)"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"/>
-          </svg>
-        </button>
-      </div>
+    <div class="h-12 border-b flex items-center px-2 gap-1 shrink-0 bg-tb-surface border-tb-line" role="toolbar" aria-label="Hoja de cálculo">
+      <!-- Archivo e historial -->
+      <TbToolbarGroup label="Archivo">
+        <TbIconButton icon="file-plus" label="Nuevo libro" @click="newDocument" />
+        <TbIconButton icon="folder" label="Abrir .xlsx o .csv" @click="openFilePicker" />
+        <TbMenu label="Exportar" icon="download" icon-only :items="exportItems" />
+      </TbToolbarGroup>
+      <TbToolbarGroup label="Historial" class="pr-2 border-r border-tb-line">
+        <TbIconButton icon="undo" label="Deshacer (Ctrl+Z)" :disabled="!spreadsheet.canUndo.value" @click="spreadsheet.undo" />
+        <TbIconButton icon="redo" label="Rehacer (Ctrl+Y)" :disabled="!spreadsheet.canRedo.value" @click="spreadsheet.redo" />
+      </TbToolbarGroup>
 
       <!-- Clipboard -->
-      <div class="flex items-center gap-1 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div class="flex items-center gap-1 pr-2 border-r border-tb-line">
         <button
           @click="spreadsheet.copyCell"
           :disabled="!spreadsheet.selectedCell.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.selectedCell.value
-            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'
+            : 'text-tb-muted opacity-40 cursor-not-allowed'"
           title="Copiar (Ctrl+C)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -559,8 +514,8 @@ const handleContextAction = (action) => {
           :disabled="!spreadsheet.selectedCell.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.selectedCell.value
-            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'
+            : 'text-tb-muted opacity-40 cursor-not-allowed'"
           title="Cortar (Ctrl+X)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -572,8 +527,8 @@ const handleContextAction = (action) => {
           :disabled="!spreadsheet.selectedCell.value"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.selectedCell.value
-            ? (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-300 dark:text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'
+            : 'text-tb-muted opacity-40 cursor-not-allowed'"
           title="Pegar (Ctrl+V)"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -583,11 +538,11 @@ const handleContextAction = (action) => {
       </div>
 
       <!-- Format - Font Size -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-1 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-1 pr-2 border-r relative border-tb-line">
         <button
           @click.stop="showFontSizeDropdown = !showFontSizeDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
-          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors min-w-[48px] justify-between"
-          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors min-w-[48px] justify-between text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2"
+         
           title="Tamaño de fuente"
         >
           <span>{{ spreadsheet.currentCellStyle.value.fontSize || 12 }}</span>
@@ -596,8 +551,8 @@ const handleContextAction = (action) => {
         <!-- Font Size Dropdown -->
         <div
           v-if="showFontSizeDropdown"
-          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto border bg-tb-surface border-tb-line"
+         
           @click.stop
         >
           <button
@@ -606,21 +561,21 @@ const handleContextAction = (action) => {
             @click="spreadsheet.setFontSize(size); showFontSizeDropdown = false"
             class="w-full px-4 py-1 text-xs text-left hover:bg-opacity-10"
             :class="[
-              isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100',
-              spreadsheet.currentCellStyle.value.fontSize === size ? (isDark ? 'bg-neutral-800' : 'bg-gray-100') : ''
+              'text-tb-ink hover:bg-tb-surface-2',
+              spreadsheet.currentCellStyle.value.fontSize === size ? 'bg-tb-surface-2' : ''
             ]"
           >{{ size }}</button>
         </div>
       </div>
 
       <!-- Format - Text Style -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r border-tb-line">
         <button
           @click="spreadsheet.toggleCellStyle('bold')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.bold
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Negrita (Ctrl+B)"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6V4zm0 8h9a4 4 0 014 4 4 4 0 01-4 4H6v-8z"/></svg>
@@ -629,8 +584,8 @@ const handleContextAction = (action) => {
           @click="spreadsheet.toggleCellStyle('italic')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.italic
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Cursiva (Ctrl+I)"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4h4l-2 16h-4l2-16z"/></svg>
@@ -639,8 +594,8 @@ const handleContextAction = (action) => {
           @click="spreadsheet.toggleCellStyle('underline')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.underline
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Subrayado (Ctrl+U)"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 21h12v-2H6v2zM12 17c3.31 0 6-2.69 6-6V3h-2.5v8c0 1.93-1.57 3.5-3.5 3.5S8.5 12.93 8.5 11V3H6v8c0 3.31 2.69 6 6 6z"/></svg>
@@ -649,8 +604,8 @@ const handleContextAction = (action) => {
           @click="spreadsheet.toggleCellStyle('strikethrough')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.strikethrough
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Tachado"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 19h4v-3h-4v3zM5 4v3h5v3h4V7h5V4H5zM3 14h18v-2H3v2z"/></svg>
@@ -658,22 +613,22 @@ const handleContextAction = (action) => {
       </div>
 
       <!-- Format - Colors -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative border-tb-line">
         <!-- Text Color -->
         <button
           @click.stop="showTextColorDropdown = !showTextColorDropdown; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
-          class="p-1.5 rounded transition-colors flex flex-col items-center"
-          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          class="p-1.5 rounded transition-colors flex flex-col items-center text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2"
+         
           title="Color de texto"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11 2L5.5 16h2.25l1.12-3h6.25l1.12 3h2.25L13 2h-2zm-1.38 9L12 4.67 14.38 11H9.62z"/></svg>
-          <div class="w-4 h-1 rounded-sm mt-0.5" :style="{ backgroundColor: spreadsheet.currentCellStyle.value.textColor || (isDark ? '#d4d4d4' : '#171717') }"></div>
+          <div class="w-4 h-1 rounded-sm mt-0.5" :style="{ backgroundColor: spreadsheet.currentCellStyle.value.textColor || 'var(--tb-ink)' }"></div>
         </button>
         <!-- Text Color Dropdown -->
         <div
           v-if="showTextColorDropdown"
-          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border bg-tb-surface border-tb-line"
+         
           @click.stop
         >
           <div class="grid grid-cols-6 gap-1">
@@ -681,8 +636,8 @@ const handleContextAction = (action) => {
               v-for="color in TEXT_COLORS"
               :key="'tc-' + color"
               @click="spreadsheet.setCellStyle('textColor', color); showTextColorDropdown = false"
-              class="w-6 h-6 rounded border transition-transform hover:scale-110"
-              :class="isDark ? 'border-neutral-600' : 'border-gray-300'"
+              class="w-6 h-6 rounded border transition-transform hover:scale-110 border-tb-line-strong"
+             
               :style="{ backgroundColor: color }"
             />
           </div>
@@ -691,18 +646,18 @@ const handleContextAction = (action) => {
         <!-- Background Color -->
         <button
           @click.stop="showBgColorDropdown = !showBgColorDropdown; showTextColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
-          class="p-1.5 rounded transition-colors flex flex-col items-center"
-          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          class="p-1.5 rounded transition-colors flex flex-col items-center text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2"
+         
           title="Color de fondo"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16.56 8.94L7.62 0 6.21 1.41l2.38 2.38-5.15 5.15c-.59.59-.59 1.54 0 2.12l5.5 5.5c.29.29.68.44 1.06.44s.77-.15 1.06-.44l5.5-5.5c.59-.58.59-1.53 0-2.12zM5.21 10L10 5.21 14.79 10H5.21zM19 11.5s-2 2.17-2 3.5c0 1.1.9 2 2 2s2-.9 2-2c0-1.33-2-3.5-2-3.5z"/></svg>
-          <div class="w-4 h-1 rounded-sm mt-0.5" :style="{ backgroundColor: spreadsheet.currentCellStyle.value.bgColor || 'transparent' }" :class="!spreadsheet.currentCellStyle.value.bgColor ? (isDark ? 'border border-neutral-600' : 'border border-gray-300') : ''"></div>
+          <div class="w-4 h-1 rounded-sm mt-0.5" :style="{ backgroundColor: spreadsheet.currentCellStyle.value.bgColor || 'transparent' }" :class="!spreadsheet.currentCellStyle.value.bgColor ? 'border border-tb-line-strong' : ''"></div>
         </button>
         <!-- Background Color Dropdown -->
         <div
           v-if="showBgColorDropdown"
-          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border bg-tb-surface border-tb-line"
+         
           @click.stop
         >
           <div class="grid grid-cols-5 gap-1">
@@ -710,31 +665,31 @@ const handleContextAction = (action) => {
               v-for="color in BG_COLORS"
               :key="'bg-' + color"
               @click="spreadsheet.setCellStyle('bgColor', color); showBgColorDropdown = false"
-              class="w-6 h-6 rounded border transition-transform hover:scale-110"
-              :class="isDark ? 'border-neutral-600' : 'border-gray-300'"
+              class="w-6 h-6 rounded border transition-transform hover:scale-110 border-tb-line-strong"
+             
               :style="{ backgroundColor: color }"
             />
             <button
               @click="spreadsheet.setCellStyle('bgColor', null); showBgColorDropdown = false"
-              class="w-6 h-6 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-6 h-6 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Sin fondo"
             >
-              <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Format - Alignment -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r border-tb-line">
         <!-- Horizontal Alignment -->
         <button
           @click="spreadsheet.setAlignment('horizontal', 'left')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignH === 'left'
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Alinear izquierda"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M15 15H3v2h12v-2zm0-8H3v2h12V7zM3 13h18v-2H3v2zm0 8h18v-2H3v2zM3 3v2h18V3H3z"/></svg>
@@ -743,8 +698,8 @@ const handleContextAction = (action) => {
           @click="spreadsheet.setAlignment('horizontal', 'center')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignH === 'center'
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Centrar"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M7 15v2h10v-2H7zm-4 6h18v-2H3v2zm0-8h18v-2H3v2zm4-6v2h10V7H7zM3 3v2h18V3H3z"/></svg>
@@ -753,20 +708,20 @@ const handleContextAction = (action) => {
           @click="spreadsheet.setAlignment('horizontal', 'right')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignH === 'right'
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Alinear derecha"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 21h18v-2H3v2zm6-4h12v-2H9v2zm-6-4h18v-2H3v2zm6-4h12V7H9v2zM3 3v2h18V3H3z"/></svg>
         </button>
-        <div class="w-px h-5 mx-0.5" :class="isDark ? 'bg-neutral-700' : 'bg-gray-200'"></div>
+        <div class="w-px h-5 mx-0.5 bg-tb-line"></div>
         <!-- Vertical Alignment -->
         <button
           @click="spreadsheet.setAlignment('vertical', 'top')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignV === 'top'
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Alinear arriba"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 11h3v10h2V11h3l-4-4-4 4zM4 3v2h16V3H4z"/></svg>
@@ -775,8 +730,8 @@ const handleContextAction = (action) => {
           @click="spreadsheet.setAlignment('vertical', 'middle')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignV === 'middle'
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Centrar verticalmente"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"/></svg>
@@ -785,8 +740,8 @@ const handleContextAction = (action) => {
           @click="spreadsheet.setAlignment('vertical', 'bottom')"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.alignV === 'bottom'
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Alinear abajo"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z"/></svg>
@@ -794,21 +749,21 @@ const handleContextAction = (action) => {
       </div>
 
       <!-- Format - Wrap & Borders -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative border-tb-line">
         <button
           @click="spreadsheet.toggleWrapText()"
           class="p-1.5 rounded transition-colors"
           :class="spreadsheet.currentCellStyle.value.wrapText
-            ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           title="Ajustar texto"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4 19h6v-2H4v2zM20 5H4v2h16V5zm-3 6H4v2h13.25c1.1 0 2 .9 2 2s-.9 2-2 2H15v-2l-3 3 3 3v-2h2c2.21 0 4-1.79 4-4s-1.79-4-4-4z"/></svg>
         </button>
         <button
           @click.stop="showBorderDropdown = !showBorderDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showNumberFormatDropdown = false; showRowColDropdown = false"
-          class="p-1.5 rounded transition-colors"
-          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          class="p-1.5 rounded transition-colors text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2"
+         
           title="Bordes"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3v18h18V3H3zm8 16H5v-6h6v6zm0-8H5V5h6v6zm8 8h-6v-6h6v6zm0-8h-6V5h6v6z"/></svg>
@@ -816,61 +771,61 @@ const handleContextAction = (action) => {
         <!-- Borders Dropdown -->
         <div
           v-if="showBorderDropdown"
-          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="absolute top-full left-0 mt-1 p-2 rounded-lg shadow-xl z-50 border bg-tb-surface border-tb-line"
+         
           @click.stop
         >
           <div class="flex gap-1">
             <button
               @click="spreadsheet.setBorders('none'); showBorderDropdown = false"
-              class="w-8 h-8 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-8 h-8 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Sin borde"
             >
-              <svg class="w-5 h-5" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              <svg class="w-5 h-5 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
             <button
               @click="spreadsheet.setBorders('all'); showBorderDropdown = false"
-              class="w-8 h-8 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-8 h-8 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Todos los bordes"
             >
-              <div class="w-4 h-4 border-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-4 h-4 border-2 border-tb-muted"></div>
             </button>
             <button
               @click="spreadsheet.setBorders('bottom'); showBorderDropdown = false"
-              class="w-8 h-8 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-8 h-8 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Borde inferior"
             >
-              <div class="w-4 h-4 border-b-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-4 h-4 border-b-2 border-tb-muted"></div>
             </button>
             <button
               @click="spreadsheet.setBorders('top-bottom'); showBorderDropdown = false"
-              class="w-8 h-8 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-8 h-8 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Bordes arriba/abajo"
             >
-              <div class="w-4 h-4 border-t-2 border-b-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-4 h-4 border-t-2 border-b-2 border-tb-muted"></div>
             </button>
             <button
               @click="spreadsheet.setBorders('left-right'); showBorderDropdown = false"
-              class="w-8 h-8 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-8 h-8 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Bordes izq/der"
             >
-              <div class="w-4 h-4 border-l-2 border-r-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-4 h-4 border-l-2 border-r-2 border-tb-muted"></div>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Format - Number Format -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative border-tb-line">
         <button
           @click.stop="showNumberFormatDropdown = !showNumberFormatDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showRowColDropdown = false"
-          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
-          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2"
+         
           title="Formato de número"
         >
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17h2v-7h-2v7zm12-7v7h2v-4h2v-3h-4zm-6 7h2V7H7v2h2v8zM3 9h4V7H3v2z"/><path d="M17 7v2h2v-2h-2z"/></svg>
@@ -880,26 +835,26 @@ const handleContextAction = (action) => {
         <!-- Number Format Dropdown -->
         <div
           v-if="showNumberFormatDropdown"
-          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[140px] border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[140px] border bg-tb-surface border-tb-line"
+         
           @click.stop
         >
           <button
             v-for="fmt in NUMBER_FORMATS"
             :key="fmt.id"
             @click="spreadsheet.setNumberFormat(fmt.format); showNumberFormatDropdown = false"
-            class="w-full px-4 py-1.5 text-xs text-left"
-            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+            class="w-full px-4 py-1.5 text-xs text-left text-tb-ink hover:bg-tb-surface-2"
+           
           >{{ fmt.name }}</button>
         </div>
       </div>
 
       <!-- Row/Column Operations -->
-      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-0.5 pr-2 border-r relative border-tb-line">
         <button
           @click.stop="showRowColDropdown = !showRowColDropdown; showTextColorDropdown = false; showBgColorDropdown = false; showFontSizeDropdown = false; showBorderDropdown = false; showNumberFormatDropdown = false"
-          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
-          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+          class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2"
+         
           title="Insertar/Eliminar filas y columnas"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18M10 3v18M14 3v18"/></svg>
@@ -908,57 +863,57 @@ const handleContextAction = (action) => {
         <!-- Row/Column Dropdown -->
         <div
           v-if="showRowColDropdown"
-          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[180px] border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[180px] border bg-tb-surface border-tb-line"
+         
           @click.stop
         >
-          <div class="px-3 py-1 text-[10px] uppercase font-medium" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Filas</div>
+          <div class="px-3 py-1 text-[10px] uppercase font-medium text-tb-muted">Filas</div>
           <button
             @click="spreadsheet.insertRowAbove(); showRowColDropdown = false"
-            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
-            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2 text-tb-ink hover:bg-tb-surface-2"
+           
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 0l-4 4m4-4l4 4"/></svg>
             Insertar fila arriba
           </button>
           <button
             @click="spreadsheet.insertRowBelow(); showRowColDropdown = false"
-            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
-            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2 text-tb-ink hover:bg-tb-surface-2"
+           
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 5v14m0 0l4-4m-4 4l-4-4"/></svg>
             Insertar fila abajo
           </button>
           <button
             @click="spreadsheet.deleteRow(); showRowColDropdown = false"
-            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
-            :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2 text-red-700 dark:text-red-300 hover:bg-tb-surface-2"
+           
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"/></svg>
             Eliminar fila
           </button>
-          <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
-          <div class="px-3 py-1 text-[10px] uppercase font-medium" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Columnas</div>
+          <div class="my-1 border-t border-tb-line"></div>
+          <div class="px-3 py-1 text-[10px] uppercase font-medium text-tb-muted">Columnas</div>
           <button
             @click="spreadsheet.insertColumnLeft(); showRowColDropdown = false"
-            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
-            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2 text-tb-ink hover:bg-tb-surface-2"
+           
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 12H5m0 0l4-4m-4 4l4 4"/></svg>
             Insertar columna izquierda
           </button>
           <button
             @click="spreadsheet.insertColumnRight(); showRowColDropdown = false"
-            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
-            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2 text-tb-ink hover:bg-tb-surface-2"
+           
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14m0 0l-4-4m4 4l-4 4"/></svg>
             Insertar columna derecha
           </button>
           <button
             @click="spreadsheet.deleteColumn(); showRowColDropdown = false"
-            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2"
-            :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'"
+            class="w-full px-4 py-1.5 text-xs text-left flex items-center gap-2 text-red-700 dark:text-red-300 hover:bg-tb-surface-2"
+           
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16"/></svg>
             Eliminar columna
@@ -967,15 +922,15 @@ const handleContextAction = (action) => {
       </div>
 
       <!-- Tabla y Filtros -->
-      <div class="flex items-center gap-0.5 pr-2 border-r relative" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div class="flex items-center gap-0.5 pr-2 border-r relative border-tb-line">
         <!-- Formatear como tabla -->
         <button
           @click.stop="toggleTableDropdown"
           :disabled="!spreadsheet.hasMultiSelection.value"
           class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
           :class="spreadsheet.hasMultiSelection.value
-            ? (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')
-            : (isDark ? 'text-neutral-700 cursor-not-allowed' : 'text-gray-300 cursor-not-allowed')"
+            ? 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'
+            : 'text-tb-muted opacity-40 cursor-not-allowed'"
           :title="spreadsheet.hasMultiSelection.value ? 'Formatear selección como tabla' : 'Selecciona un rango (cabecera + filas) para formatear como tabla'"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M3 14h18M9 4v16M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6z"/></svg>
@@ -985,26 +940,26 @@ const handleContextAction = (action) => {
         <!-- Table Presets Dropdown -->
         <div
           v-if="showTableDropdown"
-          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[170px] border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="absolute top-full left-0 mt-1 py-1 rounded-lg shadow-xl z-50 min-w-[170px] border bg-tb-surface border-tb-line"
+         
           @click.stop
         >
-          <div class="px-3 py-1 text-[10px] uppercase font-medium" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Estilo de tabla</div>
+          <div class="px-3 py-1 text-[10px] uppercase font-medium text-tb-muted">Estilo de tabla</div>
           <button
             v-for="preset in TABLE_PRESETS"
             :key="preset.id"
             @click="spreadsheet.formatAsTable(preset.id); showTableDropdown = false"
-            class="w-full px-3 py-1.5 text-xs text-left flex items-center gap-2.5"
-            :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+            class="w-full px-3 py-1.5 text-xs text-left flex items-center gap-2.5 text-tb-ink hover:bg-tb-surface-2"
+           
           >
-            <span class="flex flex-col w-7 rounded-sm overflow-hidden border" :class="isDark ? 'border-neutral-600' : 'border-gray-300'">
+            <span class="flex flex-col w-7 rounded-sm overflow-hidden border border-tb-line-strong">
               <span class="h-1.5" :style="{ backgroundColor: preset.header }"></span>
-              <span class="h-1" :class="isDark ? 'bg-neutral-100' : 'bg-white'"></span>
+              <span class="h-1 bg-white ring-1 ring-tb-line-strong"></span>
               <span class="h-1" :style="{ backgroundColor: preset.zebra }"></span>
             </span>
             {{ preset.name }}
           </button>
-          <div class="px-3 pt-1 pb-0.5 text-[10px]" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">La 1ª fila del rango será la cabecera</div>
+          <div class="px-3 pt-1 pb-0.5 text-[10px] text-tb-muted">La 1ª fila del rango será la cabecera</div>
         </div>
 
         <!-- Filtros -->
@@ -1012,8 +967,8 @@ const handleContextAction = (action) => {
           @click="spreadsheet.toggleFilters()"
           class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors relative"
           :class="spreadsheet.filtersEnabled.value
-            ? (isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-700')
-            : (isDark ? 'text-neutral-400 hover:text-white hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100')"
+            ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+            : 'text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2'"
           :title="spreadsheet.filtersEnabled.value ? 'Ocultar filtros' : 'Mostrar filtros por columna (la fila 1 se trata como cabecera)'"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
@@ -1021,43 +976,17 @@ const handleContextAction = (action) => {
         </button>
       </div>
 
-      <!-- Export -->
-      <div class="flex items-center gap-1 pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
-        <button
-          @click="spreadsheet.exportXlsx"
-          class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
-          :style="{ backgroundColor: themeColor + '20', color: themeColor }"
-          title="Exportar como XLSX"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          <span>XLSX</span>
-        </button>
-        <button
-          @click="spreadsheet.exportCsv"
-          class="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors"
-          :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
-          title="Exportar como CSV"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          <span>CSV</span>
-        </button>
-      </div>
-
       <!-- Vault -->
-      <div class="flex items-center pr-2 border-r" :class="isDark ? 'border-neutral-800' : 'border-gray-200'">
+      <div class="flex items-center pr-2 border-r border-tb-line">
         <VaultSaveLoad storeName="spreadsheet-workbooks" :getData="getWorkbookData" label="workbook" @load="loadWorkbook" />
       </div>
 
       <!-- Cell reference -->
       <div v-if="spreadsheet.selectedCell.value" class="flex items-center gap-2 px-2 text-xs">
-        <span class="font-mono px-2 py-1 rounded" :class="isDark ? 'text-neutral-500 bg-neutral-800' : 'text-gray-600 bg-gray-100'">
+        <span class="font-mono px-2 py-1 rounded text-tb-muted bg-tb-surface-2">
           {{ spreadsheet.currentCellRef.value }}
         </span>
-        <span class="truncate max-w-[200px]" :class="isDark ? 'text-neutral-400' : 'text-gray-500'">
+        <span class="truncate max-w-[200px] text-tb-muted">
           {{ spreadsheet.currentCellValue.value }}
         </span>
       </div>
@@ -1065,11 +994,11 @@ const handleContextAction = (action) => {
       <!-- Estadísticas de la selección (como Excel) -->
       <div
         v-if="spreadsheet.selectionStats.value"
-        class="flex items-center gap-2.5 px-2 text-[10px] font-mono"
-        :class="isDark ? 'text-neutral-400' : 'text-gray-500'"
+        class="flex items-center gap-2.5 px-2 text-[10px] font-mono text-tb-muted"
+       
       >
         <span v-if="spreadsheet.selectionStats.value.sum !== null">
-          Suma: <span class="font-semibold" :style="{ color: themeColor }">{{ formatStat(spreadsheet.selectionStats.value.sum) }}</span>
+          Suma: <span class="font-semibold" style="color: var(--cat)">{{ formatStat(spreadsheet.selectionStats.value.sum) }}</span>
         </span>
         <span v-if="spreadsheet.selectionStats.value.avg !== null">
           Media: <span class="font-semibold">{{ formatStat(spreadsheet.selectionStats.value.avg) }}</span>
@@ -1080,8 +1009,8 @@ const handleContextAction = (action) => {
       <div class="flex-1"></div>
 
       <!-- Dimensions info -->
-      <div class="flex items-center gap-2 px-2 text-[10px]" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">
-        <span v-if="spreadsheet.hasActiveFilters.value" :class="isDark ? 'text-emerald-400' : 'text-emerald-600'">
+      <div class="flex items-center gap-2 px-2 text-[10px] text-tb-muted">
+        <span class="text-[var(--cat)]" v-if="spreadsheet.hasActiveFilters.value">
           {{ spreadsheet.visibleRowCount.value }} de
         </span>
         <span>{{ spreadsheet.data.value.length }} filas</span>
@@ -1089,46 +1018,32 @@ const handleContextAction = (action) => {
         <span>{{ spreadsheet.data.value[0]?.length || 0 }} cols</span>
         <button
           @click="spreadsheet.addColumns(26)"
-          class="px-1.5 py-0.5 rounded text-[10px] transition-colors"
-          :class="isDark ? 'hover:bg-neutral-800 hover:text-neutral-400' : 'hover:bg-gray-100 hover:text-gray-600'"
+          class="px-1.5 py-0.5 rounded text-[10px] transition-colors hover:bg-tb-surface-2 hover:text-tb-ink"
+         
           title="Añadir 26 columnas (A-Z)"
         >
           +cols
         </button>
       </div>
 
-      <div v-if="spreadsheet.fileName.value" class="px-3 text-xs truncate max-w-xs" :class="isDark ? 'text-neutral-500' : 'text-gray-500'">
+      <div v-if="spreadsheet.fileName.value" class="px-3 text-xs truncate max-w-xs text-tb-muted">
         {{ spreadsheet.fileName.value }}
       </div>
 
-      <!-- Theme Toggle -->
-      <button
-        @click="toggleDark()"
-        class="p-1.5 rounded transition-colors"
-        :class="isDark ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:text-white dark:hover:bg-neutral-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
-        :title="isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
-      >
-        <svg v-if="isDark" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-        </svg>
-        <svg v-else class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-        </svg>
-      </button>
     </div>
 
     <!-- Formula Bar -->
-    <div class="h-8 border-b flex items-center px-2 gap-2 shrink-0" :class="isDark ? 'bg-neutral-900/50 border-neutral-800' : 'bg-gray-50 border-gray-200'">
+    <div class="h-8 border-b flex items-center px-2 gap-2 shrink-0 bg-tb-surface border-tb-line">
       <!-- Cell Reference -->
       <div
-        class="w-16 h-6 flex items-center justify-center text-xs font-mono font-medium rounded border"
-        :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-300' : 'bg-white border-gray-300 text-gray-700'"
+        class="w-16 h-6 flex items-center justify-center text-xs font-mono font-medium rounded border bg-tb-surface border-tb-line-strong text-tb-ink"
+       
       >
         {{ spreadsheet.currentCellRef.value || 'A1' }}
       </div>
 
       <!-- Function icon -->
-      <div class="flex items-center justify-center w-6 h-6" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">
+      <div class="flex items-center justify-center w-6 h-6 text-tb-muted">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.871 4A17.926 17.926 0 003 12c0 2.874.673 5.59 1.871 8m14.258 0A17.926 17.926 0 0021 12c0-2.874-.673-5.59-1.871-8M9 9h1.246a1 1 0 01.961.725l1.586 5.55a1 1 0 00.961.725H15m-6 4h6"/>
         </svg>
@@ -1141,12 +1056,10 @@ const handleContextAction = (action) => {
         type="text"
         class="flex-1 h-6 px-2 text-sm font-mono rounded border outline-none transition-colors"
         :class="[
-          isDark
-            ? 'bg-neutral-800 border-neutral-700 text-neutral-200 focus:border-neutral-500 placeholder-neutral-600'
-            : 'bg-white border-gray-300 text-gray-800 focus:border-gray-400 placeholder-gray-400',
+          'bg-tb-surface border-tb-line-strong focus:border-[var(--cat)] placeholder:text-tb-muted',
           spreadsheet.hasFormula(spreadsheet.selectedCell.value?.row, spreadsheet.selectedCell.value?.col)
-            ? 'text-blue-500'
-            : ''
+            ? 'text-[var(--cat)]'
+            : 'text-tb-ink'
         ]"
         :placeholder="spreadsheet.selectedCell.value ? 'Introduce valor o fórmula (=SUMA, =SUM, =SI, =PROMEDIO...)' : 'Selecciona una celda'"
         :disabled="!spreadsheet.selectedCell.value"
@@ -1158,20 +1071,20 @@ const handleContextAction = (action) => {
       <!-- Formula indicator -->
       <div
         v-if="spreadsheet.selectedCell.value && spreadsheet.hasFormula(spreadsheet.selectedCell.value.row, spreadsheet.selectedCell.value.col)"
-        class="px-2 py-0.5 text-[10px] font-medium rounded"
-        :class="isDark ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-600'"
+        class="px-2 py-0.5 text-[10px] font-medium rounded bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]"
+       
       >
         fx
       </div>
     </div>
 
     <!-- Sheet Tabs -->
-    <div class="flex items-center border-b shrink-0" :class="isDark ? 'bg-neutral-900/50 border-neutral-800' : 'bg-gray-50 border-gray-200'">
+    <div class="flex items-center border-b shrink-0 bg-tb-surface border-tb-line">
       <!-- Add Sheet Button -->
       <button
         @click="spreadsheet.addSheet()"
-        class="w-8 h-8 flex items-center justify-center transition-colors shrink-0"
-        :class="isDark ? 'text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'"
+        class="w-8 h-8 flex items-center justify-center transition-colors shrink-0 text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2"
+       
         title="Añadir hoja"
       >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1189,16 +1102,16 @@ const handleContextAction = (action) => {
           @contextmenu.prevent="openSheetContextMenu($event, index)"
           class="px-4 py-2 text-xs font-medium transition-colors whitespace-nowrap relative group"
           :class="spreadsheet.activeSheetIndex.value === index
-            ? (isDark ? 'text-white bg-neutral-800' : 'text-gray-900 bg-white')
-            : (isDark ? 'text-neutral-500 hover:text-neutral-300' : 'text-gray-500 hover:text-gray-700')"
+            ? 'text-tb-ink bg-tb-surface'
+            : 'text-tb-muted hover:text-tb-ink'"
         >
           <!-- Editing mode -->
           <input
             v-if="renamingSheetIndex === index"
             v-model="renamingSheetName"
             type="text"
-            class="w-20 px-1 text-xs bg-transparent border-b outline-none"
-            :class="isDark ? 'border-neutral-500 text-white' : 'border-gray-400 text-gray-900'"
+            class="w-20 px-1 text-xs bg-transparent border-b outline-none border-tb-line-strong text-tb-ink"
+           
             @blur="finishRenameSheet"
             @keydown.enter="finishRenameSheet"
             @keydown.escape="cancelRenameSheet"
@@ -1217,7 +1130,7 @@ const handleContextAction = (action) => {
           <div
             v-if="spreadsheet.activeSheetIndex.value === index"
             class="absolute bottom-0 left-0 right-0 h-0.5"
-            :style="{ backgroundColor: themeColor }"
+            style="background-color: var(--cat)"
           />
         </button>
       </div>
@@ -1227,15 +1140,15 @@ const handleContextAction = (action) => {
     <Teleport to="body">
       <div
         v-if="sheetContextMenu.visible"
-        class="fixed rounded-lg shadow-xl py-1 z-[100] min-w-[160px] border"
-        :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+        class="fixed rounded-lg shadow-xl py-1 z-[100] min-w-[160px] border bg-tb-surface border-tb-line"
+       
         :style="{ left: sheetContextMenu.x + 'px', top: sheetContextMenu.y + 'px' }"
         @click.stop
       >
         <button
           @click="startRenameSheet(sheetContextMenu.index); closeSheetContextMenu()"
-          class="w-full px-4 py-2 text-xs text-left flex items-center gap-2"
-          :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          class="w-full px-4 py-2 text-xs text-left flex items-center gap-2 text-tb-ink hover:bg-tb-surface-2"
+         
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
@@ -1244,20 +1157,20 @@ const handleContextAction = (action) => {
         </button>
         <button
           @click="spreadsheet.duplicateSheet(sheetContextMenu.index); closeSheetContextMenu()"
-          class="w-full px-4 py-2 text-xs text-left flex items-center gap-2"
-          :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'"
+          class="w-full px-4 py-2 text-xs text-left flex items-center gap-2 text-tb-ink hover:bg-tb-surface-2"
+         
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
           </svg>
           Duplicar
         </button>
-        <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
+        <div class="my-1 border-t border-tb-line"></div>
         <button
           v-if="spreadsheet.sheets.value.length > 1"
           @click="confirmDeleteSheet(sheetContextMenu.index); closeSheetContextMenu()"
           class="w-full px-4 py-2 text-xs text-left flex items-center gap-2"
-          :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'"
+          :class="'text-red-700 dark:text-red-300 hover:bg-tb-surface-2'"
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
@@ -1276,35 +1189,35 @@ const handleContextAction = (action) => {
       <table class="border-collapse min-w-full">
         <thead class="sticky top-0 z-10">
           <tr>
-            <th class="h-8 border text-xs font-medium" style="width: 80px; min-width: 80px;" :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-500' : 'bg-gray-100 border-gray-300 text-gray-500'"></th>
+            <th class="h-8 border text-xs font-medium bg-tb-surface-2 border-tb-line-strong text-tb-muted" style="width: 80px; min-width: 80px;"></th>
             <th
               v-for="(col, colIndex) in spreadsheet.columns.value"
               :key="colIndex"
-              class="h-8 border text-xs font-medium relative group"
-              :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-400' : 'bg-gray-100 border-gray-300 text-gray-600'"
+              class="h-8 border text-xs font-medium relative group bg-tb-surface-2 border-tb-line-strong text-tb-muted"
+             
               :style="{ width: spreadsheet.getColumnWidth(colIndex) + 'px', minWidth: spreadsheet.getColumnWidth(colIndex) + 'px' }"
             >
               {{ col }}
               <!-- Resize handle -->
               <div
-                class="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize opacity-0 group-hover:opacity-100 transition-opacity"
-                :class="isDark ? 'bg-neutral-500 hover:bg-neutral-400' : 'bg-gray-400 hover:bg-gray-500'"
+                class="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize opacity-0 group-hover:opacity-100 transition-opacity bg-tb-line-strong hover:bg-tb-muted"
+               
                 @mousedown="startColumnResize($event, colIndex)"
               ></div>
             </th>
           </tr>
           <!-- Fila de filtros por columna -->
           <tr v-if="spreadsheet.filtersEnabled.value">
-            <th class="h-7 border p-0" style="width: 80px; min-width: 80px;" :class="isDark ? 'bg-neutral-800/80 border-neutral-700' : 'bg-gray-50 border-gray-300'">
-              <svg class="w-3.5 h-3.5 mx-auto" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <th class="h-7 border p-0 bg-tb-surface-2 border-tb-line-strong" style="width: 80px; min-width: 80px;">
+              <svg class="w-3.5 h-3.5 mx-auto text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
               </svg>
             </th>
             <th
               v-for="(col, colIndex) in spreadsheet.columns.value"
               :key="'filter-' + colIndex"
-              class="h-7 border p-0.5"
-              :class="isDark ? 'bg-neutral-800/80 border-neutral-700' : 'bg-gray-50 border-gray-300'"
+              class="h-7 border p-0.5 bg-tb-surface-2 border-tb-line-strong"
+             
               :style="{ width: spreadsheet.getColumnWidth(colIndex) + 'px', minWidth: spreadsheet.getColumnWidth(colIndex) + 'px' }"
             >
               <input
@@ -1314,10 +1227,9 @@ const handleContextAction = (action) => {
                 placeholder="Filtrar..."
                 class="w-full h-full px-1.5 text-[11px] font-normal rounded outline-none border"
                 :class="[
-                  isDark
-                    ? 'bg-neutral-900 border-neutral-700 text-neutral-200 placeholder-neutral-600 focus:border-neutral-500'
-                    : 'bg-white border-gray-200 text-gray-800 placeholder-gray-300 focus:border-gray-400',
-                  spreadsheet.columnFilters.value[colIndex] ? (isDark ? 'border-emerald-600' : 'border-emerald-500') : ''
+                  'bg-tb-surface text-tb-ink placeholder:text-tb-muted focus:border-[var(--cat)]',
+                  spreadsheet.columnFilters.value[colIndex] ? '' : 'border-tb-line',
+                  spreadsheet.columnFilters.value[colIndex] ? 'border-[var(--cat)]' : ''
                 ]"
               />
             </th>
@@ -1326,15 +1238,15 @@ const handleContextAction = (action) => {
         <tbody>
           <tr v-for="(row, rowIndex) in spreadsheet.data.value" :key="rowIndex" v-show="spreadsheet.isRowVisible(rowIndex)">
             <td
-              class="border text-xs text-center font-medium sticky left-0 z-[5] relative group/row select-none"
-              :class="isDark ? 'bg-neutral-800 border-neutral-700 text-neutral-500' : 'bg-gray-100 border-gray-300 text-gray-500'"
+              class="border text-xs text-center font-medium sticky left-0 z-[5] relative group/row select-none bg-tb-surface-2 border-tb-line-strong text-tb-muted"
+             
               :style="{ height: spreadsheet.getRowHeight(rowIndex) + 'px', width: '80px', minWidth: '80px' }"
             >
               {{ rowIndex + 1 }}
               <!-- Row resize handle -->
               <div
-                class="absolute left-0 right-0 bottom-0 h-1 cursor-row-resize opacity-0 group-hover/row:opacity-100 transition-opacity"
-                :class="isDark ? 'bg-neutral-500 hover:bg-neutral-400' : 'bg-gray-400 hover:bg-gray-500'"
+                class="absolute left-0 right-0 bottom-0 h-1 cursor-row-resize opacity-0 group-hover/row:opacity-100 transition-opacity bg-tb-line-strong hover:bg-tb-muted"
+               
                 @mousedown="startRowResize($event, rowIndex)"
               ></div>
             </td>
@@ -1347,10 +1259,10 @@ const handleContextAction = (action) => {
               @contextmenu="handleCellContextMenu($event, rowIndex, colIndex)"
               class="h-7 border text-xs px-2 cursor-cell transition-colors select-none"
               :class="[
-                isDark ? 'border-neutral-800' : 'border-gray-200',
+                'border-tb-line',
                 {
-                  [isDark ? 'bg-neutral-900' : 'bg-blue-50']: spreadsheet.selectedCell.value?.row === rowIndex && spreadsheet.selectedCell.value?.col === colIndex && !spreadsheet.getCellStyle(rowIndex, colIndex).bgColor,
-                  [isDark ? 'bg-neutral-950' : 'bg-white']: !(spreadsheet.selectedCell.value?.row === rowIndex && spreadsheet.selectedCell.value?.col === colIndex) && !spreadsheet.getCellStyle(rowIndex, colIndex).bgColor
+                  ['bg-[color-mix(in_srgb,var(--cat)_8%,var(--tb-surface))]']: spreadsheet.selectedCell.value?.row === rowIndex && spreadsheet.selectedCell.value?.col === colIndex && !spreadsheet.getCellStyle(rowIndex, colIndex).bgColor,
+                  ['bg-tb-surface']: !(spreadsheet.selectedCell.value?.row === rowIndex && spreadsheet.selectedCell.value?.col === colIndex) && !spreadsheet.getCellStyle(rowIndex, colIndex).bgColor
                 }
               ]"
               :style="{
@@ -1358,10 +1270,10 @@ const handleContextAction = (action) => {
                 minWidth: spreadsheet.getColumnWidth(colIndex) + 'px',
                 height: spreadsheet.getRowHeight(rowIndex) + 'px',
                 ...(spreadsheet.selectedCell.value?.row === rowIndex && spreadsheet.selectedCell.value?.col === colIndex
-                  ? { outline: `2px solid ${themeColor}`, outlineOffset: '-1px' }
+                  ? { outline: '2px solid var(--cat)', outlineOffset: '-1px' }
                   : {}),
                 ...(spreadsheet.hasMultiSelection.value && spreadsheet.isCellInSelection(rowIndex, colIndex)
-                  ? { boxShadow: `inset 0 0 0 999px ${themeColor}1f` }
+                  ? { boxShadow: 'inset 0 0 0 999px color-mix(in srgb, var(--cat) 12%, transparent)' }
                   : {}),
                 ...spreadsheet.getCellComputedStyle(rowIndex, colIndex)
               }"
@@ -1375,7 +1287,7 @@ const handleContextAction = (action) => {
                 rows="1"
                 class="w-full h-full bg-white text-neutral-900 px-1 -mx-1 outline-none resize-none overflow-hidden"
                 :style="{
-                  boxShadow: `0 0 0 2px ${themeColor}`,
+                  boxShadow: '0 0 0 2px var(--cat)',
                   fontWeight: spreadsheet.getCellStyle(rowIndex, colIndex).bold ? 'bold' : 'normal',
                   fontStyle: spreadsheet.getCellStyle(rowIndex, colIndex).italic ? 'italic' : 'normal',
                   textAlign: spreadsheet.getCellStyle(rowIndex, colIndex).alignH || 'left',
@@ -1394,52 +1306,52 @@ const handleContextAction = (action) => {
       <Teleport to="body">
         <div
           v-if="spreadsheet.contextMenu.visible"
-          class="fixed rounded-lg shadow-xl py-1 z-[100] min-w-[200px] border"
-          :class="isDark ? 'bg-neutral-900 border-neutral-700' : 'bg-white border-gray-200'"
+          class="fixed rounded-lg shadow-xl py-1 z-[100] min-w-[200px] border bg-tb-surface border-tb-line"
+         
           :style="{ left: spreadsheet.contextMenu.x + 'px', top: spreadsheet.contextMenu.y + 'px' }"
           @click.stop
         >
           <!-- Clipboard -->
-          <button @click="handleContextAction('copy')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('copy')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
             </svg>
             Copiar
-            <span class="ml-auto" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">Ctrl+C</span>
+            <span class="ml-auto text-tb-muted">Ctrl+C</span>
           </button>
-          <button @click="handleContextAction('cut')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('cut')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
             </svg>
             Cortar
-            <span class="ml-auto" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">Ctrl+X</span>
+            <span class="ml-auto text-tb-muted">Ctrl+X</span>
           </button>
-          <button @click="handleContextAction('paste')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('paste')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
             </svg>
             Pegar
-            <span class="ml-auto" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">Ctrl+V</span>
+            <span class="ml-auto text-tb-muted">Ctrl+V</span>
           </button>
-          <button @click="handleContextAction('clear')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('clear')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
             </svg>
             Borrar
-            <span class="ml-auto" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">Supr</span>
+            <span class="ml-auto text-tb-muted">Supr</span>
           </button>
 
-          <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
+          <div class="my-1 border-t border-tb-line"></div>
 
           <!-- Format -->
-          <div class="px-3 py-1 text-[10px] uppercase font-medium" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Formato</div>
+          <div class="px-3 py-1 text-[10px] uppercase font-medium text-tb-muted">Formato</div>
           <div class="flex items-center gap-1 px-3 py-1.5">
             <button
               @click="spreadsheet.toggleCellStyle('bold'); spreadsheet.closeContextMenu()"
               class="p-1.5 rounded transition-colors"
               :class="spreadsheet.currentCellStyle.value.bold
-                ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-                : (isDark ? 'hover:bg-neutral-800 text-neutral-400' : 'hover:bg-gray-100 text-gray-500')"
+                ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+                : 'hover:bg-tb-surface-2 text-tb-muted'"
               title="Negrita"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -1450,21 +1362,21 @@ const handleContextAction = (action) => {
               @click="spreadsheet.toggleCellStyle('italic'); spreadsheet.closeContextMenu()"
               class="p-1.5 rounded transition-colors"
               :class="spreadsheet.currentCellStyle.value.italic
-                ? (isDark ? 'bg-neutral-700 text-white' : 'bg-gray-200 text-gray-900')
-                : (isDark ? 'hover:bg-neutral-800 text-neutral-400' : 'hover:bg-gray-100 text-gray-500')"
+                ? 'bg-[color-mix(in_srgb,var(--cat)_14%,transparent)] text-[var(--cat)]'
+                : 'hover:bg-tb-surface-2 text-tb-muted'"
               title="Cursiva"
             >
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M10 4h4l-2 16h-4l2-16z"/>
               </svg>
             </button>
-            <div class="w-px h-5 mx-1" :class="isDark ? 'bg-neutral-700' : 'bg-gray-200'"></div>
+            <div class="w-px h-5 mx-1 bg-tb-line"></div>
             <button
               v-for="color in TEXT_COLORS"
               :key="'ctx-text-' + color"
               @click="spreadsheet.setCellStyle('textColor', color); spreadsheet.closeContextMenu()"
-              class="w-5 h-5 rounded border transition-transform hover:scale-110"
-              :class="isDark ? 'border-neutral-600' : 'border-gray-300'"
+              class="w-5 h-5 rounded border transition-transform hover:scale-110 border-tb-line-strong"
+             
               :style="{ backgroundColor: color }"
               title="Color de texto"
             />
@@ -1472,23 +1384,23 @@ const handleContextAction = (action) => {
 
           <!-- Background -->
           <div class="flex items-center gap-1 px-3 py-1.5">
-            <span class="text-[10px] mr-1" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Fondo:</span>
+            <span class="text-[10px] mr-1 text-tb-muted">Fondo:</span>
             <button
               v-for="color in BG_COLORS"
               :key="'ctx-bg-' + color"
               @click="spreadsheet.setCellStyle('bgColor', color); spreadsheet.closeContextMenu()"
-              class="w-5 h-5 rounded border transition-transform hover:scale-110"
-              :class="isDark ? 'border-neutral-600' : 'border-gray-300'"
+              class="w-5 h-5 rounded border transition-transform hover:scale-110 border-tb-line-strong"
+             
               :style="{ backgroundColor: color }"
               title="Color de fondo"
             />
             <button
               @click="spreadsheet.setCellStyle('bgColor', null); spreadsheet.closeContextMenu()"
-              class="w-5 h-5 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-5 h-5 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Sin fondo"
             >
-              <svg class="w-3 h-3" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-3 h-3 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
             </button>
@@ -1496,98 +1408,98 @@ const handleContextAction = (action) => {
 
           <!-- Borders -->
           <div class="flex items-center gap-1 px-3 py-1.5 pb-2">
-            <span class="text-[10px] mr-1" :class="isDark ? 'text-neutral-500' : 'text-gray-400'">Bordes:</span>
+            <span class="text-[10px] mr-1 text-tb-muted">Bordes:</span>
             <button
               @click="spreadsheet.setBorders('none'); spreadsheet.closeContextMenu()"
-              class="w-6 h-6 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-6 h-6 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Sin borde"
             >
-              <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
               </svg>
             </button>
             <button
               @click="spreadsheet.setBorders('all'); spreadsheet.closeContextMenu()"
-              class="w-6 h-6 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-6 h-6 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Todos los bordes"
             >
-              <div class="w-3.5 h-3.5 border-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-3.5 h-3.5 border-2 border-tb-muted"></div>
             </button>
             <button
               @click="spreadsheet.setBorders('bottom'); spreadsheet.closeContextMenu()"
-              class="w-6 h-6 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-6 h-6 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Borde inferior"
             >
-              <div class="w-3.5 h-3.5 border-b-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-3.5 h-3.5 border-b-2 border-tb-muted"></div>
             </button>
             <button
               @click="spreadsheet.setBorders('top-bottom'); spreadsheet.closeContextMenu()"
-              class="w-6 h-6 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-6 h-6 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Bordes arriba/abajo"
             >
-              <div class="w-3.5 h-3.5 border-t-2 border-b-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-3.5 h-3.5 border-t-2 border-b-2 border-tb-muted"></div>
             </button>
             <button
               @click="spreadsheet.setBorders('left-right'); spreadsheet.closeContextMenu()"
-              class="w-6 h-6 rounded border flex items-center justify-center"
-              :class="isDark ? 'border-neutral-600 hover:bg-neutral-800' : 'border-gray-300 hover:bg-gray-100'"
+              class="w-6 h-6 rounded border flex items-center justify-center border-tb-line-strong hover:bg-tb-surface-2"
+             
               title="Bordes izq/der"
             >
-              <div class="w-3.5 h-3.5 border-l-2 border-r-2" :class="isDark ? 'border-neutral-400' : 'border-gray-500'"></div>
+              <div class="w-3.5 h-3.5 border-l-2 border-r-2 border-tb-muted"></div>
             </button>
           </div>
 
-          <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
+          <div class="my-1 border-t border-tb-line"></div>
 
           <!-- Row operations -->
-          <button @click="handleContextAction('insertRowAbove')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('insertRowAbove')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19V5m0 0l-4 4m4-4l4 4"/>
             </svg>
             Insertar fila arriba
           </button>
-          <button @click="handleContextAction('insertRowBelow')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('insertRowBelow')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 5v14m0 0l4-4m-4 4l-4-4"/>
             </svg>
             Insertar fila abajo
           </button>
-          <button @click="handleContextAction('deleteRow')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'">
+          <button @click="handleContextAction('deleteRow')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-red-700 dark:text-red-300 hover:bg-tb-surface-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 12H4"/>
             </svg>
             Eliminar fila
           </button>
 
-          <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
+          <div class="my-1 border-t border-tb-line"></div>
 
           <!-- Column operations -->
-          <button @click="handleContextAction('insertColumnLeft')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('insertColumnLeft')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 12H5m0 0l4-4m-4 4l4 4"/>
             </svg>
             Insertar columna izquierda
           </button>
-          <button @click="handleContextAction('insertColumnRight')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-neutral-300 hover:bg-neutral-800' : 'text-gray-700 hover:bg-gray-100'">
-            <svg class="w-4 h-4" :class="isDark ? 'text-neutral-500' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button @click="handleContextAction('insertColumnRight')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-tb-ink hover:bg-tb-surface-2">
+            <svg class="w-4 h-4 text-tb-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14m0 0l-4-4m4 4l-4 4"/>
             </svg>
             Insertar columna derecha
           </button>
-          <button @click="handleContextAction('deleteColumn')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3" :class="isDark ? 'text-red-400 hover:bg-neutral-800' : 'text-red-600 hover:bg-gray-100'">
+          <button @click="handleContextAction('deleteColumn')" class="w-full px-4 py-2 text-xs text-left flex items-center gap-3 text-red-700 dark:text-red-300 hover:bg-tb-surface-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16"/>
             </svg>
             Eliminar columna
           </button>
 
-          <div class="my-1 border-t" :class="isDark ? 'border-neutral-700' : 'border-gray-200'"></div>
-          <div class="px-3 py-1.5 text-[10px]" :class="isDark ? 'text-neutral-600' : 'text-gray-400'">
-            <span :class="isDark ? 'text-neutral-500' : 'text-gray-500'">Shift+Enter</span> salto de línea
+          <div class="my-1 border-t border-tb-line"></div>
+          <div class="px-3 py-1.5 text-[10px] text-tb-muted">
+            <span class="text-tb-muted">Shift+Enter</span> salto de línea
           </div>
         </div>
       </Teleport>
@@ -1608,19 +1520,19 @@ const handleContextAction = (action) => {
       <Transition name="fade">
         <div
           v-if="spreadsheet.isLoading.value"
-          class="fixed inset-0 z-[200] flex items-center justify-center"
-          :class="isDark ? 'bg-black/70' : 'bg-white/70'"
+          class="fixed inset-0 z-[200] flex items-center justify-center bg-tb-bg/70"
+         
         >
-          <div class="flex flex-col items-center gap-4 p-8 rounded-xl" :class="isDark ? 'bg-neutral-900' : 'bg-white shadow-xl'">
+          <div class="flex flex-col items-center gap-4 p-8 rounded-xl bg-tb-surface shadow-xl">
             <!-- Spinner -->
             <div class="relative w-12 h-12">
               <div
                 class="absolute inset-0 rounded-full border-4 border-t-transparent animate-spin"
-                :style="{ borderColor: `${themeColor}40`, borderTopColor: themeColor }"
+                style="border-color: color-mix(in srgb, var(--cat) 25%, transparent); border-top-color: var(--cat)"
               ></div>
             </div>
             <!-- Message -->
-            <p class="text-sm font-medium" :class="isDark ? 'text-neutral-300' : 'text-gray-700'">
+            <p class="text-sm font-medium text-tb-ink">
               {{ spreadsheet.loadingMessage.value || 'Procesando...' }}
             </p>
           </div>
@@ -1639,21 +1551,13 @@ const handleContextAction = (action) => {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb, #404040);
+  background: var(--tb-line-strong);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover, #525252);
+  background: var(--tb-muted);
 }
 
-.bg-neutral-950 {
-  --scrollbar-thumb: #404040;
-  --scrollbar-thumb-hover: #525252;
-}
-.bg-gray-100 {
-  --scrollbar-thumb: #d1d5db;
-  --scrollbar-thumb-hover: #9ca3af;
-}
 
 /* Loading overlay transition */
 .fade-enter-active,
