@@ -41,7 +41,7 @@ function closePopover() {
       ref="buttonRef"
       @click="handleClick"
       class="flex items-center gap-1.5 px-2 py-1 rounded text-xs transition-colors"
-      :class="!auth.isAuthenticated.value ? 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300' :
+      :class="!auth.isAuthenticated.value ? 'text-tb-muted hover:text-tb-ink' :
               crypto.isLocked.value ? 'text-amber-400 hover:text-amber-300' :
               sync.syncStatus.value === 'syncing' ? 'text-blue-400' :
               sync.syncStatus.value === 'error' ? 'text-red-400' :
