@@ -1,0 +1,38 @@
+/* ============================================
+   EL TALLER — Home
+   ============================================ */
+@keyframes tb-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.tb-rise { animation: tb-rise .7s var(--tb-ease-out) both; }
+
+@keyframes tb-draw { from { stroke-dashoffset: 240; } to { stroke-dashoffset: 0; } }
+.tb-scribble path { stroke-dasharray: 240; animation: tb-draw 1s .5s var(--tb-ease-out) both; }
+
+@keyframes tb-pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--cat-apps) 60%, transparent); } 50% { box-shadow: 0 0 0 5px transparent; } }
+.tb-pulse { animation: tb-pulse 2.4s ease-in-out infinite; }
+
+.tb-hero-input:focus { box-shadow: 0 0 0 5px color-mix(in srgb, var(--tb-accent) 18%, transparent), var(--tb-shadow-lift); }
+
+.tb-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--tb-line); background: var(--tb-surface);
+  font-size: 14px; color: var(--tb-ink);
+  transition: transform .35s var(--tb-spring), border-color .2s, background .2s;
+}
+.tb-chip:hover { transform: translateY(-2px); border-color: var(--cat, var(--tb-line-strong)); background: color-mix(in srgb, var(--cat, var(--tb-ink)) 8%, var(--tb-surface)); }
+.tb-chip-ghost { background: transparent; border-style: dashed; color: var(--tb-muted); }
+
+.tb-cluster-tile {
+  position: absolute; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 14px 16px 10px; border-radius: 18px;
+  border: 1px solid var(--tb-line); background: var(--tb-surface); box-shadow: var(--tb-shadow-lift);
+  transform: translate(calc(var(--mx, 0) * var(--depth) * -1px), calc(var(--my, 0) * var(--depth) * -1px)) rotate(var(--r));
+  transition: transform .8s var(--tb-ease-out);
+  animation: tb-float 6s var(--delay) ease-in-out infinite;
+}
+@keyframes tb-float { 50% { translate: 0 -10px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tb-rise, .tb-scribble path, .tb-pulse, .tb-cluster-tile { animation: none !important; }
+  .tb-scribble path { stroke-dasharray: none; }
+}
