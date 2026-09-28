@@ -41,3 +41,14 @@ a:hover > .tb-logo-mark, a:focus-visible > .tb-logo-mark { transform: rotate(90d
 
 /* Campos que ya muestran su propio estado de foco (paleta, buscador del hero) */
 .tb-bare-input:focus-visible { outline: none; }
+
+/* Barra de pestañas móvil y hoja inferior */
+.tb-tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 11px; color: var(--tb-muted); transition: color .2s; }
+.tb-tab.is-active, .tb-tab.router-link-exact-active { color: var(--tb-ink); }
+.tb-tab.is-active svg, .tb-tab.router-link-exact-active svg { color: var(--tb-accent); }
+.tb-sheet-enter-active .tb-sheet-panel { transition: transform .45s var(--tb-spring); }
+.tb-sheet-leave-active .tb-sheet-panel { transition: transform .18s ease; }
+.tb-sheet-enter-active .tb-sheet-backdrop, .tb-sheet-leave-active .tb-sheet-backdrop { transition: opacity .2s; }
+.tb-sheet-enter-active, .tb-sheet-leave-active { transition: opacity .45s; }
+.tb-sheet-enter-from .tb-sheet-panel, .tb-sheet-leave-to .tb-sheet-panel { transform: translateY(100%); }
+.tb-sheet-enter-from .tb-sheet-backdrop, .tb-sheet-leave-to .tb-sheet-backdrop { opacity: 0; }
