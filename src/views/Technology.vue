@@ -1,6 +1,5 @@
 <script setup>
 import { useTechnology } from '../composables/useTechnology'
-import TechnologyTabs from '../components/technology/TechnologyTabs.vue'
 
 // Import technology tools
 import DevTools from './DevTools.vue'
@@ -14,11 +13,6 @@ const tech = useTechnology()
 
 <template>
   <div class="app-container">
-    <TechnologyTabs
-      :active-tab="tech.activeTab.value"
-      :theme-color="tech.themeColor.value"
-      @change="(tab) => tech.activeTab.value = tab"
-    />
 
     <div class="flex-1 overflow-auto">
       <DevTools v-if="tech.activeTab.value === 'dev'" />

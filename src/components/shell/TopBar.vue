@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Icon from '../icons/Icon.vue'
 import SectionMenu from './SectionMenu.vue'
+import ToolSwitcher from './ToolSwitcher.vue'
 import ThemeToggleButton from '../common/ThemeToggleButton.vue'
 import SyncAccountButton from '../common/SyncAccountButton.vue'
 import { CATEGORIES } from '@/config/catalog'
@@ -26,7 +27,16 @@ function scrollToCategory(id) {
       <span>tools</span>
     </router-link>
 
-    <SectionMenu v-if="currentCategory" :category="currentCategory" />
+    <template v-if="currentCategory">
+      <SectionMenu :category="currentCategory" class="lg:hidden" />
+      <div class="hidden lg:flex items-center gap-3 ml-1">
+        <span class="flex items-center gap-2 text-sm font-medium">
+          <span class="w-2 h-2 rounded-full" :style="{ background: `var(--cat-${currentCategory.id})` }"></span>
+          {{ currentCategory.name }}
+        </span>
+        <ToolSwitcher :category="currentCategory" />
+      </div>
+    </template>
     <nav v-else-if="isHome" aria-label="Categorías" class="hidden lg:flex items-center gap-0.5 ml-2">
       <button v-for="c in CATEGORIES" :key="c.id" type="button"
               class="px-2.5 py-1 rounded-full text-sm text-tb-muted hover:text-tb-ink hover:bg-tb-surface-2 transition-colors"

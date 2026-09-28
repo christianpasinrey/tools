@@ -1,7 +1,6 @@
 <script setup>
 import { useDocuments } from '../composables/useDocuments'
 import { useDevice } from '../composables/useDevice'
-import DocumentsTabs from '../components/documents/DocumentsTabs.vue'
 
 // Desktop document editors
 import PdfEditorContent from './PdfEditor.vue'
@@ -23,11 +22,6 @@ const { isMobile } = useDevice()
 
 <template>
   <div class="h-full flex flex-col bg-neutral-100 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-300">
-    <DocumentsTabs
-      :active-tab="docs.activeTab.value"
-      :theme-color="docs.themeColor.value"
-      @change="(tab) => docs.activeTab.value = tab"
-    />
 
     <div class="flex-1 overflow-auto">
       <!-- PDF (same for mobile/desktop for now) -->

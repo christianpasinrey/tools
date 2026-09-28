@@ -1,6 +1,5 @@
 <script setup>
 import { useMultimedia } from '../composables/useMultimedia'
-import MultimediaTabs from '../components/multimedia/MultimediaTabs.vue'
 
 // Import multimedia editors
 import ImageEditor from './ImageEditor.vue'
@@ -13,11 +12,6 @@ const media = useMultimedia()
 
 <template>
   <div class="app-container">
-    <MultimediaTabs
-      :active-tab="media.activeTab.value"
-      :theme-color="media.themeColor.value"
-      @change="(tab) => media.activeTab.value = tab"
-    />
 
     <div class="flex-1 overflow-hidden">
       <ImageEditor v-if="media.activeTab.value === 'image'" />

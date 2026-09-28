@@ -1,7 +1,6 @@
 <script setup>
 import { useTools } from '../composables/useTools'
 import { useDevice } from '../composables/useDevice'
-import ToolsTabs from '../components/tools/ToolsTabs.vue'
 
 // Import tools
 import UnitConverter from './UnitConverter.vue'
@@ -14,11 +13,6 @@ const { isMobile } = useDevice()
 
 <template>
   <div class="app-container">
-    <ToolsTabs
-      :active-tab="tools.activeTab.value"
-      :theme-color="tools.themeColor.value"
-      @change="(tab) => tools.activeTab.value = tab"
-    />
 
     <div class="flex-1 overflow-auto">
       <UnitConverter v-if="tools.activeTab.value === 'converter'" />

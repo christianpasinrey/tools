@@ -1,7 +1,6 @@
 <script setup>
 import { useApps } from '../composables/useApps'
 import { useDevice } from '../composables/useDevice'
-import AppsTabs from '../components/apps/AppsTabs.vue'
 import MapEditor from './MapEditor.vue'
 import MobileMapEditor from './MobileMapEditor.vue'
 import TodoKanban from '../components/apps/TodoKanban.vue'
@@ -15,11 +14,6 @@ const { isMobile } = useDevice()
 
 <template>
   <div class="app-container">
-    <AppsTabs
-      :active-tab="apps.activeTab.value"
-      :theme-color="apps.themeColor.value"
-      @change="(tab) => apps.activeTab.value = tab"
-    />
 
     <div class="flex-1 overflow-hidden relative">
       <MobileMapEditor v-if="apps.activeTab.value === 'map' && isMobile" class="absolute inset-0" />

@@ -1,0 +1,20 @@
+/* ============================================
+   EL TALLER — kit de UI (src/components/ui)
+   El acento es el color de la categoría (--cat) o, si no hay, el de la app.
+   ============================================ */
+:where(.tb-ui) { --accent: var(--cat, var(--tb-accent)); }
+
+/* ---------- Selector segmentado ---------- */
+.tb-seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--tb-surface-2); }
+.tb-seg-item {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px;
+  border-radius: 7px; font-size: 13px; font-weight: 500; color: var(--tb-muted); white-space: nowrap;
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.tb-seg-sm .tb-seg-item { height: 26px; padding: 0 10px; font-size: 13px; }
+.tb-seg-item:hover { color: var(--tb-ink); }
+.tb-seg-item[aria-checked="true"] { background: var(--tb-surface); color: var(--tb-ink); box-shadow: 0 1px 2px rgb(0 0 0 / .08), inset 0 -2px 0 var(--accent); }
+html.dark .tb-seg-item[aria-checked="true"] { box-shadow: 0 1px 2px rgb(0 0 0 / .4), inset 0 -2px 0 var(--accent); }
+.tb-seg-item[aria-checked="true"] svg { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) { .tb-seg-item { transition: none; } }
