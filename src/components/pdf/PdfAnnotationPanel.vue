@@ -1,11 +1,14 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, useId } from 'vue'
+import TbIconButton from '../ui/TbIconButton.vue'
+import TbButton from '../ui/TbButton.vue'
+
+const uid = useId()
 
 const props = defineProps({
   visible: Boolean,
   annotations: Array,
-  selectedPageIndex: Number,
-  themeColor: String
+  selectedPageIndex: Number
 })
 
 const emit = defineEmits(['close', 'add', 'remove', 'clear', 'update'])
@@ -19,8 +22,14 @@ const positionY = ref(50)
 const hasBg = ref(false)
 const bgColor = ref('#ffff00')
 
-const colors = ['#000000', '#ef4444', '#22c55e', '#3b82f6', '#f59e0b', '#8b5cf6', '#ffffff']
-const bgColors = ['#ffff00', '#22c55e', '#3b82f6', '#ef4444', '#f59e0b', '#000000', '#ffffff']
+const colors = [
+  { value: '#000000', name: 'Negro' }, { value: '#ef4444', name: 'Rojo' }, { value: '#22c55e', name: 'Verde' },
+  { value: '#3b82f6', name: 'Azul' }, { value: '#f59e0b', name: 'Ámbar' }, { value: '#8b5cf6', name: 'Violeta' }, { value: '#ffffff', name: 'Blanco' }
+]
+const bgColors = [
+  { value: '#ffff00', name: 'Amarillo' }, { value: '#22c55e', name: 'Verde' }, { value: '#3b82f6', name: 'Azul' },
+  { value: '#ef4444', name: 'Rojo' }, { value: '#f59e0b', name: 'Ámbar' }, { value: '#000000', name: 'Negro' }, { value: '#ffffff', name: 'Blanco' }
+]
 
 const isEditing = computed(() => selectedAnnotationId.value !== null)
 
@@ -108,182 +117,125 @@ watch([textContent, textColor, textSize, positionX, positionY, hasBg, bgColor], 
 
 <template>
   <Transition name="slide">
-    <div
+    <aside
       v-if="visible"
-      class="absolute right-0 top-0 bottom-0 w-80 bg-neutral-900 border-l border-neutral-800 flex flex-col z-10"
+      class="absolute right-0 top-0 bottom-0 w-80 max-w-full flex flex-col z-10 border-l border-tb-line bg-tb-surface shadow-[var(--tb-shadow-lift)]"
+      aria-label="Anotaciones"
     >
-      <!-- Header -->
-      <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800">
-        <h3 class="text-sm font-medium text-white">
+      <header class="flex items-center justify-between h-12 px-4 border-b border-tb-line">
+        <h3 class="font-display text-base font-bold text-tb-ink">
           {{ isEditing ? 'Editar anotación' : 'Nueva anotación' }}
         </h3>
-        <button
-          @click="emit('close')"
-          class="p-1 hover:bg-neutral-800 rounded transition-colors"
-        >
-          <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
+        <TbIconButton icon="x" label="Cerrar anotaciones" @click="emit('close')" />
+      </header>
 
-      <!-- Add annotation form -->
-      <div class="p-4 border-b border-neutral-800 space-y-4">
+      <div class="p-4 border-b border-tb-line space-y-4">
         <div>
-          <label class="text-xs text-neutral-500 block mb-2">Texto</label>
+          <label :for="`${uid}-text`" class="block mb-1.5 text-xs text-tb-muted">Texto</label>
           <textarea
+            :id="`${uid}-text`"
             v-model="textContent"
-            placeholder="Escribe tu anotación..."
+            placeholder="Escribe tu anotación…"
             rows="2"
-            class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-sm text-neutral-300 resize-none focus:outline-none focus:border-neutral-500"
+            class="ann-field w-full px-3 py-2 text-sm resize-none"
           />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs text-neutral-500 block mb-2">Color texto</label>
-            <div class="flex flex-wrap gap-1">
+        <div class="grid grid-cols-[1fr_auto] gap-3">
+          <fieldset>
+            <legend class="mb-1.5 text-xs text-tb-muted">Color del texto</legend>
+            <div class="flex flex-wrap gap-1.5">
               <button
-                v-for="color in colors"
-                :key="color"
-                @click="textColor = color"
-                class="w-5 h-5 rounded transition-transform hover:scale-110 border border-neutral-600"
-                :class="textColor === color ? 'ring-2 ring-white ring-offset-1 ring-offset-neutral-900' : ''"
-                :style="{ backgroundColor: color }"
+                v-for="c in colors"
+                :key="c.value"
+                type="button"
+                class="ann-swatch"
+                :aria-label="c.name"
+                :aria-pressed="String(textColor === c.value)"
+                :style="{ backgroundColor: c.value }"
+                @click="textColor = c.value"
               />
             </div>
-          </div>
+          </fieldset>
           <div>
-            <label class="text-xs text-neutral-500 block mb-2">Tamaño</label>
-            <input
-              v-model.number="textSize"
-              type="number"
-              min="1"
-              max="200"
-              class="w-full px-2 py-1.5 bg-neutral-800 border border-neutral-700 rounded text-sm text-neutral-300 focus:outline-none"
-            />
+            <label :for="`${uid}-size`" class="block mb-1.5 text-xs text-tb-muted">Tamaño</label>
+            <input :id="`${uid}-size`" v-model.number="textSize" type="number" min="1" max="200" class="ann-field w-20 h-8 px-2 text-sm font-code" />
           </div>
         </div>
 
-        <!-- Background -->
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <input
-              type="checkbox"
-              id="hasBg"
-              v-model="hasBg"
-              class="w-4 h-4 rounded border-neutral-600 bg-neutral-800 text-green-500 focus:ring-0"
-            />
-            <label for="hasBg" class="text-xs text-neutral-500 cursor-pointer">Fondo</label>
-          </div>
-          <div v-if="hasBg" class="flex flex-wrap gap-1">
+        <fieldset>
+          <label class="flex items-center gap-2 mb-1.5 text-xs text-tb-muted cursor-pointer">
+            <input v-model="hasBg" type="checkbox" class="w-4 h-4 accent-[var(--cat)]" />
+            Fondo
+          </label>
+          <div v-if="hasBg" class="flex flex-wrap gap-1.5">
             <button
-              v-for="color in bgColors"
-              :key="'bg-' + color"
-              @click="bgColor = color"
-              class="w-5 h-5 rounded transition-transform hover:scale-110 border border-neutral-600"
-              :class="bgColor === color ? 'ring-2 ring-white ring-offset-1 ring-offset-neutral-900' : ''"
-              :style="{ backgroundColor: color }"
+              v-for="c in bgColors"
+              :key="'bg-' + c.value"
+              type="button"
+              class="ann-swatch"
+              :aria-label="`Fondo ${c.name.toLowerCase()}`"
+              :aria-pressed="String(bgColor === c.value)"
+              :style="{ backgroundColor: c.value }"
+              @click="bgColor = c.value"
             />
           </div>
-        </div>
+        </fieldset>
 
         <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs text-neutral-500 block mb-2">Posición X (%)</label>
-            <input
-              v-model.number="positionX"
-              type="range"
-              min="0"
-              max="100"
-              class="w-full"
-              :style="{ accentColor: themeColor }"
-            />
-            <span class="text-xs text-neutral-500">{{ positionX }}%</span>
-          </div>
-          <div>
-            <label class="text-xs text-neutral-500 block mb-2">Posición Y (%)</label>
-            <input
-              v-model.number="positionY"
-              type="range"
-              min="0"
-              max="100"
-              class="w-full"
-              :style="{ accentColor: themeColor }"
-            />
-            <span class="text-xs text-neutral-500">{{ positionY }}%</span>
-          </div>
+          <label class="text-xs text-tb-muted">
+            Horizontal <span class="font-code text-tb-ink">{{ positionX }} %</span>
+            <input v-model.number="positionX" type="range" min="0" max="100" class="w-full mt-1 accent-[var(--cat)]" />
+          </label>
+          <label class="text-xs text-tb-muted">
+            Vertical <span class="font-code text-tb-ink">{{ positionY }} %</span>
+            <input v-model.number="positionY" type="range" min="0" max="100" class="w-full mt-1 accent-[var(--cat)]" />
+          </label>
         </div>
+        <p class="text-xs text-tb-muted">También puedes arrastrar la anotación sobre la página.</p>
 
         <div class="flex gap-2">
-          <button
-            v-if="isEditing"
-            @click="clearSelection"
-            class="flex-1 py-2 text-sm font-medium rounded-lg transition-colors bg-neutral-700 hover:bg-neutral-600 text-white"
-          >
-            Cancelar
-          </button>
-          <button
-            @click="handleSubmit"
+          <TbButton v-if="isEditing" class="flex-1" @click="clearSelection">Listo</TbButton>
+          <TbButton
+            v-else
+            variant="primary"
+            icon="plus"
+            class="flex-1"
             :disabled="!textContent.trim() || selectedPageIndex === null"
-            class="flex-1 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            :style="{ backgroundColor: themeColor, color: 'white' }"
+            @click="handleSubmit"
           >
-            {{ isEditing ? 'Guardar cambios' : 'Añadir anotación' }}
-          </button>
+            Añadir a la página {{ selectedPageIndex + 1 }}
+          </TbButton>
         </div>
-
-        <p v-if="selectedPageIndex === null" class="text-xs text-yellow-500 text-center">
-          Selecciona una página para añadir anotaciones
-        </p>
       </div>
 
-      <!-- Annotations list -->
       <div class="flex-1 overflow-auto">
-        <div v-if="annotations.length === 0" class="p-4 text-center text-sm text-neutral-600">
-          No hay anotaciones
-        </div>
-        <div v-else class="divide-y divide-neutral-800">
-          <div
+        <p v-if="annotations.length === 0" class="p-6 text-center text-sm text-tb-muted">
+          Aún no hay anotaciones.
+        </p>
+        <ul v-else class="divide-y divide-[var(--tb-line)]">
+          <li
             v-for="ann in annotations"
             :key="ann.id"
-            @click="selectAnnotation(ann)"
-            class="px-4 py-3 flex items-start gap-3 cursor-pointer transition-colors"
-            :class="selectedAnnotationId === ann.id ? 'bg-neutral-800' : 'hover:bg-neutral-800/50'"
-            :style="selectedAnnotationId === ann.id ? { borderLeft: `3px solid ${themeColor}` } : {}"
+            class="flex items-center gap-3 pl-4 pr-2 py-2.5 transition-colors"
+            :class="selectedAnnotationId === ann.id ? 'bg-[color-mix(in_srgb,var(--cat)_10%,transparent)] shadow-[inset_3px_0_0_var(--cat)]' : 'hover:bg-tb-surface-2'"
           >
-            <div
-              class="w-3 h-3 rounded-full shrink-0 mt-1 border border-neutral-600"
-              :style="{ backgroundColor: ann.color }"
-            />
-            <div class="flex-1 min-w-0">
-              <p class="text-sm text-neutral-300 truncate">{{ ann.content }}</p>
-              <p class="text-xs text-neutral-600">
-                Página {{ ann.pageIndex + 1 }} · {{ ann.size }}px
-              </p>
-            </div>
-            <button
-              @click.stop="emit('remove', ann.id)"
-              class="p-1 text-neutral-500 hover:text-red-400 transition-colors shrink-0"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
+            <span class="w-3 h-3 rounded-full shrink-0 ring-1 ring-tb-line-strong" :style="{ backgroundColor: ann.color }" />
+            <button type="button" class="flex-1 min-w-0 text-left" @click="selectAnnotation(ann)">
+              <span class="block text-sm text-tb-ink truncate">{{ ann.content }}</span>
+              <span class="block text-xs text-tb-muted">Página {{ ann.pageIndex + 1 }} · {{ ann.size }} px</span>
             </button>
-          </div>
-        </div>
+            <TbIconButton size="sm" icon="trash" tone="danger" :label="`Eliminar «${ann.content}»`" @click="emit('remove', ann.id)" />
+          </li>
+        </ul>
       </div>
 
-      <!-- Footer -->
-      <div v-if="annotations.length > 0" class="p-4 border-t border-neutral-800">
-        <button
-          @click="emit('clear')"
-          class="w-full py-2 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
-        >
+      <footer v-if="annotations.length > 0" class="p-3 border-t border-tb-line">
+        <TbButton variant="ghost" icon="trash" class="w-full text-red-700! dark:text-red-300!" @click="emit('clear')">
           Eliminar todas las anotaciones
-        </button>
-      </div>
-    </div>
+        </TbButton>
+      </footer>
+    </aside>
   </Transition>
 </template>
 
@@ -298,4 +250,9 @@ watch([textContent, textColor, textSize, positionX, positionY, hasBg, bgColor], 
 .slide-leave-to {
   transform: translateX(100%);
 }
+.ann-field { border-radius: 9px; border: 1px solid var(--tb-line-strong); background: var(--tb-surface); color: var(--tb-ink); }
+.ann-field:focus { outline: none; border-color: var(--cat); box-shadow: 0 0 0 3px color-mix(in srgb, var(--cat) 20%, transparent); }
+.ann-swatch { width: 22px; height: 22px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .18); transition: transform .15s; }
+.ann-swatch:hover { transform: scale(1.1); }
+.ann-swatch[aria-pressed="true"] { outline: 2px solid var(--cat); outline-offset: 2px; }
 </style>

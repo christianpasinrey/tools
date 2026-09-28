@@ -1,6 +1,7 @@
 import { ref, computed, shallowRef } from 'vue'
 import { PDFDocument, degrees, StandardFonts, rgb } from 'pdf-lib'
 import * as pdfjsLib from 'pdfjs-dist'
+import { toast } from './useToast'
 
 // Set worker path for pdf.js - use unpkg which has the correct version
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`
@@ -27,9 +28,6 @@ export function usePdfEditor() {
   // Progress state
   const loadingProgress = ref(0)
   const loadingMessage = ref('')
-
-  // Toast state
-  const toasts = ref([])
 
   // Preview state
   const previewPage = ref(null)
@@ -66,27 +64,10 @@ export function usePdfEditor() {
   // ==========================================
   // TOAST SYSTEM
   // ==========================================
-  const showToast = (message, type = 'info', duration = 3000) => {
-    const toast = {
-      id: `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      message,
-      type,
-      duration,
-      dismissable: true
-    }
-    toasts.value.push(toast)
-    if (duration > 0) {
-      setTimeout(() => dismissToast(toast.id), duration)
-    }
-    return toast.id
-  }
+  // Avisos globales; 'warning' se muestra como error porque bloquea la acción
+  const showToast = (message, type = 'info', duration = 3000) =>
+    toast(message, { tone: type === 'warning' ? 'error' : type, duration })
 
-  const dismissToast = (toastId) => {
-    const index = toasts.value.findIndex(t => t.id === toastId)
-    if (index !== -1) {
-      toasts.value.splice(index, 1)
-    }
-  }
 
   // ==========================================
   // HISTORY SYSTEM (UNDO/REDO)
@@ -671,8 +652,6 @@ export function usePdfEditor() {
     loadingProgress,
     loadingMessage,
 
-    // Toast state
-    toasts,
 
     // Preview state
     previewPage,
@@ -712,9 +691,7 @@ export function usePdfEditor() {
     saveToHistory,
     clearHistory,
 
-    // Toast methods
     showToast,
-    dismissToast,
 
     // Preview methods
     openPreview,

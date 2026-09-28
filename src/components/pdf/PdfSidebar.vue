@@ -1,101 +1,55 @@
 <script setup>
-const props = defineProps({
+import Icon from '../icons/Icon.vue'
+import TbPanel from '../ui/TbPanel.vue'
+import TbButton from '../ui/TbButton.vue'
+import TbIconButton from '../ui/TbIconButton.vue'
+
+defineProps({
   fileName: String,
   pageCount: Number,
-  selectedCount: Number,
-  themeColor: String
+  selectedCount: Number
 })
 
 const emit = defineEmits(['close', 'export', 'add-files'])
 </script>
 
 <template>
-  <div class="w-56 bg-neutral-900 border-l border-neutral-800 flex flex-col shrink-0">
-    <!-- Header -->
-    <div class="px-3 py-2 border-b border-neutral-800 flex items-center justify-between">
-      <div class="flex items-center gap-2 min-w-0">
-        <div class="w-8 h-8 rounded bg-neutral-800 flex items-center justify-center shrink-0">
-          <svg class="w-4 h-4" :style="{ color: themeColor }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-          </svg>
-        </div>
-        <span class="text-neutral-300 text-xs font-medium truncate">{{ fileName }}</span>
+  <aside class="w-64 shrink-0 flex flex-col overflow-y-auto border-l border-tb-line bg-tb-surface" aria-label="Documento">
+    <TbPanel title="Documento">
+      <template #actions>
+        <TbIconButton size="sm" icon="x" label="Cerrar el documento" @click="emit('close')" />
+      </template>
+      <div class="flex items-center gap-2.5 min-w-0">
+        <span class="grid place-items-center w-9 h-9 rounded-lg shrink-0 text-[var(--cat)] bg-[color-mix(in_srgb,var(--cat)_12%,transparent)]">
+          <Icon name="file" :size="17" />
+        </span>
+        <p class="text-sm font-medium text-tb-ink truncate" :title="fileName">{{ fileName }}</p>
       </div>
-      <button
-        @click="emit('close')"
-        class="p-1 rounded text-neutral-500 hover:text-white hover:bg-neutral-800 transition-colors"
-        title="Cerrar"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
+      <dl class="mt-3 grid grid-cols-2 gap-2">
+        <div class="p-2 rounded-lg bg-tb-surface-2">
+          <dt class="text-xs text-tb-muted">Páginas</dt>
+          <dd class="font-code text-lg text-tb-ink">{{ pageCount }}</dd>
+        </div>
+        <div class="p-2 rounded-lg bg-tb-surface-2">
+          <dt class="text-xs text-tb-muted">Seleccionadas</dt>
+          <dd class="font-code text-lg text-tb-ink">{{ selectedCount }}</dd>
+        </div>
+      </dl>
+    </TbPanel>
 
-    <!-- Info -->
-    <div class="p-3 border-b border-neutral-800">
-      <div class="grid grid-cols-2 gap-3 text-xs">
-        <div>
-          <span class="text-neutral-600">Páginas</span>
-          <p class="text-neutral-300 font-mono text-lg">{{ pageCount }}</p>
-        </div>
-        <div>
-          <span class="text-neutral-600">Seleccionadas</span>
-          <p class="text-neutral-300 font-mono text-lg">{{ selectedCount }}</p>
-        </div>
+    <TbPanel title="Acciones">
+      <div class="flex flex-col gap-1.5">
+        <TbButton variant="secondary" icon="file-plus" class="w-full justify-start!" @click="emit('add-files')">Combinar con otro PDF</TbButton>
+        <TbButton variant="primary" icon="download" class="w-full" @click="emit('export')">Exportar PDF</TbButton>
       </div>
-    </div>
+    </TbPanel>
 
-    <!-- Quick Actions -->
-    <div class="p-3 space-y-2">
-      <p class="text-[10px] text-neutral-600 uppercase tracking-wider font-medium mb-2">Acciones rápidas</p>
-
-      <button
-        @click="emit('add-files')"
-        class="w-full flex items-center gap-2 px-3 py-2 rounded text-sm text-neutral-300 hover:bg-neutral-800 transition-colors text-left"
-      >
-        <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/>
-        </svg>
-        Combinar PDFs
-      </button>
-
-      <button
-        class="w-full flex items-center gap-2 px-3 py-2 rounded text-sm text-neutral-300 hover:bg-neutral-800 transition-colors text-left"
-        @click="emit('export')"
-      >
-        <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-        </svg>
-        Descargar PDF
-      </button>
-    </div>
-
-    <!-- Spacer -->
-    <div class="flex-1"></div>
-
-    <!-- Tips -->
-    <div class="p-3 border-t border-neutral-800">
-      <p class="text-[10px] text-neutral-600 uppercase tracking-wider font-medium mb-2">Tips</p>
-      <ul class="text-[11px] text-neutral-500 space-y-1">
-        <li>• Click para seleccionar páginas</li>
-        <li>• Arrastra para reordenar</li>
-        <li>• Añade más PDFs para combinar</li>
+    <TbPanel title="Consejos" collapsible>
+      <ul class="space-y-1.5 text-xs text-tb-muted">
+        <li>Pulsa una miniatura para verla; marca su casilla para seleccionarla.</li>
+        <li>Arrastra las miniaturas para cambiar el orden.</li>
+        <li>Suelta más PDF sobre la vista para combinarlos.</li>
       </ul>
-    </div>
-
-    <!-- Export Button -->
-    <div class="p-3 border-t border-neutral-800">
-      <button
-        @click="emit('export')"
-        class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors"
-        :style="{ backgroundColor: themeColor, color: 'white' }"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-        </svg>
-        Exportar PDF
-      </button>
-    </div>
-  </div>
+    </TbPanel>
+  </aside>
 </template>

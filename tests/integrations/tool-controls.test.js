@@ -18,6 +18,7 @@ const mockVault = {
 vi.mock('@/composables/useVault', () => ({ useVault: () => mockVault }))
 // Cargar desde la bóveda sobre un borrador propio pide confirmación: aquí se acepta
 vi.mock('@/composables/useConfirm', () => ({ confirmAction: vi.fn(async () => true) }))
+vi.mock('@/composables/useToast', async (orig) => ({ ...(await orig()), toast: vi.fn() }))
 
 // ============================================================
 // 1. IMAGE EDITOR
@@ -843,8 +844,9 @@ describe('PdfEditor — VaultSaveLoad controls', () => {
     expect(data).toBeNull()
   })
 
-  it('getData returns null and alerts for oversized PDFs', () => {
-    const alertMock = vi.spyOn(window, 'alert').mockImplementation(() => {})
+  it('getData returns null and warns for oversized PDFs', async () => {
+    const { toast } = await import('@/composables/useToast')
+    toast.mockClear()
     mockPdfEditor.pdfBytes.value = new ArrayBuffer(11 * 1024 * 1024) // > 10MB
 
     const wrapper = shallowMount(PdfEditor)
@@ -852,8 +854,7 @@ describe('PdfEditor — VaultSaveLoad controls', () => {
     const data = vaultSaveLoad.props('getData')()
 
     expect(data).toBeNull()
-    expect(alertMock).toHaveBeenCalledWith(expect.stringContaining('10MB'))
-    alertMock.mockRestore()
+    expect(toast).toHaveBeenCalledWith(expect.stringContaining('10 MB'), expect.objectContaining({ tone: 'error' }))
   })
 
   it('load handler calls loadFile with reconstructed File', async () => {
