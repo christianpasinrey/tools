@@ -1,4 +1,5 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { replaceSectionHash } from '../lib/sectionHash'
 import { buildHashMap, buildTabToHash, getToolColors, getDefaultTab } from '../config/tools'
 
 const hashToTab = buildHashMap('technology')
@@ -13,8 +14,7 @@ function getTabFromHash() {
 
 function setHashFromTab(tab) {
   const hash = tabToHash[tab] || defaultTab
-  const newUrl = `${window.location.pathname}#${hash}`
-  window.history.replaceState(null, '', newUrl)
+  replaceSectionHash(hash)
 }
 
 export function useTechnology() {
@@ -36,9 +36,8 @@ export function useTechnology() {
 
   onMounted(() => {
     window.addEventListener('hashchange', onHashChange)
-    if (!window.location.hash) {
-      setHashFromTab(activeTab.value)
-    }
+    // Normaliza alias (p. ej. #md → #markdown) y fija el hash inicial
+    setHashFromTab(activeTab.value)
     themeColor.value = tabColors[activeTab.value] || tabColors[defaultTab]
   })
 

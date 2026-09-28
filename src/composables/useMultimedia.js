@@ -1,4 +1,5 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { replaceSectionHash } from '../lib/sectionHash'
 
 const validTabs = ['image', 'audio', '3d', 'svg']
 
@@ -30,8 +31,7 @@ function getTabFromHash() {
 
 function setHashFromTab(tab) {
   const hash = tabToHash[tab] || 'image'
-  const newUrl = `${window.location.pathname}#${hash}`
-  window.history.replaceState(null, '', newUrl)
+  replaceSectionHash(hash)
 }
 
 export function useMultimedia() {
@@ -63,10 +63,8 @@ export function useMultimedia() {
 
   onMounted(() => {
     window.addEventListener('hashchange', onHashChange)
-    // Set initial hash if not present
-    if (!window.location.hash) {
-      setHashFromTab(activeTab.value)
-    }
+    // Normaliza alias (p. ej. #md → #markdown) y fija el hash inicial
+    setHashFromTab(activeTab.value)
     // Set initial theme color
     themeColor.value = tabColors[activeTab.value] || '#a855f7'
   })

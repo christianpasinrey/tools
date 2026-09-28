@@ -1,4 +1,5 @@
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { replaceSectionHash } from '../lib/sectionHash'
 
 const validTabs = ['converter', 'color']
 
@@ -25,8 +26,7 @@ function getTabFromHash() {
 
 function setHashFromTab(tab) {
   const hash = tabToHash[tab] || 'converter'
-  const newUrl = `${window.location.pathname}#${hash}`
-  window.history.replaceState(null, '', newUrl)
+  replaceSectionHash(hash)
 }
 
 export function useTools() {
@@ -56,9 +56,8 @@ export function useTools() {
 
   onMounted(() => {
     window.addEventListener('hashchange', onHashChange)
-    if (!window.location.hash) {
-      setHashFromTab(activeTab.value)
-    }
+    // Normaliza alias (p. ej. #md → #markdown) y fija el hash inicial
+    setHashFromTab(activeTab.value)
     themeColor.value = tabColors[activeTab.value] || '#10b981'
   })
 

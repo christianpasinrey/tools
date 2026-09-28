@@ -9,6 +9,41 @@ export const CATEGORIES = [
   { id: 'cheatsheets', name: 'Chuletas', blurb: 'Atajos, comandos y fórmulas a mano', path: '/cheatsheets', icon: 'cheatsheets' }
 ]
 
+// Herramientas (pestañas) de cada sección, en el orden en que se muestran
+export const SECTION_TOOLS = {
+  documents: [
+    { hash: 'pdf', name: 'PDF', short: 'PDF', icon: 'file', mobile: false },
+    { hash: 'spreadsheet', name: 'Hoja de cálculo', short: 'Hojas', icon: 'grid', mobile: false },
+    { hash: 'docx', name: 'Documento Word', short: 'Word', icon: 'documents', mobile: true },
+    { hash: 'markdown', name: 'Markdown', short: 'Markdown', icon: 'markdown', mobile: true },
+    { hash: 'converter', name: 'Conversor', short: 'Conversor', icon: 'swap', mobile: true }
+  ],
+  multimedia: [
+    { hash: 'image', name: 'Imagen', short: 'Imagen', icon: 'multimedia', mobile: false },
+    { hash: 'audio', name: 'Audio', short: 'Audio', icon: 'audio', mobile: false },
+    { hash: 'svg', name: 'SVG', short: 'SVG', icon: 'pen', mobile: false },
+    { hash: '3d', name: '3D', short: '3D', icon: 'cube', mobile: false }
+  ],
+  tools: [
+    { hash: 'converter', name: 'Unidades', short: 'Unidades', icon: 'swap', mobile: true },
+    { hash: 'color', name: 'Color', short: 'Color', icon: 'drop', mobile: true }
+  ],
+  apps: [
+    { hash: 'todo', name: 'Kanban', short: 'Kanban', icon: 'apps', mobile: true },
+    { hash: 'invoice', name: 'Facturas', short: 'Facturas', icon: 'receipt', mobile: true },
+    { hash: 'map', name: 'Mapa', short: 'Mapa', icon: 'map', mobile: true }
+  ],
+  technology: [
+    { hash: 'dev', name: 'Código', short: 'Código', icon: 'code', mobile: false },
+    { hash: 'security', name: 'Seguridad', short: 'Seguridad', icon: 'shield', mobile: true },
+    { hash: 'api', name: 'APIs', short: 'APIs', icon: 'bolt', mobile: false },
+    { hash: 'phone', name: 'Teléfono SIP', short: 'SIP', icon: 'phone', mobile: true },
+    { hash: 'browser-storage', name: 'Almacenamiento', short: 'Storage', icon: 'database', mobile: true }
+  ]
+}
+
+export const sectionTools = (categoryId) => SECTION_TOOLS[categoryId] || []
+
 const r = (path, hash = '') => ({ path, hash })
 
 export const TASKS = [

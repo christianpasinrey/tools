@@ -56,3 +56,18 @@ describe('catálogo', () => {
     }
   })
 })
+
+import { SECTION_TOOLS, sectionTools } from '@/config/catalog'
+
+describe('herramientas por sección', () => {
+  it('cada hash de SECTION_TOOLS lo acepta su sección', () => {
+    for (const [cat, tools] of Object.entries(SECTION_TOOLS)) {
+      const path = getCategory(cat).path
+      for (const t of tools) expect(acceptedHashes[path][t.hash], `${cat}#${t.hash}`).toBeTruthy()
+    }
+  })
+  it('cubre las cinco secciones con pestañas y ninguna más', () => {
+    expect(Object.keys(SECTION_TOOLS).sort()).toEqual(['apps', 'documents', 'multimedia', 'technology', 'tools'])
+    expect(sectionTools('cheatsheets')).toEqual([])
+  })
+})

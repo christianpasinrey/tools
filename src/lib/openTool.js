@@ -1,17 +1,13 @@
 import { useDevice } from '@/composables/useDevice'
 import { setPendingLaunch, LAUNCH_EVENT } from './pendingLaunch'
+import { goToSectionTool } from './sectionHash'
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
 async function navigate(router, entry, file) {
   const { path, hash } = entry.route
-  // Las secciones cambian de pestaña con history.replaceState, así que el hash que
-  // recuerda el router puede estar desfasado: en la misma sección se fuerza el push
-  // y se avisa con hashchange para que la sección lea el hash real.
-  const sameSection = router.currentRoute.value.path === path
-  await router.push({ path, hash: hash ? `#${hash}` : '', force: sameSection })
-  if (sameSection) window.dispatchEvent(new HashChangeEvent('hashchange'))
+  await goToSectionTool(router, path, hash)
 
   // La entrega se deja al llegar (la caducidad cuenta desde que la herramienta ha
   // cargado) y solo si la navegación no acabó en otra ruta.

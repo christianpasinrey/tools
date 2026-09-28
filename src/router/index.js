@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import { device } from '../composables/useDevice'
+import { currentHash } from '../lib/sectionHash'
 
 // Rutas no soportadas en dispositivos móviles
 const mobileUnsupportedRoutes = [
@@ -128,6 +129,7 @@ const router = createRouter({
 })
 
 router.afterEach((to, from) => {
+  currentHash.value = to.hash
   if (to.path !== from.path) document.getElementById('app-main')?.scrollTo({ top: 0 })
 })
 
