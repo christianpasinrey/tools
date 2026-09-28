@@ -1,0 +1,247 @@
+[
+  {
+    "id": "accounting",
+    "title": "Contabilidad",
+    "description": "Términos, fórmulas y conceptos contables"
+  },
+  {
+    "id": "aftereffects",
+    "title": "After Effects",
+    "description": "Atajos de teclado y expresiones para animación en Adobe After Effects"
+  },
+  {
+    "id": "anglicismos",
+    "title": "Anglicismos",
+    "description": "Palabras en ingles que usamos porque mola mas"
+  },
+  {
+    "id": "bash",
+    "title": "Bash Scripting",
+    "description": "Referencia de scripting en Bash"
+  },
+  {
+    "id": "blender",
+    "title": "Blender",
+    "description": "Atajos de teclado esenciales de Blender 3D"
+  },
+  {
+    "id": "chemistry",
+    "title": "Química",
+    "description": "Elementos, fórmulas y conceptos químicos"
+  },
+  {
+    "id": "chinese",
+    "title": "Chino Mandarín",
+    "description": "Pinyin, caracteres básicos y frases esenciales del chino mandarín"
+  },
+  {
+    "id": "css",
+    "title": "CSS Reference",
+    "description": "Propiedades CSS y Flexbox/Grid"
+  },
+  {
+    "id": "docker",
+    "title": "Docker Commands",
+    "description": "Comandos esenciales de Docker"
+  },
+  {
+    "id": "electricity",
+    "title": "Electricidad",
+    "description": "Fórmulas, leyes y componentes eléctricos"
+  },
+  {
+    "id": "english",
+    "title": "Inglés",
+    "description": "Tiempos verbales, conectores y gramática esencial del inglés"
+  },
+  {
+    "id": "excel",
+    "title": "Excel / Sheets",
+    "description": "Fórmulas y funciones de hojas de cálculo"
+  },
+  {
+    "id": "french",
+    "title": "Francés",
+    "description": "Gramática esencial, verbos y frases útiles del francés"
+  },
+  {
+    "id": "german",
+    "title": "Alemán",
+    "description": "Gramática esencial, verbos y frases útiles del alemán"
+  },
+  {
+    "id": "git",
+    "title": "Git Commands",
+    "description": "Comandos esenciales de Git"
+  },
+  {
+    "id": "http",
+    "title": "HTTP & REST",
+    "description": "Códigos de estado, métodos y headers HTTP"
+  },
+  {
+    "id": "illustrator",
+    "title": "Illustrator",
+    "description": "Atajos de teclado esenciales de Adobe Illustrator"
+  },
+  {
+    "id": "internet",
+    "title": "Lenguaje de Internet",
+    "description": "Guia para entender a tu sobrino cuando escribe"
+  },
+  {
+    "id": "japanese",
+    "title": "Japonés",
+    "description": "Hiragana, Katakana y frases básicas del japonés"
+  },
+  {
+    "id": "korean",
+    "title": "Coreano",
+    "description": "Hangul básico, frases esenciales y gramática del coreano"
+  },
+  {
+    "id": "kubernetes",
+    "title": "Kubernetes",
+    "description": "Comandos kubectl y conceptos de K8s"
+  },
+  {
+    "id": "laravel",
+    "title": "Laravel Commands",
+    "description": "Comandos Artisan y helpers de Laravel"
+  },
+  {
+    "id": "lightroom",
+    "title": "Lightroom",
+    "description": "Atajos de teclado esenciales de Adobe Lightroom Classic"
+  },
+  {
+    "id": "linux",
+    "title": "Linux Terminal Commands",
+    "description": "Comandos esenciales de terminal para Linux"
+  },
+  {
+    "id": "macos",
+    "title": "macOS Keyboard Shortcuts",
+    "description": "Atajos de teclado esenciales para macOS"
+  },
+  {
+    "id": "markdown",
+    "title": "Markdown",
+    "description": "Sintaxis completa de Markdown"
+  },
+  {
+    "id": "math",
+    "title": "Matemáticas",
+    "description": "Álgebra, cálculo, trigonometría y geometría"
+  },
+  {
+    "id": "mongodb",
+    "title": "MongoDB",
+    "description": "Queries, operadores y aggregation pipeline"
+  },
+  {
+    "id": "music",
+    "title": "Teoría Musical",
+    "description": "Escalas, acordes, intervalos y armonía"
+  },
+  {
+    "id": "mysql",
+    "title": "MySQL Commands",
+    "description": "Comandos y sintaxis SQL para MySQL"
+  },
+  {
+    "id": "notion",
+    "title": "Notion",
+    "description": "Atajos, bloques y fórmulas de Notion"
+  },
+  {
+    "id": "npm",
+    "title": "NPM Commands",
+    "description": "Comandos esenciales de NPM"
+  },
+  {
+    "id": "periodictable",
+    "title": "Tabla Periódica",
+    "description": "Elementos químicos organizados por grupos y propiedades"
+  },
+  {
+    "id": "photography",
+    "title": "Fotografía",
+    "description": "Exposición, composición y técnicas fotográficas"
+  },
+  {
+    "id": "photoshop",
+    "title": "Photoshop",
+    "description": "Atajos de teclado esenciales de Photoshop"
+  },
+  {
+    "id": "physics",
+    "title": "Física",
+    "description": "Fórmulas fundamentales de física"
+  },
+  {
+    "id": "premiere",
+    "title": "Premiere Pro",
+    "description": "Atajos de teclado esenciales de Adobe Premiere Pro"
+  },
+  {
+    "id": "python",
+    "title": "Python",
+    "description": "Sintaxis, built-ins y patrones de Python"
+  },
+  {
+    "id": "react",
+    "title": "React Reference",
+    "description": "Hooks y patrones de React"
+  },
+  {
+    "id": "regex",
+    "title": "Regular Expressions",
+    "description": "Patrones y sintaxis de expresiones regulares"
+  },
+  {
+    "id": "slang",
+    "title": "Jerga Gen Z",
+    "description": "Expresiones que tu primo de 15 usa y no entiendes"
+  },
+  {
+    "id": "sql",
+    "title": "SQL Avanzado",
+    "description": "JOINs, window functions, CTEs y más"
+  },
+  {
+    "id": "statistics",
+    "title": "Estadística",
+    "description": "Fórmulas, distribuciones y tests estadísticos"
+  },
+  {
+    "id": "tailwind",
+    "title": "Tailwind CSS",
+    "description": "Clases de utilidad más usadas de Tailwind"
+  },
+  {
+    "id": "typescript",
+    "title": "TypeScript",
+    "description": "Tipos, utilities y sintaxis de TypeScript"
+  },
+  {
+    "id": "vim",
+    "title": "Vim Commands",
+    "description": "Atajos y comandos de Vim"
+  },
+  {
+    "id": "vscode",
+    "title": "VS Code Shortcuts",
+    "description": "Atajos de teclado para Visual Studio Code"
+  },
+  {
+    "id": "vue",
+    "title": "Vue.js Reference",
+    "description": "Referencia rápida de Vue 3 Composition API"
+  },
+  {
+    "id": "windows",
+    "title": "Windows Keyboard Shortcuts",
+    "description": "Atajos de teclado esenciales para Windows"
+  }
+]

@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "sheets:meta": "node scripts/build-cheatsheet-meta.mjs",
+    "prebuild": "node scripts/build-cheatsheet-meta.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.0",

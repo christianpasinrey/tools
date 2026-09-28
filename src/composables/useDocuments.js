@@ -3,7 +3,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 const validTabs = ['pdf', 'spreadsheet', 'docx', 'markdown', 'converter']
 
 // Map hash names to internal tab names
-const hashToTab = {
+export const hashToTab = {
   'pdf': 'pdf',
   'spreadsheet': 'spreadsheet',
   'spreadsheets': 'spreadsheet',

@@ -3,7 +3,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 const validTabs = ['converter', 'color']
 
 // Map hash names to internal tab names
-const hashToTab = {
+export const hashToTab = {
   'converter': 'converter',
   'convert': 'converter',
   'units': 'converter',

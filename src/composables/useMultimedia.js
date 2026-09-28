@@ -3,7 +3,7 @@ import { ref, watch, onMounted, onUnmounted } from 'vue'
 const validTabs = ['image', 'audio', '3d', 'svg']
 
 // Map hash names to internal tab names
-const hashToTab = {
+export const hashToTab = {
   'image': 'image',
   'imagen': 'image',
   'img': 'image',
