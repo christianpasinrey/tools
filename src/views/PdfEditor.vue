@@ -11,6 +11,7 @@ import PdfProgressBar from '../components/pdf/PdfProgressBar.vue'
 import PdfAnnotationPanel from '../components/pdf/PdfAnnotationPanel.vue'
 import EditorEmptyState from '../components/common/EditorEmptyState.vue'
 import { usePendingLaunch } from '../composables/usePendingLaunch'
+import { requestDeletePages, requestClose, requestSplitAll } from './pdfActions'
 
 const editor = usePdfEditor()
 
@@ -119,62 +120,29 @@ const handleDrop = (e) => {
   }
 }
 
-// Confirm dialog helpers
-const showConfirm = (title, message, type, onConfirm) => {
-  confirmDialog.value = {
-    visible: true,
-    title,
-    message,
-    type,
-    onConfirm
-  }
-}
+// Confirm dialog helpers: el diálogo responde con una promesa (true = aceptar)
+let settleConfirm = null
+const askConfirm = ({ title, message, tone }) => new Promise((resolve) => {
+  settleConfirm = resolve
+  confirmDialog.value = { visible: true, title, message, type: tone, onConfirm: null }
+})
 
 const closeConfirm = () => {
   confirmDialog.value.visible = false
-  confirmDialog.value.onConfirm = null
+  settleConfirm?.(false)
+  settleConfirm = null
 }
 
 const handleConfirm = () => {
-  if (confirmDialog.value.onConfirm) {
-    confirmDialog.value.onConfirm()
-  }
-  closeConfirm()
+  confirmDialog.value.visible = false
+  settleConfirm?.(true)
+  settleConfirm = null
 }
 
 // Actions with confirmation
-const handleDelete = () => {
-  const count = editor.selectedPages.value.size
-  if (count === 0) return
-
-  showConfirm(
-    'Eliminar páginas',
-    `¿Eliminar ${count} página${count > 1 ? 's' : ''} seleccionada${count > 1 ? 's' : ''}? Esta acción se puede deshacer.`,
-    'danger',
-    () => editor.deleteSelected()
-  )
-}
-
-const handleClearFile = () => {
-  showConfirm(
-    'Cerrar documento',
-    '¿Cerrar el documento actual? Se perderán los cambios no guardados.',
-    'warning',
-    () => {
-      editor.clearFile()
-      editor.clearHistory()
-    }
-  )
-}
-
-const handleSplitAll = () => {
-  showConfirm(
-    'Dividir PDF',
-    `Se descargarán ${editor.pageCount.value} archivos PDF individuales. ¿Continuar?`,
-    'info',
-    () => editor.splitAll()
-  )
-}
+const handleDelete = () => requestDeletePages(editor, askConfirm)
+const handleClearFile = () => requestClose(editor, askConfirm)
+const handleSplitAll = () => requestSplitAll(editor, askConfirm)
 
 // Preview navigation
 const selectPreview = (index) => {
