@@ -1,0 +1,25 @@
+import './previews.css'
+import Generic from './Generic.vue'
+import PdfSign from './PdfSign.vue'
+import PdfToImages from './PdfToImages.vue'
+import PdfToDoc from './PdfToDoc.vue'
+import ImagesToPdf from './ImagesToPdf.vue'
+import Sheet from './Sheet.vue'
+import DocWrite from './DocWrite.vue'
+import Markdown from './Markdown.vue'
+import ImageAdjust from './ImageAdjust.vue'
+import Waveform from './Waveform.vue'
+import Bezier from './Bezier.vue'
+import Orbit from './Orbit.vue'
+import Units from './Units.vue'
+import ColorDrop from './ColorDrop.vue'
+import Kanban from './Kanban.vue'
+import Invoice from './Invoice.vue'
+import MapPins from './MapPins.vue'
+import ApiRequest from './ApiRequest.vue'
+import Code from './Code.vue'
+import Cheatsheet from './Cheatsheet.vue'
+
+const PREVIEWS = { Generic, PdfSign, PdfToImages, PdfToDoc, ImagesToPdf, Sheet, DocWrite, Markdown, ImageAdjust, Waveform, Bezier, Orbit, Units, ColorDrop, Kanban, Invoice, MapPins, ApiRequest, Code, Cheatsheet }
+
+export const getPreview = (name) => PREVIEWS[name] || Generic

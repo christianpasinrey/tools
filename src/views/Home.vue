@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import DotField from '../components/home/DotField.vue'
 import HomeHero from '../components/home/HomeHero.vue'
+import ToolBench from '../components/home/ToolBench.vue'
 
 const query = ref('')
 </script>
@@ -11,6 +12,7 @@ const query = ref('')
     <DotField />
     <div class="relative z-10">
       <HomeHero v-model="query" />
+      <ToolBench v-model:query="query" />
     </div>
   </div>
 </template>
