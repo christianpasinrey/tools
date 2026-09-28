@@ -102,6 +102,11 @@ const routes = [
     redirect: '/apps#map'
   },
   {
+    path: '/acerca',
+    name: 'About',
+    component: () => import('../views/About.vue')
+  },
+  {
     path: '/forgot-password',
     name: 'ForgotPassword',
     component: () => import('../views/ForgotPassword.vue')
