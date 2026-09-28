@@ -42,7 +42,7 @@ const { isMobile } = useDevice()
       <!-- Markdown: mobile vs desktop -->
       <template v-if="docs.activeTab.value === 'markdown'">
         <MobileMarkdownEditor v-if="isMobile" />
-        <MarkdownEditorContent v-else :theme-color="docs.themeColor.value" />
+        <MarkdownEditorContent v-else />
       </template>
 
       <!-- Converter -->

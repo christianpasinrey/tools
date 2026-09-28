@@ -47,6 +47,13 @@ describe('CommandPalette', () => {
     outside.remove()
   })
 
+  it('ignora Ctrl+K ya tratado por un editor', async () => {
+    const ev = new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true, cancelable: true })
+    ev.preventDefault()
+    window.dispatchEvent(ev); await flushPromises()
+    expect(usePalette().isOpen.value).toBe(false)
+  })
+
   it('sin resultados muestra ayuda', async () => {
     usePalette().open(); await flushPromises()
     const input = document.querySelector('input[role="combobox"]')

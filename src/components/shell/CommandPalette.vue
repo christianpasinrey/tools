@@ -84,6 +84,7 @@ function isEditable(el) {
 }
 
 function onGlobalKeydown(e) {
+  if (e.defaultPrevented) return // ya lo ha tratado un editor (p. ej. Ctrl+K = enlace)
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); toggle(); return }
   if (e.key === '/' && !isOpen.value && !isEditable(e.target) && !isEditable(document.activeElement)) { e.preventDefault(); open() }
 }
