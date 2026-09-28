@@ -30,3 +30,14 @@ a:hover > .tb-logo-mark, a:focus-visible > .tb-logo-mark { transform: rotate(90d
   .tb-pop-enter-active, .tb-pop-leave-active { transition: none; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
 }
+
+/* Paleta de comandos */
+.tb-palette-enter-active .tb-palette-backdrop, .tb-palette-leave-active .tb-palette-backdrop { transition: opacity 0.2s ease; }
+.tb-palette-enter-active .tb-palette-panel { transition: opacity 0.2s ease, transform 0.45s var(--tb-spring); }
+.tb-palette-leave-active .tb-palette-panel { transition: opacity 0.14s ease, transform 0.14s ease; }
+.tb-palette-enter-active, .tb-palette-leave-active { transition: opacity 0.2s; }
+.tb-palette-enter-from .tb-palette-backdrop, .tb-palette-leave-to .tb-palette-backdrop { opacity: 0; }
+.tb-palette-enter-from .tb-palette-panel, .tb-palette-leave-to .tb-palette-panel { opacity: 0; transform: translateY(-10px) scale(0.97); }
+
+/* Campos que ya muestran su propio estado de foco (paleta, buscador del hero) */
+.tb-bare-input:focus-visible { outline: none; }
