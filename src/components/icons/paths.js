@@ -54,7 +54,7 @@ export const ICONS = {
   copy: 'M9 9h11v11H9zM5 15H4V4h11v1',
   trash: 'M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
   'chevron-up': 'M6 15l6-6 6 6',
-  'more-vertical': 'M12 5h.01M12 12h.01M12 19h.01',
+  'more-vertical': 'M11 5a1 1 0 1 0 2 0 1 1 0 1 0-2 0M11 12a1 1 0 1 0 2 0 1 1 0 1 0-2 0M11 19a1 1 0 1 0 2 0 1 1 0 1 0-2 0',
   replace: 'M4 7h11l-3-3M20 17H9l3 3',
   check: 'M5 12l5 5L20 7',
   sparkle: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z'

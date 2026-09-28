@@ -30,9 +30,9 @@ function choose(tool) {
     <button type="button" class="flex items-center gap-2 h-8 pl-2 pr-1.5 min-w-0 max-w-[60vw] rounded-lg text-sm font-medium whitespace-nowrap hover:bg-tb-surface-2 transition-colors"
             :aria-expanded="open" aria-haspopup="menu" :disabled="!tools.length" @click="open = !open">
       <span class="w-2 h-2 rounded-full" style="background: var(--cat)"></span>
-      <span>{{ category.name }}</span>
+      <span :class="activeTool && 'hidden sm:inline'">{{ category.name }}</span>
       <template v-if="activeTool">
-        <span class="text-tb-muted truncate">/ {{ activeTool.short }}</span>
+        <span class="truncate"><span class="hidden sm:inline text-tb-muted">/ </span>{{ activeTool.short }}</span>
         <Icon name="chevron-down" :size="14" class="text-tb-muted transition-transform duration-200" :class="open && 'rotate-180'" />
       </template>
     </button>
