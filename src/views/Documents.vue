@@ -21,9 +21,8 @@ const { isMobile } = useDevice()
 </script>
 
 <template>
-  <div class="h-full flex flex-col bg-neutral-100 dark:bg-neutral-950 text-neutral-800 dark:text-neutral-300">
-
-    <div class="flex-1 overflow-auto">
+  <div class="h-full flex flex-col bg-tb-bg text-tb-ink" style="--cat: var(--cat-documents)">
+    <div class="flex-1 min-h-0 overflow-auto">
       <!-- PDF (same for mobile/desktop for now) -->
       <PdfEditorContent v-if="docs.activeTab.value === 'pdf'" />
 
