@@ -46,3 +46,17 @@ describe('kit', () => {
     w.unmount()
   })
 })
+
+describe('TbMenu — teclado', () => {
+  it('Escape cierra y devuelve el foco al botón', async () => {
+    const w = mount(TbMenu, { props: { label: 'Exportar', items: [{ label: 'Markdown', action: vi.fn() }] }, attachTo: document.body })
+    const trigger = w.find('button[aria-haspopup="menu"]')
+    await trigger.trigger('click')
+    await new Promise(r => setTimeout(r))
+    document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    await new Promise(r => setTimeout(r))
+    expect(w.find('[role="menu"]').exists()).toBe(false)
+    expect(document.activeElement).toBe(trigger.element)
+    w.unmount()
+  })
+})

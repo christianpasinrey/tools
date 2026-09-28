@@ -20,3 +20,19 @@ describe('TbSegmented', () => {
     expect(w.emitted('update:modelValue')[1]).toEqual(['a'])
   })
 })
+
+describe('TbSegmented — foco con flechas', () => {
+  it('las flechas avanzan varias posiciones y mueven el foco', async () => {
+    const opts = [{ value: 'a', label: 'Uno' }, { value: 'b', label: 'Dos' }, { value: 'c', label: 'Tres' }]
+    const w = mount(TbSegmented, { attachTo: document.body, props: { modelValue: 'a', options: opts, label: 'Modo', 'onUpdate:modelValue': (v) => w.setProps({ modelValue: v }) } })
+    w.findAll('[role="radio"]')[0].element.focus()
+    await w.findAll('[role="radio"]')[0].trigger('keydown', { key: 'ArrowRight' })
+    await new Promise(r => setTimeout(r))
+    expect(document.activeElement.textContent).toContain('Dos')
+    document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }))
+    await new Promise(r => setTimeout(r))
+    expect(w.props('modelValue')).toBe('c')
+    expect(document.activeElement.textContent).toContain('Tres')
+    w.unmount()
+  })
+})

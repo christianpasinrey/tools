@@ -1,4 +1,5 @@
 <script setup>
+import { ref, nextTick } from 'vue'
 import Icon from '../icons/Icon.vue'
 const props = defineProps({
   modelValue: { type: [String, Number], default: null },
@@ -7,10 +8,13 @@ const props = defineProps({
   size: { type: String, default: 'md' }
 })
 const emit = defineEmits(['update:modelValue'])
+const root = ref(null)
 
 function move(index, delta) {
   const next = (index + delta + props.options.length) % props.options.length
   emit('update:modelValue', props.options[next].value)
+  // Roving tabindex: el foco acompaña a la selección para que la siguiente flecha parta de ahí
+  nextTick(() => root.value?.querySelectorAll('[role="radio"]')[next]?.focus())
 }
 function onKeydown(e, index) {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); move(index, 1) }
@@ -19,7 +23,7 @@ function onKeydown(e, index) {
 </script>
 
 <template>
-  <div role="radiogroup" :aria-label="label" class="tb-seg tb-ui" :class="size === 'sm' && 'tb-seg-sm'">
+  <div ref="root" role="radiogroup" :aria-label="label" class="tb-seg tb-ui" :class="size === 'sm' && 'tb-seg-sm'">
     <button v-for="(opt, i) in options" :key="opt.value" type="button" role="radio" class="tb-seg-item"
             :aria-checked="opt.value === modelValue" :tabindex="opt.value === modelValue ? 0 : -1"
             :title="opt.title || undefined"

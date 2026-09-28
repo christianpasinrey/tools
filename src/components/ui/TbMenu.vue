@@ -13,9 +13,18 @@ defineProps({
 const open = ref(false)
 const root = ref(null)
 const menu = ref(null)
+const trigger = ref(null)
 
 onClickOutside(root, () => { open.value = false })
-onKeyStroke('Escape', () => { open.value = false })
+onKeyStroke('Escape', () => {
+  if (!open.value) return
+  open.value = false
+  trigger.value?.focus()
+})
+// Cerrar si el foco sale del menú (Tab), no solo con el puntero
+function onFocusOut(e) {
+  if (open.value && !root.value?.contains(e.relatedTarget)) open.value = false
+}
 
 async function toggle() {
   open.value = !open.value
@@ -38,8 +47,8 @@ function onKeydown(e) {
 </script>
 
 <template>
-  <div ref="root" class="relative inline-flex tb-ui">
-    <button type="button" :class="iconOnly ? 'tb-icon-btn tb-icon-btn-md' : 'tb-btn tb-btn-ghost tb-btn-sm'"
+  <div ref="root" class="relative inline-flex tb-ui" @focusout="onFocusOut">
+    <button ref="trigger" type="button" :class="iconOnly ? 'tb-icon-btn tb-icon-btn-md' : 'tb-btn tb-btn-ghost tb-btn-sm'"
             aria-haspopup="menu" :aria-expanded="open" :aria-label="iconOnly ? label : undefined" :title="iconOnly ? label : undefined"
             @click="toggle">
       <Icon v-if="icon" :name="icon" :size="16" />
