@@ -29,13 +29,13 @@ const { isMobile } = useDevice()
       <!-- Spreadsheet: mobile vs desktop -->
       <template v-if="docs.activeTab.value === 'spreadsheet'">
         <MobileSpreadsheetEditor v-if="isMobile" />
-        <SpreadsheetEditor v-else :theme-color="docs.themeColor.value" />
+        <SpreadsheetEditor v-else />
       </template>
 
       <!-- DOCX: mobile vs desktop -->
       <template v-if="docs.activeTab.value === 'docx'">
         <MobileDocxEditor v-if="isMobile" />
-        <DocxEditor v-else :theme-color="docs.themeColor.value" />
+        <DocxEditor v-else />
       </template>
 
       <!-- Markdown: mobile vs desktop -->
@@ -45,7 +45,7 @@ const { isMobile } = useDevice()
       </template>
 
       <!-- Converter -->
-      <ConverterHome v-if="docs.activeTab.value === 'converter'" :theme-color="docs.themeColor.value" />
+      <ConverterHome v-if="docs.activeTab.value === 'converter'" />
     </div>
   </div>
 </template>

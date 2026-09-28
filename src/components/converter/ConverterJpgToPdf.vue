@@ -1,6 +1,12 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import ConverterDropZone from './ConverterDropZone.vue'
+import { ref, reactive, onMounted } from 'vue'
+import Icon from '../icons/Icon.vue'
+import TbEmptyState from '../ui/TbEmptyState.vue'
+import TbButton from '../ui/TbButton.vue'
+import TbIconButton from '../ui/TbIconButton.vue'
+import TbSegmented from '../ui/TbSegmented.vue'
+import ConverterView from './ConverterView.vue'
+import { formatSize } from './converterFiles'
 
 const props = defineProps({
   converter: { type: Object, required: true },
@@ -11,26 +17,42 @@ const imageFiles = ref([])
 const imagePreviews = ref([])
 const pageSize = ref('fit')
 const dragIndex = ref(null)
+const pageSizes = [
+  { value: 'fit', label: 'Ajustar a la imagen' },
+  { value: 'a4', label: 'A4 centrado' }
+]
+
+const isImage = (f) => f.type === 'image/jpeg' || f.type === 'image/png'
 
 const handleFiles = (files) => {
-  const validFiles = files.filter(f => f.type === 'image/jpeg' || f.type === 'image/png')
+  const validFiles = files.filter(isImage)
   if (validFiles.length === 0) {
-    props.converter.showToast('Solo se aceptan archivos JPG y PNG', 'error')
+    props.converter.showToast('Este conversor solo acepta imágenes JPG y PNG', 'error')
     return
+  }
+  const skipped = files.length - validFiles.length
+  if (skipped) {
+    props.converter.showToast(`${skipped} ${skipped === 1 ? 'archivo ignorado' : 'archivos ignorados'}: solo JPG y PNG`, 'info')
   }
 
   for (const file of validFiles) {
+    // La miniatura ocupa ya su sitio: el orden es el de los archivos, no el de lectura
+    const preview = reactive({ name: file.name, src: '', size: file.size })
     imageFiles.value.push(file)
+    imagePreviews.value.push(preview)
     const reader = new FileReader()
-    reader.onload = (e) => {
-      imagePreviews.value.push({ name: file.name, src: e.target.result, size: file.size })
-    }
+    reader.onload = (e) => { preview.src = e.target.result }
     reader.readAsDataURL(file)
   }
 }
 
 // Archivo entregado desde la Home
 onMounted(() => { if (props.initialFile) handleFiles([props.initialFile]) })
+
+const onPick = (e) => {
+  handleFiles(Array.from(e.target.files || []))
+  e.target.value = ''
+}
 
 const removeImage = (index) => {
   imageFiles.value.splice(index, 1)
@@ -42,16 +64,16 @@ const clearAll = () => {
   imagePreviews.value = []
 }
 
-const onDragStart = (index) => {
-  dragIndex.value = index
+const move = (from, to) => {
+  if (from === null || from === to || to < 0 || to >= imageFiles.value.length) return
+  const movedFile = imageFiles.value.splice(from, 1)[0]
+  const movedPreview = imagePreviews.value.splice(from, 1)[0]
+  imageFiles.value.splice(to, 0, movedFile)
+  imagePreviews.value.splice(to, 0, movedPreview)
 }
 
 const onDrop = (targetIndex) => {
-  if (dragIndex.value === null || dragIndex.value === targetIndex) return
-  const movedFile = imageFiles.value.splice(dragIndex.value, 1)[0]
-  const movedPreview = imagePreviews.value.splice(dragIndex.value, 1)[0]
-  imageFiles.value.splice(targetIndex, 0, movedFile)
-  imagePreviews.value.splice(targetIndex, 0, movedPreview)
+  move(dragIndex.value, targetIndex)
   dragIndex.value = null
 }
 
@@ -59,121 +81,72 @@ const convert = () => {
   if (imageFiles.value.length === 0) return
   props.converter.jpgToPdf(imageFiles.value, pageSize.value)
 }
-
-const formatSize = (bytes) => {
-  if (bytes < 1024) return bytes + ' B'
-  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB'
-  return (bytes / 1048576).toFixed(1) + ' MB'
-}
 </script>
 
 <template>
-  <div class="flex-1 overflow-auto p-4 sm:p-6">
-    <div class="max-w-3xl mx-auto">
-      <!-- Header -->
-      <div class="flex items-center gap-3 mb-6">
-        <button
-          @click="converter.goBack()"
-          class="w-8 h-8 rounded-lg bg-neutral-200 dark:bg-neutral-800 hover:bg-neutral-300 dark:hover:bg-neutral-700 flex items-center justify-center transition-colors"
-        >
-          <svg class="w-4 h-4 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <div>
-          <h2 class="text-lg font-semibold text-neutral-800 dark:text-neutral-200">JPG a PDF</h2>
-          <p class="text-xs text-neutral-500">Convierte imágenes JPG/PNG a un documento PDF</p>
-        </div>
+  <ConverterView title="JPG a PDF" description="Une imágenes JPG o PNG en un documento PDF" wide @back="converter.goBack()">
+    <TbEmptyState
+      v-if="imagePreviews.length === 0"
+      icon="image"
+      title="Suelta imágenes JPG o PNG"
+      button-label="Elegir imágenes"
+      accept="image/jpeg,image/png"
+      multiple
+      :chips="['JPG', 'PNG', 'varias a la vez']"
+      formats="Conversión 100 % local: las imágenes no salen de tu equipo"
+      @files="handleFiles"
+    />
+
+    <template v-else>
+      <div class="mb-4 flex flex-wrap items-center gap-3 p-3 rounded-xl border border-tb-line bg-tb-surface">
+        <span class="text-sm text-tb-muted">Página</span>
+        <TbSegmented v-model="pageSize" :options="pageSizes" label="Tamaño de página" size="sm" />
+        <TbButton size="sm" variant="ghost" icon="trash" class="ml-auto" @click="clearAll">Quitar todas</TbButton>
       </div>
 
-      <!-- Upload zone (when no images) -->
-      <ConverterDropZone
-        v-if="imagePreviews.length === 0"
-        accept="image/jpeg,image/png"
-        :multiple="true"
-        label="Arrastra imágenes JPG o PNG aquí"
-        sublabel="o haz clic para buscar"
-        icon="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-        accent="#ef4444"
-        formats="JPG / PNG → PDF — conversión 100% local"
-        @files="handleFiles"
-      />
-
-      <!-- Images loaded -->
-      <template v-if="imagePreviews.length > 0">
-        <!-- Options bar -->
-        <div class="flex flex-wrap items-center gap-3 mb-4 p-3 bg-neutral-100 dark:bg-neutral-800/50 rounded-lg border border-neutral-200 dark:border-neutral-700">
-          <div class="flex items-center gap-2">
-            <label class="text-xs text-neutral-600 dark:text-neutral-400">Tamaño de página:</label>
-            <select
-              v-model="pageSize"
-              class="text-xs bg-white dark:bg-neutral-700 border border-neutral-300 dark:border-neutral-600 rounded px-2 py-1 text-neutral-700 dark:text-neutral-300"
-            >
-              <option value="fit">Ajustar a imagen</option>
-              <option value="a4">A4 (centrado)</option>
-            </select>
-          </div>
-          <div class="flex-1"></div>
-          <button
-            @click="clearAll"
-            class="text-xs text-red-500 hover:text-red-600 transition-colors"
-          >
-            Eliminar todo
-          </button>
-        </div>
-
-        <!-- Image grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
-          <div
-            v-for="(img, index) in imagePreviews"
-            :key="index"
-            draggable="true"
-            @dragstart="onDragStart(index)"
-            @dragover.prevent
-            @drop.prevent="onDrop(index)"
-            class="relative group rounded-lg border border-neutral-300 dark:border-neutral-700 overflow-hidden bg-white dark:bg-neutral-800 cursor-grab active:cursor-grabbing"
-          >
-            <img :src="img.src" :alt="img.name" class="w-full aspect-[3/4] object-cover" />
-            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-2">
-              <p class="text-white text-[10px] truncate">{{ img.name }}</p>
-              <p class="text-white/70 text-[9px]">{{ formatSize(img.size) }}</p>
-            </div>
-            <button
-              @click.stop="removeImage(index)"
-              class="absolute top-1.5 right-1.5 w-6 h-6 bg-black/50 hover:bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <div class="absolute top-1.5 left-1.5 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center text-[9px] text-white font-medium">
-              {{ index + 1 }}
-            </div>
-          </div>
-
-          <!-- Add more button -->
-          <label class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-neutral-300 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-600 cursor-pointer transition-colors aspect-[3/4]">
-            <input type="file" class="hidden" accept="image/jpeg,image/png" multiple @change="(e) => handleFiles(Array.from(e.target.files || []))" />
-            <svg class="w-6 h-6 text-neutral-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4" />
-            </svg>
-            <span class="text-[10px] text-neutral-500">Agregar</span>
-          </label>
-        </div>
-
-        <p class="text-xs text-neutral-500 dark:text-neutral-400 mb-4">
-          {{ imagePreviews.length }} {{ imagePreviews.length === 1 ? 'imagen' : 'imágenes' }} - Arrastra para reordenar
-        </p>
-
-        <!-- Convert button -->
-        <button
-          @click="convert"
-          :disabled="converter.isProcessing.value"
-          class="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm font-medium transition-colors"
+      <ol class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
+        <li
+          v-for="(img, index) in imagePreviews"
+          :key="img.name + index"
+          draggable="true"
+          class="relative rounded-xl border border-tb-line overflow-hidden bg-tb-surface cursor-grab active:cursor-grabbing"
+          :class="dragIndex === index && 'opacity-50'"
+          @dragstart="dragIndex = index"
+          @dragend="dragIndex = null"
+          @dragover.prevent
+          @drop.prevent="onDrop(index)"
         >
-          Convertir a PDF
-        </button>
-      </template>
-    </div>
-  </div>
+          <img v-if="img.src" :src="img.src" :alt="img.name" class="w-full aspect-[3/4] object-cover" />
+          <div v-else class="w-full aspect-[3/4] bg-tb-surface-2 animate-pulse"></div>
+          <span class="absolute top-2 left-2 grid place-items-center min-w-6 h-6 px-1.5 rounded-full text-xs font-code font-semibold bg-tb-surface text-tb-ink shadow">{{ index + 1 }}</span>
+          <div class="flex items-center gap-0.5 pl-2.5 pr-1 py-1.5 border-t border-tb-line">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-tb-ink truncate">{{ img.name }}</p>
+              <p class="text-[11px] text-tb-muted font-code">{{ formatSize(img.size) }}</p>
+            </div>
+            <TbIconButton v-if="index > 0" size="sm" :label="`Mover ${img.name} antes`" @click="move(index, index - 1)">
+              <Icon name="arrow-right" :size="14" class="rotate-180" />
+            </TbIconButton>
+            <TbIconButton size="sm" icon="x" tone="danger" :label="`Quitar ${img.name}`" @click="removeImage(index)" />
+          </div>
+        </li>
+
+        <li>
+          <label class="flex flex-col items-center justify-center gap-2 h-full min-h-40 rounded-xl border-2 border-dashed border-tb-line-strong text-tb-muted hover:border-[var(--cat)] hover:text-[var(--cat)] focus-within:border-[var(--cat)] focus-within:text-[var(--cat)] cursor-pointer transition-colors">
+            <input type="file" class="sr-only" accept="image/jpeg,image/png" multiple @change="onPick" />
+            <Icon name="upload" :size="20" />
+            <span class="text-xs font-medium">Añadir más</span>
+          </label>
+        </li>
+      </ol>
+
+      <p class="text-xs text-tb-muted mb-4">
+        {{ imagePreviews.length }} {{ imagePreviews.length === 1 ? 'imagen' : 'imágenes' }} · arrastra o usa la flecha para cambiar el orden
+      </p>
+
+      <TbButton variant="primary" icon="download" class="w-full" :loading="converter.isProcessing.value" @click="convert">
+        Convertir a PDF
+      </TbButton>
+    </template>
+  </ConverterView>
 </template>

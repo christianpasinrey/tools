@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { toast } from './useToast'
 import { PDFDocument } from 'pdf-lib'
 import * as pdfjsLib from 'pdfjs-dist'
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, PageBreak } from 'docx'
@@ -12,25 +13,8 @@ export function useConverter() {
   const progress = ref(0)
   const progressMessage = ref('')
 
-  // Toast system
-  const toasts = ref([])
-
-  const showToast = (message, type = 'info', duration = 3000) => {
-    const toast = {
-      id: `toast-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      message,
-      type,
-      duration
-    }
-    toasts.value.push(toast)
-    if (duration > 0) {
-      setTimeout(() => dismissToast(toast.id), duration)
-    }
-  }
-
-  const dismissToast = (id) => {
-    toasts.value = toasts.value.filter(t => t.id !== id)
-  }
+  // Avisos: delegan en los globales (se mantiene la firma de las llamadas)
+  const showToast = (message, type = 'info') => toast(message, { tone: type })
 
   // Download helper
   const downloadFile = (data, filename, mimeType) => {
@@ -437,9 +421,7 @@ export function useConverter() {
     isProcessing,
     progress,
     progressMessage,
-    toasts,
     showToast,
-    dismissToast,
     selectConversion,
     goBack,
     downloadFile,
