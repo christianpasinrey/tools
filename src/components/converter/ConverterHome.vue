@@ -1,5 +1,7 @@
 <script setup>
+import { ref } from 'vue'
 import { useConverter } from '../../composables/useConverter'
+import { usePendingLaunch } from '../../composables/usePendingLaunch'
 import ConverterJpgToPdf from './ConverterJpgToPdf.vue'
 import ConverterPdfToJpg from './ConverterPdfToJpg.vue'
 import ConverterPdfToWord from './ConverterPdfToWord.vue'
@@ -10,6 +12,13 @@ defineProps({
 })
 
 const converter = useConverter()
+
+// Conversión (y archivo) elegidos desde la Home o la paleta
+const launchFile = ref(null)
+usePendingLaunch('converter:', ({ target, file }) => {
+  launchFile.value = file
+  converter.selectConversion(target.slice('converter:'.length))
+})
 
 const conversions = [
   {
@@ -112,10 +121,10 @@ const conversions = [
     </div>
 
     <!-- Sub-views -->
-    <ConverterJpgToPdf v-if="converter.activeConversion.value === 'jpg-to-pdf'" :converter="converter" />
-    <ConverterPdfToJpg v-if="converter.activeConversion.value === 'pdf-to-jpg'" :converter="converter" />
-    <ConverterPdfToWord v-if="converter.activeConversion.value === 'pdf-to-word'" :converter="converter" />
-    <ConverterPdfToExcel v-if="converter.activeConversion.value === 'pdf-to-excel'" :converter="converter" />
+    <ConverterJpgToPdf v-if="converter.activeConversion.value === 'jpg-to-pdf'" :converter="converter" :initial-file="launchFile" />
+    <ConverterPdfToJpg v-if="converter.activeConversion.value === 'pdf-to-jpg'" :converter="converter" :initial-file="launchFile" />
+    <ConverterPdfToWord v-if="converter.activeConversion.value === 'pdf-to-word'" :converter="converter" :initial-file="launchFile" />
+    <ConverterPdfToExcel v-if="converter.activeConversion.value === 'pdf-to-excel'" :converter="converter" :initial-file="launchFile" />
   </div>
 </template>
 

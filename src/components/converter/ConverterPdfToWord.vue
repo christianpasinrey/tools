@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import ConverterDropZone from './ConverterDropZone.vue'
 
 const props = defineProps({
-  converter: { type: Object, required: true }
+  converter: { type: Object, required: true },
+  initialFile: { type: Object, default: null }
 })
 
 const pdfFile = ref(null)
@@ -18,6 +19,9 @@ const handleFiles = (files) => {
   pdfFile.value = file
   pdfName.value = file.name
 }
+
+// Archivo entregado desde la Home
+onMounted(() => { if (props.initialFile) handleFiles([props.initialFile]) })
 
 const convert = () => {
   if (!pdfFile.value) return

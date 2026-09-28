@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import ConverterDropZone from './ConverterDropZone.vue'
 
 const props = defineProps({
-  converter: { type: Object, required: true }
+  converter: { type: Object, required: true },
+  initialFile: { type: Object, default: null }
 })
 
 const imageFiles = ref([])
@@ -27,6 +28,9 @@ const handleFiles = (files) => {
     reader.readAsDataURL(file)
   }
 }
+
+// Archivo entregado desde la Home
+onMounted(() => { if (props.initialFile) handleFiles([props.initialFile]) })
 
 const removeImage = (index) => {
   imageFiles.value.splice(index, 1)

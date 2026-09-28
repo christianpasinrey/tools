@@ -94,3 +94,16 @@
   .tb-card { transform: none !important; transition: none; }
   .tb-card-enter-active, .tb-card-move { transition: none; }
 }
+
+/* ---------- Suelta un archivo ---------- */
+.tb-drop-overlay { background: color-mix(in srgb, var(--tb-bg) 70%, transparent); backdrop-filter: blur(6px); }
+.tb-drop-frame { display: flex; flex-direction: column; align-items: center; text-align: center; width: min(640px, 100%); padding: 64px 24px; border-radius: 28px; border: 2.5px dashed var(--tb-accent); background: var(--tb-surface); color: var(--tb-ink); animation: tb-breathe 1.6s ease-in-out infinite; }
+.tb-drop-icon { color: var(--tb-accent); margin-bottom: 14px; animation: tb-bob 1.2s ease-in-out infinite; }
+@keyframes tb-breathe { 50% { transform: scale(1.015); } }
+@keyframes tb-bob { 50% { transform: translateY(-6px); } }
+.tb-drop-enter-active, .tb-drop-leave-active { transition: opacity .2s ease; }
+.tb-drop-enter-from, .tb-drop-leave-to { opacity: 0; }
+.tb-drop-option { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--tb-line); transition: border-color .2s, background .2s, transform .35s var(--tb-spring); }
+.tb-drop-option:hover { border-color: var(--cat); background: color-mix(in srgb, var(--cat) 6%, var(--tb-surface)); transform: translateX(3px); }
+.tb-drop-option[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { .tb-drop-frame, .tb-drop-icon { animation: none; } }

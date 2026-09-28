@@ -10,8 +10,12 @@ import PdfConfirmDialog from '../components/pdf/PdfConfirmDialog.vue'
 import PdfProgressBar from '../components/pdf/PdfProgressBar.vue'
 import PdfAnnotationPanel from '../components/pdf/PdfAnnotationPanel.vue'
 import EditorEmptyState from '../components/common/EditorEmptyState.vue'
+import { usePendingLaunch } from '../composables/usePendingLaunch'
 
 const editor = usePdfEditor()
+
+// Archivo entregado desde la Home ("suelta un archivo")
+usePendingLaunch('pdf', ({ file }) => { if (file) editor.loadFile(file) })
 const previewCanvas = ref(null)
 const isRenderingPreview = ref(false)
 const fileInput = ref(null)

@@ -6,6 +6,7 @@ import ImageCanvas from '../components/image/ImageCanvas.vue'
 import ImageSidebar from '../components/image/ImageSidebar.vue'
 import ImageHistory from '../components/image/ImageHistory.vue'
 import VaultSaveLoad from '../components/common/VaultSaveLoad.vue'
+import { usePendingLaunch } from '../composables/usePendingLaunch'
 
 const editor = useImageEditor()
 
@@ -69,6 +70,9 @@ const handleDrop = (e) => {
 const loadFile = async (file) => {
   await editor.loadFile(file)
 }
+
+// Archivo entregado desde la Home ("suelta un archivo")
+usePendingLaunch('image', ({ file }) => { if (file) loadFile(file) })
 
 // Canvas ready
 const onCanvasReady = (canvas) => {

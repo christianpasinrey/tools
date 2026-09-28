@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import ConverterDropZone from './ConverterDropZone.vue'
 
 const props = defineProps({
-  converter: { type: Object, required: true }
+  converter: { type: Object, required: true },
+  initialFile: { type: Object, default: null }
 })
 
 const images = ref([])
@@ -22,6 +23,9 @@ const handleFiles = async (files) => {
   hasFile.value = true
   images.value = await props.converter.pdfToJpg(file, scale.value, quality.value)
 }
+
+// Archivo entregado desde la Home
+onMounted(() => { if (props.initialFile) handleFiles([props.initialFile]) })
 
 const reconvert = async (file) => {
   // Re-read the file isn't possible after initial load, so we inform user
