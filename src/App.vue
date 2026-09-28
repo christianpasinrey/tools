@@ -1,6 +1,8 @@
 <script setup>
 import { defineAsyncComponent } from 'vue'
 import TopBar from './components/shell/TopBar.vue'
+import TbToaster from './components/ui/TbToaster.vue'
+import TbConfirmHost from './components/ui/TbConfirmHost.vue'
 import { useDevice } from './composables/useDevice'
 
 const MobileTabBar = defineAsyncComponent(() => import('./components/shell/MobileTabBar.vue'))
@@ -18,5 +20,7 @@ const { isMobile } = useDevice()
     </main>
     <MobileTabBar v-if="isMobile" />
     <CommandPalette />
+    <TbToaster />
+    <TbConfirmHost />
   </div>
 </template>
