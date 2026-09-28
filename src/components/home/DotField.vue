@@ -27,16 +27,25 @@ function resize() {
 function draw() {
   raf = 0
   ctx.clearRect(0, 0, w, h)
+  const lit = []
+  ctx.beginPath()
   for (let y = GAP / 2; y < h; y += GAP) {
     for (let x = GAP / 2; x < w; x += GAP) {
-      const d = Math.hypot(x - pointer.x, y - pointer.y)
-      const t = animated ? Math.max(0, 1 - d / RADIUS) : 0
-      ctx.beginPath()
-      ctx.fillStyle = t > 0.02 ? colors.accent : colors.dot
-      ctx.globalAlpha = t > 0.02 ? 0.25 + t * 0.6 : 1
-      ctx.arc(x, y, 1 + t * 1.8, 0, Math.PI * 2)
-      ctx.fill()
+      const d = animated ? Math.hypot(x - pointer.x, y - pointer.y) : Infinity
+      if (d < RADIUS * 0.98) { lit.push([x, y, 1 - d / RADIUS]); continue }
+      ctx.moveTo(x + 1, y)
+      ctx.arc(x, y, 1, 0, Math.PI * 2)
     }
+  }
+  ctx.globalAlpha = 1
+  ctx.fillStyle = colors.dot
+  ctx.fill()
+  ctx.fillStyle = colors.accent
+  for (const [x, y, t] of lit) {
+    ctx.globalAlpha = 0.25 + t * 0.6
+    ctx.beginPath()
+    ctx.arc(x, y, 1 + t * 1.8, 0, Math.PI * 2)
+    ctx.fill()
   }
   ctx.globalAlpha = 1
 }

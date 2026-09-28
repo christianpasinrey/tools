@@ -11,17 +11,43 @@ const TILES = [
   { cat: 'apps', icon: 'apps', label: 'TODO', x: 44, y: 28, r: -3, depth: 12, delay: 0.9 }
 ]
 
+// Parallax suavizado por fotograma: el objetivo cambia con el ratón y la posición
+// actual se acerca a él con una fracción fija por frame. Sin transición CSS, que se
+// reiniciaba en cada pointermove y hacía avanzar las fichas a tirones.
+const EASE = 0.12
+let target = { x: 0, y: 0 }
+let current = { x: 0, y: 0 }
+let raf = 0
+
+function frame() {
+  current.x += (target.x - current.x) * EASE
+  current.y += (target.y - current.y) * EASE
+  root.value?.style.setProperty('--mx', current.x.toFixed(4))
+  root.value?.style.setProperty('--my', current.y.toFixed(4))
+  const settled = Math.abs(target.x - current.x) < 0.001 && Math.abs(target.y - current.y) < 0.001
+  raf = settled ? 0 : requestAnimationFrame(frame)
+}
+
 function onMove(e) {
   const el = root.value
   if (!el) return
   const rect = el.getBoundingClientRect()
-  el.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width - 0.5).toFixed(3))
-  el.style.setProperty('--my', ((e.clientY - rect.top) / rect.height - 0.5).toFixed(3))
+  target = {
+    x: Math.max(-0.5, Math.min(0.5, (e.clientX - rect.left) / rect.width - 0.5)),
+    y: Math.max(-0.5, Math.min(0.5, (e.clientY - rect.top) / rect.height - 0.5))
+  }
+  if (!raf) raf = requestAnimationFrame(frame)
 }
+
 onMounted(() => {
-  if (window.matchMedia('(pointer: fine)').matches) window.addEventListener('pointermove', onMove, { passive: true })
+  const fine = window.matchMedia('(pointer: fine)').matches
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (fine && !reduced) window.addEventListener('pointermove', onMove, { passive: true })
 })
-onUnmounted(() => window.removeEventListener('pointermove', onMove))
+onUnmounted(() => {
+  cancelAnimationFrame(raf)
+  window.removeEventListener('pointermove', onMove)
+})
 </script>
 
 <template>

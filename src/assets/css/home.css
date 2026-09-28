@@ -23,8 +23,8 @@
   position: absolute; display: flex; flex-direction: column; align-items: center; gap: 8px;
   padding: 14px 16px 10px; border-radius: 18px;
   border: 1px solid var(--tb-line); background: var(--tb-surface); box-shadow: var(--tb-shadow-lift);
-  transform: translate(calc(var(--mx, 0) * var(--depth) * -1px), calc(var(--my, 0) * var(--depth) * -1px)) rotate(var(--r));
-  transition: transform .8s var(--tb-ease-out);
+  transform: translate3d(calc(var(--mx, 0) * var(--depth) * -1px), calc(var(--my, 0) * var(--depth) * -1px), 0) rotate(var(--r));
+  will-change: transform, translate;
   animation: tb-float 6s var(--delay) ease-in-out infinite;
 }
 @keyframes tb-float { 50% { translate: 0 -10px; } }
