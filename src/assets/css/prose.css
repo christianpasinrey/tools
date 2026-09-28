@@ -2,7 +2,7 @@
    EL TALLER — lectura de Markdown (.tb-prose)
    Acento: color de la categoría (--cat)
    ============================================ */
-.tb-prose { color: var(--tb-ink); font-size: 16px; line-height: 1.75; }
+.tb-prose { color: var(--tb-ink); font-size: 16px; line-height: 1.75; overflow-wrap: anywhere; }
 .tb-prose > :first-child { margin-top: 0; }
 .tb-prose h1, .tb-prose h2, .tb-prose h3, .tb-prose h4, .tb-prose h5, .tb-prose h6 {
   font-family: var(--font-display); font-weight: 750; letter-spacing: -.015em; line-height: 1.2;
@@ -34,7 +34,9 @@
 .tb-prose li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.4em; }
 .tb-prose input[type="checkbox"] { accent-color: var(--cat, var(--tb-accent)); margin-right: .5em; transform: translateY(1px); }
 .tb-prose hr { border: 0; border-top: 1px solid var(--tb-line-strong); margin: 2em 0; }
-.tb-prose table { width: 100%; border-collapse: collapse; margin: 1.3em 0; font-size: .95em; }
+/* En pantallas estrechas la tabla se desplaza sola, sin mover toda la vista */
+.tb-prose table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 1.3em 0; font-size: .95em; }
+.tb-prose th, .tb-prose td { overflow-wrap: normal; }
 .tb-prose th, .tb-prose td { border: 1px solid var(--tb-line); padding: 8px 12px; text-align: left; }
 .tb-prose th { background: var(--tb-surface-2); font-weight: 600; }
 .tb-prose img { max-width: 100%; border-radius: 10px; }

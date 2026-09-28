@@ -9,7 +9,7 @@ import TbMenu from '../ui/TbMenu.vue'
 import TbInput from '../ui/TbInput.vue'
 import TbButton from '../ui/TbButton.vue'
 import Icon from '../icons/Icon.vue'
-import { useMarkdownDocument } from '@/composables/useMarkdownDocument'
+import { useMarkdownDocument, SAMPLE_MARKDOWN } from '@/composables/useMarkdownDocument'
 import * as md from '@/lib/markdownEdit'
 import { toast } from '@/composables/useToast'
 import { confirmAction } from '@/composables/useConfirm'
@@ -17,7 +17,7 @@ import { confirmAction } from '@/composables/useConfirm'
 const LINE_HEIGHT = 24
 
 const doc = useMarkdownDocument()
-const { content, previewHtml, stats, outline } = doc
+const { content, persisted, previewHtml, stats, outline } = doc
 
 const editor = ref(null)
 const gutter = ref(null)
@@ -77,7 +77,15 @@ const table = () => apply((t, s) => md.insertBlock(t, s, '| Columna 1 | Columna 
 const rule = () => apply((t, s) => md.insertBlock(t, s, '---'))
 
 // Atajos solo dentro del editor: preventDefault marca el evento como tratado (la paleta lo ignora)
+// Tab indenta; para salir del editor con el teclado: Esc y después Tab (como en otros editores de código)
+let releaseTab = false
 function onEditorKeydown(e) {
+  if (e.key === 'Escape') {
+    if (showSearch.value) { e.preventDefault(); showSearch.value = false } else releaseTab = true
+    return
+  }
+  if (e.key === 'Tab' && releaseTab) { releaseTab = false; return }
+  releaseTab = false
   const mod = e.ctrlKey || e.metaKey
   const k = e.key.toLowerCase()
   if (mod && k === 'b') { e.preventDefault(); bold() }
@@ -85,7 +93,6 @@ function onEditorKeydown(e) {
   else if (mod && k === 'k') { e.preventDefault(); link() }
   else if (mod && k === 'f') { e.preventDefault(); openSearch() }
   else if (e.key === 'Tab') { e.preventDefault(); apply((t, s) => md.indentLines(t, s, e.shiftKey)) }
-  else if (e.key === 'Escape' && showSearch.value) { e.preventDefault(); showSearch.value = false }
 }
 
 // ---------- Cursor, índice y scroll ----------
@@ -106,12 +113,17 @@ function onEditorScroll() {
   preview.value.scrollTop = ratio * (preview.value.scrollHeight - preview.value.clientHeight)
 }
 
+function lineTop(line) {
+  const el = gutter.value?.children[line]
+  return el ? el.offsetTop : line * LINE_HEIGHT
+}
+
 function goToLine(line) {
   const ta = editor.value
   const pos = md.offsetOfLine(content.value, line)
   ta.focus()
   ta.setSelectionRange(pos, pos)
-  ta.scrollTop = Math.max(0, line * LINE_HEIGHT - ta.clientHeight / 3)
+  ta.scrollTop = Math.max(0, lineTop(line) - ta.clientHeight / 3)
   onEditorScroll()
   updateCursor()
 }
@@ -119,6 +131,15 @@ function goToLine(line) {
 // ---------- Buscar y reemplazar ----------
 const matches = computed(() => md.findMatches(content.value, query.value))
 watch(query, () => { activeMatch.value = 0; selectMatch() })
+watch(matches, (m) => { if (activeMatch.value >= m.length) activeMatch.value = Math.max(0, m.length - 1) })
+
+// Coincidencia activa pintada en la capa espejo (el textarea no muestra la selección sin foco)
+const activeMark = computed(() => {
+  const m = showSearch.value && matches.value[activeMatch.value]
+  if (!m) return null
+  const { line, col } = md.cursorPosition(content.value, m.start)
+  return { line: line - 1, from: col - 1, to: col - 1 + (m.end - m.start) }
+})
 
 function openSearch() {
   showSearch.value = true
@@ -130,7 +151,7 @@ function selectMatch() {
   if (!m || !ta) return
   ta.setSelectionRange(m.start, m.end)
   const line = md.cursorPosition(content.value, m.start).line
-  ta.scrollTop = Math.max(0, (line - 1) * LINE_HEIGHT - ta.clientHeight / 3)
+  ta.scrollTop = Math.max(0, lineTop(line - 1) - ta.clientHeight / 3)
   onEditorScroll()
 }
 function step(delta) {
@@ -142,7 +163,9 @@ function replaceCurrent() {
   const m = matches.value[activeMatch.value]
   if (!m) return
   content.value = md.replaceAt(content.value, m, replacement.value)
-  if (activeMatch.value >= matches.value.length) activeMatch.value = 0
+  const after = m.start + replacement.value.length
+  const next = matches.value.findIndex(x => x.start >= after)
+  activeMatch.value = next === -1 ? 0 : next
   nextTick(selectMatch)
 }
 function replaceEverything() {
@@ -173,10 +196,23 @@ function onResizeKey(e) {
 }
 
 // ---------- Archivo ----------
+// Abrir un archivo o un guardado sustituye el único borrador: se pide confirmación si es texto propio
+async function confirmReplace() {
+  const text = content.value.trim()
+  if (!text || content.value === SAMPLE_MARKDOWN) return true
+  return confirmAction({
+    title: '¿Sustituir el documento actual?',
+    message: 'El texto que tienes ahora se perderá. Si lo quieres conservar, expórtalo o guárdalo antes.',
+    confirmLabel: 'Sustituir',
+    tone: 'danger'
+  })
+}
+
 async function onFile(e) {
   const file = e.target.files?.[0]
   e.target.value = ''
   if (!file) return
+  if (/\.(md|markdown|txt)$/i.test(file.name) && !(await confirmReplace())) return
   const res = await doc.openFile(file)
   toast(res.ok ? `«${file.name}» abierto` : res.error, { tone: res.ok ? 'success' : 'error' })
 }
@@ -207,7 +243,9 @@ const modes = [
 ]
 
 const getDocumentData = () => ({ content: content.value })
-const loadDocument = (data) => { content.value = data.content || '' }
+const loadDocument = async (data) => {
+  if (await confirmReplace()) content.value = data.content || ''
+}
 </script>
 
 <template>
@@ -288,7 +326,7 @@ const loadDocument = (data) => { content.value = data.content || '' }
         <div class="w-12 shrink-0 border-r border-tb-line" aria-hidden="true"></div>
         <div class="absolute top-0 bottom-0 left-0 overflow-hidden pointer-events-none select-none" :style="{ width: (48 + mirrorWidth) + 'px' }" aria-hidden="true">
           <div ref="gutter" class="md-mirror ml-12 px-5 pt-5 font-code text-[14px] leading-6 will-change-transform">
-            <div v-for="(line, i) in lines" :key="i" class="md-mirror-line">{{ line || ' ' }}<span class="md-line-no" :class="i + 1 === cursor.line ? 'text-tb-ink' : 'text-tb-muted opacity-70'">{{ i + 1 }}</span></div>
+            <div v-for="(line, i) in lines" :key="i" class="md-mirror-line"><template v-if="activeMark && activeMark.line === i">{{ line.slice(0, activeMark.from) }}<mark class="md-match">{{ line.slice(activeMark.from, activeMark.to) }}</mark>{{ line.slice(activeMark.to) }}</template><template v-else>{{ line || ' ' }}</template><span class="md-line-no" :class="i + 1 === cursor.line ? 'text-tb-ink' : 'text-tb-muted opacity-70'">{{ i + 1 }}</span></div>
           </div>
         </div>
         <textarea ref="editor" v-model="content" aria-label="Texto Markdown" spellcheck="false"
@@ -314,7 +352,9 @@ const loadDocument = (data) => { content.value = data.content || '' }
       <span>{{ stats.words }} palabras</span>
       <span>{{ stats.chars }} caracteres</span>
       <span v-if="stats.readTime">~{{ stats.readTime }} min de lectura</span>
-      <span class="ml-auto flex items-center gap-1.5"><Icon name="check" :size="12" /> Guardado en este navegador</span>
+      <span v-if="persisted" class="ml-auto flex items-center gap-1.5"><Icon name="check" :size="12" /> Guardado en este navegador</span>
+      <span v-else class="ml-auto flex items-center gap-1.5 text-[var(--cat)]" title="El navegador no permite guardar datos de este sitio. Exporta el documento para no perderlo."><Icon name="x" :size="12" /> Sin guardar: solo en memoria</span>
+      <span class="hidden xl:inline">Tab indenta · Esc y Tab para salir</span>
     </footer>
 
     <input ref="fileInput" type="file" accept=".md,.markdown,.txt" class="hidden" @change="onFile" />
@@ -323,6 +363,7 @@ const loadDocument = (data) => { content.value = data.content || '' }
 
 <style scoped>
 .md-mirror-line { position: relative; white-space: pre-wrap; overflow-wrap: break-word; color: transparent; tab-size: 4; }
+.md-match { color: transparent; background: color-mix(in srgb, var(--cat) 28%, transparent); box-shadow: 0 0 0 1px color-mix(in srgb, var(--cat) 60%, transparent); border-radius: 3px; }
 .md-line-no { position: absolute; top: 0; right: calc(100% + 32px); font-size: 12px; font-variant-numeric: tabular-nums; }
 textarea { tab-size: 4; overflow-wrap: break-word; }
 </style>

@@ -57,3 +57,23 @@ describe('useMarkdownDocument', () => {
     expect(api.content.value).toBe('sin almacenamiento')
   })
 })
+
+describe('useMarkdownDocument — almacenamiento bloqueado', () => {
+  beforeEach(() => { localStorage.clear(); vi.restoreAllMocks() })
+  it('no lanza si acceder a localStorage lanza, y avisa de que no persiste', async () => {
+    const desc = Object.getOwnPropertyDescriptor(window, 'localStorage')
+    Object.defineProperty(window, 'localStorage', { configurable: true, get() { throw new DOMException('bloqueado', 'SecurityError') } })
+    try {
+      const { api } = await withDoc()
+      api.content.value = 'en memoria'
+      expect(api.content.value).toBe('en memoria')
+      expect(api.persisted.value).toBe(false)
+    } finally {
+      Object.defineProperty(window, 'localStorage', desc)
+    }
+  })
+  it('con almacenamiento normal persiste', async () => {
+    const { api } = await withDoc()
+    expect(api.persisted.value).toBe(true)
+  })
+})

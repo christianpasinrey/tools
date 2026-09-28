@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
@@ -33,9 +33,16 @@ const saludo = (nombre) => \`Hola, \${nombre}\`
 `
 
 // Borrador compartido entre el editor de escritorio y el móvil
-const content = useStorage('tb:markdown:draft', SAMPLE_MARKDOWN, typeof localStorage !== 'undefined' ? localStorage : undefined, {
-  onError: () => { /* sin almacenamiento: el texto vive solo en memoria */ }
-})
+// Acceder a window.localStorage puede lanzar (datos del sitio bloqueados, iframes aislados)
+function safeStorage() {
+  try { return typeof window !== 'undefined' ? window.localStorage : undefined } catch { return undefined }
+}
+const storage = safeStorage()
+/** false si el borrador no se está guardando (sin almacenamiento o lleno): vive solo en memoria */
+const persisted = ref(!!storage)
+const content = storage
+  ? useStorage('tb:markdown:draft', SAMPLE_MARKDOWN, storage, { onError: () => { persisted.value = false } })
+  : ref(SAMPLE_MARKDOWN)
 
 marked.setOptions({ breaks: true, gfm: true })
 
@@ -101,5 +108,5 @@ export function useMarkdownDocument() {
   const clear = () => { content.value = '' }
   const reset = () => { content.value = SAMPLE_MARKDOWN }
 
-  return { content, previewHtml, stats, outline, openFile, downloadMarkdown, downloadHtml, copyToClipboard, clear, reset }
+  return { content, persisted, previewHtml, stats, outline, openFile, downloadMarkdown, downloadHtml, copyToClipboard, clear, reset }
 }
