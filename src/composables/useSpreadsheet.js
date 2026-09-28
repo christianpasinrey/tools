@@ -1,6 +1,7 @@
 import { ref, computed, reactive } from 'vue'
 import ExcelJS from 'exceljs'
 import { isDark, toggleDark } from './useTheme'
+import { resolveCellTextColor } from '../lib/cellColor'
 
 // El estado del tema vive en useTheme (ligero); se reexporta por compatibilidad
 export { isDark, toggleDark }
@@ -1600,42 +1601,9 @@ export function useSpreadsheet() {
     return n
   })
 
-  // Helper to determine if a color is light
-  function isLightColor(hexColor) {
-    if (!hexColor) return false
-    const hex = hexColor.replace('#', '')
-    const r = parseInt(hex.substr(0, 2), 16)
-    const g = parseInt(hex.substr(2, 2), 16)
-    const b = parseInt(hex.substr(4, 2), 16)
-    // Calculate luminance
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-    return luminance > 0.5
-  }
-
   function getCellComputedStyle(row, col) {
     const style = getCellStyle(row, col)
-
-    // Auto-adjust text color based on background brightness and theme
-    let textColor = style.textColor
-
-    // Swap black/white based on theme for better visibility
-    if (textColor) {
-      if (isDark.value) {
-        // In dark mode: black -> white, keep others
-        if (textColor === '#000000') textColor = '#ffffff'
-      } else {
-        // In light mode: white -> black, keep others
-        if (textColor === '#ffffff') textColor = '#000000'
-      }
-    }
-
-    if (!textColor) {
-      if (style.bgColor) {
-        textColor = isLightColor(style.bgColor) ? '#171717' : '#f5f5f5'
-      } else {
-        textColor = isDark.value ? '#d4d4d4' : '#171717'
-      }
-    }
+    const textColor = resolveCellTextColor(style, isDark.value)
 
     const computed = {
       fontWeight: style.bold ? 'bold' : 'normal',
