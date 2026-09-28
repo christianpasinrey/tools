@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useVault } from '../../composables/useVault'
+import Icon from '../icons/Icon.vue'
+import { toast } from '../../composables/useToast'
 
 const props = defineProps({
   storeName: { type: String, required: true },
@@ -17,7 +19,6 @@ const showSaveInput = ref(false)
 const saveName = ref('')
 const saving = ref(false)
 const loading = ref(false)
-const feedback = ref('')
 const deleteConfirm = ref(null)
 
 // Refs for positioning teleported popovers
@@ -135,8 +136,7 @@ async function deleteItem(id) {
 }
 
 function showFeedback(msg) {
-  feedback.value = msg
-  setTimeout(() => feedback.value = '', 2000)
+  toast(msg, { tone: msg.startsWith('Error') ? 'error' : 'success' })
 }
 
 function formatDate(ts) {
@@ -147,110 +147,52 @@ function formatDate(ts) {
 </script>
 
 <template>
-  <div class="inline-flex items-center gap-1 vault-controls">
-    <!-- Save button -->
-    <button
-      ref="saveButtonRef"
-      @click="startSave"
-      :disabled="vault.isLocked.value"
-      class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
-      :class="vault.isLocked.value ? 'text-neutral-600 cursor-not-allowed' : 'text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10'"
-      title="Guardar en vault"
-    >
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-      </svg>
+  <div class="inline-flex items-center gap-0.5 vault-controls tb-ui">
+    <button ref="saveButtonRef" type="button" class="tb-icon-btn tb-icon-btn-md" :disabled="vault.isLocked.value"
+            :title="vault.isLocked.value ? 'Bóveda bloqueada' : 'Guardar en la bóveda'" aria-label="Guardar en la bóveda" @click="startSave">
+      <Icon name="download" :size="16" />
+    </button>
+    <button ref="loadButtonRef" type="button" class="tb-icon-btn tb-icon-btn-md relative" :disabled="vault.isLocked.value"
+            :title="vault.isLocked.value ? 'Bóveda bloqueada' : 'Abrir desde la bóveda'" aria-label="Abrir desde la bóveda"
+            :aria-expanded="showPanel" @click="togglePanel">
+      <Icon name="folder" :size="16" />
+      <span v-if="items.length && !vault.isLocked.value"
+            class="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] px-1 grid place-items-center rounded-full bg-[var(--accent)] text-[9px] font-semibold text-white">{{ items.length }}</span>
     </button>
 
-    <!-- Load button (with count badge) -->
-    <button
-      ref="loadButtonRef"
-      @click="togglePanel"
-      :disabled="vault.isLocked.value"
-      class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors"
-      :class="vault.isLocked.value ? 'text-neutral-600 cursor-not-allowed' : 'text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10'"
-      title="Cargar desde vault"
-    >
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-      </svg>
-      <span v-if="items.length && !vault.isLocked.value" class="min-w-[14px] h-3.5 flex items-center justify-center rounded-full bg-neutral-700 text-[9px] text-neutral-300 px-1">{{ items.length }}</span>
-    </button>
-
-    <!-- Feedback toast -->
-    <transition name="fade">
-      <span v-if="feedback" class="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-neutral-800 text-[10px] text-emerald-400 border border-emerald-500/20 shadow-lg z-50">
-        {{ feedback }}
-      </span>
-    </transition>
-
-    <!-- Teleported popovers to avoid overflow clipping -->
     <Teleport to="body">
-      <!-- Save input popover -->
-      <div
-        v-if="showSaveInput"
-        class="vault-popover fixed z-[9999] bg-neutral-800 border border-neutral-700 rounded-lg p-3 shadow-xl min-w-[220px]"
-        :style="{ top: popoverPos.top + 'px', left: popoverPos.left + 'px' }"
-      >
-        <div class="text-[10px] text-neutral-500 uppercase tracking-wider mb-2">Guardar {{ label }}</div>
+      <div v-if="showSaveInput" class="vault-popover tb-ui fixed z-[9999] w-[260px] rounded-xl border border-tb-line bg-tb-surface text-tb-ink p-3 shadow-[var(--tb-shadow-lift)] font-ui"
+           :style="{ top: popoverPos.top + 'px', left: popoverPos.left + 'px' }">
+        <p class="mb-2 text-[11px] font-code uppercase tracking-[.12em] text-tb-muted">Guardar {{ label }}</p>
         <div class="flex items-center gap-2">
-          <input
-            v-model="saveName"
-            type="text"
-            placeholder="Nombre..."
-            class="flex-1 bg-neutral-900 border border-neutral-600 rounded px-2 py-1 text-xs text-neutral-200 focus:outline-none focus:border-emerald-500"
-            @keyup.enter="confirmSave"
-            @keyup.escape="showSaveInput = false"
-            autofocus
-          />
-          <button @click="confirmSave" :disabled="!saveName.trim() || saving" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white rounded text-xs">
-            {{ saving ? '...' : 'OK' }}
+          <input v-model="saveName" type="text" placeholder="Nombre…" autofocus
+                 class="tb-bare-input flex-1 min-w-0 h-8 px-2.5 rounded-lg border border-tb-line-strong bg-tb-bg text-sm text-tb-ink outline-none focus:border-[var(--accent)]"
+                 @keyup.enter="confirmSave" @keyup.escape="showSaveInput = false" />
+          <button type="button" data-test="vault-confirm-save" class="tb-btn tb-btn-primary tb-btn-sm" :disabled="!saveName.trim() || saving" @click="confirmSave">
+            {{ saving ? '…' : 'Guardar' }}
           </button>
-          <button @click="showSaveInput = false" class="px-1 py-1 text-neutral-500 hover:text-neutral-300 text-xs">&times;</button>
         </div>
       </div>
 
-      <!-- Items list panel -->
-      <div
-        v-if="showPanel"
-        class="vault-popover fixed z-[9999] bg-neutral-800 border border-neutral-700 rounded-lg shadow-xl min-w-[260px] max-h-[300px] overflow-hidden flex flex-col"
-        :style="{ top: popoverPos.top + 'px', left: popoverPos.left + 'px' }"
-      >
-        <div class="flex items-center justify-between px-3 py-2 border-b border-neutral-700/50">
-          <span class="text-[10px] text-neutral-500 uppercase tracking-wider">{{ label || 'Guardados' }}</span>
-          <button @click="showPanel = false" class="text-neutral-500 hover:text-neutral-300 text-xs">&times;</button>
+      <div v-if="showPanel" class="vault-popover tb-ui fixed z-[9999] w-[260px] max-h-[320px] flex flex-col overflow-hidden rounded-xl border border-tb-line bg-tb-surface text-tb-ink shadow-[var(--tb-shadow-lift)] font-ui"
+           :style="{ top: popoverPos.top + 'px', left: popoverPos.left + 'px' }">
+        <div class="flex items-center justify-between px-3 py-2 border-b border-tb-line">
+          <span class="text-[11px] font-code uppercase tracking-[.12em] text-tb-muted">{{ label || 'Guardados' }}</span>
+          <button type="button" class="tb-icon-btn tb-icon-btn-sm" aria-label="Cerrar" @click="showPanel = false"><Icon name="x" :size="13" /></button>
         </div>
-
-        <div v-if="!items.length" class="px-3 py-4 text-center text-xs text-neutral-600">
-          Sin items guardados
-        </div>
-
-        <div v-else class="overflow-y-auto flex-1">
-          <div
-            v-for="item in items"
-            :key="item.id"
-            class="group flex items-center gap-2 px-3 py-2 hover:bg-neutral-700/30 cursor-pointer border-b border-neutral-700/20 last:border-0"
-          >
+        <div v-if="!items.length" class="px-3 py-6 text-center text-sm text-tb-muted">Sin elementos guardados</div>
+        <div v-else class="overflow-y-auto flex-1 p-1">
+          <div v-for="item in items" :key="item.id" class="group flex items-center gap-2 px-2.5 py-2 rounded-lg hover:bg-tb-surface-2 cursor-pointer">
             <div class="flex-1 min-w-0" @click="loadItem(item)">
-              <div class="text-xs text-neutral-300 truncate">{{ item.name }}</div>
-              <div class="text-[10px] text-neutral-600">{{ formatDate(item.updatedAt) }}</div>
+              <div class="text-sm truncate">{{ item.name }}</div>
+              <div class="text-[11px] text-tb-muted">{{ formatDate(item.updatedAt) }}</div>
             </div>
-
-            <!-- Delete -->
-            <button
-              v-if="deleteConfirm !== item.id"
-              @click.stop="deleteConfirm = item.id"
-              class="opacity-0 group-hover:opacity-100 p-1 text-neutral-600 hover:text-red-400 transition-all"
-              title="Eliminar"
-            >
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </button>
-            <!-- Confirm delete -->
+            <button v-if="deleteConfirm !== item.id" type="button" title="Eliminar" aria-label="Eliminar"
+                    class="tb-icon-btn tb-icon-btn-sm tb-icon-btn-danger opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+                    @click.stop="deleteConfirm = item.id"><Icon name="trash" :size="13" /></button>
             <div v-else class="flex items-center gap-1" @click.stop>
-              <button @click="deleteItem(item.id)" class="px-1.5 py-0.5 bg-red-600 hover:bg-red-500 text-white rounded text-[10px]">Si</button>
-              <button @click="deleteConfirm = null" class="px-1.5 py-0.5 text-neutral-500 hover:text-neutral-300 text-[10px]">No</button>
+              <button type="button" data-test="vault-confirm-delete" class="tb-btn tb-btn-danger tb-btn-sm" @click="deleteItem(item.id)">Sí</button>
+              <button type="button" class="tb-btn tb-btn-ghost tb-btn-sm" @click="deleteConfirm = null">No</button>
             </div>
           </div>
         </div>
@@ -258,8 +200,3 @@ function formatDate(ts) {
     </Teleport>
   </div>
 </template>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity 0.2s; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
-</style>

@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { useToasts } from '@/composables/useToast'
 import { mount, flushPromises } from '@vue/test-utils'
 import { ref } from 'vue'
 import VaultSaveLoad from '@/components/common/VaultSaveLoad.vue'
@@ -69,8 +70,8 @@ describe('VaultSaveLoad', () => {
     it('shows disabled buttons when vault is locked', () => {
       mockVault.isLocked.value = true
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       expect(saveBtn.exists()).toBe(true)
       expect(loadBtn.exists()).toBe(true)
       expect(saveBtn.attributes('disabled')).toBeDefined()
@@ -93,7 +94,7 @@ describe('VaultSaveLoad', () => {
   describe('save flow', () => {
     it('shows save input on save button click', async () => {
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -104,7 +105,7 @@ describe('VaultSaveLoad', () => {
     it('does not show save input when locked', async () => {
       mockVault.isLocked.value = true
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
       // Save input should not appear
@@ -114,7 +115,7 @@ describe('VaultSaveLoad', () => {
 
     it('calls vault.save with correct args on confirm', async () => {
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -123,7 +124,7 @@ describe('VaultSaveLoad', () => {
       input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      const okBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-save"]')
       okBtn.click()
       await flushPromises()
 
@@ -138,7 +139,7 @@ describe('VaultSaveLoad', () => {
     it('calls getData prop to get save data', async () => {
       const getData = vi.fn(() => ({ test: 'data' }))
       createWrapper({ getData })
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -147,7 +148,7 @@ describe('VaultSaveLoad', () => {
       input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      const okBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-save"]')
       okBtn.click()
       await flushPromises()
 
@@ -156,7 +157,7 @@ describe('VaultSaveLoad', () => {
 
     it('trims whitespace from save name', async () => {
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -165,7 +166,7 @@ describe('VaultSaveLoad', () => {
       input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      const okBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-save"]')
       okBtn.click()
       await flushPromises()
 
@@ -179,7 +180,7 @@ describe('VaultSaveLoad', () => {
 
     it('does not save when name is empty', async () => {
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -188,7 +189,7 @@ describe('VaultSaveLoad', () => {
       input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      const okBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-save"]')
       okBtn.click()
       await flushPromises()
 
@@ -197,7 +198,7 @@ describe('VaultSaveLoad', () => {
 
     it('hides save input after successful save', async () => {
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -206,7 +207,7 @@ describe('VaultSaveLoad', () => {
       input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      const okBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-save"]')
       okBtn.click()
       await flushPromises()
 
@@ -215,7 +216,7 @@ describe('VaultSaveLoad', () => {
 
     it('refreshes list after save', async () => {
       createWrapper()
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -224,7 +225,7 @@ describe('VaultSaveLoad', () => {
       input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      const okBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-save"]')
       okBtn.click()
       await flushPromises()
 
@@ -247,7 +248,7 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -259,7 +260,7 @@ describe('VaultSaveLoad', () => {
     it('does not open panel when locked', async () => {
       mockVault.isLocked.value = true
       createWrapper()
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
       // Panel should not appear
@@ -274,7 +275,7 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -293,7 +294,7 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -309,19 +310,19 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
       const panel = document.body.querySelector('.vault-popover')
-      expect(panel.textContent).toContain('Sin items guardados')
+      expect(panel.textContent).toContain('Sin elementos guardados')
     })
 
     it('shows label in panel header', async () => {
       createWrapper({ label: 'paleta' })
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -343,7 +344,7 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -353,7 +354,7 @@ describe('VaultSaveLoad', () => {
       await flushPromises()
 
       const panel = document.body.querySelector('.vault-popover')
-      expect(panel.textContent).toContain('Si')
+      expect(panel.textContent).toContain('Sí')
       expect(panel.textContent).toContain('No')
     })
 
@@ -366,7 +367,7 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -375,7 +376,7 @@ describe('VaultSaveLoad', () => {
       await flushPromises()
 
       // Click "Si" to confirm
-      const confirmBtn = document.body.querySelector('.vault-popover button.bg-red-600')
+      const confirmBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-delete"]')
       confirmBtn.click()
       await flushPromises()
 
@@ -386,7 +387,7 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -409,7 +410,7 @@ describe('VaultSaveLoad', () => {
       mockVault.save.mockRejectedValue(new Error('Encryption failed'))
       createWrapper()
 
-      const saveBtn = wrapper.find('button[title="Guardar en vault"]')
+      const saveBtn = wrapper.find('button[aria-label="Guardar en la bóveda"]')
       await saveBtn.trigger('click')
       await flushPromises()
 
@@ -418,11 +419,11 @@ describe('VaultSaveLoad', () => {
       input.dispatchEvent(new Event('input'))
       await flushPromises()
 
-      const okBtn = document.body.querySelector('.vault-popover button.bg-emerald-600')
+      const okBtn = document.body.querySelector('.vault-popover [data-test="vault-confirm-save"]')
       okBtn.click()
       await flushPromises()
 
-      expect(wrapper.text()).toContain('Error')
+      expect(useToasts().toasts.value.some(t => t.message.startsWith('Error'))).toBe(true)
     })
 
     it('shows error feedback when load fails', async () => {
@@ -432,7 +433,7 @@ describe('VaultSaveLoad', () => {
       createWrapper()
       await flushPromises()
 
-      const loadBtn = wrapper.find('button[title="Cargar desde vault"]')
+      const loadBtn = wrapper.find('button[aria-label="Abrir desde la bóveda"]')
       await loadBtn.trigger('click')
       await flushPromises()
 
@@ -440,7 +441,7 @@ describe('VaultSaveLoad', () => {
       itemDiv.click()
       await flushPromises()
 
-      expect(wrapper.text()).toContain('Error')
+      expect(useToasts().toasts.value.some(t => t.message.startsWith('Error'))).toBe(true)
     })
   })
 })
