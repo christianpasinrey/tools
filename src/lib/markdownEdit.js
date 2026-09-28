@@ -1,7 +1,8 @@
 // Operaciones de edición Markdown puras: (texto, selección) → { text, sel }.
 // Las comparten el editor de escritorio y el móvil.
 
-const lineStartOf = (text, offset) => text.lastIndexOf('\n', offset - 1) + 1
+// Con offset 0, lastIndexOf('\n', -1) se evalúa como índice 0 y encontraría un salto en la posición 0
+const lineStartOf = (text, offset) => (offset <= 0 ? 0 : text.lastIndexOf('\n', offset - 1) + 1)
 const lineEndOf = (text, offset) => {
   const i = text.indexOf('\n', offset)
   return i === -1 ? text.length : i

@@ -89,3 +89,16 @@ describe('estadísticas y posición', () => {
     expect(md.offsetOfLine('ab\ncd\nef', 2)).toBe(6)
   })
 })
+
+describe('documento que empieza por línea en blanco', () => {
+  it('prefijo con el cursor en 0 no duplica el salto', () => {
+    expect(md.toggleLinePrefix('\nabc', s(0), '- ').text).toBe('- \nabc')
+  })
+  it('título con el cursor en 0', () => {
+    expect(md.setHeading('\nabc', s(0), 2).text).toBe('## \nabc')
+  })
+  it('indentar incluye la primera línea vacía', () => {
+    // [0,5) abarca '\nabc\n': solo las dos primeras líneas
+    expect(md.indentLines('\nabc\ndef', s(0, 5)).text).toBe('  \n  abc\ndef')
+  })
+})
